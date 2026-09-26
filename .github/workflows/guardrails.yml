@@ -1,0 +1,22 @@
+name: guardrails
+on:
+  push:
+    branches:
+      - main
+      - nightly
+      - feat/refactor-x
+    paths-ignore:
+      - dist/**
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run guardrails
+        run: node scripts/guardrails/check-guardrails.mjs

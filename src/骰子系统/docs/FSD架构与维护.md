@@ -92,3 +92,10 @@ export function createXxx(deps: any) {
 - 2026-09-14：`feat/fsd-core` 全量合并至 `main`，`SCRIPT_VERSION = v7.0.0`；
 - 正式引用：`https://gcore.jsdelivr.net/gh/kai6666666/my-tavern-scripts@v7.0.0/dist/骰子系统/stable.js`
 - 回退点：`fsd-s100` / `fsd-s99`（或 v6.68 `5cb1851`）。
+
+## x1 护栏与基线（v7.1.0-x1）
+
+- 体积门：src/骰子系统 内 >100KB 文件冻结清单 `scripts/guardrails/baseline-large-files.json`（只许拆小，不得新增/增长）；
+- @ts-nocheck 冻结：1306 个存量文件清单 `scripts/guardrails/baseline-ts-nocheck.json`（禁止新增）；
+- CI：`.github/workflows/guardrails.yml`；本地校验：`pnpm guardrails`；
+- 基线 tag：`v7.1.0-x1`。
