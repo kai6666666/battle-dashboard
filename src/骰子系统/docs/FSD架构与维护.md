@@ -99,3 +99,10 @@ export function createXxx(deps: any) {
 - @ts-nocheck 冻结：1306 个存量文件清单 `scripts/guardrails/baseline-ts-nocheck.json`（禁止新增）；
 - CI：`.github/workflows/guardrails.yml`；本地校验：`pnpm guardrails`；
 - 基线 tag：`v7.1.0-x1`。
+
+## x2-a（v7.1.0-x2a）
+
+- `show-dice-panel.ts`：拆出「历史簇」→ `features/dice/panel/dice-panel-history.ts`；
+  - 包含：历史过滤状态 ×3、`renderDiceHistoryItems`、`showDiceHistoryDialog`（全仓无调用，保留待定）；
+  - 面板 4,109 → 3,832 行（-277）；采用子工厂 `createDicePanelHistory(deps)` 就地实例化。
+- 约定：子工厂文件带 `// @child-factory` 标记，不参与 index 接线审计。
