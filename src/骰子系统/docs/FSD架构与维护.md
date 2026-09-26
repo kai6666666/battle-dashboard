@@ -106,3 +106,10 @@ export function createXxx(deps: any) {
   - 包含：历史过滤状态 ×3、`renderDiceHistoryItems`、`showDiceHistoryDialog`（全仓无调用，保留待定）；
   - 面板 4,109 → 3,832 行（-277）；采用子工厂 `createDicePanelHistory(deps)` 就地实例化。
 - 约定：子工厂文件带 `// @child-factory` 标记，不参与 index 接线审计。
+
+## x2-b（v7.1.0-x2b）
+
+- `show-dice-panel.ts`：拆出「效果运行簇」→ `features/dice/panel/dice-panel-effect-runs.ts`（约 604 行）；
+  - 包含：效果运行状态机（pendingEffectRuns / activeConfirmEffectRun / 重试定时器）、meta 注入、历史状态写回、清理定时器；
+  - 桥接：`effectRunState`（对象属性替代 let 变量）+ `getPanel()`/`buildAttrButtons()` ctx + 共享 effect-math 导入；
+  - 面板 3,833 → 3,252 行（-581）；导出 7 个方法 + 状态对象。
