@@ -209,52 +209,6 @@ export function createDicePanelAttrButtons(deps: any, ctx: any) {
       });
     };
 
-    // 初始化角色按钮
-    buildCharButtons();
-    // 初始化属性按钮（默认主角）
-    buildAttrButtons(ctx.getDiceCharacterList()[0] || '<user>');
-    // [新增] 随机技能按钮点击事件
-    getPanel().find('#dice-random-skill').click(function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      const skillPool = deps.getRandomSkillPool();
-      const randomSkill = skillPool[Math.floor(Math.random() * skillPool.length)];
-      getPanel().find('#dice-attr-name').val(randomSkill).trigger('change');
-    });
-
-    // 初始化自定义下拉菜单
-    deps.initCustomDropdown(getPanel().find('#dice-initiator-name'), ctx.getDiceCharacterList());
-    deps.initCustomDropdown(getPanel().find('#dice-attr-name'), ctx.getDiceAttrList());
-    // [新增] 添加清除按钮
-    deps.addClearButton(
-      getPanel(),
-      '#dice-initiator-name, #dice-attr-name, #dice-attr-value, #dice-skill-mod, #dice-target, #dice-modifier, #custom-dice-expr, #custom-target-value',
-    );
-
-    // [修复] 角色变化时更新属性列表和快捷按钮
-    getPanel().find('#dice-initiator-name').on('change.acuattr input.acuattr', function () {
-      const charName = $(this).val().trim() || '<user>';
-      const newAttrList = deps.getAttributesForCharacter(charName);
-      deps.initCustomDropdown(getPanel().find('#dice-attr-name'), newAttrList.length > 0 ? newAttrList : ctx.getDiceAttrList());
-
-      // [新增] 更新属性快捷按钮
-      buildAttrButtons(charName);
-    });
-
-    // [新增] 属性名变化时自动填入属性值
-    getPanel().find('#dice-attr-name').on('change.acuval', function () {
-      const charName = getPanel().find('#dice-initiator-name').val().trim() || '<user>';
-      const attrName = $(this).val().trim();
-      const attrEntry = deps.getAttributeEntryForCharacter(charName, attrName);
-      if (attrEntry) {
-        const target = deps.resolveQuickSelectTarget(attrEntry.name, attrEntry.source, ctx.getCurrentAdvancedPreset(), 'normal');
-        const targetField = deps.getNormalQuickSelectInputSelector(target);
-        getPanel().find(targetField).val(attrEntry.value).trigger('change');
-        // [修复] 不自动填写DC，让检定时根据预设的defaultValue处理
-      }
-    });
-
-    // [修复] 根据骰子类型自动转换目标值
     const convertTargetForDice = (currentTarget, fromDice, toDice) => {
       if (!currentTarget || currentTarget === '') return '';
       const val = parseInt(currentTarget, 10);
@@ -299,12 +253,61 @@ export function createDicePanelAttrButtons(deps: any, ctx: any) {
       }
     };
 
-    getPanel().find('#dice-success-criteria').on('change', updateRuleMode);
 
+
+    const init = () => {
+      // 初始化角色按钮
+      buildCharButtons();
+      // 初始化属性按钮（默认主角）
+      buildAttrButtons(ctx.getDiceCharacterList()[0] || '<user>');
+      // [新增] 随机技能按钮点击事件
+      getPanel().find('#dice-random-skill').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const skillPool = deps.getRandomSkillPool();
+        const randomSkill = skillPool[Math.floor(Math.random() * skillPool.length)];
+        getPanel().find('#dice-attr-name').val(randomSkill).trigger('change');
+      });
+
+      // 初始化自定义下拉菜单
+      deps.initCustomDropdown(getPanel().find('#dice-initiator-name'), ctx.getDiceCharacterList());
+      deps.initCustomDropdown(getPanel().find('#dice-attr-name'), ctx.getDiceAttrList());
+      // [新增] 添加清除按钮
+      deps.addClearButton(
+        getPanel(),
+        '#dice-initiator-name, #dice-attr-name, #dice-attr-value, #dice-skill-mod, #dice-target, #dice-modifier, #custom-dice-expr, #custom-target-value',
+      );
+
+      // [修复] 角色变化时更新属性列表和快捷按钮
+      getPanel().find('#dice-initiator-name').on('change.acuattr input.acuattr', function () {
+        const charName = $(this).val().trim() || '<user>';
+        const newAttrList = deps.getAttributesForCharacter(charName);
+        deps.initCustomDropdown(getPanel().find('#dice-attr-name'), newAttrList.length > 0 ? newAttrList : ctx.getDiceAttrList());
+
+        // [新增] 更新属性快捷按钮
+        buildAttrButtons(charName);
+      });
+
+      // [新增] 属性名变化时自动填入属性值
+      getPanel().find('#dice-attr-name').on('change.acuval', function () {
+        const charName = getPanel().find('#dice-initiator-name').val().trim() || '<user>';
+        const attrName = $(this).val().trim();
+        const attrEntry = deps.getAttributeEntryForCharacter(charName, attrName);
+        if (attrEntry) {
+          const target = deps.resolveQuickSelectTarget(attrEntry.name, attrEntry.source, ctx.getCurrentAdvancedPreset(), 'normal');
+          const targetField = deps.getNormalQuickSelectInputSelector(target);
+          getPanel().find(targetField).val(attrEntry.value).trigger('change');
+          // [修复] 不自动填写DC，让检定时根据预设的defaultValue处理
+        }
+      });
+
+      // [修复] 根据骰子类型自动转换目标值
+      getPanel().find('#dice-success-criteria').on('change', updateRuleMode);
+    };
 
   return {
     buildAttrButtons,
     updateRuleMode,
-    buildCharButtons,
+    init,
   };
 }

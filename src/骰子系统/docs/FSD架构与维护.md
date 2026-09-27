@@ -134,3 +134,9 @@ export function createXxx(deps: any) {
   - 包含：角色快捷按钮 / 属性快捷按钮 / 目标值随骰型转换 / 规则模式切换（`buildCharButtons` / `buildAttrButtons` / `convertTargetForDice` / `updateRuleMode`）；
   - 桥接：`getPanel` / `getDiceCharacterList` / `getDiceAttrList` / `getFromMvu` / `getMvuParsedInfo` / `getTargetValue` / `getCurrentAdvancedPreset` 共 7 个 ctx；
   - 面板 2,731 → 2,442 行（-289）。
+
+## x2-e2 热修（v7.1.0-x2e2）
+
+- 事故：x2-e 把「面板打开时执行的初始化块」一并搬进了子工厂，导致面板打开瞬间在 `panel` 赋值前调用 `buildCharButtons()` → TDZ 崩溃（面板无法打开）。
+- 修复：初始化块收进子工厂 `init()` 方法；面板在对应时机显式调用 `dicePanelAttrButtons.init()`。
+- 新护栏：`@child-factory` 模块禁止在工厂体一级直接写可执行语句（guardrails 新增「子工厂顶层语句扫描」）。

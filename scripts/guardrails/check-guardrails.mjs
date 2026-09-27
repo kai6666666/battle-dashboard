@@ -47,6 +47,17 @@ for (const f of files) {
   }
 }
 
+// ②-2 子工厂顶层语句扫描（@child-factory 文件在工厂体一级不得直接执行语句）
+const CHILD_STMT = /^    (deps\.|ctx\.|initCustomDropdown\(|addClearButton\(|getPanel\(|\$\(|build[A-Za-z_$]*\(|update[A-Za-z_$]*\()/;
+for (const f of files) {
+  const content = fs.readFileSync(f, 'utf8');
+  if (!content.includes('@child-factory')) continue;
+  const ls = content.split('\n');
+  for (let i = 0; i < ls.length; i += 1) {
+    if (CHILD_STMT.test(ls[i])) errors.push(`[子工厂顶层语句] ${rel(f)}:${i + 1} —— ${ls[i].trim().slice(0, 60)}`);
+  }
+}
+
 // ② @ts-nocheck 冻结
 const nocheckNow = [];
 for (const f of files) {

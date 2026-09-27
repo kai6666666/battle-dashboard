@@ -256,6 +256,7 @@ export function createShowDicePanel(deps: any) {
     $('body').append(overlay);
     deps.bindTutorialButtonsIn(panel);
 
+    dicePanelAttrButtons.init();
     // 初始化时执行一次
     dicePanelAttrButtons.updateRuleMode();
 
