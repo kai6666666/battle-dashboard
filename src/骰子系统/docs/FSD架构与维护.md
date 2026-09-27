@@ -140,3 +140,10 @@ export function createXxx(deps: any) {
 - 事故：x2-e 把「面板打开时执行的初始化块」一并搬进了子工厂，导致面板打开瞬间在 `panel` 赋值前调用 `buildCharButtons()` → TDZ 崩溃（面板无法打开）。
 - 修复：初始化块收进子工厂 `init()` 方法；面板在对应时机显式调用 `dicePanelAttrButtons.init()`。
 - 新护栏：`@child-factory` 模块禁止在工厂体一级直接写可执行语句（guardrails 新增「子工厂顶层语句扫描」）。
+
+## x2-f（v7.1.0-x2f）
+
+- `show-dice-panel.ts`：拆出「效果确认簇」→ `features/dice/panel/dice-panel-effect-confirm.ts`（约 330 行）；
+  - 包含：确认弹窗 / 条件预览 / 输入计算 / 确认流程（`showEffectConfirmDialog` / `resolveEffectConditionPreview` / `computeEffectsFromInputs` / `handleEffectConfirmation`）；
+  - 桥接：`getPanel` + `getEffectRuns`（延迟取 effect-runs 子工厂实例）；
+  - 面板 2,442 → 2,129 行（-313）。
