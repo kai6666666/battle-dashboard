@@ -167,3 +167,10 @@ export function createXxx(deps: any) {
 - **事故与护栏升级**：提取时误把「尾随事件绑定块」（attr-name/快捷预设/返回常规/动作按钮等监听）一并纳入子工厂，导致工厂创建即执行、面板打开抛 `panel is not defined`；
   - 面板打开冒烟（调试注入）精确定位；修正：尾块回迁主文件（3 处调用改走实例）；
   - 护栏 ⑧ 正则扩展：新增 `panel\. / localStorage\. / window\. / console\.` 顶层语句前缀检测（历史漏网：裸 `panel.xxx` 语句）。
+
+## x2-j（v7.1.0-x2j）
+
+- `show-dice-panel.ts`：拆出「高级检定主流程」`performAdvancedCheck`（768 行）→ `features/dice/panel/dice-panel-advanced-check.ts`（约 790 行）；
+  - 覆盖：DC 解析 / 派生变量 / dicePatches / outcomes / 孤注一掷 / 效果入队；
+  - 桥接：`getPanel` / `getCurrentAdvancedPreset` + 6 个子工厂实例（effectRuns / effectConfirm / expr / attrButtons / resourceBurner / effectInputs）；
+  - 面板 1,667 → 903 行（x2 累计 -3,206，≈-78%）。
