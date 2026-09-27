@@ -120,3 +120,10 @@ export function createXxx(deps: any) {
   - 包含：快照过滤/可见性/渲染（`getPresetQuickActions` / `buildQuickActionContext` / `isQuickActionVisible` / `renderPresetQuickActions`）+ 三种执行器（`activatePresetQuickAction` / `executeAttrShortcutQuickAction` / `executePresetQuickAction`）；
   - 桥接：`getPanel()` / `getCurrentAdvancedPreset()` / `applyAdvancedPreset()` ctx；
   - 面板 3,251 → 3,051 行（-200）。
+
+## x2-d（v7.1.0-x2d）
+
+- `show-dice-panel.ts`：拆出「资源燃烧簇」→ `features/dice/panel/dice-panel-resource-burner.ts`（336 行）；
+  - 包含：结果区燃烧按钮渲染 / 点击入口 / 输入弹窗 / 生效与二次效果（`renderResourceBurnerButtons` / `handleResourceBurnerClick` / `showBurnerInputDialog` / `applyBurnerEffect` / `checkSecondaryEffects`）；
+  - 桥接：`getPanel()` / `buildAttrButtons` / `matchesCheckSelector` / `parseModifier` / `performAdvancedCheck` 共 5 个 ctx 注入；
+  - 面板 3,050 → 2,732 行（-318）。
