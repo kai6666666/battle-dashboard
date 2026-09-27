@@ -221,3 +221,9 @@ export function createXxx(deps: any) {
   - 聚合器 8 行，按序拼接；**逐字节等价校验通过**（recon == orig: True）；
   - @ts-nocheck 总数 1306 → 1305（新分片无需豁免）。
 - 说明：`bind-events.ts` 为单函数 1,700 行、仅尾 28 行 IIFE 可安全切出，切分收益低；本批改拆 styles 大分片，bind-events 留待 x4 与 index 收尾时统一评估。
+
+## x3-f（v7.1.0-x3f）
+
+- `shared/styles/part-04-validation.ts`（2,366 行 / 94KB）拆为 3 个子分片 + 聚合器：
+  - `part-04a-settings.ts`（661 行）/ `part-04b-attr-preset.ts`（602 行）/ `part-04c-audit-errors.ts`（1,109 行）；
+  - 聚合器 8 行；**逐字节等价校验通过**；@ts-nocheck 1305 → 1304。
