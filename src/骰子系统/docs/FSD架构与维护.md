@@ -311,3 +311,10 @@ export function createXxx(deps: any) {
   - index 12,344 → 11,790 行；
   - 排除：依赖 index 运行时常量的 3 块（RENDER_PRESET_FORMAT / DICE_CONFIG_BACKUP_FORMAT / INVENTORY_*_OPTIONS）；
   - 发现经验：多行 `import type {` 续行会被类型扫描误判为本地类型声明（x4-b 侦察时识别并规避）。
+
+## x4-c（v7.1.0-x4c）
+
+- x4 首个 **wiring 域拆分**：CRUD/表格读写装配簇（238 行，35 个装配实例）→ `wiring/crud-wiring.ts`（工厂 `createCrudWiring(ctx)`，返回 35 项）；
+  - index 11,790 → 11,552 行；
+  - 事件：① import 映射需全量解析（首次只扫前300行导致30+工厂漏 import，smoke 抓到）；② 前向引用（`buildCrudColumnAliasMap` 定义在后面）在快照式 ctx 下会 TDZ → 改为惰性转发 `(...a)=>name(...a)`；
+  - 该模式沉淀为 wiring 拆分规范：ctx 快照 + 前向/可变引用惰性转发。
