@@ -279,3 +279,10 @@ export function createXxx(deps: any) {
 - `features/settings/show-settings-modal.ts`（1,963 行）拆出 `build-settings-dialog-html.ts`：设置弹窗 652 行巨型模板串外置（逐字节等价），ctx 注入 14 个依赖；
   - 主文件 1,963 → 1,313 行；新文件不带 @ts-nocheck（TS 受检）；
   - 新增「代理 ctx 缺名冒烟」（任何遗漏外部引用直接 ReferenceError）。
+
+## x3-o（v7.1.0-x3o）
+
+- `features/dice/show-contest-panel.ts`（2,302 行）拆出 `features/dice/contest/apply-advanced-preset.ts`（604 行）：「应用进阶预设」整段（~600 行，含嵌套 helpers）经 ctx 注入提取；
+  - `currentContestAdvancedPreset` 写回改为 `ctx.setCurrentContestAdvancedPreset`（2 处）；主文件 2,302 → 1,711 行；
+  - 首版边界事故：span 末行为注释而非 `};` → 用「尾部回扫收尾行」修正；参数名 `presetId` 需原样保留；
+  - 新文件无 @ts-nocheck 且构建通过（TS 全检）。
