@@ -199,3 +199,9 @@ export function createXxx(deps: any) {
   - `features/ui/apply-config-styles.ts`：保存配置/备份恢复统一入口注入（设置面板主题/字体变更即生效）；
   - `database-ui-override.ts` 增加守卫：`native`/未知主题 → `clearDatabaseStyles()` 且不接管（避免错误套用 aurora）。
 - 产物：stable.js 增大 ~92KB（2,733,070 → 2,825,249 B），DB CSS 首次进入发布包；index.ts 保持 658,998 B 不增长（护栏通过）。
+
+## x3-c（v7.1.0-x3c）
+
+- `show-relationship-graph.ts`（2,063 行）拆出「数据模型构建」→ `features/table/relationship-graph/build-relation-graph-model.ts`（478 行）；
+  - 输入：deps/headers/rows/nameIdx/relationIdx/options/npcTableKey；输出：nodes/edges/rawData/resolvedPlayerName；
+  - 主文件 2,063 → 1,623 行；纯构建函数（无 @child-factory 标记）。
