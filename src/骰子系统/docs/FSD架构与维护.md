@@ -205,3 +205,11 @@ export function createXxx(deps: any) {
 - `show-relationship-graph.ts`（2,063 行）拆出「数据模型构建」→ `features/table/relationship-graph/build-relation-graph-model.ts`（478 行）；
   - 输入：deps/headers/rows/nameIdx/relationIdx/options/npcTableKey；输出：nodes/edges/rawData/resolvedPlayerName；
   - 主文件 2,063 → 1,623 行；纯构建函数（无 @child-factory 标记）。
+
+## x3-d（v7.1.0-x3d）
+
+- `table-template-requirements.ts`（1,728 行）拆层：
+  - `types.ts`（113 行）：公共类型 + 格式常量；
+  - `utils.ts`（278 行）：基础工具 + DDL 工具（48 个常量/函数，全部 export）；
+  - 主文件 1,728 → **1,362 行**（保留导出面 & 逻辑，无 @ts-nocheck）。
+- 过程修复：`export *` 不产生本地绑定 → 主文件补常量 import；`...spread` 调用被首个扫描漏掉 → 补 `getDdlSeparatorProblems`。
