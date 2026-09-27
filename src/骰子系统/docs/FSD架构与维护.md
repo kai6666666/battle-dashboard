@@ -181,3 +181,13 @@ export function createXxx(deps: any) {
   - 修复既有隐患：`calculateDiceExpectedValue` 在 `dice-engine.ts` 未导出却被跨模块引用（基线 no-undef 清单项）→ 补 `export` 并由 roll 模块导入；
   - 排除误桥接：`isDND` 为 `performDiceRoll` 内部局部量（与外层同名遮蔽），不做 ctx 注入。
 - 面板 903 → **417 行**（x2 累计 4,109 → 417，**-3,692 ≈ -90%**）；剩余为：状态定义 / 面板 HTML / 事件接线 / `closePanel` 骨架。
+
+## x3-a（v7.1.0-x3a）
+
+- `database-ui-override.ts`（2,534 行）拆解：
+  - `features/database-ui/types.ts`（公共类型，含 `DatabaseCssParams`）；
+  - `features/database-ui/themes.ts`（`DATABASE_THEME_MAP` 15 主题 + 样式 ID）；
+  - `features/database-ui/css/part-01..05`（核心/布局/表格/面板/可视化，共约 2,100 行，逐字节等价校验通过）；
+  - 主文件 2,534 → **174 行**（装配 + toast mute）。
+- **重要发现**：`database-ui-override.ts` 已无任何入口引用（孤儿文件、不进产物；index.ts 曾在 v3.61/v5.32 引用，后移除）。本次拆解为零风险结构整理；其去留（重新接线 / x7 清理）待定。
+  - 校验：tsc 直编模块+片段零错误（esbuild 不可用，改用 tsc noEmit）。
