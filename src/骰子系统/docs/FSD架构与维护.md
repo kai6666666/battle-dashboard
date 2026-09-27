@@ -127,3 +127,10 @@ export function createXxx(deps: any) {
   - 包含：结果区燃烧按钮渲染 / 点击入口 / 输入弹窗 / 生效与二次效果（`renderResourceBurnerButtons` / `handleResourceBurnerClick` / `showBurnerInputDialog` / `applyBurnerEffect` / `checkSecondaryEffects`）；
   - 桥接：`getPanel()` / `buildAttrButtons` / `matchesCheckSelector` / `parseModifier` / `performAdvancedCheck` 共 5 个 ctx 注入；
   - 面板 3,050 → 2,732 行（-318）。
+
+## x2-e（v7.1.0-x2e）
+
+- `show-dice-panel.ts`：拆出「角色与属性按钮簇」→ `features/dice/panel/dice-panel-attr-buttons.ts`（约 310 行）；
+  - 包含：角色快捷按钮 / 属性快捷按钮 / 目标值随骰型转换 / 规则模式切换（`buildCharButtons` / `buildAttrButtons` / `convertTargetForDice` / `updateRuleMode`）；
+  - 桥接：`getPanel` / `getDiceCharacterList` / `getDiceAttrList` / `getFromMvu` / `getMvuParsedInfo` / `getTargetValue` / `getCurrentAdvancedPreset` 共 7 个 ctx；
+  - 面板 2,731 → 2,442 行（-289）。
