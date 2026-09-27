@@ -286,3 +286,10 @@ export function createXxx(deps: any) {
   - `currentContestAdvancedPreset` 写回改为 `ctx.setCurrentContestAdvancedPreset`（2 处）；主文件 2,302 → 1,711 行；
   - 首版边界事故：span 末行为注释而非 `};` → 用「尾部回扫收尾行」修正；参数名 `presetId` 需原样保留；
   - 新文件无 @ts-nocheck 且构建通过（TS 全检）。
+
+## x3-p（v7.1.0-x3p）
+
+- `features/dice/show-contest-panel.ts` 二阶段：`performContestRoll`（731 行对抗投骰主流程）拆出 `contest/perform-contest-roll.ts`；
+  - ctx 注入 + 3 处最小改写（跨帧节流时间戳 get/set、预设 get）；主文件 1,711 → 986 行；
+  - 事故：漏 import `showActionableErrorToast`（no-undef 扫描抓出）→ 已修复；
+  - 分析经验：`var` 声明与解构声明会被声明扫描漏掉造成自由变量误报；属性键（`attrName:`）也会造成误报。
