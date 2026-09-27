@@ -325,3 +325,9 @@ export function createXxx(deps: any) {
   - index 11,552 → 11,212 行；
   - 事故1：前向「上游使用」（`updateTemplateForActivePreset` 在其定义之前已被引用）漏出返回值 → 重算「模块外全量使用」补齐；
   - 事故2：`.json?raw` 默认导入被生成器写成具名导入 → 运行时 raw 为空（JSON.parse undefined），smoke 抓出并修复；生成器已补默认导入映射。
+
+## x4-e（v7.1.0-x4e）
+
+- wiring 第三簇：骰子配置备份/角色档案装配（285 行；defs 49 / aft 20 / ext 23）→ `wiring/dice-profile-backup-wiring.ts`；
+  - index 11,212 → 10,930 行；
+  - 事故与改进：① 脚本被重复执行造成错位拼接（含语法错误）→ 改为单次执行并在生成前 `git checkout` 复位；② 簇边界必须用「构造闭合」算法而非 def 间隔（否则切在 `createX({` 中间）；③ `escapeHtml` 定义接在 `});` 同行，属于扫描盲区 → 全库扫描「行中定义」并补入 ctx。
