@@ -73,7 +73,12 @@ export function injectDatabaseStyles(themeId: string, fontFamily?: string, optio
     );
     if (!targets.length) return;
 
-    const t = DATABASE_THEME_MAP[themeId] || DATABASE_THEME_MAP.aurora;
+    const t = DATABASE_THEME_MAP[themeId];
+    if (!t) {
+      // 'native' 或未知主题：不接管数据库 UI，保持原生外观
+      clearDatabaseStyles();
+      return;
+    }
     const darkThemeIds = new Set(['cyber', 'terminal', 'aurora', 'chouten', 'classicpackaging']);
     const isDarkTheme = darkThemeIds.has(themeId);
     const stepperSpinFilter = isDarkTheme ? 'invert(1) brightness(1.05)' : 'none';

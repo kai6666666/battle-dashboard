@@ -4,6 +4,7 @@
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DICE_ROOT_SELECTOR } from '../../shared/constants';
+import { injectDatabaseStyles } from '../../database-ui-override';
 export function createApplyConfigStyles(deps: any) {
   const applyConfigStyles = config => {
     const targetDocument = deps.getTavernHostDocument();
@@ -76,6 +77,9 @@ export function createApplyConfigStyles(deps: any) {
         node.style.setProperty(key, String(value));
       });
     });
+
+    // 数据库UI主题同步（native/未知主题内部自动清除）
+    injectDatabaseStyles(config.theme, deps.FONTS.find(f => f.id === config.fontFamily)?.val);
 
     return fontVal;
   };

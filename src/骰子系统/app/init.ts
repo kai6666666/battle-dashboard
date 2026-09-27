@@ -6,6 +6,8 @@
 import { ConsoleCaptureManager } from '../features/console/console-capture-manager';
 import { DICE_ROOT_SELECTOR } from '../shared/constants';
 import { setDatabaseToastMute } from '../shared/database-toast-mute';
+import { injectDatabaseStyles } from '../database-ui-override';
+import { createFontsList } from '../features/ui/fonts-list';
 export function createInit(deps: any) {
   const init = () => {
     if (deps.getIsInitialized()) return;
@@ -67,6 +69,7 @@ export function createInit(deps: any) {
     deps.bindAcuDiceGachaRegexActions();
     const initCfg = deps.getConfig();
     setDatabaseToastMute(initCfg.muteDatabaseToasts === true);
+    injectDatabaseStyles(initCfg.theme, createFontsList({}).find((f: any) => f.id === initCfg.fontFamily)?.val);
     // 2. 保留原有的 SillyTavern 事件监听（使用具名函数防止重复注册）
     if (window.SillyTavern && window.SillyTavern.eventSource) {
       console.info('[DICE]注册 SillyTavern 事件监听器...');

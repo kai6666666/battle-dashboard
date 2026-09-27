@@ -191,3 +191,11 @@ export function createXxx(deps: any) {
   - 主文件 2,534 → **174 行**（装配 + toast mute）。
 - **重要发现**：`database-ui-override.ts` 已无任何入口引用（孤儿文件、不进产物；index.ts 曾在 v3.61/v5.32 引用，后移除）。本次拆解为零风险结构整理；其去留（重新接线 / x7 清理）待定。
   - 校验：tsc 直编模块+片段零错误（esbuild 不可用，改用 tsc noEmit）。
+
+## x3-b（v7.1.0-x3b）· database-ui 重新接线
+
+- 恢复「数据库 UI 主题同步」（孤儿文件重新接入）：
+  - `app/init.ts`：启动时 `injectDatabaseStyles(theme, fontVal)`（用 `createFontsList({})` 计算字体栈，不触碰冻结的 index.ts）；
+  - `features/ui/apply-config-styles.ts`：保存配置/备份恢复统一入口注入（设置面板主题/字体变更即生效）；
+  - `database-ui-override.ts` 增加守卫：`native`/未知主题 → `clearDatabaseStyles()` 且不接管（避免错误套用 aurora）。
+- 产物：stable.js 增大 ~92KB（2,733,070 → 2,825,249 B），DB CSS 首次进入发布包；index.ts 保持 658,998 B 不增长（护栏通过）。
