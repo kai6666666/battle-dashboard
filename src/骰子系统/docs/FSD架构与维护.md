@@ -274,3 +274,8 @@ export function createXxx(deps: any) {
 - 修复：显示名唯一命中直接接受；仅同名多候选时才用 SQL 表名优选；空模板仍正确报缺失（行为保留）；
 - 仿真：重排键 / 无 ddl / SQL 名不同 / 组合变体 全部 HIT；
     
+## x3-n（v7.1.0-x3n）
+
+- `features/settings/show-settings-modal.ts`（1,963 行）拆出 `build-settings-dialog-html.ts`：设置弹窗 652 行巨型模板串外置（逐字节等价），ctx 注入 14 个依赖；
+  - 主文件 1,963 → 1,313 行；新文件不带 @ts-nocheck（TS 受检）；
+  - 新增「代理 ctx 缺名冒烟」（任何遗漏外部引用直接 ReferenceError）。
