@@ -159,3 +159,11 @@ export function createXxx(deps: any) {
 - `show-dice-panel.ts`：拆出「效果输入/字段配置簇」→ `features/dice/panel/dice-panel-effect-inputs.ts`（128 行）；
   - 包含：`applyFieldConfig` / `matchesCheckSelector` / `renderEffectInputs`；
   - 面板 2,090 → 1,977 行（-113）。
+
+## x2-i（v7.1.0-x2i）
+
+- `show-dice-panel.ts`：拆出「预设应用中枢」`applyAdvancedPreset` → `features/dice/panel/dice-panel-apply-preset.ts`（含行布局恢复辅助函数，约 330 行）；
+  - 桥接：`getPanel` / `getCurrentAdvancedPreset` / `setCurrentAdvancedPreset` / `getLastVisiblePresetId` / `setLastVisiblePresetId` + 3 个子工厂实例（effectInputs / attrButtons / quickActions）。
+- **事故与护栏升级**：提取时误把「尾随事件绑定块」（attr-name/快捷预设/返回常规/动作按钮等监听）一并纳入子工厂，导致工厂创建即执行、面板打开抛 `panel is not defined`；
+  - 面板打开冒烟（调试注入）精确定位；修正：尾块回迁主文件（3 处调用改走实例）；
+  - 护栏 ⑧ 正则扩展：新增 `panel\. / localStorage\. / window\. / console\.` 顶层语句前缀检测（历史漏网：裸 `panel.xxx` 语句）。

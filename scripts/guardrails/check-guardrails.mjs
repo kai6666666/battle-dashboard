@@ -48,7 +48,7 @@ for (const f of files) {
 }
 
 // ②-2 子工厂顶层语句扫描（@child-factory 文件在工厂体一级不得直接执行语句）
-const CHILD_STMT = /^    (deps\.|ctx\.|initCustomDropdown\(|addClearButton\(|getPanel\(|\$\(|build[A-Za-z_$]*\(|update[A-Za-z_$]*\()/;
+const CHILD_STMT = /^    (deps\.|ctx\.|panel\.|localStorage\.|window\.|console\.|initCustomDropdown\(|addClearButton\(|getPanel\(|\$\(|build[A-Za-z_$]*\(|update[A-Za-z_$]*\()/;
 for (const f of files) {
   const content = fs.readFileSync(f, 'utf8');
   if (!content.includes('@child-factory')) continue;
