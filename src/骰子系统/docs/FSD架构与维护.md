@@ -174,3 +174,10 @@ export function createXxx(deps: any) {
   - 覆盖：DC 解析 / 派生变量 / dicePatches / outcomes / 孤注一掷 / 效果入队；
   - 桥接：`getPanel` / `getCurrentAdvancedPreset` + 6 个子工厂实例（effectRuns / effectConfirm / expr / attrButtons / resourceBurner / effectInputs）；
   - 面板 1,667 → 903 行（x2 累计 -3,206，≈-78%）。
+
+## x2-k（v7.1.0-x2k）· x2 收口
+
+- `show-dice-panel.ts`：拆出「投骰双流程」`performCustomRoll` + `performDiceRoll` → `features/dice/panel/dice-panel-roll.ts`（约 510 行，含面板打开级节流状态 `lastDiceRollAt`）；
+  - 修复既有隐患：`calculateDiceExpectedValue` 在 `dice-engine.ts` 未导出却被跨模块引用（基线 no-undef 清单项）→ 补 `export` 并由 roll 模块导入；
+  - 排除误桥接：`isDND` 为 `performDiceRoll` 内部局部量（与外层同名遮蔽），不做 ctx 注入。
+- 面板 903 → **417 行**（x2 累计 4,109 → 417，**-3,692 ≈ -90%**）；剩余为：状态定义 / 面板 HTML / 事件接线 / `closePanel` 骨架。

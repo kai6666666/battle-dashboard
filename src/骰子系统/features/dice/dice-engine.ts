@@ -252,7 +252,7 @@ export const rollDiceExpression = (expr: string): RollResult => {
   };
 
   // 计算骰子表达式的期望值（用于默认目标值）
-  const calculateDiceExpectedValue = (diceExpr: string): number => {
+  export const calculateDiceExpectedValue = (diceExpr: string): number => {
     const formula = String(diceExpr).replace(/\s+/g, '');
     if (!formula) return Number.NaN;
 
