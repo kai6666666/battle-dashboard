@@ -238,3 +238,9 @@ export function createXxx(deps: any) {
 
 - `shared/styles/part-05-validation.ts`（2,537 行 / 86KB）拆为 4 个子分片 + 聚合器：
   - a 表格管理(218) / b 验证+头像裁剪(684) / c 收藏夹系列(988) / d 导入确认+尾部(657)；逐字节等价；@ts-nocheck 1303 → 1302。
+
+## x3-i（v7.1.0-x3i）
+
+- `shared/styles/part-01-theme.ts`（2,362 行 / 145KB）拆为 4 个子分片 + 聚合器：
+  - a 基础+头像(500) / b 骰子面板(624) / c 主题变量上(560) / d 主题变量下(688)；逐字节等价；
+  - 拆分后 part-01 退出 >100KB 名单（5 → 4）；@ts-nocheck 1302 → 1301。

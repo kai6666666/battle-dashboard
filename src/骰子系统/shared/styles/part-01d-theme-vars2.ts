@@ -1,0 +1,688 @@
+/**
+ * part-01d-theme-vars2.ts — part-01 子分片（从 part-01-theme 拆分，按序拼接内容不变）。
+ */
+export const STYLES_PART_01D_THEME_VARS2 = `    /* [新增] 移植功能样式 */
+/* --- 1. 外层容器：防止误触边缘 --- */
+.acu-height-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    cursor: ns-resize;
+    padding: 0;
+    border-radius: 6px;
+    color: var(--acu-text-sub);
+    border: 1px solid transparent;
+    transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard), border-color var(--acu-motion-fast) var(--acu-ease-standard);
+    /* 关键属性：禁止在此区域触发浏览器默认手势 */
+    touch-action: none;
+}
+
+/* 交互反馈 */
+.acu-height-control:hover, .acu-height-control.active {
+    color: var(--acu-accent);
+    background: var(--acu-table-hover);
+    border-color: var(--acu-border);
+}
+
+/* --- 2. [加保险] 内部图标：这是事件绑定的主体，必须禁止触摸 --- */
+.acu-height-drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: ns-resize;
+    /* 双重保险：确保直接按在图标上也不会触发滚动 */
+    touch-action: none;
+}
+
+            /* 视图切换样式 */
+            .acu-view-btn { background: transparent !important; border: 1px solid transparent; color: var(--acu-text-main) !important; cursor: pointer; padding: 5px; margin-right: 2px; font-size: 14px; opacity: 0.7; border-radius: 6px; transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard), opacity var(--acu-motion-fast) var(--acu-ease-standard), border-color var(--acu-motion-fast) var(--acu-ease-standard); }
+            .acu-view-btn:hover { opacity: 1; color: var(--acu-accent) !important; background: var(--acu-table-hover) !important; border-color: var(--acu-border); }
+            .acu-view-btn.acu-reverse-btn.active, .acu-reverse-btn[data-reversed="true"] { color: var(--acu-accent) !important; opacity: 1; }
+            /* Grid 视图 (双列) */
+            .acu-wrapper.acu-dice-ui-root .acu-card-body.view-grid,
+            .acu-preview-overlay .acu-card-body.view-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
+            /* 修复版：强制 Grid 模式使用 Flex 布局并允许高度自适应 */
+.acu-wrapper.acu-dice-ui-root .acu-card-body.view-grid .acu-card-row,
+.acu-preview-overlay .acu-card-body.view-grid .acu-card-row { display: flex; height: auto !important; min-height: fit-content; border: 1px solid var(--acu-border); border-radius: 6px; padding: 5px 7px; flex-direction: column !important; align-items: flex-start !important; background: rgba(0,0,0,0.02); box-sizing: border-box; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,
+            .acu-preview-overlay .acu-card-body.view-grid .acu-card-row.acu-grid-span-full { grid-column: 1 / -1; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-body.view-grid .acu-card-label,
+            .acu-preview-overlay .acu-card-body.view-grid .acu-card-label { width: 100% !important; font-size: 0.85em; opacity: 0.8; margin-bottom: 2px; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-body.view-grid .acu-card-value,
+            .acu-preview-overlay .acu-card-body.view-grid .acu-card-value { width: 100% !important; }
+
+            /* List 视图 (单列 - 原版增强) */
+            .acu-wrapper.acu-dice-ui-root button.acu-nav-btn.active,
+            .acu-nav-btn.active { background: var(--acu-btn-active-bg); color: var(--acu-btn-active-text); box-shadow: 0 1px 4px var(--acu-shadow); outline: none; border-color: var(--acu-btn-active-bg); }
+            .acu-wrapper.acu-dice-ui-root button.acu-nav-btn.active:hover,
+            .acu-nav-btn.active:hover { background: var(--acu-btn-active-bg); color: var(--acu-btn-active-text); transform: none; }
+            .acu-wrapper.acu-dice-ui-root button.acu-nav-btn.active:focus,
+            .acu-wrapper.acu-dice-ui-root button.acu-nav-btn.active:focus-visible,
+            .acu-nav-btn.active:focus, .acu-nav-btn.active:focus-visible { outline: none; box-shadow: var(--acu-focus-ring), 0 1px 4px var(--acu-shadow) !important; }
+            .acu-nav-btn.has-validation-errors { border-color: rgba(231, 76, 60, 0.5); }
+            .acu-nav-btn .acu-nav-warning-icon { color: var(--acu-error-text, #e74c3c); font-size: 10px; margin-left: 2px; }
+            .acu-action-btn { flex: 1; height: var(--acu-nav-button-size, 32px); font-size: var(--acu-nav-icon-size, 14px); display: flex; align-items: center; justify-content: center; background: var(--acu-btn-bg); border-radius: 8px; color: var(--acu-text-sub); cursor: pointer; border: 1px solid var(--acu-border); transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard), border-color var(--acu-motion-fast) var(--acu-ease-standard), box-shadow var(--acu-motion-fast) var(--acu-ease-standard), transform var(--acu-motion-fast) var(--acu-ease-standard); margin: 0; }
+            .acu-action-btn:hover { background: var(--acu-btn-hover); color: var(--acu-text-main); border-color: var(--acu-accent); transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            .acu-action-btn:focus, .acu-action-btn:focus-visible { outline: none; box-shadow: var(--acu-focus-ring) !important; }
+            #acu-btn-save-global { color: var(--acu-btn-active-bg); } #acu-btn-save-global:hover { background: var(--acu-btn-active-bg); color: var(--acu-btn-active-text); }
+
+            .acu-data-display { position: absolute; bottom: calc(100% + 10px); left: 0; right: 0; max-height: 80vh; height: auto; background: var(--acu-bg-panel); border: 1px solid var(--acu-border); border-radius: 8px; box-shadow: 0 8px 30px var(--acu-shadow); display: flex; flex-direction: column; z-index: 31002 !important; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity var(--acu-motion-normal) var(--acu-ease-standard), transform var(--acu-motion-normal) var(--acu-ease-standard), visibility 0s linear var(--acu-motion-normal); pointer-events: none; }
+            .acu-data-display.visible { opacity: 1; visibility: visible; transform: translateY(0); transition: opacity var(--acu-motion-normal) var(--acu-ease-standard), transform var(--acu-motion-normal) var(--acu-ease-standard), visibility 0s linear 0s; pointer-events: auto; }
+            @keyframes popUp { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+            @keyframes highlightFlash { 0%, 100% { box-shadow: none; } 50% { box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.6); } }
+            .acu-highlight-flash { animation: highlightFlash 0.5s ease-in-out 3; }
+
+            .acu-panel-header { flex: 0 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; background: var(--acu-table-head); border-bottom: 1px solid var(--acu-border); border-radius: 8px 8px 0 0; }
+            /* 核心修改：增加了 flex: 1 和 min-width: 0，强制标题在空间不足时自动变短显示省略号 */
+/* --- 新的标题布局：纵向排列 --- */
+.acu-panel-title {
+    display: flex;
+    flex-direction: column; /* 垂直堆叠 */
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1; /* 占据剩余空间 */
+    min-width: 0; /* 允许压缩 */
+    margin-right: 8px;
+    overflow: hidden;
+}
+
+/* 第一行：标题主体 (加粗，稍大) */
+.acu-title-main {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    font-size: 13px; /* 你要求的：字体变小一点，但保持加粗 */
+    font-weight: bold;
+    color: var(--acu-text-main);
+    line-height: 1.2;
+}
+
+/* 标题文字本身 (溢出省略) */
+.acu-title-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 第二行：页码信息 (灰色，更小) */
+.acu-title-sub {
+    font-size: 10px;
+    color: var(--acu-text-sub);
+    font-weight: normal;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    line-height: 1.2;
+    margin-top: 1px;
+}
+            /* 增加了 flex-shrink: 0; 防止被标题挤压 */
+/* 核心修改：flex-shrink: 0 确保这一块区域永远不会被压缩 */
+.acu-header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+            .acu-search-wrapper { position: relative; display: flex; align-items: center; }
+            .acu-wrapper.acu-dice-ui-root input.acu-search-input { background: var(--acu-btn-bg) !important; border: 1px solid var(--acu-border) !important; color: var(--acu-text-main) !important; padding: 4px 8px 4px 24px; border-radius: 12px; font-size: 12px; width: 120px; transition: border-color var(--acu-motion-fast) var(--acu-ease-standard), box-shadow var(--acu-motion-fast) var(--acu-ease-standard); }
+            .acu-wrapper.acu-dice-ui-root input.acu-search-input::placeholder { color: var(--acu-text-sub) !important; opacity: 0.7; }
+            .acu-wrapper.acu-dice-ui-root input.acu-search-input:focus { width: 160px; outline: none !important; border-color: var(--acu-accent) !important; box-shadow: none !important; }
+            .acu-search-input::placeholder { color: var(--acu-text-sub) ; opacity: 0.7; }
+            .acu-search-icon { position: absolute; left: 8px; font-size: 10px; color: var(--acu-text-sub); pointer-events: none; }
+            .acu-empty-state { min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--acu-text-sub); text-align: center; padding: 24px; }
+            .acu-empty-state i { font-size: 20px; opacity: 0.7; }
+            .acu-empty-state span { font-size: 12px; }
+            /* 普通横向表格由卡片自己纵向滚动；手动高度模式才把面板高度传给卡片 */
+            .acu-wrapper.acu-dice-ui-root .acu-panel-content { flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; padding: 15px; background: transparent; scrollbar-width: thin; scrollbar-color: var(--acu-scrollbar-thumb) var(--acu-scrollbar-track); overscroll-behavior-x: contain; overscroll-behavior-y: contain; touch-action: pan-x pan-y; -webkit-overflow-scrolling: touch; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-grid { display: flex; flex-wrap: nowrap; gap: 12px; align-items: flex-start; }
+            .acu-wrapper.acu-dice-ui-root:not(.acu-layout-vertical) .acu-manual-mode .acu-panel-content > .acu-card-grid { height: 100%; min-height: 0; }
+            .acu-wrapper.acu-dice-ui-root:not(.acu-layout-vertical) .acu-manual-mode .acu-panel-content > .acu-card-grid > .acu-data-card { max-height: 100% !important; min-height: 0; overflow-y: auto; }
+            .acu-wrapper.acu-dice-ui-root.acu-layout-vertical .acu-panel-content { overflow-x: hidden !important; overflow-y: auto !important; overscroll-behavior: auto; touch-action: manipulation; min-height: 0; }
+            /* 竖向布局时恢复 auto 高度 */
+            .acu-wrapper.acu-dice-ui-root.acu-layout-vertical .acu-card-grid { flex-wrap: wrap !important; justify-content: center; padding-bottom: 20px; height: auto; }
+            .acu-wrapper.acu-dice-ui-root .acu-data-card, .acu-preview-overlay .acu-data-card { flex: 0 0 var(--acu-card-width, 260px); width: var(--acu-card-width, 260px); background: var(--acu-card-bg); border: 1px solid var(--acu-border); border-radius: 8px; height: auto; max-height: min(52vh, 520px, calc(100dvh - 140px)); overflow-y: auto; overscroll-behavior-y: contain; touch-action: pan-x pan-y; -webkit-overflow-scrolling: touch; transition: border-color var(--acu-motion-fast) var(--acu-ease-standard), box-shadow var(--acu-motion-fast) var(--acu-ease-standard), transform var(--acu-motion-fast) var(--acu-ease-standard); display: flex; flex-direction: column; position: relative; }
+            .acu-wrapper.acu-dice-ui-root .acu-data-card:hover,
+            .acu-preview-overlay .acu-data-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px var(--acu-shadow); border-color: var(--acu-accent); }
+            .acu-wrapper.acu-dice-ui-root .acu-data-card.pending-deletion,
+            .acu-preview-overlay .acu-data-card.pending-deletion { opacity: 0.6; border: 1px dashed var(--acu-error-text, #e74c3c); }
+            .acu-wrapper.acu-dice-ui-root .acu-data-card.pending-deletion::after,
+            .acu-preview-overlay .acu-data-card.pending-deletion::after { content: "待删除"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); color: var(--acu-error-text, #e74c3c); font-size: 24px; font-weight: bold; border: 2px solid var(--acu-error-text, #e74c3c); padding: 5px 10px; border-radius: 8px; opacity: 0.8; pointer-events: none; }
+            .acu-wrapper.acu-dice-ui-root .acu-data-card.acu-card-locked,
+            .acu-preview-overlay .acu-data-card.acu-card-locked { border: 2px solid var(--acu-accent); box-shadow: 0 0 8px rgba(var(--acu-accent-rgb, 59, 130, 246), 0.3); position: relative; }
+            .acu-wrapper.acu-dice-ui-root .acu-data-card.acu-card-locked::before,
+            .acu-preview-overlay .acu-data-card.acu-card-locked::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(var(--acu-accent-rgb, 59, 130, 246), 0.05) 0%, transparent 50%); pointer-events: none; z-index: 0; border-radius: 8px; }
+            .acu-row-lock-badge { color: var(--acu-accent); font-size: 14px; opacity: 0.9; margin-left: 4px; flex-shrink: 0; }
+            @keyframes pulse-highlight { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
+            .acu-highlight-manual { color: var(--acu-hl-manual) !important; background-color: var(--acu-hl-manual-bg) !important; border-radius: 4px; padding: 0 4px; font-weight: bold; animation: pulse-highlight 2s infinite; display: inline-block; }
+            .acu-highlight-diff { color: var(--acu-hl-diff) !important; background-color: var(--acu-hl-diff-bg) !important; border-radius: 4px; padding: 0 4px; font-weight: bold; animation: pulse-highlight 2s infinite; display: inline-block; }
+            .acu-editable-title.acu-highlight-manual, .acu-editable-title.acu-highlight-diff { width: auto; display: inline-block; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-header,
+            .acu-preview-overlay .acu-card-header { flex: 0 0 auto; padding: 8px 10px; background: var(--acu-table-head); border-bottom: 1px solid var(--acu-border); font-weight: bold; color: var(--acu-text-main); font-size: 14px; display: flex; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 8px; min-height: 40px; height: auto !important; position: relative; }
+            .acu-editable-title { flex: 1; width: auto !important; cursor: pointer; border-bottom: 1px dashed transparent; transition: border-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard); white-space: pre-wrap !important; overflow: visible !important; word-break: break-word !important; text-align: center; line-height: 1.3; margin: 0; }
+            .acu-editable-title:hover { border-bottom-color: var(--acu-accent); color: var(--acu-accent); }
+            .acu-card-index { position: static !important; transform: none !important; margin: 0; flex-shrink: 0; font-size: 11px; color: var(--acu-text-sub); font-weight: normal; background: var(--acu-badge-bg); padding: 2px 6px; border-radius: 4px; }
+            .acu-preview-overlay .acu-card-preview-close { margin-left: auto; width: 34px; height: 34px; min-width: 34px; min-height: 34px; flex: 0 0 34px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--acu-text-sub); font-size: 16px; line-height: 1; box-shadow: none; }
+            .acu-preview-overlay .acu-card-preview-close:hover,
+            .acu-preview-overlay .acu-card-preview-close:focus-visible { border-color: var(--acu-border); background: var(--acu-table-hover); color: var(--acu-accent); }
+            .acu-bookmark-icon { position: absolute; top: 8px; right: 8px; color: var(--acu-accent); cursor: pointer; font-size: 16px; opacity: 0.35; transition: opacity var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard); z-index: 10; }
+            .acu-bookmark-icon:hover { opacity: 0.7; }
+            .acu-bookmark-icon.bookmarked { color: var(--acu-accent); opacity: 1; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-body,
+            .acu-preview-overlay .acu-card-body { padding: 6px 12px; display: flex; flex-direction: column; gap: 0; font-size: var(--acu-font-size, 13px); flex: 1; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-row,
+            .acu-preview-overlay .acu-card-row { display: block; padding: 7px 0; border-bottom: 1px solid var(--acu-border); cursor: pointer; overflow: hidden; transition: background-color var(--acu-motion-fast) var(--acu-ease-standard); }
+            .acu-wrapper.acu-dice-ui-root .acu-card-row:last-child,
+            .acu-preview-overlay .acu-card-row:last-child { border-bottom: none; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-actions,
+            .acu-preview-overlay .acu-card-actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--acu-border); background: var(--acu-table-head); }
+            .acu-action-item { padding: 4px 10px; font-size: 11px; border: 1px solid var(--acu-border); border-radius: 5px; background: var(--acu-btn-bg); color: var(--acu-text-main); cursor: pointer; display: flex; align-items: center; gap: 4px; transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard), border-color var(--acu-motion-fast) var(--acu-ease-standard), transform var(--acu-motion-fast) var(--acu-ease-standard); white-space: nowrap; }
+            .acu-action-item:hover { background: var(--acu-btn-hover); border-color: var(--acu-accent); color: var(--acu-accent); transform: translateY(-1px); }
+            .acu-action-item:active { transform: translateY(0); }
+            .acu-action-item.check-type { border-style: dashed; }
+            .acu-action-item i { font-size: 10px; opacity: 0.7; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-row:hover,
+            .acu-preview-overlay .acu-card-row:hover { background: var(--acu-table-hover); }
+            .acu-wrapper.acu-dice-ui-root .acu-card-label,
+            .acu-preview-overlay .acu-card-label { float: left !important; clear: left; width: auto !important; margin-right: 8px !important; color: var(--acu-text-sub); font-size: 0.9em; line-height: 1.5; padding-top: 0; }
+            .acu-wrapper.acu-dice-ui-root .acu-hide-label .acu-card-label,
+            .acu-preview-overlay .acu-hide-label .acu-card-label { display: none; }
+            .acu-wrapper.acu-dice-ui-root .acu-hide-label .acu-card-value,
+            .acu-preview-overlay .acu-hide-label .acu-card-value { width: 100% !important; }
+            .acu-inline-dice-btn:hover { opacity: 1 !important; }
+            .acu-wrapper.acu-dice-ui-root .acu-card-value,
+            .acu-preview-overlay .acu-card-value { display: block; width: auto !important; margin: 0; text-align: left !important; word-break: break-all !important; white-space: pre-wrap !important; line-height: 1.5 !important; color: var(--acu-text-main); font-size: 1em; }
+            .acu-tag-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-top: 2px; }
+            .acu-multi-attr-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+            .acu-badge { display: inline-block; padding: 1px 8px; border-radius: 12px; font-size: 0.9em; font-weight: 500; line-height: 1.2; }
+            .acu-badge-green { background: var(--acu-success-bg); color: var(--acu-success-text); }
+            .acu-badge-neutral { background: var(--acu-badge-bg); color: var(--acu-text-main); border: 1px solid var(--acu-border); }
+            .acu-panel-footer { flex: 0 0 auto; padding: 8px; border-top: 1px solid var(--acu-border); background: var(--acu-table-head); display: flex; justify-content: center; align-items: center; gap: 5px; flex-wrap: wrap; }
+            .acu-page-btn { padding: 4px 10px; min-width: 32px; height: 28px; border-radius: 5px; border: 1px solid var(--acu-border); background: var(--acu-btn-bg); color: var(--acu-text-main); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard), border-color var(--acu-motion-fast) var(--acu-ease-standard), transform var(--acu-motion-fast) var(--acu-ease-standard); }
+            .acu-page-btn:hover:not(.disabled):not(.active) { background: var(--acu-btn-hover); transform: translateY(-1px); }
+            .acu-page-btn.active { background: var(--acu-accent); color: var(--acu-button-text-on-accent, #fff); border-color: var(--acu-accent); font-weight: bold; }
+            .acu-page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+            .acu-page-info { font-size: 12px; color: var(--acu-text-sub); margin: 0 10px; }
+            /* --- [重设计] 行动选项面板样式 - 叙事书页风 --- */
+            .acu-option-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                padding: 4px;
+                background: var(--acu-bg-nav);
+                border: 1px solid var(--acu-border);
+                border-radius: 6px;
+                margin-top: 0;
+                margin-bottom: 4px;
+                width: 100%;
+                box-sizing: border-box;
+                z-index: 31001;
+                animation: acuFadeIn 0.3s ease;
+                backdrop-filter: blur(5px);
+            }
+
+            .acu-embedded-options-container {
+                width: 100%;
+                max-width: 100%;
+                margin: 12px 0;
+                padding: 0;
+                clear: both;
+                box-sizing: border-box;
+                animation: acuFadeIn 0.3s ease;
+            }
+
+            .acu-opt-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--acu-text-main);
+                padding: 8px 0;
+                border-bottom: 1px solid var(--acu-border);
+                margin-bottom: 8px;
+                cursor: pointer;
+                user-select: none;
+                transition: color 0.2s;
+            }
+            .acu-opt-header:hover {
+                color: var(--acu-text-main);
+            }
+            .acu-opt-header > span {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                min-width: 0;
+            }
+            .acu-opt-chevron {
+                flex: 0 0 auto;
+                width: 8px;
+                height: 8px;
+                box-sizing: border-box;
+                border-right: 2px solid currentColor;
+                border-bottom: 2px solid currentColor;
+                transform: rotate(45deg);
+                transform-origin: center;
+                transition: transform 0.16s ease;
+            }
+            .acu-option-panel.collapsed .acu-opt-chevron {
+                transform: rotate(-45deg);
+            }
+
+            /* --- [重设计] 叙事条目风格按钮 --- */
+            .acu-opt-btn,
+            .acu-check-suggestion-btn {
+                background: var(--acu-opt-bright-bg, var(--acu-opt-bg, var(--acu-btn-bg)));
+                border: 1px solid transparent;
+                padding: 3px 6px;
+                border-radius: 4px;
+                cursor: pointer;
+                color: var(--acu-text-main);
+                font-size: var(--acu-opt-font-size, 12px) !important;
+                transition: all 0.15s;
+                font-weight: normal;
+                text-align: left;
+                white-space: pre-wrap;
+                word-break: break-word;
+                min-height: 22px;
+                line-height: 1.3;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                opacity: 1;
+            }
+            .acu-opt-btn:last-child,
+            .acu-check-suggestion-btn:last-child {
+                border-bottom: none;
+            }
+            .acu-opt-btn:hover,
+            .acu-check-suggestion-btn:hover {
+                background: var(--acu-table-hover);
+                color: var(--acu-accent);
+                border-color: var(--acu-accent);
+                transform: translateX(3px);
+            }
+            .acu-opt-btn:active,
+            .acu-check-suggestion-btn:active {
+                background: var(--acu-btn-active-bg);
+                color: var(--acu-btn-active-text);
+            }
+
+            .acu-wrapper.acu-dice-ui-root .acu-option-table-content {
+                padding: 12px;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-option-table-grid {
+                display: block !important;
+                width: 100%;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-option-table-panel {
+                margin: 0;
+                gap: 6px;
+                max-width: 100%;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-option-table-row {
+                width: 100%;
+                min-height: 32px;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 8px 10px;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-option-table-index {
+                flex: 0 0 auto;
+                color: var(--acu-accent);
+                font-weight: 700;
+                opacity: 0.9;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-option-table-text {
+                flex: 1 1 auto;
+                min-width: 0;
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-option-table-empty {
+                padding: 18px;
+                text-align: center;
+                color: var(--acu-text-sub);
+            }
+
+            /* --- [新增] 折叠态样式 --- */
+            .acu-option-panel.collapsed .acu-opt-btn,
+            .acu-option-panel.collapsed .acu-check-suggestion-btn {
+                display: none;
+            }
+            .acu-option-panel.collapsed .acu-opt-header {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+            @keyframes acuFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+            /* [新增] 骰子结果隐藏动画：消除闪烁 */
+            .acu-dice-result-revealing {
+                opacity: 0 !important;
+                transform: translateY(3px) !important;
+                transition: opacity 0.18s ease-out, transform 0.18s ease-out !important;
+            }
+            .acu-dice-result-revealed {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+            /* 移动端性能优化：减少动画时长 */
+            @media (max-width: 768px) {
+                .acu-dice-result-revealing {
+                    transition: opacity 0.15s ease-out, transform 0.15s ease-out !important;
+                }
+            }
+            /* 尊重用户的减弱动画偏好设置 */
+            @media (prefers-reduced-motion: reduce) {
+                .acu-dice-result-revealing {
+                    transition: none !important;
+                    opacity: 1 !important;
+                    transform: none !important;
+                }
+            }
+
+            .acu-menu-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: transparent; z-index: 31110 !important; }
+            /* 1. 菜单容器：背景色、边框、阴影全部跟随主题变量 */
+.acu-cell-menu {
+    position: fixed !important;
+    background: var(--acu-menu-bg) !important;
+    border: 1px solid var(--acu-border);
+    box-shadow: 0 6px 20px var(--acu-shadow) !important;
+    z-index: 31111 !important;
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 150px;
+    color: var(--acu-menu-text);
+    padding: 4px;
+}
+
+/* 2. 菜单项：文字颜色跟随主题 */
+.acu-cell-menu-item {
+    width: 100%;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--acu-menu-text);
+    font-weight: 500;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    text-align: left;
+    transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard), border-color var(--acu-motion-fast) var(--acu-ease-standard);
+}
+
+/* 3. 悬停效果：使用主题定义的通用悬停色 */
+.acu-cell-menu-item:hover,
+.acu-cell-menu-item:focus-visible {
+    background: var(--acu-table-hover);
+    border-color: var(--acu-border);
+    outline: none;
+}
+.acu-cell-menu-separator {
+    height: 1px;
+    margin: 4px 0;
+    background: var(--acu-border);
+}
+
+/* 4. 特殊按钮优化 */
+            .acu-cell-menu-item#act-delete,
+            .acu-cell-menu-item[data-action="delete"] { color: var(--acu-error-text, #e74c3c); }
+            .acu-cell-menu-item#act-delete:hover,
+            .acu-cell-menu-item[data-action="delete"]:hover { background: var(--acu-error-bg, rgba(231, 76, 60, 0.1)); } /* 红色半透明背景，任何主题都适配 */
+            .acu-cell-menu-item#act-close,
+            .acu-cell-menu-item[data-action="close"] { color: var(--acu-text-sub); }
+
+/* 5. 匹配状态标签 */
+            .acu-match-full { color: var(--acu-success-text, #27ae60); }
+            .acu-match-partial { color: var(--acu-warning-text, #f39c12); }
+
+/* 6. 布局编辑完成按钮 */
+            .acu-btn-finish-sort {
+                background: rgba(255,255,255,0.2);
+                color: var(--acu-button-text-on-accent, #fff);
+                border: 1px solid rgba(255,255,255,0.4);
+                padding: 4px 14px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                transition: all 0.2s;
+                white-space: nowrap;
+            }
+            .acu-btn-finish-sort:hover, .acu-btn-finish-sort.hover {
+                background: var(--acu-button-text-on-accent, #fff);
+                color: var(--acu-accent);
+            }
+
+            .acu-edit-overlay { position: fixed !important; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; height: 100dvh; background: rgba(0,0,0,0.75) !important; z-index: 31200 !important; display: flex; justify-content: center !important; align-items: center !important; backdrop-filter: blur(2px); }
+            .acu-edit-dialog { background: var(--acu-bg-panel); width: 95%; max-width: 500px; max-height: 95vh; padding: 16px; border-radius: 12px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 15px 50px rgba(0,0,0,0.6); color: var(--acu-text-main); border: 1px solid var(--acu-border); overflow: hidden; flex-shrink: 0; }
+            @media (min-width: 768px) { .acu-edit-dialog { max-width: 900px; width: 90%; } .acu-edit-dialog.acu-settings-dialog { max-width: 400px; width: 400px; } }
+            .acu-edit-title { margin: 0; font-size: 16px; font-weight: bold; color: var(--acu-text-main); padding-bottom: 8px; border-bottom: 1px solid var(--acu-border); }
+            .acu-edit-icon-muted { opacity: 0.7; }
+            .acu-edit-content { background: var(--acu-bg-panel); }
+            .acu-settings-content-scroll { flex: 1; overflow-y: auto; padding: 15px; }
+            .acu-card-edit-field { margin-bottom: 10px; }
+            .acu-card-edit-label { display: block; font-size: 12px; color: var(--acu-accent); font-weight: bold; margin-bottom: 4px; }
+            .acu-card-edit-input { width: 100% !important; padding: 10px !important; border: 1px solid var(--acu-border) !important; border-radius: 6px !important; background: var(--acu-input-bg) !important; color: var(--acu-text-main) !important; box-sizing: border-box !important; font-size: 14px !important; line-height: 1.5 !important; appearance: none; -webkit-appearance: none; }
+            .acu-card-edit-input:focus { outline: none !important; border-color: var(--acu-accent) !important; box-shadow: var(--acu-focus-ring) !important; }
+            .acu-edit-dialog select { padding: 6px 10px !important; border: 1px solid var(--acu-border) !important; border-radius: 6px !important; background: var(--acu-input-bg) !important; color: var(--acu-text-main) !important; font-size: 13px !important; appearance: none; -webkit-appearance: none; cursor: pointer; }
+            .acu-edit-dialog select:focus { outline: none !important; border-color: var(--acu-accent) !important; box-shadow: var(--acu-focus-ring) !important; }
+            .acu-edit-dialog select option { background: var(--acu-bg-panel) !important; color: var(--acu-text-main) !important; }
+            .acu-edit-dialog input[type="text"], .acu-edit-dialog input[type="number"], .acu-edit-dialog input[type="search"], .acu-edit-dialog input:not([type]) { padding: 6px 10px !important; border: 1px solid var(--acu-border) !important; border-radius: 6px !important; background: var(--acu-input-bg) !important; color: var(--acu-text-main) !important; font-size: 13px !important; box-sizing: border-box !important; }
+            .acu-edit-dialog input:focus { outline: none !important; border-color: var(--acu-accent) !important; box-shadow: var(--acu-focus-ring) !important; }
+            .acu-edit-dialog input::placeholder { color: var(--acu-text-sub) !important; opacity: 0.7; }
+            .acu-card-edit-textarea { min-height: 40px; max-height: 500px; resize: none; overflow-y: hidden; }
+            .acu-edit-textarea { width: 100%; height: auto; padding: 12px; border: 1px solid var(--acu-border) !important; background: var(--acu-input-bg) !important; color: var(--acu-text-main) !important; border-radius: 6px; resize: vertical; box-sizing: border-box; font-size: 14px; line-height: 1.6; overflow-y: auto !important; }
+            .acu-edit-textarea:focus { outline: none !important; border-color: var(--acu-accent) !important; box-shadow: var(--acu-focus-ring) !important; }
+            .acu-edit-textarea::placeholder { color: var(--acu-text-sub) !important; opacity: 0.7; }
+            @media (min-width: 768px) { .acu-edit-textarea { height: auto !important; font-size: 15px !important; } }
+            .acu-edit-textarea:focus { outline: none !important; }
+            .acu-dialog-btns { display: flex; justify-content: flex-end; gap: 20px; margin-top: 10px; }
+            .acu-dialog-btn { background: none; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 6px; color: var(--acu-text-sub); transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard), border-color var(--acu-motion-fast) var(--acu-ease-standard), box-shadow var(--acu-motion-fast) var(--acu-ease-standard); }
+            .acu-dialog-btn:hover, .acu-dialog-btn:focus-visible { background: var(--acu-btn-bg); color: var(--acu-text-main); border-color: var(--acu-border); outline: none; }
+            .acu-btn-confirm { color: var(--acu-success-text); } .acu-btn-confirm:hover, .acu-btn-confirm:focus-visible { opacity: 0.9; }
+            /* --- [UI Optimization] PC-First Edit Mode Styles --- */
+            .acu-order-controls { grid-column: 1 / -1; order: -2; display: none; width: 100%; text-align: left; background: var(--acu-accent); color: var(--acu-button-text-on-accent, var(--acu-text-main)); padding: 6px 12px; margin: 0 0 8px 0; border-radius: 4px; font-weight: bold; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+            .acu-order-controls.visible { display: flex; align-items: center; justify-content: space-between; }
+
+            .acu-nav-container.editing-order { border: 2px solid var(--acu-accent); background: var(--acu-bg-panel); }
+            .acu-nav-container.editing-order .acu-nav-btn, .acu-nav-container.editing-order .acu-action-btn { opacity: 1 !important; cursor: grab !important; border: 1px solid var(--acu-border); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+            .acu-nav-container.editing-order .acu-nav-btn:hover, .acu-nav-container.editing-order .acu-action-btn:hover { border-color: var(--acu-accent); transform: translateY(-1px); }
+
+            .acu-swap-selected { background-color: var(--acu-accent) !important; color: var(--acu-button-text-on-accent, var(--acu-text-main)) !important; border-color: var(--acu-accent); box-shadow: 0 0 0 2px rgba(255,255,255,0.5), 0 4px 12px rgba(0,0,0,0.2); transform: scale(1.05); z-index: 10; }
+            .acu-drag-over { border: 2px dashed var(--acu-accent); opacity: 0.5; transform: scale(0.95); background: rgba(var(--acu-accent-rgb), 0.1); }
+
+            /* --- [PC Style] Unused Pool Optimization (工具架样式) --- */
+            .acu-unused-pool {
+                grid-column: 1 / -1;
+                display: none;
+                flex-wrap: wrap;
+                gap: 8px;
+                background: var(--acu-table-head); /* 使用表头背景色，更融合 */
+                border: 1px dashed var(--acu-border); /* 虚线框表示这是编辑区域 */
+                padding: 10px 15px;
+                margin: 0 0 10px 0;
+                border-radius: 8px;
+                justify-content: flex-start;
+                align-items: center;
+                min-height: 50px;
+                box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+            }
+            .acu-unused-pool.visible { display: flex; animation: acuFadeIn 0.2s ease-out; }
+
+            /* PC端清晰的文字引导 */
+            .acu-unused-pool::before {
+                content: "备选功能池 (拖拽图标到下方启用 ↘)";
+                display: flex;
+                align-items: center;
+                height: 32px;
+                font-size: 12px;
+                font-weight: bold;
+                color: var(--acu-text-sub);
+                margin-right: 15px;
+                padding-right: 15px;
+                border-right: 1px solid var(--acu-border);
+                white-space: nowrap;
+                opacity: 0.8;
+            }
+
+            .acu-actions-group { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 4px; border-top: 1px solid var(--acu-border); padding-top: 8px; margin-top: 4px; min-height: calc(var(--acu-nav-button-size, 32px) + 4px); transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), border-color var(--acu-motion-fast) var(--acu-ease-standard); }
+
+            /* [修复] 移动端顶部布局适配：强制提升顺序 */
+            .acu-pos-top .acu-actions-group { order: -1; border-top: none; border-bottom: 1px dashed var(--acu-border); margin-top: 0; margin-bottom: 6px; padding-top: 0; padding-bottom: 8px; }
+
+            /* [修复] 编辑模式下，备选池也跟随置顶 */
+            .acu-pos-top .acu-unused-pool { order: -1; margin-bottom: 10px; border-bottom: 1px dashed var(--acu-border); }
+            .acu-actions-group.dragging-over { background: rgba(127, 127, 127, 0.05); box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+
+            /* 仪表盘横向滚动模式 */
+                .acu-dash-body.acu-dash-horizontal {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    gap: 15px;
+                    height: 100%;
+                    min-height: 0;
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    padding-bottom: 10px;
+                    box-sizing: border-box;
+                }
+                .acu-dash-body.acu-dash-horizontal > div {
+                    flex: 0 0 280px;
+                    min-width: 280px;
+                    min-height: 0;
+                    max-height: 100%;
+                    overflow-y: auto;
+                    box-sizing: border-box;
+                }
+                @media (min-width: 769px) {
+                    .acu-dash-body.acu-dash-horizontal > div {
+                        flex: 0 0 320px;
+                        min-width: 320px;
+                    }
+                }
+            /* Mobile adjustments to keep it usable there */
+            @media (max-width: 768px) {
+                .acu-unused-pool { justify-content: center; background: rgba(0,0,0,0.05); border: 1px dashed var(--acu-border); border-bottom: none; margin: 0 0 8px 0; border-radius: 6px; }
+                .acu-unused-pool::before { display: block; width: 100%; text-align: center; margin-bottom: 4px; content: "可选功能池 (拖拽或点击)"; }
+                .acu-order-controls { flex-direction: column; gap: 6px; text-align: center; }
+            }
+            .acu-actions-group.dragging-over { background: rgba(var(--acu-accent-rgb), 0.1); border-color: var(--acu-accent); }
+            .acu-settings-item { margin-bottom: 15px; }
+            .acu-settings-label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #ccc; }
+            .acu-settings-val { float: right; color: #4cd964; font-size: 12px; }
+            .acu-slider { width: 100%; height: 4px; background: #555; border-radius: 2px; outline: none; -webkit-appearance: none; }
+            .acu-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #fff; border-radius: 50%; cursor: pointer; }
+            .acu-select { width: 100%; padding: 8px; background: rgba(0,0,0,0.3); border: 1px solid #555; color: #fff; border-radius: 4px; outline: none; }
+            .acu-edit-overlay input[type="checkbox"].acu-checkbox { margin-right: 10px; accent-color: var(--acu-accent) !important; background: transparent !important; background-color: transparent !important; }
+            .acu-btn-block { width: 100%; padding: 10px; background: #444; color: #eee; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
+            .acu-btn-block:hover { background: #555; color: #fff; }
+            .acu-expand-trigger { background: var(--acu-bg-nav); border: 1px solid var(--acu-border); box-shadow: 0 2px 6px var(--acu-shadow); cursor: pointer; color: var(--acu-text-main); font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 6px; transition: background-color var(--acu-motion-fast) var(--acu-ease-standard), color var(--acu-motion-fast) var(--acu-ease-standard), transform var(--acu-motion-fast) var(--acu-ease-standard); z-index: 31005 !important; }
+            .acu-expand-trigger:hover { background: var(--acu-btn-hover); transform: translateY(-1px); }
+            .acu-col-bar { width: 100%; justify-content: center; padding: 8px 10px; border-radius: 6px; }
+            .acu-col-pill { width: auto !important; padding: 6px 16px; border-radius: 50px; }
+            .acu-col-floating { width: 48px !important; height: 48px !important; padding: 0; justify-content: center; border-radius: 50%; cursor: grab; touch-action: none; user-select: none; font-size: 16px; display: flex !important; visibility: visible !important; opacity: 1 !important; }
+            .acu-col-floating span { display: none; }
+            .acu-col-floating:hover { transform: translateY(-1px) scale(1.02); }
+            .acu-col-floating:focus, .acu-col-floating:focus-visible { outline: none; box-shadow: var(--acu-focus-ring), 0 2px 6px var(--acu-shadow) !important; }
+            .acu-col-floating:active, .acu-col-floating.acu-floating-dragging { cursor: grabbing; transform: scale(0.98); }
+            /* [优化] 小眼睛图标悬停效果 */
+            .acu-nav-toggle-btn:hover { opacity: 1 !important; transform: translateY(-50%) scale(1.2); color: var(--acu-accent); }
+            .acu-align-right { margin-left: auto; align-self: flex-end; }
+            .acu-align-center { 
+                margin-left: auto !important; 
+                margin-right: auto !important; 
+            }
+            .acu-align-left { margin-right: auto; margin-left: 0; align-self: flex-start; }
+            .acu-nav-container.acu-left-mode .acu-actions-group { order: -1; margin-left: 0; margin-right: 10px; }
+            #acu-btn-collapse { color: var(--acu-text-sub); }
+            #acu-btn-collapse:hover { color: var(--acu-text-main); background: rgba(0,0,0,0.05); }
+            @keyframes acu-breathe { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); color: #ff7e67; } 100% { opacity: 1; transform: scale(1); } } .acu-icon-breathe { animation: acu-breathe 3s infinite ease-in-out !important; display: inline-block; }
+
+            @media (min-width: 769px) {
+                .acu-wrapper.acu-dice-ui-root.acu-mode-viewport { bottom: max(12px, env(safe-area-inset-bottom)); }
+                .acu-wrapper.acu-dice-ui-root.acu-mode-embedded .acu-nav-container { width: 100% !important; min-width: 0; max-width: 100%; box-sizing: border-box; margin: 0; border-radius: 0 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; border: 1px solid var(--acu-border); padding: 6px 10px; background: var(--acu-bg-nav) !important; }
+                .acu-wrapper.acu-dice-ui-root.acu-mode-embedded .acu-data-display { bottom: calc(100% + 12px) !important; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important; }
+                .acu-nav-container { display: flex; flex-wrap: wrap !important; gap: 6px !important; padding: 6px 10px; grid-template-columns: none !important; flex-direction: row !important; justify-content: flex-start !important; align-items: center !important; height: auto !important; }
+                .acu-nav-container .acu-nav-btn { width: fit-content !important; flex: 0 0 auto !important; height: var(--acu-nav-button-size, 32px) !important; padding: 0 var(--acu-nav-button-padding-x, 12px); font-size: var(--acu-nav-font-size, 13px) !important; min-width: auto !important; }
+                .acu-nav-btn span { max-width: 200px; }
+                .acu-action-btn { flex: 0 0 var(--acu-nav-button-size, 32px) !important; width: var(--acu-nav-button-size, 32px) !important; height: var(--acu-nav-button-size, 32px) !important; font-size: var(--acu-nav-icon-size, 14px) !important; background: transparent !important; color: var(--acu-text-sub) !important; border-radius: 6px; border: 1px solid transparent; }
+                .acu-action-btn:hover { background: var(--acu-btn-hover) !important; color: var(--acu-text-main) !important; transform: translateY(-1px); box-shadow: none; }
+                #acu-btn-save-global { color: var(--acu-accent) !important; }
+                #acu-btn-save-global:hover { background: var(--acu-accent) !important; color: var(--acu-btn-active-text) !important; }
+                .acu-order-controls { margin: 0 0 8px 0; padding: 4px; }
+                .acu-actions-group { width: auto !important; margin-left: auto !important; border-top: none !important; border-bottom: none !important; padding: 0; margin-top: 0 !important; margin-bottom: 0 !important; gap: 4px !important; background: transparent; justify-content: flex-end; order: 9999 !important; display: flex; }
+                .acu-pos-top .acu-actions-group { order: -1 !important; margin-left: 0 !important; margin-right: 10px !important; justify-content: flex-start !important; }
+                .acu-wrapper.acu-dice-ui-root.acu-desktop-nav-aligned.acu-mode-embedded .acu-nav-container { width: 100% !important; }
+                .acu-wrapper.acu-dice-ui-root.acu-desktop-nav-aligned .acu-nav-container { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(clamp(118px, calc(var(--acu-nav-button-size, 32px) + var(--acu-nav-font-size, 13px) + var(--acu-nav-font-size, 13px) + 70px), 168px), 1fr)) !important; flex-wrap: initial !important; justify-content: stretch !important; align-items: center !important; }
+                .acu-wrapper.acu-dice-ui-root.acu-desktop-nav-aligned .acu-nav-container .acu-nav-btn { width: 100% !important; min-width: 0 !important; flex: none !important; }
+                .acu-wrapper.acu-dice-ui-root.acu-desktop-nav-aligned .acu-nav-btn span { max-width: 100%; }
+                .acu-wrapper.acu-dice-ui-root.acu-desktop-nav-aligned .acu-actions-group { grid-column: span 2 / -1 !important; justify-self: end; width: auto !important; margin-left: 0 !important; margin-right: 0 !important; }
+                .acu-wrapper.acu-dice-ui-root.acu-desktop-nav-aligned .acu-nav-container.acu-pos-top .acu-actions-group { grid-column: 1 / span 2 !important; justify-self: start; margin-right: 0 !important; }
+            }
+            @media (max-width: 768px) {
+                .acu-wrapper.acu-dice-ui-root .acu-panel-content { -webkit-overflow-scrolling: touch !important; overscroll-behavior-y: auto; }
+                .acu-wrapper.acu-dice-ui-root.acu-mode-fixed.acu-has-visible-panel .acu-nav-container {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: stretch !important;
+                    max-height: clamp(152px, 28dvh, 196px);
+                    overflow: hidden !important;
+                    overscroll-behavior: contain;
+                }
+                .acu-wrapper.acu-dice-ui-root.acu-mode-fixed.acu-has-visible-panel .acu-nav-items {
+                    display: grid;
+                    grid-template-columns: repeat(var(--acu-grid-cols, 3), minmax(0, 1fr));
+                    gap: 5px;
+                    align-content: start;
+                    flex: 1 1 auto;
+                    min-height: 0;
+                    overflow-x: hidden !important;
+                    overflow-y: auto !important;
+                    overscroll-behavior-y: contain;
+                    -webkit-overflow-scrolling: touch;
+                    scrollbar-width: none;
+                }
+                .acu-wrapper.acu-dice-ui-root.acu-mode-fixed.acu-has-visible-panel .acu-nav-items::-webkit-scrollbar {
+                    width: 0 !important;
+                    height: 0 !important;
+                    display: none !important;
+                }
+                .acu-wrapper.acu-dice-ui-root.acu-mode-fixed.acu-has-visible-panel .acu-nav-items .acu-nav-btn {
+                    width: 100%;
+                    min-width: 0;
+                }
+                .acu-wrapper.acu-dice-ui-root.acu-mode-fixed.acu-has-visible-panel .acu-actions-group {
+                    position: relative;
+                    bottom: auto;
+                    z-index: 2;
+                    flex: 0 0 auto;
+                    width: 100%;
+                    box-sizing: border-box;
+                    margin-top: 6px !important;
+                    padding-top: 6px;
+                    border-top: 1px solid var(--acu-border);
+                    background: var(--acu-bg-nav);
+                    box-shadow: none;
+                }
+                .acu-wrapper.acu-dice-ui-root.acu-mode-fixed.acu-has-visible-panel .acu-nav-container.acu-pos-top .acu-actions-group {
+                    order: -1 !important;
+                    margin-top: 0 !important;
+                    margin-bottom: 6px !important;
+                    padding-top: 0;
+                    padding-bottom: 6px;
+                    border-top: none !important;
+                    border-bottom: 1px solid var(--acu-border) !important;
+                }
+                .acu-wrapper.acu-dice-ui-root .acu-data-card,
+                .acu-preview-overlay .acu-data-card { box-shadow: none !important; border: 1px solid var(--acu-border); transform: translateZ(0); }
+                .acu-wrapper.acu-dice-ui-root .acu-data-card:hover,
+                .acu-preview-overlay .acu-data-card:hover { transform: none !important; box-shadow: none !important; }
+                .acu-nav-btn:hover { transform: none !important; }
+            }
+            `;
