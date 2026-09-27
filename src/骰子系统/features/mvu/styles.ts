@@ -1,0 +1,959 @@
+/**
+ * mvu / styles.ts — MVU 面板样式（从 mvu-module.ts 拆出）。
+ */
+export const MVU_STYLES = `
+            /* MVU 面板容器 */
+            .acu-mvu-panel {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                min-height: 300px; /* 确保面板有足够的最小高度，避免显示为白条 */
+                overflow: hidden; /* 不在这里滚动，让父容器处理 */
+            }
+            .acu-mvu-panel .acu-panel-header {
+                background: var(--acu-table-head);
+                border-bottom: 1px solid var(--acu-border);
+                padding: 10px 12px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-shrink: 0;
+            }
+            .acu-mvu-panel .acu-panel-header .acu-panel-title {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 600;
+                color: var(--acu-text-main);
+            }
+            .acu-mvu-panel .acu-panel-header .acu-panel-title i {
+                color: var(--acu-accent);
+            }
+            .acu-mvu-panel .acu-header-actions {
+                display: flex;
+                gap: 4px;
+            }
+            .acu-mvu-panel .mvu-header-btn {
+                background: transparent;
+                border: 1px solid transparent;
+                color: var(--acu-text-sub);
+                cursor: pointer;
+                padding: 5px;
+                font-size: 14px;
+                border-radius: 6px;
+                transition:
+                    background-color var(--acu-motion-fast) var(--acu-ease-standard),
+                    color var(--acu-motion-fast) var(--acu-ease-standard),
+                    border-color var(--acu-motion-fast) var(--acu-ease-standard);
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .acu-mvu-panel .mvu-header-btn:hover {
+                background: var(--acu-table-hover);
+                color: var(--acu-accent);
+                border-color: var(--acu-border);
+            }
+            .acu-mvu-panel .mvu-header-btn.active {
+                background: var(--acu-btn-bg);
+                color: var(--acu-accent);
+                border-color: var(--acu-accent);
+                font-weight: bold;
+            }
+            /* [新增] 数值模式样式 */
+            .mvu-numeric-mode {
+                padding: 0;
+            }
+            .mvu-numeric-level-controls {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+            /* [新增] 可折叠层级控制样式 */
+            .mvu-level-controls-collapsible {
+                margin-bottom: 8px;
+            }
+            .mvu-level-controls-header {
+                transition: background-color var(--acu-motion-fast) var(--acu-ease-standard);
+            }
+            .mvu-level-controls-header:hover {
+                background: var(--acu-table-hover) !important;
+            }
+            .mvu-level-controls-body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                transition:
+                    opacity var(--acu-motion-fast) var(--acu-ease-standard),
+                    border-color var(--acu-motion-fast) var(--acu-ease-standard);
+                max-height: 300px; /* 限制最大高度，超出时可滚动 */
+                scrollbar-width: thin;
+            }
+            /* 移动端使用更小的最大高度 */
+            @media (max-width: 768px) {
+                .mvu-level-controls-body {
+                    max-height: 200px;
+                }
+            }
+            .mvu-level-controls-body::-webkit-scrollbar {
+                width: 6px;
+            }
+            .mvu-level-controls-body::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .mvu-level-controls-body::-webkit-scrollbar-thumb {
+                background: var(--acu-border);
+                border-radius: 3px;
+            }
+            .mvu-level-controls-body::-webkit-scrollbar-thumb:hover {
+                background: var(--acu-text-sub);
+            }
+            .mvu-level-controls-collapsible.collapsed .mvu-level-controls-body {
+                max-height: 0 !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                border-bottom: none !important;
+                margin: 0 !important;
+            }
+            .mvu-level-controls-toggle-icon {
+                transition: transform var(--acu-motion-fast) var(--acu-ease-standard);
+            }
+            .mvu-level-controls-collapsible.collapsed .mvu-level-controls-toggle-icon {
+                transform: rotate(-90deg);
+            }
+            .mvu-numeric-items {
+                max-height: calc(100vh - 200px);
+                overflow-y: auto;
+            }
+            .mvu-numeric-item {
+                transition: background-color var(--acu-motion-fast) var(--acu-ease-standard);
+            }
+            .mvu-numeric-item:hover {
+                background: var(--acu-table-hover) !important;
+            }
+            .mvu-dice-icon {
+                transition:
+                    opacity var(--acu-motion-fast) var(--acu-ease-standard),
+                    color var(--acu-motion-fast) var(--acu-ease-standard);
+            }
+            .mvu-dice-icon:hover {
+                opacity: 1 !important;
+                color: var(--acu-accent);
+            }
+            .mvu-level-toggle:hover {
+                opacity: 1 !important;
+            }
+            .mvu-level-toggle[data-visible="true"]:hover {
+                background: var(--acu-accent) !important;
+                color: var(--acu-btn-active-text) !important;
+                border-color: var(--acu-accent) !important;
+            }
+            .mvu-level-toggle[data-visible="false"]:hover,
+            .mvu-level-toggle[data-visible=""]:hover {
+                background: var(--acu-table-hover) !important;
+                color: var(--acu-text-sub) !important;
+                border-color: var(--acu-border) !important;
+            }
+
+            /* MVU 内容区 - 始终使用竖向滚动模式 */
+            .mvu-content {
+                display: flex;
+                flex-direction: column;
+                overflow-x: hidden;
+                overflow-y: auto; /* 直接在内容区启用滚动 */
+                flex: 1 1 auto;
+                min-height: 0; /* 关键：允许 flex 子项缩小以启用滚动 */
+                max-height: 100%; /* 限制最大高度为父容器 */
+                padding: 12px;
+                scrollbar-width: thin;
+            }
+            .mvu-content::-webkit-scrollbar {
+                display: none;
+            }
+            .mvu-content .mvu-card {
+                flex: 0 0 auto; /* 不拉伸，保持自然高度 */
+                min-width: 100%;
+                max-width: 100%;
+                width: 100%;
+            }
+            /* MVU面板始终支持滚动 */
+            .acu-mvu-panel {
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                flex: 1 1 0; /* 关键：使用 flex-basis: 0 让容器可以正确计算滚动 */
+                min-height: 300px; /* 确保面板有足够的最小高度，避免显示为白条 */
+            }
+
+            /* MVU 卡片 */
+            .mvu-card {
+                background: var(--acu-bg-panel);
+                border: 1px solid var(--acu-border);
+                border-radius: 8px;
+                margin-bottom: 10px;
+                overflow: hidden;
+            }
+            .mvu-card:last-child {
+                margin-bottom: 0;
+            }
+            .mvu-card-header {
+                background: var(--acu-table-head);
+                padding: 8px 12px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                user-select: none;
+                transition: background-color var(--acu-motion-fast) var(--acu-ease-standard);
+            }
+            .mvu-card-header:hover {
+                background: var(--acu-table-hover);
+            }
+            .mvu-card-title {
+                font-weight: 600;
+                color: var(--acu-accent);
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .mvu-card-count {
+                font-size: 11px;
+                color: var(--acu-text-sub);
+                font-weight: normal;
+            }
+            .mvu-card-toggle {
+                color: var(--acu-text-sub);
+                font-size: 10px;
+                transition: transform 0.2s;
+            }
+            .mvu-card.collapsed .mvu-card-toggle {
+                transform: rotate(-90deg);
+            }
+            .mvu-card-body {
+                padding: 8px 12px;
+                display: block;
+                overflow: hidden; /* 为 slideUp/slideDown 动画提供支持 */
+            }
+            .mvu-card.collapsed .mvu-card-body {
+                display: none;
+            }
+
+            /* 嵌套卡片 */
+            .mvu-card .mvu-card {
+                background: var(--acu-table-head);
+                margin: 6px 0;
+            }
+            .mvu-card .mvu-card .mvu-card-header {
+                background: rgba(128,128,128,0.1);
+                padding: 6px 10px;
+            }
+            .mvu-card .mvu-card .mvu-card-body {
+                padding: 6px 10px;
+            }
+
+            /* 嵌套卡片横向布局 - 只对嵌套卡片生效，键值对保持正常块级显示 */
+            .mvu-card-body.horizontal-nested {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 12px;
+                overflow-x: auto;
+                overflow-y: visible;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 8px;
+                align-items: flex-start;
+            }
+            /* 如果父卡片有 has-nested-cards 类，使用 wrap 布局，让键值对和嵌套卡片可以换行 */
+            .mvu-card.has-nested-cards .mvu-card-body.horizontal-nested {
+                flex-wrap: wrap;
+            }
+            /* 键值对行保持正常块级显示，占满一行 */
+            .mvu-card-body.horizontal-nested > .mvu-row {
+                display: flex;
+                flex: 0 0 100%;
+                width: 100%;
+                max-width: 100%; /* 确保不超过容器宽度 */
+                box-sizing: border-box;
+            }
+            /* 如果父卡片有 has-nested-cards 类，键值对应该根据内容自适应宽度，但仍然占满一行 */
+            .mvu-card.has-nested-cards .mvu-card-body.horizontal-nested > .mvu-row {
+                flex: 0 0 auto; /* 根据内容自适应宽度 */
+                min-width: 100%; /* 确保占满一行 */
+                width: auto; /* 根据内容自适应宽度 */
+                max-width: 450px; /* 限制键值对的最大宽度，避免占用过多横向空间 */
+                box-sizing: border-box;
+            }
+            @media (min-width: 769px) {
+                .mvu-card.has-nested-cards .mvu-card-body.horizontal-nested > .mvu-row {
+                    max-width: 550px; /* 大屏幕下也限制键值对的最大宽度 */
+                }
+            }
+            /* 只有嵌套卡片才横向排列 - 智能宽度 */
+            .mvu-card-body.horizontal-nested > .mvu-card {
+                flex: 0 0 auto; /* 根据内容自动调整宽度 */
+                min-width: 200px;
+                max-width: 350px;
+                width: auto;
+            }
+            /* 如果嵌套卡片内部也有横向排列的子卡片，移除最大宽度限制，允许根据内容自适应 */
+            .mvu-card-body.horizontal-nested > .mvu-card.has-nested-cards {
+                min-width: 400px; /* 为包含嵌套卡片的嵌套卡片设置更大的最小宽度 */
+                max-width: none; /* 移除最大宽度限制，允许根据内容自适应 */
+            }
+            @media (min-width: 769px) {
+                .mvu-card-body.horizontal-nested > .mvu-card {
+                    min-width: 240px;
+                    max-width: 400px;
+                }
+                .mvu-card-body.horizontal-nested > .mvu-card.has-nested-cards {
+                    min-width: 500px; /* 为包含嵌套卡片的嵌套卡片设置更大的最小宽度 */
+                    max-width: none; /* 移除最大宽度限制，允许根据内容自适应 */
+                }
+            }
+
+            /* 键值对行 */
+            .mvu-row {
+                display: flex;
+                align-items: flex-start;
+                padding: 5px 0;
+                border-bottom: 1px dashed var(--acu-border);
+            }
+            .mvu-row:last-child {
+                border-bottom: none;
+            }
+            .mvu-key {
+                color: var(--acu-text-sub);
+                min-width: 80px;
+                max-width: 120px;
+                flex-shrink: 0;
+                font-size: 12px;
+                padding-right: 8px;
+                word-break: break-all;
+            }
+            .mvu-value-wrap {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                min-width: 0;
+            }
+            .mvu-value {
+                color: var(--acu-text-main);
+                font-size: var(--acu-font-size, 13px);
+                cursor: pointer;
+                padding: 1px 6px;
+                border-radius: 4px;
+                transition: background 0.2s;
+                word-break: break-word;
+                flex: 0 1 auto;
+            }
+            .mvu-value:hover {
+                background: var(--acu-table-hover);
+            }
+            .mvu-value.mvu-array-value {
+                font-size: calc(var(--acu-font-size, 13px) * 0.92);
+                color: var(--acu-text-sub);
+            }
+            .mvu-change-indicator {
+                color: var(--acu-success-text);
+                font-weight: bold;
+                font-size: 12px;
+                flex-shrink: 0;
+            }
+            .mvu-row.mvu-changed {
+                background: var(--acu-success-bg);
+                margin: 0 -12px;
+                padding: 5px 12px;
+                border-radius: 4px;
+            }
+            .mvu-card .mvu-card .mvu-row.mvu-changed {
+                margin: 0 -10px;
+                padding: 5px 10px;
+            }
+
+            /* 空状态 */
+            .mvu-empty {
+                text-align: center;
+                padding: 40px 20px;
+                color: var(--acu-text-sub);
+                flex: 1;
+                min-width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            .mvu-empty i {
+                font-size: 32px;
+                margin-bottom: 12px;
+                display: block;
+                opacity: 0.5;
+            }
+            .mvu-empty p {
+                margin: 0 0 6px 0;
+            }
+            .mvu-empty .mvu-empty-hint {
+                font-size: 12px;
+                opacity: 0.7;
+            }
+
+            /* 编辑弹窗 */
+            .mvu-edit-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.6);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 99999;
+                animation: mvuFadeIn 0.15s ease-out;
+            }
+            .mvu-edit-dialog {
+                background: var(--acu-bg-panel);
+                border: 1px solid var(--acu-border);
+                border-radius: 8px;
+                padding: 16px;
+                width: 90%;
+                max-width: 400px;
+                animation: mvuSlideIn 0.2s ease-out;
+            }
+            .mvu-edit-title {
+                font-weight: 600;
+                color: var(--acu-text-main);
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .mvu-edit-path {
+                font-size: 11px;
+                color: var(--acu-text-sub);
+                background: var(--acu-table-head);
+                padding: 6px 10px;
+                border-radius: 4px;
+                margin-bottom: 12px;
+                word-break: break-all;
+                font-family: monospace;
+            }
+            .mvu-edit-textarea {
+                width: 100%;
+                min-height: 80px;
+                padding: 10px;
+                border: 1px solid var(--acu-border);
+                border-radius: 4px;
+                background: var(--acu-input-bg, var(--acu-bg-panel));
+                color: var(--acu-text-main);
+                font-size: 13px;
+                resize: vertical;
+                box-sizing: border-box;
+            }
+            .mvu-edit-textarea:focus {
+                outline: none;
+                border-color: var(--acu-accent);
+            }
+            .mvu-edit-hint {
+                font-size: 11px;
+                color: var(--acu-text-sub);
+                margin-top: 8px;
+                opacity: 0.7;
+            }
+            .mvu-edit-btns {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                margin-top: 16px;
+            }
+            .mvu-edit-btn {
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 13px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                transition: all 0.2s;
+            }
+            .mvu-edit-btn.mvu-btn-cancel {
+                background: transparent;
+                border: 1px solid var(--acu-border);
+                color: var(--acu-text-sub);
+            }
+            .mvu-edit-btn.mvu-btn-cancel:hover {
+                background: var(--acu-table-hover);
+            }
+            .mvu-edit-btn.mvu-btn-save {
+                background: var(--acu-accent);
+                border: 1px solid var(--acu-accent);
+                color: var(--acu-btn-active-text);
+            }
+            .mvu-edit-btn.mvu-btn-save:hover {
+                opacity: 0.9;
+            }
+
+            @keyframes mvuFadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes mvuSlideIn {
+                from { transform: translateY(-20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                min-width: 0;
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+                background: var(--acu-bg-panel, transparent);
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-toolbar {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-search-wrapper {
+                flex: 1 1 220px;
+                min-width: 0;
+            }
+            .acu-wrapper.acu-dice-ui-root input.acu-global-interaction-search {
+                width: 100%;
+                min-width: 0;
+                padding: 6px 10px 6px 26px;
+                border: 1px solid var(--acu-border);
+                border-radius: 12px;
+                background: var(--acu-card-bg);
+                color: var(--acu-text-main);
+            }
+            .acu-wrapper.acu-dice-ui-root input.acu-global-interaction-search::placeholder {
+                color: var(--acu-text-sub);
+                opacity: 0.75;
+            }
+            .acu-wrapper.acu-dice-ui-root input.acu-global-interaction-search:focus-visible {
+                outline: 2px solid var(--acu-accent);
+                outline-offset: 2px;
+                border-color: var(--acu-accent);
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-content {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                min-width: 0;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                min-width: 0;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section-header {
+                appearance: none;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                width: 100%;
+                min-width: 0;
+                padding: 0 2px;
+                border: 0;
+                background: transparent;
+                color: var(--acu-text-main);
+                font: inherit;
+                font-size: 12px;
+                font-weight: 800;
+                cursor: pointer;
+                text-align: left;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section-header:hover,
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section-header:focus-visible {
+                color: var(--acu-accent);
+                outline: none;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section-header .acu-collapse-icon {
+                flex: 0 0 12px;
+                width: 12px;
+                color: var(--acu-accent);
+                font-size: 10px;
+                transition: transform 0.2s;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section-title {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                min-width: 0;
+                color: var(--acu-text-main);
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section-title i {
+                color: var(--acu-accent);
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section-stats {
+                margin-left: auto;
+                color: var(--acu-text-sub);
+                font-size: 11px;
+                font-weight: 700;
+                white-space: nowrap;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-section-body {
+                min-width: 0;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-table-list {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                min-width: 0;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                min-width: 0;
+                padding: 6px 8px;
+                border: 1px solid color-mix(in srgb, var(--acu-border) 80%, var(--acu-accent) 20%);
+                border-radius: 14px;
+                background: linear-gradient(135deg, color-mix(in srgb, var(--acu-card-bg) 94%, var(--acu-accent) 6%), var(--acu-card-bg));
+                box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+                overflow: visible;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-grid {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 2px !important;
+                align-items: flex-start !important;
+                justify-content: center;
+                min-width: 0;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row {
+                position: relative;
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                flex: 0 0 58px !important;
+                width: 58px !important;
+                min-width: 58px !important;
+                max-width: 58px !important;
+                min-height: 0 !important;
+                padding: 1px !important;
+                border: 0 !important;
+                border-radius: 18px;
+                background: transparent !important;
+                box-shadow: none !important;
+                overflow: visible !important;
+                overflow-x: visible !important;
+                overflow-y: visible !important;
+                cursor: pointer;
+                transition: transform 0.16s;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row:hover,
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row:focus-visible {
+                background: transparent !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
+                outline: none;
+                transform: none !important;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row.is-expanded {
+                z-index: 30;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row-character {
+                background: transparent;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row-map {
+                background: transparent;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row-main {
+                appearance: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex: 0 0 56px;
+                width: 56px;
+                height: 56px;
+                min-width: 56px;
+                padding: 0;
+                border: 1px solid color-mix(in srgb, var(--acu-border) 70%, var(--acu-accent) 30%);
+                border-radius: 50%;
+                background: radial-gradient(circle at 35% 24%, color-mix(in srgb, var(--acu-accent) 30%, transparent), transparent 48%), color-mix(in srgb, var(--acu-bg-panel) 74%, var(--acu-card-bg) 26%);
+                box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acu-card-bg) 64%, transparent), 0 6px 16px color-mix(in srgb, var(--acu-accent) 16%, transparent);
+                color: inherit;
+                font: inherit;
+                overflow: hidden;
+                cursor: pointer;
+                transition: border-color 0.16s, box-shadow 0.16s, transform 0.16s;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row.is-expanded .acu-global-interaction-row-main {
+                border-color: var(--acu-accent);
+                box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acu-card-bg) 72%, transparent), 0 0 0 3px color-mix(in srgb, var(--acu-accent) 18%, transparent), 0 8px 20px color-mix(in srgb, var(--acu-accent) 20%, transparent);
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row-main:hover,
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row-main:focus-visible {
+                border-color: var(--acu-accent);
+                outline: none;
+                transform: translateY(-1px);
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row-title {
+                appearance: none;
+                display: block;
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                padding: 0 2px 8px;
+                border: 0;
+                border-bottom: 1px dashed var(--acu-border);
+                background: transparent;
+                color: var(--acu-text-main);
+                font: inherit;
+                font-weight: 700;
+                font-size: 14px;
+                line-height: 1.35;
+                text-align: center;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                cursor: pointer;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row-title:hover,
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row-title:focus-visible {
+                color: var(--acu-accent);
+                outline: none;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-map-mark {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex: 0 0 46px;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                background: color-mix(in srgb, var(--acu-accent) 16%, transparent);
+                color: var(--acu-accent);
+                font-size: 22px;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-generic-mark {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex: 0 0 46px;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                background: color-mix(in srgb, var(--acu-accent) 14%, var(--acu-card-bg));
+                color: var(--acu-text-main);
+                font-size: 18px;
+                font-weight: 800;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-avatar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                border: 2px solid color-mix(in srgb, var(--acu-accent) 64%, white 18%);
+                background-color: color-mix(in srgb, var(--acu-accent) 18%, var(--acu-card-bg));
+                background-size: cover;
+                background-position: center;
+                color: var(--acu-text-main);
+                font-weight: 800;
+                box-shadow: 0 0 0 3px color-mix(in srgb, var(--acu-accent) 14%, transparent), 0 6px 14px rgba(0,0,0,0.18);
+                overflow: hidden;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-details {
+                display: none;
+                position: absolute;
+                top: calc(100% + 6px);
+                left: 0;
+                flex-direction: column;
+                gap: 4px;
+                width: max-content;
+                min-width: 188px;
+                max-width: 260px;
+                padding: 10px;
+                border: 1px solid color-mix(in srgb, var(--acu-border) 72%, var(--acu-accent) 28%);
+                border-radius: 13px;
+                background: color-mix(in srgb, var(--acu-bg-panel) 92%, black 8%);
+                box-shadow: 0 14px 34px rgba(0,0,0,0.34), 0 0 0 1px rgba(255,255,255,0.035) inset;
+                z-index: 40;
+                overflow-x: hidden;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-row.is-expanded .acu-global-interaction-details,
+            .acu-global-interaction-floating-host .acu-global-interaction-details.is-floating {
+                display: flex;
+            }
+            .acu-global-interaction-floating-host {
+                position: fixed;
+                inset: 0;
+                z-index: 31420;
+                pointer-events: none;
+                font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+                font-size: 13px;
+                line-height: 1.5;
+                color: var(--acu-text-main);
+            }
+            .acu-global-interaction-floating-host,
+            .acu-global-interaction-floating-host *:not(i[class*="fa-"]):not(i[class*="ti-"]) {
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-font-smoothing: antialiased;
+            }
+            .acu-global-interaction-floating-host .acu-global-interaction-details {
+                display: none;
+                position: absolute;
+                top: calc(100% + 6px);
+                left: 0;
+                flex-direction: column;
+                gap: 4px;
+                width: max-content;
+                min-width: 188px;
+                max-width: 260px;
+                padding: 10px;
+                border: 1px solid color-mix(in srgb, var(--acu-border) 72%, var(--acu-accent) 28%);
+                border-radius: 13px;
+                background: color-mix(in srgb, var(--acu-bg-panel) 92%, black 8%);
+                box-shadow: 0 14px 34px rgba(0,0,0,0.34), 0 0 0 1px rgba(255,255,255,0.035) inset;
+                z-index: 31421;
+                overflow-x: hidden;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                pointer-events: auto;
+            }
+            .acu-global-interaction-floating-host .acu-global-interaction-row-title {
+                appearance: none;
+                display: block;
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                padding: 0 2px 8px;
+                border: 0;
+                border-bottom: 1px dashed var(--acu-border);
+                background: transparent;
+                color: var(--acu-text-main);
+                font: inherit;
+                font-weight: 700;
+                font-size: 14px;
+                line-height: 1.35;
+                text-align: center;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                cursor: pointer;
+            }
+            .acu-global-interaction-floating-host .acu-global-interaction-row-title:hover,
+            .acu-global-interaction-floating-host .acu-global-interaction-row-title:focus-visible {
+                color: var(--acu-accent);
+                outline: none;
+            }
+            .acu-global-interaction-floating-host .acu-global-interaction-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                justify-content: flex-start;
+                min-width: 0;
+            }
+            .acu-global-interaction-floating-host .acu-global-interaction-action {
+                display: inline-flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 4px;
+                flex: 0 0 auto;
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                padding: 7px 9px;
+                border: 1px solid transparent;
+                border-radius: 8px;
+                background: transparent;
+                color: var(--acu-text-main);
+                font-size: 13px;
+                line-height: 1.25;
+                text-align: left;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                cursor: pointer;
+                transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+            }
+            .acu-global-interaction-floating-host .acu-global-interaction-action:hover {
+                background: var(--acu-accent);
+                border-color: var(--acu-accent);
+                color: var(--acu-btn-active-text, var(--acu-button-text-on-accent, var(--acu-bg-panel)));
+                transform: translateX(2px);
+            }
+            .acu-global-interaction-floating-host .acu-global-interaction-action:focus-visible {
+                outline: 2px solid var(--acu-accent);
+                outline-offset: 1px;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                justify-content: flex-start;
+                min-width: 0;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-action {
+                display: inline-flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 4px;
+                flex: 0 0 auto;
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                padding: 7px 9px;
+                border: 1px solid transparent;
+                border-radius: 8px;
+                background: transparent;
+                color: var(--acu-text-main);
+                font-size: 13px;
+                line-height: 1.25;
+                text-align: left;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                cursor: pointer;
+                transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-action:hover {
+                background: var(--acu-accent);
+                border-color: var(--acu-accent);
+                color: var(--acu-btn-active-text, var(--acu-button-text-on-accent, var(--acu-bg-panel)));
+                transform: translateY(-1px);
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-action:focus-visible {
+                outline: 2px solid var(--acu-accent);
+                outline-offset: 2px;
+                border-color: var(--acu-accent);
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-empty,
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-no-results {
+                color: var(--acu-text-sub);
+                overflow-wrap: anywhere;
+            }
+            .acu-wrapper.acu-dice-ui-root .acu-global-interaction-no-results[hidden] {
+                display: none !important;
+            }
+
+            @media (max-width: 768px) {
+                .acu-wrapper.acu-dice-ui-root .acu-global-interaction-toolbar {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+                .acu-wrapper.acu-dice-ui-root .acu-global-interaction-grid {
+                    gap: 2px;
+                }
+                .acu-wrapper.acu-dice-ui-root .acu-global-interaction-search-wrapper,
+                .acu-wrapper.acu-dice-ui-root input.acu-global-interaction-search {
+                    width: 100%;
+                    flex-basis: auto;
+                }
+            }
+
+            /* 导航按钮 */
+            .acu-nav-btn.acu-mvu-btn.active {
+                background: var(--acu-btn-active-bg);
+                color: var(--acu-btn-active-text);
+            }
+        `;

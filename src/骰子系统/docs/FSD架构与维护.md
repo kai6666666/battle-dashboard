@@ -256,3 +256,8 @@ export function createXxx(deps: any) {
 - `features/tutorial.ts`（3,296 行 / 129KB）拆为：
   - `features/tutorial/types.ts`（115 行）/ `features/tutorial/steps.ts`（1,983 行，STEPS 数据外置）；
   - 主文件 3,296 → 1,211 行；>100KB 文件 3 → 2（仅剩 index / mvu-module）。
+
+## x3-l（v7.1.0-x3l）
+
+- `features/mvu/mvu-module.ts`（3,118 行 / 129KB）拆出 `features/mvu/styles.ts`（959 行，MVU_STYLES 外置，逐字节等价）；
+  - 主文件 129KB → 89.9KB；>100KB 文件 2 → 1（仅剩 index.ts，留给 x4）。
