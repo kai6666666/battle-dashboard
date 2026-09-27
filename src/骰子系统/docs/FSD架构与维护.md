@@ -337,3 +337,9 @@ export function createXxx(deps: any) {
 - wiring 第四簇：配置备份核心装配（392 行；defs 54 / aft 22 / ext 65）→ `wiring/dice-config-backup-core-wiring.ts`；
   - index 10,930 → 10,541 行；
   - 事故与改进：① 提取器加入「已应用守卫」防双跑；② `TableTemplateRequirementPresetManager` / `BUILTIN_..._PRESETS`（x4-d 已迁出）属跨模块依赖，外扫需以「全量定义（含已迁出符号）」，本次以手工补 ctx 解决；后续在生成器中维护「已迁名字映射」。
+
+## x4-g（v7.1.0-x4g）
+
+- wiring 第五簇：检查建议/设置弹窗装配（495 行；defs 56 / after 6）→ `wiring/check-suggestion-wiring.ts`；
+  - index 10,541 → 10,046 行；
+  - 生成器新增「**已迁名字登记表**」：自动识别历史 wiring destructure，跨模块依赖全自动补 ctx（本批一次过闸）。
