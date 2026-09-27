@@ -244,3 +244,9 @@ export function createXxx(deps: any) {
 - `shared/styles/part-01-theme.ts`（2,362 行 / 145KB）拆为 4 个子分片 + 聚合器：
   - a 基础+头像(500) / b 骰子面板(624) / c 主题变量上(560) / d 主题变量下(688)；逐字节等价；
   - 拆分后 part-01 退出 >100KB 名单（5 → 4）；@ts-nocheck 1302 → 1301。
+
+## x3-j（v7.1.0-x3j）
+
+- `shared/styles/part-06-inventory.ts`（3,694 行 / 114KB）拆为 4 个均衡子分片 + 聚合器：
+  - part-06a(效果输入) / b / c / d，各 ~29.3KB；逐字节等价；
+  - 拆分后 >100KB 文件 4 → 3（仅剩 index / tutorial / mvu-module）；@ts-nocheck 1301 → 1300。
