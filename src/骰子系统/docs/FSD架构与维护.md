@@ -293,3 +293,8 @@ export function createXxx(deps: any) {
   - ctx 注入 + 3 处最小改写（跨帧节流时间戳 get/set、预设 get）；主文件 1,711 → 986 行；
   - 事故：漏 import `showActionableErrorToast`（no-undef 扫描抓出）→ 已修复；
   - 分析经验：`var` 声明与解构声明会被声明扫描漏掉造成自由变量误报；属性键（`attrName:`）也会造成误报。
+
+## x3-p2（v7.1.0-x3p2）回退
+
+- 用户实测：x3-p 后对抗投骰无效（单人投骰正常）。多环境对照（源码等价 diff / 单函数 harness 新旧一致 / 真实产物 jsdom 加载正常）均未复现差异；
+- 为确保业务可用，先回退 `performContestRoll` 提取（恢复 x3-o 状态），保留 apply-advanced-preset 提取；后续复现手段齐备时再重试。
