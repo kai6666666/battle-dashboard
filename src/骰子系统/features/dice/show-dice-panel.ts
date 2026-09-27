@@ -6,6 +6,7 @@
 import { buildEffectMetaLines, buildEffectTraceLines, computePendingEffectVariables, parseEffectValueInput } from '../../shared/effect-math';
 import { rollComplexDiceExpression } from '../../features/dice/dice-engine';
 import { createDicePanelHistory } from './panel/dice-panel-history';
+import { createDicePanelExpr } from './panel/dice-panel-expr';
 import { createDicePanelAttrButtons } from './panel/dice-panel-attr-buttons';
 import { createDicePanelEffectRuns } from './panel/dice-panel-effect-runs';
 import { createDicePanelQuickActions } from './panel/dice-panel-quick-actions';
@@ -16,10 +17,11 @@ export function createShowDicePanel(deps: any) {
   const showDicePanel = (options = {}) => {
     const { $ } = deps.getCore();
     const dicePanelHistory = createDicePanelHistory(deps);
+    const dicePanelExpr = createDicePanelExpr(deps);
     const dicePanelAttrButtons = createDicePanelAttrButtons(deps, { getPanel: () => panel, getDiceCharacterList: () => diceCharacterList, getDiceAttrList: () => diceAttrList, getFromMvu: () => fromMvu, getMvuParsedInfo: () => mvuParsedInfo, getTargetValue: () => targetValue, getCurrentAdvancedPreset: () => currentAdvancedPreset });
     const dicePanelEffectRuns = createDicePanelEffectRuns(deps, { getPanel: () => panel, buildAttrButtons: (n: any) => dicePanelAttrButtons.buildAttrButtons(n) });
     const dicePanelQuickActions = createDicePanelQuickActions(deps, { getPanel: () => panel, getCurrentAdvancedPreset: () => currentAdvancedPreset, applyAdvancedPreset: (id: any) => applyAdvancedPreset(id) });
-    const dicePanelResourceBurner = createDicePanelResourceBurner(deps, { getPanel: () => panel, buildAttrButtons: (n: any) => dicePanelAttrButtons.buildAttrButtons(n), matchesCheckSelector: (a: any, s: any) => matchesCheckSelector(a, s), parseModifier: (m: any) => parseModifier(m), performAdvancedCheck: (...a: any[]) => performAdvancedCheck(...a) });
+    const dicePanelResourceBurner = createDicePanelResourceBurner(deps, { getPanel: () => panel, buildAttrButtons: (n: any) => dicePanelAttrButtons.buildAttrButtons(n), matchesCheckSelector: (a: any, s: any) => matchesCheckSelector(a, s), parseModifier: (m: any) => dicePanelExpr.parseModifier(m), performAdvancedCheck: (...a: any[]) => performAdvancedCheck(...a) });
     const dicePanelEffectConfirm = createDicePanelEffectConfirm(deps, { getPanel: () => panel, getEffectRuns: () => dicePanelEffectRuns });
     $('.acu-dice-panel, .acu-dice-overlay').remove();
 
@@ -789,47 +791,6 @@ export function createShowDicePanel(deps: any) {
     }
 
     // 掷骰逻辑 - 使用 rollComplexDiceExpression 支持复合表达式
-    const rollDice = formula => {
-      const rollResult = rollComplexDiceExpression(formula);
-      const total = rollResult.total;
-      if (Number.isNaN(total)) {
-        return { total: 0, rolls: [], formula };
-      }
-      // 尝试从公式中提取基本信息用于显示
-      const basicMatch = formula.match(/^(\d*)d(\d+|F)/i);
-      const count = basicMatch && basicMatch[1] ? parseInt(basicMatch[1], 10) : 1;
-      const sidesStr = basicMatch ? basicMatch[2] : '100';
-      const sides = sidesStr.toUpperCase() === 'F' ? 3 : parseInt(sidesStr, 10);
-      // 对于复杂语法，不提供单独的 rolls 数组
-      return { total, rolls: [], sides, count, modifier: 0, formula };
-    };
-
-    // 解析修正值，支持纯数字和骰子表达式（如1d6, 1d6+2等）
-    const parseModifier = function (modStr) {
-      if (!modStr || modStr.trim() === '') return 0;
-      const trimmed = modStr.trim();
-
-      // 尝试直接解析为数字
-      const numValue = parseFloat(trimmed);
-      if (!isNaN(numValue) && isFinite(numValue) && trimmed.match(/^-?\d+(\.\d+)?$/)) {
-        return numValue;
-      }
-
-      // 复合表达式统一走完整解析
-      const rollResult = rollComplexDiceExpression(trimmed);
-      if (!Number.isNaN(rollResult.total)) return rollResult.total;
-      return 0;
-    };
-
-    const resolveExpressionWithContext = (expr: string, context: Record<string, string | number | boolean>): string => {
-      let resolved = String(expr || '0');
-      Object.entries(context).forEach(([key, value]) => {
-        const safeKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        resolved = resolved.replace(new RegExp(safeKey, 'g'), String(value));
-      });
-      return resolved;
-    };
-
     const performAdvancedCheck = async function (options?: { isPushed?: boolean }) {
       if (!currentAdvancedPreset) return;
 
@@ -887,7 +848,7 @@ export function createShowDicePanel(deps: any) {
       if (!preset.mod?.hidden) {
         const modStr = panel.find('#dice-modifier').val().trim();
         if (modStr !== '') {
-          mod = parseModifier(modStr);
+          mod = dicePanelExpr.parseModifier(modStr);
         } else {
           mod = resolveDefaultValue(preset.mod?.defaultValue, { $attr: attrValue });
         }
@@ -898,7 +859,7 @@ export function createShowDicePanel(deps: any) {
       if (preset.skillMod && !preset.skillMod.hidden) {
         const skillModStr = panel.find('#dice-skill-mod').val().trim();
         if (skillModStr !== '') {
-          skillMod = parseModifier(skillModStr);
+          skillMod = dicePanelExpr.parseModifier(skillModStr);
         } else {
           skillMod = resolveDefaultValue(preset.skillMod?.defaultValue, { $attr: attrValue });
         }
@@ -1476,8 +1437,8 @@ export function createShowDicePanel(deps: any) {
             $success: isSuccess ? 1 : 0,
             ...customValues,
           };
-          const resolvedExpr = resolveExpressionWithContext(autoUpdate.valueExpr, autoContext);
-          const changeValue = parseModifier(resolvedExpr);
+          const resolvedExpr = dicePanelExpr.resolveExpressionWithContext(autoUpdate.valueExpr, autoContext);
+          const changeValue = dicePanelExpr.parseModifier(resolvedExpr);
           const aliasCandidates = autoUpdate.aliasCandidates || [];
           const resolvedAlias = deps.resolveAttributeAliasName(initiatorName, attrName, aliasCandidates).name;
           const targetAttr = resolvedAlias || attrName;
@@ -1771,7 +1732,7 @@ export function createShowDicePanel(deps: any) {
 
       const formula = panel.find('#dice-formula').val().trim() || '1d100';
       const modStr = panel.find('#dice-modifier').val().trim() || '0';
-      const mod = parseModifier(modStr);
+      const mod = dicePanelExpr.parseModifier(modStr);
       const attrName = panel.find('#dice-attr-name').val().trim() || '自由检定';
       const criteria = panel.find('#dice-success-criteria').val() || 'lte';
       const difficulty = panel.find('#dice-difficulty').val() || 'normal';
@@ -1824,7 +1785,7 @@ export function createShowDicePanel(deps: any) {
         }
       }
 
-      const result = rollDice(formula);
+      const result = dicePanelExpr.rollDice(formula);
       const finalValue = result.total + mod;
 
       // 根据规则和难度等级计算

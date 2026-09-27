@@ -147,3 +147,9 @@ export function createXxx(deps: any) {
   - 包含：确认弹窗 / 条件预览 / 输入计算 / 确认流程（`showEffectConfirmDialog` / `resolveEffectConditionPreview` / `computeEffectsFromInputs` / `handleEffectConfirmation`）；
   - 桥接：`getPanel` + `getEffectRuns`（延迟取 effect-runs 子工厂实例）；
   - 面板 2,442 → 2,129 行（-313）。
+
+## x2-g（v7.1.0-x2g）
+
+- `show-dice-panel.ts`：拆出「表达式助手簇」→ `features/dice/panel/dice-panel-expr.ts`（54 行）；
+  - 包含：投骰 / 修正值解析 / 变量表达式替换（`rollDice` / `parseModifier` / `resolveExpressionWithContext`）；无 deps 依赖；
+  - 面板 2,128 → 2,090 行（-38）。
