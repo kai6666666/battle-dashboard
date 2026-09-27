@@ -298,3 +298,9 @@ export function createXxx(deps: any) {
 
 - 用户实测：x3-p 后对抗投骰无效（单人投骰正常）。多环境对照（源码等价 diff / 单函数 harness 新旧一致 / 真实产物 jsdom 加载正常）均未复现差异；
 - 为确保业务可用，先回退 `performContestRoll` 提取（恢复 x3-o 状态），保留 apply-advanced-preset 提取；后续复现手段齐备时再重试。
+
+## x4-a（v7.1.0-x4a）
+
+- x4（index.ts 收口）首刀：高级骰子预设系统类型区块 31 个类型（约 670 行）迁出 → `shared/advanced-preset-types.ts`；
+  - index 13,018 → 12,346 行（类型仅编译期，运行时零变化）；
+  - 依赖：仅4个类型从 `./types` 导入（CustomFieldConfig / DerivedVarSpec / DiceExprPatch / OutcomePolicy）。
