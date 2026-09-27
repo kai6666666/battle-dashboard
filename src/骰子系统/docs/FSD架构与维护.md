@@ -113,3 +113,10 @@ export function createXxx(deps: any) {
   - 包含：效果运行状态机（pendingEffectRuns / activeConfirmEffectRun / 重试定时器）、meta 注入、历史状态写回、清理定时器；
   - 桥接：`effectRunState`（对象属性替代 let 变量）+ `getPanel()`/`buildAttrButtons()` ctx + 共享 effect-math 导入；
   - 面板 3,833 → 3,252 行（-581）；导出 7 个方法 + 状态对象。
+
+## x2-c（v7.1.0-x2c）
+
+- `show-dice-panel.ts`：拆出「快捷动作簇」→ `features/dice/panel/dice-panel-quick-actions.ts`（218 行）；
+  - 包含：快照过滤/可见性/渲染（`getPresetQuickActions` / `buildQuickActionContext` / `isQuickActionVisible` / `renderPresetQuickActions`）+ 三种执行器（`activatePresetQuickAction` / `executeAttrShortcutQuickAction` / `executePresetQuickAction`）；
+  - 桥接：`getPanel()` / `getCurrentAdvancedPreset()` / `applyAdvancedPreset()` ctx；
+  - 面板 3,251 → 3,051 行（-200）。
