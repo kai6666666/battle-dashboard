@@ -250,3 +250,9 @@ export function createXxx(deps: any) {
 - `shared/styles/part-06-inventory.ts`（3,694 行 / 114KB）拆为 4 个均衡子分片 + 聚合器：
   - part-06a(效果输入) / b / c / d，各 ~29.3KB；逐字节等价；
   - 拆分后 >100KB 文件 4 → 3（仅剩 index / tutorial / mvu-module）；@ts-nocheck 1301 → 1300。
+
+## x3-k（v7.1.0-x3k）
+
+- `features/tutorial.ts`（3,296 行 / 129KB）拆为：
+  - `features/tutorial/types.ts`（115 行）/ `features/tutorial/steps.ts`（1,983 行，STEPS 数据外置）；
+  - 主文件 3,296 → 1,211 行；>100KB 文件 3 → 2（仅剩 index / mvu-module）。
