@@ -113,18 +113,18 @@ export const findMatchingSheetMatch = (
   const requirementName = normalizeTemplateText(requirementSheet.name);
   if (!requirementName) return { entry: null, ambiguous: false, reasons: [] };
   const byName = entries.filter(entry => normalizeTemplateText(entry.sheet.name) === requirementName);
-  const compatibleByName = requirementSqlName
-    ? byName.filter(entry => {
-        const sqlName = getSheetSqlTableName(entry.sheet);
-        return sqlName === requirementSqlName;
-      })
-    : byName;
-  if (compatibleByName.length === 1) return { entry: compatibleByName[0], ambiguous: false, reasons: [] };
-  if (compatibleByName.length > 1) {
+  // [修复] 显示名唯一命中时直接接受：聊天侧表可能被重排内部键或缺少 ddl（SQL 表名解析为空），
+  // 旧逻辑会用 SQL 表名从严过滤导致「表明明存在却报缺失」。现在仅在同名多候选时用 SQL 表名优选。
+  if (byName.length === 1) return { entry: byName[0], ambiguous: false, reasons: [] };
+  if (byName.length > 1) {
+    if (requirementSqlName) {
+      const sqlEqual = byName.filter(entry => getSheetSqlTableName(entry.sheet) === requirementSqlName);
+      if (sqlEqual.length === 1) return { entry: sqlEqual[0], ambiguous: false, reasons: [] };
+    }
     return {
       entry: null,
       ambiguous: true,
-      reasons: [`有 ${compatibleByName.length} 张表使用显示名 ${toSafeString(requirementSheet.name)}`],
+      reasons: [`有 ${byName.length} 张表使用显示名 ${toSafeString(requirementSheet.name)}`],
     };
   }
   return { entry: null, ambiguous: false, reasons: [] };

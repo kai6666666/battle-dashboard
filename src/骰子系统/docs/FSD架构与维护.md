@@ -268,3 +268,9 @@ export function createXxx(deps: any) {
   - 主文件 1,367 → 819 行；
   - 事故：两处 spread 调用（`...getDdlSeparatorProblems(...)` / `...getTemplateStructureIssues(...)`）被标识符扫描漏掉 → 导入修复；扫描脚本已改进（先 `replace('...', ' ')` 再扫描）。
     
+## x3-m2（v7.1.0-x3m2）修复
+
+- 事故：模板检验误报「缺少 XX 表」×7 —— 根因：`findMatchingSheetMatch` 在“聊天侧表被重排内部键 / 缺 ddl（SQL 表名解析为空）”时，仍用 SQL 表名从严过滤显示名命中，导致已存在的表被判缺失；
+- 修复：显示名唯一命中直接接受；仅同名多候选时才用 SQL 表名优选；空模板仍正确报缺失（行为保留）；
+- 仿真：重排键 / 无 ddl / SQL 名不同 / 组合变体 全部 HIT；
+    
