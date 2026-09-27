@@ -318,3 +318,10 @@ export function createXxx(deps: any) {
   - index 11,790 → 11,552 行；
   - 事件：① import 映射需全量解析（首次只扫前300行导致30+工厂漏 import，smoke 抓到）；② 前向引用（`buildCrudColumnAliasMap` 定义在后面）在快照式 ctx 下会 TDZ → 改为惰性转发 `(...a)=>name(...a)`；
   - 该模式沉淀为 wiring 拆分规范：ctx 快照 + 前向/可变引用惰性转发。
+
+## x4-d（v7.1.0-x4d）
+
+- wiring 第二簇：高级骰子预设/属性预设装配（343 行；aft 17 / import 70 / ctx 12，含 8 个前向引用惰性转发）→ `wiring/advanced-preset-wiring.ts`；
+  - index 11,552 → 11,212 行；
+  - 事故1：前向「上游使用」（`updateTemplateForActivePreset` 在其定义之前已被引用）漏出返回值 → 重算「模块外全量使用」补齐；
+  - 事故2：`.json?raw` 默认导入被生成器写成具名导入 → 运行时 raw 为空（JSON.parse undefined），smoke 抓出并修复；生成器已补默认导入映射。
