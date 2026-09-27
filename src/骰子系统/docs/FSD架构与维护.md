@@ -213,3 +213,11 @@ export function createXxx(deps: any) {
   - `utils.ts`（278 行）：基础工具 + DDL 工具（48 个常量/函数，全部 export）；
   - 主文件 1,728 → **1,362 行**（保留导出面 & 逻辑，无 @ts-nocheck）。
 - 过程修复：`export *` 不产生本地绑定 → 主文件补常量 import；`...spread` 调用被首个扫描漏掉 → 补 `getDdlSeparatorProblems`。
+
+## x3-e（v7.1.0-x3e）
+
+- `shared/styles/part-02-avatar.ts`（2,734 行 / 98.4KB）拆为 3 个子分片 + 聚合器：
+  - `part-02a-dice-ui.ts`（935 行）/ `part-02b-relation-map.ts`（917 行）/ `part-02c-avatar.ts`（888 行）；
+  - 聚合器 8 行，按序拼接；**逐字节等价校验通过**（recon == orig: True）；
+  - @ts-nocheck 总数 1306 → 1305（新分片无需豁免）。
+- 说明：`bind-events.ts` 为单函数 1,700 行、仅尾 28 行 IIFE 可安全切出，切分收益低；本批改拆 styles 大分片，bind-events 留待 x4 与 index 收尾时统一评估。
