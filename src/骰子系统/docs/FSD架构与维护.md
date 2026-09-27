@@ -261,3 +261,10 @@ export function createXxx(deps: any) {
 
 - `features/mvu/mvu-module.ts`（3,118 行 / 129KB）拆出 `features/mvu/styles.ts`（959 行，MVU_STYLES 外置，逐字节等价）；
   - 主文件 129KB → 89.9KB；>100KB 文件 2 → 1（仅剩 index.ts，留给 x4）。
+
+## x3-m（v7.1.0-x3m）
+
+- `features/table/table-template-requirements.ts` 二阶段拆层：内部 helpers 簇（34 个函数/常量）→ `table-template-requirements/helpers.ts`（559 行，全量 export）；
+  - 主文件 1,367 → 819 行；
+  - 事故：两处 spread 调用（`...getDdlSeparatorProblems(...)` / `...getTemplateStructureIssues(...)`）被标识符扫描漏掉 → 导入修复；扫描脚本已改进（先 `replace('...', ' ')` 再扫描）。
+    
