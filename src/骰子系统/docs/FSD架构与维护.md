@@ -153,3 +153,9 @@ export function createXxx(deps: any) {
 - `show-dice-panel.ts`：拆出「表达式助手簇」→ `features/dice/panel/dice-panel-expr.ts`（54 行）；
   - 包含：投骰 / 修正值解析 / 变量表达式替换（`rollDice` / `parseModifier` / `resolveExpressionWithContext`）；无 deps 依赖；
   - 面板 2,128 → 2,090 行（-38）。
+
+## x2-h（v7.1.0-x2h）
+
+- `show-dice-panel.ts`：拆出「效果输入/字段配置簇」→ `features/dice/panel/dice-panel-effect-inputs.ts`（128 行）；
+  - 包含：`applyFieldConfig` / `matchesCheckSelector` / `renderEffectInputs`；
+  - 面板 2,090 → 1,977 行（-113）。

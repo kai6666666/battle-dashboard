@@ -7,6 +7,7 @@ import { buildEffectMetaLines, buildEffectTraceLines, computePendingEffectVariab
 import { rollComplexDiceExpression } from '../../features/dice/dice-engine';
 import { createDicePanelHistory } from './panel/dice-panel-history';
 import { createDicePanelExpr } from './panel/dice-panel-expr';
+import { createDicePanelEffectInputs } from './panel/dice-panel-effect-inputs';
 import { createDicePanelAttrButtons } from './panel/dice-panel-attr-buttons';
 import { createDicePanelEffectRuns } from './panel/dice-panel-effect-runs';
 import { createDicePanelQuickActions } from './panel/dice-panel-quick-actions';
@@ -18,10 +19,11 @@ export function createShowDicePanel(deps: any) {
     const { $ } = deps.getCore();
     const dicePanelHistory = createDicePanelHistory(deps);
     const dicePanelExpr = createDicePanelExpr(deps);
+    const dicePanelEffectInputs = createDicePanelEffectInputs(deps);
     const dicePanelAttrButtons = createDicePanelAttrButtons(deps, { getPanel: () => panel, getDiceCharacterList: () => diceCharacterList, getDiceAttrList: () => diceAttrList, getFromMvu: () => fromMvu, getMvuParsedInfo: () => mvuParsedInfo, getTargetValue: () => targetValue, getCurrentAdvancedPreset: () => currentAdvancedPreset });
     const dicePanelEffectRuns = createDicePanelEffectRuns(deps, { getPanel: () => panel, buildAttrButtons: (n: any) => dicePanelAttrButtons.buildAttrButtons(n) });
     const dicePanelQuickActions = createDicePanelQuickActions(deps, { getPanel: () => panel, getCurrentAdvancedPreset: () => currentAdvancedPreset, applyAdvancedPreset: (id: any) => applyAdvancedPreset(id) });
-    const dicePanelResourceBurner = createDicePanelResourceBurner(deps, { getPanel: () => panel, buildAttrButtons: (n: any) => dicePanelAttrButtons.buildAttrButtons(n), matchesCheckSelector: (a: any, s: any) => matchesCheckSelector(a, s), parseModifier: (m: any) => dicePanelExpr.parseModifier(m), performAdvancedCheck: (...a: any[]) => performAdvancedCheck(...a) });
+    const dicePanelResourceBurner = createDicePanelResourceBurner(deps, { getPanel: () => panel, buildAttrButtons: (n: any) => dicePanelAttrButtons.buildAttrButtons(n), matchesCheckSelector: (a: any, s: any) => dicePanelEffectInputs.matchesCheckSelector(a, s), parseModifier: (m: any) => dicePanelExpr.parseModifier(m), performAdvancedCheck: (...a: any[]) => performAdvancedCheck(...a) });
     const dicePanelEffectConfirm = createDicePanelEffectConfirm(deps, { getPanel: () => panel, getEffectRuns: () => dicePanelEffectRuns });
     $('.acu-dice-panel, .acu-dice-overlay').remove();
 
@@ -268,121 +270,6 @@ export function createShowDicePanel(deps: any) {
     let currentAdvancedPreset: AdvancedDicePreset | LegacyAdvancedDicePreset | null = null;
     let lastVisiblePresetId: string | null = null;
 
-    const applyFieldConfig = function (
-      $input: JQuery,
-      $label: JQuery,
-      config: FieldConfig | undefined,
-      defaults: { label: string; placeholder: string },
-    ) {
-      // 获取包含label和input的wrapper div
-      // 实际DOM结构: <div> <label/> <div.acu-input-wrapper> <input/> </div> </div>
-      // 所以需要找到label的父元素（同时也是input-wrapper的父元素）
-      const $wrapper = $label.parent();
-
-      if (config?.hidden) {
-        $wrapper.hide();
-        return;
-      }
-
-      $wrapper.show();
-      $input.attr('placeholder', config?.placeholder || defaults.placeholder).prop('readonly', false);
-      $label.text(config?.label || defaults.label);
-    };
-
-    /**
-     * [新增] 检查属性名是否匹配 CheckSelector
-     * @param attrName - 当前检定的属性名
-     * @param selector - 选择器配置
-     * @returns 是否匹配（true=可用，false=不可用）
-     */
-    const matchesCheckSelector = (attrName: string, selector?: CheckSelector): boolean => {
-      // 如果没有定义 selector，默认匹配所有
-      if (!selector) return true;
-
-      const normalizedName = attrName.trim().toLowerCase();
-
-      // 辅助函数：将通配符模式转换为正则表达式
-      const wildcardToRegex = (pattern: string): RegExp => {
-        const escaped = pattern
-          .replace(/[.+^${}()|[\]\\]/g, '\\$&') // 转义特殊字符
-          .replace(/\*/g, '.*') // * -> .*
-          .replace(/\?/g, '.'); // ? -> .
-        return new RegExp(`^${escaped}$`, 'i');
-      };
-
-      // 辅助函数：检查名称是否匹配任一模式
-      const matchesAnyPattern = (name: string, patterns: string[]): boolean => {
-        return patterns.some(pattern => {
-          const regex = wildcardToRegex(pattern);
-          return regex.test(name);
-        });
-      };
-
-      // 1. 检查 namePatterns.exclude（优先于 include）
-      if (selector.namePatterns?.exclude && selector.namePatterns.exclude.length > 0) {
-        if (matchesAnyPattern(normalizedName, selector.namePatterns.exclude)) {
-          return false; // 被排除
-        }
-      }
-
-      // 2. 检查 namePatterns.include
-      if (selector.namePatterns?.include && selector.namePatterns.include.length > 0) {
-        // 如果定义了 include 且不为 ['*']，需要匹配
-        const isWildcardOnly = selector.namePatterns.include.length === 1 && selector.namePatterns.include[0] === '*';
-        if (!isWildcardOnly && !matchesAnyPattern(normalizedName, selector.namePatterns.include)) {
-          return false; // 未被包含
-        }
-      }
-
-      // 3. 检查 tags（暂时跳过，因为当前掷骰上下文可能没有 tags 元数据）
-      // 未来可以扩展支持 tags.include/exclude
-
-      return true;
-    };
-
-    // [新增] 渲染效果输入区域
-    const renderEffectInputs = (preset: AdvancedDicePreset, attrName: string): string[] => {
-      if (!preset.effectsConfig) return [];
-
-      // 检查触发模式
-      const isMatched = matchesCheckSelector(attrName, {
-        namePatterns: { include: preset.effectsConfig.triggerPatterns },
-      });
-
-      if (!isMatched) return [];
-
-      const items: string[] = [];
-
-      // 从 preset.outcomes 中查找有效果的结果等级，生成输入框
-      // 注意：效果定义在 preset.outcomes[].effects 中，不是 effectsConfig.outcomes
-      if (preset.outcomes && Array.isArray(preset.outcomes)) {
-        const outcomesWithEffects = preset.outcomes.filter(outcome => outcome.effects && outcome.effects.length > 0);
-
-        outcomesWithEffects.forEach(outcome => {
-          // 获取该结果等级的默认值（从 effectsConfig.defaultValues 或 effects[0].value）
-          const defaultVal =
-            preset.effectsConfig?.defaultValues?.[outcome.name] || (outcome.effects && outcome.effects[0]?.value) || '';
-          const label = outcome.name; // 使用结果名作为标签
-
-          items.push(`
-            <div class="acu-effect-input-group">
-              <div class="acu-effect-input-label">
-                <span>${deps.escapeHtml(label)}效果</span>
-                <span class="acu-effect-preview-text" id="effect-preview-${deps.escapeHtml(outcome.name)}"></span>
-              </div>
-              <input type="text"
-                     class="acu-dice-input acu-effect-value-input"
-                     data-outcome="${deps.escapeHtml(outcome.name)}"
-                     value=""
-                     placeholder="${deps.escapeHtml(String(defaultVal || '输入效果值 (如 1d6)'))}">
-            </div>
-          `);
-        });
-      }
-
-      return items;
-    };
-
     const applyAdvancedPreset = (presetId: string | null) => {
       // 获取关键DOM元素
       const $modWrapper = panel.find('#dice-mod-wrapper');
@@ -462,12 +349,12 @@ export function createShowDicePanel(deps: any) {
         panel.find('.dice-attr-name-text').text('属性名');
 
         // 恢复属性值和目标值输入框
-        applyFieldConfig(panel.find('#dice-attr-value'), panel.find('#dice-attr-label'), undefined, {
+        dicePanelEffectInputs.applyFieldConfig(panel.find('#dice-attr-value'), panel.find('#dice-attr-label'), undefined, {
           label: '属性值',
           placeholder: '留空=50%最大值',
         });
 
-        applyFieldConfig(panel.find('#dice-target'), panel.find('#dice-target-label'), undefined, {
+        dicePanelEffectInputs.applyFieldConfig(panel.find('#dice-target'), panel.find('#dice-target-label'), undefined, {
           label: '目标值',
           placeholder: '留空=属性值',
         });
@@ -533,7 +420,7 @@ export function createShowDicePanel(deps: any) {
 
       // 1. 属性值 (如果未隐藏)
       if (!preset.attribute?.hidden) {
-        applyFieldConfig(panel.find('#dice-attr-value'), panel.find('#dice-attr-label'), preset.attribute, {
+        dicePanelEffectInputs.applyFieldConfig(panel.find('#dice-attr-value'), panel.find('#dice-attr-label'), preset.attribute, {
           label: '属性值',
           placeholder: '留空=50%最大值',
         });
@@ -542,7 +429,7 @@ export function createShowDicePanel(deps: any) {
 
       // 1.5 技能加值 (如果预设定义了 skillMod 且未隐藏)
       if (preset.skillMod && !preset.skillMod.hidden) {
-        applyFieldConfig(panel.find('#dice-skill-mod'), panel.find('#dice-skill-mod-label'), preset.skillMod, {
+        dicePanelEffectInputs.applyFieldConfig(panel.find('#dice-skill-mod'), panel.find('#dice-skill-mod-label'), preset.skillMod, {
           label: '技能加值',
           placeholder: '留空=0',
         });
@@ -551,14 +438,14 @@ export function createShowDicePanel(deps: any) {
 
       // [新增] 效果输入区域
       const attrName = panel.find('#dice-attr-name').val().trim();
-      const effectInputItems = renderEffectInputs(preset, attrName);
+      const effectInputItems = dicePanelEffectInputs.renderEffectInputs(preset, attrName);
       if (effectInputItems.length > 0) {
         gridItems.push(...effectInputItems);
       }
 
       // 2. 目标值/DC (如果未隐藏)
       if (!preset.dc?.hidden) {
-        applyFieldConfig(panel.find('#dice-target'), panel.find('#dice-target-label'), preset.dc, {
+        dicePanelEffectInputs.applyFieldConfig(panel.find('#dice-target'), panel.find('#dice-target-label'), preset.dc, {
           label: '目标值',
           placeholder: '留空=属性值',
         });
@@ -1185,7 +1072,7 @@ export function createShowDicePanel(deps: any) {
         preset.pushedRoll?.enabled &&
         !isPushed && // 已经是孤注一掷则不可再push
         matchedOutcome &&
-        !matchesCheckSelector(attrName, {
+        !dicePanelEffectInputs.matchesCheckSelector(attrName, {
           namePatterns: { include: preset.pushedRoll.excludePatterns ?? [] },
         }) // 排除特定属性名
       ) {
@@ -1344,7 +1231,7 @@ export function createShowDicePanel(deps: any) {
         matchedOutcome &&
         matchedOutcome.effects &&
         matchedOutcome.effects.length > 0 &&
-        matchesCheckSelector(attrName, {
+        dicePanelEffectInputs.matchesCheckSelector(attrName, {
           namePatterns: { include: preset.effectsConfig.triggerPatterns },
         });
 
