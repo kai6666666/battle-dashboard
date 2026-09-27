@@ -1,0 +1,218 @@
+/**
+ * part-05a-table-manager.ts — part-05 子分片（从 part-05-validation 拆分，按序拼接内容不变）。
+ */
+export const STYLES_PART_05A_TABLE_MANAGER = `/* ========== 表格管理列表样式 ========== */
+            .acu-table-manager-list {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                max-height: 300px;
+                overflow-y: auto;
+                padding: 4px;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-y: contain;
+                touch-action: pan-y;
+            }
+            .acu-table-manager-hint {
+                font-size: 11px;
+                color: var(--acu-text-sub);
+                margin-bottom: 8px;
+                padding: 0 4px;
+            }
+            .acu-settings-manager-body .acu-table-manager-list {
+                max-height: min(520px, 55vh);
+            }
+            .acu-table-manager-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 10px;
+                background: transparent;
+                border: 1.5px solid var(--acu-accent);
+                border-radius: 6px;
+                cursor: default;
+                transition: all 0.15s;
+                user-select: none;
+                touch-action: pan-y;
+            }
+            .acu-table-manager-item:hover {
+                background: var(--acu-table-hover);
+            }
+            .acu-table-manager-item.hidden-table {
+                opacity: 0.5;
+                border-color: var(--acu-border);
+                border-style: dashed;
+            }
+            .acu-table-manager-item.hidden-table .acu-table-item-name {
+                text-decoration: line-through;
+            }
+            .acu-table-item-check {
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: var(--acu-accent);
+                border-radius: 4px;
+                transition: all 0.15s;
+            }
+            .acu-table-item-check:hover {
+                background: var(--acu-table-hover);
+                transform: scale(1.1);
+            }
+            .acu-table-manager-item.hidden-table .acu-table-item-check {
+                color: var(--acu-text-sub);
+            }
+            .acu-table-item-icon {
+                width: 20px;
+                text-align: center;
+                color: var(--acu-accent);
+                font-size: 12px;
+            }
+            .acu-table-item-name {
+                flex: 1;
+                font-size: 13px;
+                color: var(--acu-text-main);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .acu-table-item-handle {
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--acu-text-sub);
+                cursor: grab;
+                opacity: 0.4;
+                transition: all 0.15s;
+                border-radius: 4px;
+            }
+            .acu-table-item-handle:hover {
+                opacity: 1;
+                background: var(--acu-table-hover);
+                color: var(--acu-accent);
+            }
+            .acu-dragging {
+                cursor: grabbing;
+            }
+            .acu-drag-ghost {
+                position: fixed;
+                pointer-events: none;
+                z-index: 10000;
+                opacity: 0.9;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+                transform: rotate(2deg);
+            }
+            .acu-drag-placeholder {
+                opacity: 0.3;
+                border: 2px dashed var(--acu-border);
+                background: var(--acu-table-hover);
+            }
+            .acu-drag-indicator {
+                height: 3px;
+                background: var(--acu-accent);
+                border-radius: 2px;
+                margin: 4px 0;
+            }
+            @media (max-width: 768px) {
+                .acu-table-item-handle {
+                    opacity: 0.6;
+                }
+            }
+            /* 特殊按钮样式（投骰/审核/变量） */
+            .acu-table-manager-item.acu-special-item {
+                background: linear-gradient(135deg, rgba(var(--acu-accent-rgb, 128, 128, 128), 0.08), transparent);
+                border-style: dashed;
+                border-color: rgba(var(--acu-accent-rgb, 128, 128, 128), 0.3);
+            }
+            .acu-table-manager-item.acu-special-item .acu-table-item-icon {
+                color: var(--acu-accent);
+            }
+            .acu-table-manager-item.acu-special-item .acu-table-item-name {
+                font-weight: 500;
+            }
+            /* ========== 设置内预设管理层 ========== */
+            .acu-settings-manager-overlay {
+                position: fixed;
+                inset: 0;
+                height: 100vh;
+                height: 100dvh;
+                z-index: 10040;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            .acu-settings-manager-overlay[hidden] {
+                display: none !important;
+            }
+            .acu-settings-manager-backdrop {
+                position: absolute;
+                inset: 0;
+                background: rgba(8, 10, 12, 0.46);
+            }
+            .acu-settings-manager-dialog {
+                position: relative;
+                z-index: 1;
+                width: min(760px, calc(100vw - 32px));
+                max-height: min(780px, calc(100vh - 40px));
+                max-height: min(780px, calc(100dvh - 40px));
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                background: var(--acu-bg-panel, #1f1f1f);
+                background-color: var(--acu-bg-panel, #1f1f1f);
+                color: var(--acu-text-main);
+                border: 1px solid var(--acu-border);
+                border-radius: 12px;
+                box-shadow: 0 18px 52px rgba(8, 10, 12, 0.38);
+            }
+            .acu-settings-manager-header {
+                flex: 0 0 auto;
+                border-bottom: 1px solid var(--acu-border);
+            }
+            .acu-settings-manager-title {
+                min-width: 0;
+            }
+            .acu-settings-manager-body {
+                flex: 1 1 auto;
+                min-height: 0;
+                overflow: auto;
+                padding: 14px 16px 16px;
+                background: var(--acu-bg-panel, #1f1f1f);
+                background-color: var(--acu-bg-panel, #1f1f1f);
+            }
+            .acu-settings-manager-control-row {
+                gap: 12px;
+            }
+            .acu-settings-manager-control-row > span {
+                color: var(--acu-text-main);
+                font-weight: 600;
+            }
+            @media (max-width: 600px) {
+                .acu-settings-manager-overlay {
+                    padding: 10px;
+                }
+                .acu-settings-manager-dialog {
+                    width: calc(100vw - 20px);
+                    max-height: calc(100vh - 20px);
+                    max-height: calc(100dvh - 20px);
+                    border-radius: 10px;
+                }
+                .acu-settings-manager-body {
+                    padding: 12px;
+                }
+                .acu-settings-manager-control-row {
+                    align-items: stretch;
+                    flex-direction: column;
+                }
+                .acu-settings-manager-control-row .acu-setting-select {
+                    width: 100%;
+                    max-width: none !important;
+                }
+            }
+`;

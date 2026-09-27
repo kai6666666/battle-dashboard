@@ -233,3 +233,8 @@ export function createXxx(deps: any) {
 - `shared/styles/part-03-icons.ts`（2,430 行 / 87KB）拆为 3 个子分片 + 聚合器：
   - `part-03a-avatar-manager.ts`（435 行）/ `part-03b-icon-preset.ts`（1,181 行）/ `part-03c-dialogs-settings.ts`（820 行）；
   - 逐字节等价；@ts-nocheck 1304 → 1303。
+
+## x3-h（v7.1.0-x3h）
+
+- `shared/styles/part-05-validation.ts`（2,537 行 / 86KB）拆为 4 个子分片 + 聚合器：
+  - a 表格管理(218) / b 验证+头像裁剪(684) / c 收藏夹系列(988) / d 导入确认+尾部(657)；逐字节等价；@ts-nocheck 1303 → 1302。

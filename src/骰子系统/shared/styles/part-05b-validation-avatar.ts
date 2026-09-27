@@ -1,0 +1,684 @@
+/**
+ * part-05b-validation-avatar.ts — part-05 子分片（从 part-05-validation 拆分，按序拼接内容不变）。
+ */
+export const STYLES_PART_05B_VALIDATION_AVATAR = `            /* ========== 数据验证规则样式 ========== */
+            .acu-validation-rules-list {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                max-height: 280px;
+                overflow-y: auto;
+                padding: 2px;
+            }
+            .acu-validation-rule-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 10px;
+                background: transparent;
+                border: 1.5px solid var(--acu-accent);
+                border-radius: 6px;
+                transition: all 0.2s ease;
+            }
+            .acu-validation-rule-item.disabled {
+                opacity: 0.5;
+            }
+            .acu-validation-rule-item:hover {
+                border-color: var(--acu-accent);
+            }
+            .acu-rule-toggle {
+                cursor: pointer;
+                font-size: 18px;
+                color: var(--text-sub);
+                transition: all 0.2s;
+                flex-shrink: 0;
+                background: none;
+                border: none;
+                border-radius: 4px;
+                padding: 4px 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .acu-rule-toggle:hover {
+                opacity: 0.8;
+            }
+            .acu-rule-toggle.active {
+                color: var(--acu-accent);
+                opacity: 1;
+            }
+            .acu-rule-info {
+                flex: 1;
+                min-width: 0;
+            }
+            .acu-rule-name {
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--acu-text-main);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .acu-rule-target {
+                font-size: 10px;
+                color: var(--acu-text-sub);
+                margin-top: 2px;
+            }
+            .acu-rule-type-icon {
+                width: 20px;
+                font-size: 12px;
+                color: var(--acu-text-sub);
+                flex-shrink: 0;
+                text-align: center;
+                background: none !important;
+            }
+            .acu-settings-manager-dialog .acu-rule-action {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+                min-height: 28px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex: 0 0 28px;
+                padding: 0;
+                margin: 0;
+                border: 1px solid transparent;
+                border-radius: 6px;
+                background: transparent;
+                box-shadow: none;
+                color: var(--acu-text-sub);
+                cursor: pointer;
+                opacity: 0.68;
+                transition:
+                    background-color var(--acu-motion-fast) var(--acu-ease-standard),
+                    color var(--acu-motion-fast) var(--acu-ease-standard),
+                    opacity var(--acu-motion-fast) var(--acu-ease-standard),
+                    box-shadow var(--acu-motion-fast) var(--acu-ease-standard);
+            }
+            .acu-settings-manager-dialog .acu-rule-action:hover {
+                border-color: transparent;
+                background: var(--acu-table-hover);
+                opacity: 1;
+            }
+            .acu-settings-manager-dialog .acu-rule-action:focus {
+                outline: none;
+                box-shadow: none;
+            }
+            .acu-settings-manager-dialog .acu-rule-action:focus-visible {
+                outline: none;
+                box-shadow: var(--acu-focus-ring);
+                opacity: 1;
+            }
+            .acu-settings-manager-dialog .acu-rule-edit:hover {
+                color: var(--acu-accent);
+            }
+            .acu-settings-manager-dialog .acu-rule-delete:hover {
+                color: var(--acu-error-text, #e74c3c);
+            }
+            .acu-rule-intercept {
+                cursor: pointer;
+                font-size: 14px;
+                color: var(--acu-text-sub);
+                padding: 4px 6px;
+                border-radius: 4px;
+                opacity: 0.5;
+                transition: all 0.2s;
+                flex-shrink: 0;
+            }
+            .acu-rule-intercept:hover {
+                opacity: 0.8;
+                background: var(--acu-table-hover);
+            }
+            .acu-rule-intercept.active {
+                color: var(--acu-accent);
+                opacity: 1;
+            }
+            .acu-add-rule-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                width: 100%;
+                padding: 10px;
+                margin-top: 8px;
+                background: var(--acu-btn-bg);
+                border: 1px dashed var(--acu-border);
+                border-radius: 6px;
+                color: var(--acu-text-sub);
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .acu-add-rule-btn:hover {
+                border-color: var(--acu-accent);
+                color: var(--acu-accent);
+                background: rgba(var(--acu-accent-rgb, 128, 128, 128), 0.1);
+            }
+            /* 验证规则弹窗 */
+            .acu-validation-modal-overlay {
+                z-index: 31320;
+            }
+            .acu-validation-modal {
+                background: var(--acu-bg-panel);
+                border: 1px solid var(--acu-border);
+                border-radius: 12px;
+                width: 90%;
+                max-width: 420px;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            }
+            .acu-edit-dialog.acu-validation-rule-editor-dialog {
+                width: min(560px, 92vw);
+                max-width: 560px;
+                max-height: 85vh;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            .acu-validation-modal-body {
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            .acu-validation-rule-editor-dialog .acu-validation-modal-body {
+                flex: 1;
+                min-height: 0;
+                max-height: none;
+                padding: 2px 2px 0;
+            }
+            .acu-validation-modal-body .acu-setting-row {
+                flex-wrap: wrap;
+            }
+            .acu-validation-modal-body .acu-panel-input,
+            .acu-validation-modal input[type="text"],
+            .acu-validation-modal input[type="number"],
+            .acu-validation-modal select {
+                background: var(--acu-input-bg, var(--acu-btn-bg)) !important;
+                border: 1px solid var(--acu-border) !important;
+                border-radius: 6px !important;
+                padding: 8px 10px !important;
+                color: var(--acu-text-main) !important;
+                font-size: 12px !important;
+                box-shadow: none !important;
+                -webkit-appearance: none !important;
+            }
+            .acu-validation-modal-body .acu-panel-input:focus,
+            .acu-validation-modal input[type="text"]:focus,
+            .acu-validation-modal input[type="number"]:focus,
+            .acu-validation-modal select:focus {
+                outline: none !important;
+                border-color: var(--acu-accent) !important;
+            }
+            .acu-validation-modal-body .acu-panel-input::placeholder,
+            .acu-validation-modal input[type="text"]::placeholder,
+            .acu-validation-modal input[type="number"]::placeholder {
+                color: var(--acu-text-sub) !important;
+                opacity: 0.7 !important;
+            }
+            .acu-validation-modal select option {
+                background: var(--acu-bg-panel) !important;
+                color: var(--acu-text-main) !important;
+            }
+            .acu-validation-modal select option[value=""] {
+                color: var(--acu-text-sub) !important;
+                opacity: 0.7 !important;
+            }
+            .acu-rule-config-section {
+                padding: 8px 0;
+            }
+            .acu-validation-modal-footer {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 8px;
+                padding: 12px 0 0;
+                border-top: 1px solid var(--acu-border);
+                background: transparent;
+                flex-shrink: 0;
+            }
+            .acu-validation-modal-footer .acu-advanced-preset-editor-actions {
+                justify-content: flex-end;
+            }
+            .acu-validation-modal-footer .acu-dialog-btn {
+                flex: 0 0 auto;
+                min-height: 38px;
+                margin: 0;
+            }
+            .acu-validation-modal-footer .acu-btn {
+                flex: 1;
+                padding: 10px 12px !important;
+                font-size: 13px !important;
+                font-weight: 500 !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            }
+            /* 智能修改弹窗样式 */
+            .acu-smart-fix-meta {
+                font-size: 11px !important;
+                color: var(--acu-text-sub) !important;
+                padding: 4px 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 6px !important;
+                flex-wrap: wrap !important;
+            }
+            .acu-smart-fix-separator {
+                color: var(--acu-border) !important;
+                opacity: 0.5 !important;
+            }
+            .acu-smart-fix-diff {
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                padding: 6px 0 !important;
+                margin: 4px 0 !important;
+                flex-wrap: wrap !important;
+            }
+            .acu-smart-fix-diff-old-text {
+                color: var(--acu-hl-manual) !important;
+                text-decoration: line-through !important;
+                opacity: 0.7 !important;
+                font-size: 13px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                max-width: 150px !important;
+            }
+            .acu-smart-fix-diff-arrow {
+                color: var(--acu-text-sub) !important;
+                flex-shrink: 0 !important;
+            }
+            .acu-smart-fix-empty {
+                opacity: 0.5 !important;
+                font-style: italic !important;
+            }
+            .acu-smart-fix-diff-input-wrapper {
+                flex: 1 !important;
+                min-width: 120px !important;
+            }
+            .acu-smart-fix-diff-input-wrapper input,
+            .acu-smart-fix-diff-input-wrapper select {
+                width: 100% !important;
+                background: var(--acu-input-bg, var(--acu-btn-bg)) !important;
+                border: 1px solid var(--acu-border) !important;
+                border-radius: 4px !important;
+                padding: 4px 8px !important;
+                color: var(--acu-text-main) !important;
+                font-size: 13px !important;
+                font-weight: 500 !important;
+                box-shadow: none !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+                min-height: 26px !important;
+                line-height: 1.3 !important;
+            }
+            .acu-smart-fix-diff-input-wrapper input:focus,
+            .acu-smart-fix-diff-input-wrapper select:focus {
+                outline: none !important;
+                border-color: var(--acu-accent) !important;
+            }
+            .acu-smart-fix-diff-input-wrapper select {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23666' d='M5 7L1 3h8z'/%3E%3C/svg%3E") !important;
+                background-repeat: no-repeat !important;
+                background-position: right 6px center !important;
+                padding-right: 24px !important;
+            }
+            .acu-smart-fix-diff-input-wrapper select option {
+                background: var(--acu-card-bg) !important;
+                color: var(--acu-text-main) !important;
+            }
+            .acu-smart-fix-suggest {
+                padding: 10px !important;
+                background: var(--acu-card-bg) !important;
+                border: 1px solid var(--acu-border) !important;
+                border-radius: 6px !important;
+                margin-top: 8px !important;
+            }
+            .acu-smart-fix-suggest-label {
+                font-size: 11px !important;
+                color: var(--acu-text-sub) !important;
+                margin-bottom: 6px !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+            }
+            .acu-smart-fix-suggest-label i {
+                color: var(--acu-accent) !important;
+            }
+            .acu-smart-fix-suggest-value {
+                font-size: 13px !important;
+                color: var(--acu-success-text) !important;
+                font-weight: 500 !important;
+                padding: 6px 8px !important;
+                background: var(--acu-success-bg) !important;
+                border-radius: 4px !important;
+                cursor: pointer !important;
+                transition: all 0.2s !important;
+            }
+            .acu-smart-fix-suggest-value:hover {
+                background: var(--acu-success-text) !important;
+                color: white !important;
+            }
+            .acu-smart-fix-suggest-options {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 6px !important;
+            }
+            .acu-smart-fix-suggest-options-scroll {
+                max-height: 120px !important;
+                overflow-y: auto !important;
+                padding-right: 4px !important;
+            }
+            .acu-smart-fix-option {
+                display: inline-block !important;
+                font-size: 12px !important;
+                padding: 4px 10px !important;
+                background: var(--acu-btn-bg) !important;
+                border: 1px solid var(--acu-border) !important;
+                border-radius: 4px !important;
+                color: var(--acu-text-main) !important;
+                cursor: pointer !important;
+                transition: all 0.2s !important;
+            }
+            .acu-smart-fix-option:hover {
+                background: var(--acu-btn-hover) !important;
+                border-color: var(--acu-accent) !important;
+                color: var(--acu-accent) !important;
+            }
+            .acu-smart-fix-option-current {
+                background: var(--acu-hl-manual-bg) !important;
+                border-color: var(--acu-hl-manual) !important;
+                color: var(--acu-hl-manual) !important;
+                text-decoration: line-through !important;
+                opacity: 0.7 !important;
+            }
+            .acu-smart-fix-error-hint {
+                font-size: 11px !important;
+                color: var(--acu-text-sub) !important;
+                padding: 8px !important;
+                background: var(--acu-card-bg) !important;
+                border-radius: 4px !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 6px !important;
+            }
+            .acu-smart-fix-error-hint i {
+                color: var(--acu-accent) !important;
+                flex-shrink: 0 !important;
+            }
+            @media (max-width: 600px) {
+                .acu-smart-fix-diff {
+                    flex-direction: column !important;
+                    align-items: stretch !important;
+                }
+                .acu-smart-fix-diff-arrow {
+                    transform: rotate(90deg) !important;
+                }
+            }
+            .acu-btn {
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s;
+                border: 1px solid transparent;
+            }
+            .acu-btn-secondary {
+                background: var(--acu-btn-bg);
+                border-color: var(--acu-text-sub);
+                color: var(--acu-text-main);
+            }
+            .acu-btn-secondary:hover {
+                background: var(--acu-btn-hover);
+            }
+            .acu-btn-primary {
+                background: var(--acu-accent);
+                color: var(--acu-btn-active-text);
+            }
+            .acu-btn-primary:hover {
+                opacity: 0.9;
+            }
+            /* 智能修改弹窗新增样式 */
+            .acu-smart-fix-rule-info {
+                padding: 10px 12px !important;
+                background: var(--acu-table-head) !important;
+                border: 1px solid var(--acu-border) !important;
+                border-color: var(--acu-state-accent-border) !important;
+                border-radius: 4px !important;
+                margin-bottom: 12px !important;
+            }
+            .acu-smart-fix-rule-header {
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                font-size: 13px !important;
+                font-weight: 600 !important;
+                color: var(--acu-text-main) !important;
+                margin-bottom: 4px !important;
+            }
+            .acu-smart-fix-rule-header i {
+                color: var(--acu-accent) !important;
+            }
+            .acu-smart-fix-rule-desc {
+                font-size: 12px !important;
+                color: var(--acu-text-sub) !important;
+                line-height: 1.4 !important;
+            }
+            .acu-smart-fix-suggest-section {
+                margin-top: 12px !important;
+            }
+            .acu-smart-fix-suggest code {
+                background: var(--acu-table-head) !important;
+                padding: 2px 6px !important;
+                border-radius: 3px !important;
+                font-size: 11px !important;
+                color: var(--acu-text-main) !important;
+            }
+            .acu-smart-fix-quick-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 6px !important;
+                padding: 6px 12px !important;
+                background: var(--acu-accent) !important;
+                color: var(--acu-btn-active-text) !important;
+                border: 1px solid var(--acu-accent) !important;
+                border-radius: 4px !important;
+                font-size: 12px !important;
+                font-weight: 500 !important;
+                cursor: pointer !important;
+                transition: all 0.2s !important;
+            }
+            .acu-smart-fix-quick-btn:hover {
+                background: var(--acu-btn-active-bg) !important;
+                color: var(--acu-btn-active-text) !important;
+                border-color: var(--acu-btn-active-bg) !important;
+            }
+            .acu-smart-fix-table-summary {
+                padding: 12px !important;
+                background: var(--acu-card-bg) !important;
+                border: 1px solid var(--acu-border) !important;
+                border-radius: 6px !important;
+            }
+            .acu-smart-fix-stat {
+                font-size: 13px !important;
+                color: var(--acu-text-main) !important;
+                margin-bottom: 8px !important;
+            }
+            .acu-smart-fix-stat strong {
+                color: var(--acu-hl-manual) !important;
+            }
+            .acu-smart-fix-change-list {
+                max-height: 150px !important;
+                overflow-y: auto !important;
+                margin-top: 8px !important;
+            }
+            .acu-smart-fix-change-item {
+                font-size: 11px !important;
+                color: var(--acu-text-sub) !important;
+                padding: 4px 8px !important;
+                background: var(--acu-table-head) !important;
+                border-radius: 3px !important;
+                margin-bottom: 4px !important;
+            }
+            .acu-smart-fix-hint {
+                font-size: 12px !important;
+                color: var(--acu-text-sub) !important;
+                padding: 8px !important;
+                background: var(--acu-table-head) !important;
+                border-radius: 4px !important;
+                margin-top: 8px !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 6px !important;
+            }
+            .acu-smart-fix-hint i {
+                color: var(--acu-accent) !important;
+            }
+            /* ========== 头像裁剪弹窗样式 ========== */
+            .acu-crop-modal-overlay {
+                z-index: 31330;
+            }
+            .acu-crop-file-input {
+                display: none;
+            }
+            .acu-crop-modal {
+                background: var(--acu-bg-panel);
+                border: 1px solid var(--acu-border);
+                border-radius: 12px;
+                width: min(360px, calc(100vw - 24px));
+                max-width: 360px;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                box-sizing: border-box;
+            }
+            .acu-crop-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 16px;
+                background: var(--acu-table-head);
+                border-bottom: 1px solid var(--acu-border);
+                font-size: 14px;
+                font-weight: bold;
+                color: var(--acu-accent);
+            }
+            .acu-crop-close {
+                width: 34px;
+                height: 34px;
+                min-width: 34px;
+                min-height: 34px;
+                background: var(--acu-btn-bg);
+                border: 1px solid var(--acu-border);
+                border-radius: 6px;
+                color: var(--acu-text-sub);
+                font-size: 16px;
+                cursor: pointer;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .acu-crop-close:hover {
+                color: var(--acu-text-main);
+                background: var(--acu-btn-hover);
+            }
+            .acu-crop-body {
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            .acu-crop-container {
+                position: relative;
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                overflow: hidden;
+                touch-action: none;
+                user-select: none;
+            }
+            .acu-crop-image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-repeat: no-repeat;
+                cursor: grab;
+            }
+            .acu-crop-mask {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border: 3px solid var(--acu-accent);
+                border-radius: 50%;
+                pointer-events: none;
+                box-shadow: 0 0 0 1000px rgba(0,0,0,0.3);
+            }
+            .acu-crop-hint {
+                font-size: 11px;
+                color: var(--acu-text-sub);
+                opacity: 0.7;
+            }
+            .acu-crop-footer {
+                display: grid;
+                grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr);
+                gap: 10px;
+                padding: 12px 16px;
+                background: var(--acu-table-head);
+                border-top: 1px solid var(--acu-border);
+            }
+            .acu-crop-btn {
+                min-width: 0;
+                min-height: 38px;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.15s;
+            }
+            .acu-crop-cancel {
+                background: var(--acu-btn-bg);
+                border: 1px solid var(--acu-text-sub);
+                color: var(--acu-text-main);
+            }
+            .acu-crop-cancel:hover {
+                background: var(--acu-btn-hover);
+            }
+            .acu-crop-confirm {
+                background: var(--acu-accent);
+                border: 1px solid var(--acu-accent);
+                color: var(--acu-btn-active-text);
+            }
+            .acu-crop-confirm:hover {
+                opacity: 0.9;
+            }
+            .acu-crop-reupload {
+                padding: 0;
+                background: var(--acu-btn-bg);
+                border: 1px solid var(--acu-border);
+                color: var(--acu-text-main);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .acu-crop-reupload:hover {
+                background: var(--acu-btn-hover);
+                color: var(--acu-accent);
+            }
+
+`;
