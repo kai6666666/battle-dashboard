@@ -331,3 +331,9 @@ export function createXxx(deps: any) {
 - wiring 第三簇：骰子配置备份/角色档案装配（285 行；defs 49 / aft 20 / ext 23）→ `wiring/dice-profile-backup-wiring.ts`；
   - index 11,212 → 10,930 行；
   - 事故与改进：① 脚本被重复执行造成错位拼接（含语法错误）→ 改为单次执行并在生成前 `git checkout` 复位；② 簇边界必须用「构造闭合」算法而非 def 间隔（否则切在 `createX({` 中间）；③ `escapeHtml` 定义接在 `});` 同行，属于扫描盲区 → 全库扫描「行中定义」并补入 ctx。
+
+## x4-f（v7.1.0-x4f）
+
+- wiring 第四簇：配置备份核心装配（392 行；defs 54 / aft 22 / ext 65）→ `wiring/dice-config-backup-core-wiring.ts`；
+  - index 10,930 → 10,541 行；
+  - 事故与改进：① 提取器加入「已应用守卫」防双跑；② `TableTemplateRequirementPresetManager` / `BUILTIN_..._PRESETS`（x4-d 已迁出）属跨模块依赖，外扫需以「全量定义（含已迁出符号）」，本次以手工补 ctx 解决；后续在生成器中维护「已迁名字映射」。
