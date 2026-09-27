@@ -304,3 +304,10 @@ export function createXxx(deps: any) {
 - x4（index.ts 收口）首刀：高级骰子预设系统类型区块 31 个类型（约 670 行）迁出 → `shared/advanced-preset-types.ts`；
   - index 13,018 → 12,346 行（类型仅编译期，运行时零变化）；
   - 依赖：仅4个类型从 `./types` 导入（CustomFieldConfig / DerivedVarSpec / DiceExprPatch / OutcomePolicy）。
+
+## x4-b（v7.1.0-x4b）
+
+- 第二批类型迁移：10 个区块（Regex / Favorites&History / AttributeRule / Dashboard / GlobalInteraction / CustomTableNameIcon / RelationGraph / RuntimeCrud / TemplateInspection）共约 560 行 → `shared/index-local-types.ts`；
+  - index 12,344 → 11,790 行；
+  - 排除：依赖 index 运行时常量的 3 块（RENDER_PRESET_FORMAT / DICE_CONFIG_BACKUP_FORMAT / INVENTORY_*_OPTIONS）；
+  - 发现经验：多行 `import type {` 续行会被类型扫描误判为本地类型声明（x4-b 侦察时识别并规避）。

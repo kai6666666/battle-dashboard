@@ -1938,162 +1938,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
    * - delete: 删除匹配的内容
    * - validate: 验证格式(与ValidationEngine不同,这是转换验证)
    */
-  type RegexOperation = 'replace' | 'extract' | 'delete' | 'validate';
-
-  /**
-   * 正则转换作用域类型
-   * - global: 所有表格的所有列
-   * - table: 指定表格的所有列
-   * - column: 指定表格的指定列
-   */
-  type RegexScopeType = 'global' | 'table' | 'column';
-
-  /**
-   * 正则转换执行模式
-   * - auto: 数据更新时自动执行
-   * - manual: 用户手动触发
-   * - preview: 预览影响,确认后应用
-   */
-  type RegexExecutionMode = 'auto' | 'manual' | 'preview';
-
-  /**
-   * 正则标志位选项
-   */
-  interface RegexFlags {
-    caseInsensitive?: boolean; // i - 忽略大小写
-    global?: boolean; // g - 全局匹配
-    multiline?: boolean; // m - 多行模式
-    unicode?: boolean; // u - Unicode模式
-    sticky?: boolean; // y - 粘性匹配
-  }
-
-  /**
-   * 作用域配置
-   */
-  interface RegexScopeConfig {
-    type: RegexScopeType;
-    tableNames?: string[]; // 作用域为table或column时指定表格名
-    columnNames?: string[]; // 作用域为column时指定列名
-  }
-
-  /**
-   * 安全配置
-   */
-  interface RegexSecurityConfig {
-    maxMatchTime: number; // 单次匹配最大耗时(毫秒),默认100
-    maxMatches: number; // 最大匹配次数,默认1000
-    maxInputLength: number; // 最大输入长度,默认10000
-  }
-
-  /**
-   * 测试用例
-   */
-  interface RegexTestCase {
-    input: string;
-    expected: string;
-    description?: string;
-  }
-
-  /**
-   * 表格正则规则
-   */
-  interface RegexTransformationRule {
-    id: string; // 唯一标识
-    name: string; // 规则名称
-    description?: string; // 规则描述
-    operation: RegexOperation; // 操作类型
-    pattern: string; // 正则表达式字符串
-    flags?: RegexFlags; // 正则标志位
-    replacement?: string; // 替换内容(仅replace操作)
-    scope: RegexScopeConfig; // 作���域配置
-    enabled: boolean; // 是否启用
-    priority: number; // 优先级(1-100),数值越大优先级越高
-    executeMode: RegexExecutionMode; // 执行模式
-    testCases?: RegexTestCase[]; // 测试用例
-    security?: RegexSecurityConfig; // 安全配置
-    createdAt?: number; // 创建时间戳
-    updatedAt?: number; // 更新时间戳
-  }
-
-  /**
-   * 转换结果
-   */
-  interface RegexTransformResult {
-    success: boolean;
-    oldValue: string;
-    newValue: string;
-    matched: boolean;
-    error?: string;
-  }
-
-  /**
-   * 批量转换结果
-   */
-  interface RegexBatchTransformResult {
-    tableName: string;
-    columnIndex: number;
-    rowIndex: number;
-    result: RegexTransformResult;
-  }
-
-  /**
-   * 预览结果
-   */
-  interface RegexPreviewResult {
-    rule: RegexTransformationRule;
-    affectedCells: Array<{
-      tableName: string;
-      rowIndex: number;
-      columnIndex: number;
-      columnName: string;
-      oldValue: string;
-      newValue: string;
-    }>;
-    totalAffected: number;
-  }
-
-  /**
-   * 预设配置
-   */
-  interface RegexPreset {
-    id: string;
-    name: string;
-    description?: string;
-    version: string;
-    rules: RegexTransformationRule[];
-    createdAt?: number;
-    updatedAt?: number;
-  }
-
-  // 正则转换系统存储键
-
-
-
-
-
-  // ========================================
-  // 酒馆原生正则格式兼容 (Tavern Regex Import)
-  // ========================================
-
-  /**
-   * 酒馆原生正则格式
-   * @see https://docs.sillytavern.app/usage/core-concepts/regex/
-   */
-  interface TavernRegex {
-    id?: string;
-    scriptName: string;
-    findRegex: string;
-    replaceString: string;
-    trimStrings?: string[];
-    placement?: number[];
-    disabled?: boolean;
-    markdownOnly?: boolean;
-    promptOnly?: boolean;
-    runOnEdit?: boolean;
-    substituteRegex?: number;
-    minDepth?: number | null;
-    maxDepth?: number | null;
-  }
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   /**
    * 解析酒馆正则的 findRegex 字段
@@ -2377,44 +2222,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
    * @property {number} updatedAt - 最后修改时间戳
    * @property {{tableUid: string, tableName: string, chatId: string}} [sourceInfo] - 来源信息
    */
-  interface FavoriteItem {
-    id: string;
-    header: string[];
-    rowData: (string | number)[];
-    tags: string[];
-    createdAt: number;
-    updatedAt: number;
-    sourceInfo?: {
-      tableUid: string;
-      tableName: string;
-      chatId: string;
-    };
-  }
-
-
-  type DiceHistoryEventType = 'check' | 'contest';
-
-  interface DiceHistoryStatRecord {
-    id?: number;
-    eventType: DiceHistoryEventType;
-    timestamp: number;
-    chatId: string;
-    characterId: string;
-    success: boolean;
-    attrName: string;
-    formula: string;
-    total: number;
-    target: number;
-    outcomeText: string;
-  }
-
-  interface DiceHistoryStatsSummary {
-    total: number;
-    checks: number;
-    contests: number;
-    checkSuccess: number;
-    checkSuccessRate: number;
-  }
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const DiceHistoryStatsDB = createDiceHistoryStatsDB({
     getDiceStatsContext: (...a: any[]) => getDiceStatsContext(...a),
@@ -3279,28 +3087,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     buildAutoCheckSuggestionGuide: (...a: any[]) => buildAutoCheckSuggestionGuide(...a),
   });
 
-  interface AttributeRuleAttributeConfig {
-    name: string;
-    formula: string;
-    range: [number, number];
-    modifier?: string;
-  }
-
-  interface AttributeRulePresetConfig {
-    id: string;
-    name: string;
-    baseAttributes?: AttributeRuleAttributeConfig[];
-    specialAttributes?: AttributeRuleAttributeConfig[];
-  }
-
-  interface GeneratedAttributeRules {
-    base?: Record<string, number>;
-    special?: Record<string, number>;
-  }
-
-  type RuleTemplateSourceData = { note?: unknown };
-  type RuleTemplateSheet = { name?: unknown; sourceData?: RuleTemplateSourceData };
-  type RuleTemplateRecord = Record<string, unknown>;
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const getAttributeRulePresetById = createGetAttributeRulePresetById({
     getAttributePresetManager: () => AttributePresetManager,
@@ -3546,58 +3333,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   // ========================================
   // 仪表盘统一配置中心
   // ========================================
-  type DashboardColumnConfig = {
-    keywords: string[];
-    fallbackIndex: number | null;
-    isMultiple?: boolean;
-  };
-  type DashboardFilterConfig = {
-    column: string;
-    includes: string[];
-    excludeColumn?: string;
-    excludes?: string[];
-  };
-  type DashboardModuleConfig = {
-    tableKeywords: string[];
-    columns: Record<string, DashboardColumnConfig>;
-    filters?: Record<string, DashboardFilterConfig>;
-  };
-  type DashboardConfigMap = Record<string, DashboardModuleConfig>;
-  type DashboardPresetColumnConfig = {
-    keywords: string[];
-  };
-  type DashboardPresetFilterConfig = {
-    column?: string;
-    includes?: string[];
-    excludeColumn?: string;
-    excludes?: string[];
-  };
-  type DashboardRelationshipGraphSourceMode = 'fixedTarget' | 'relationList';
-  type DashboardRelationshipGraphSourceConfig = {
-    mode: DashboardRelationshipGraphSourceMode;
-    tableKeywords: string[];
-    nameColumn: string[];
-    relationColumn: string[];
-    target?: string;
-  };
-  type DashboardPresetModuleConfig = {
-    tableKeywords?: string[];
-    columns?: Record<string, DashboardPresetColumnConfig>;
-    filters?: Record<string, DashboardPresetFilterConfig>;
-    sources?: DashboardRelationshipGraphSourceConfig[];
-  };
-  type DashboardPresetModules = Record<string, DashboardPresetModuleConfig>;
-  type DashboardPreset = {
-    format: 'acu_dashboard_preset_v1';
-    version: string;
-    id: string;
-    name: string;
-    builtin?: boolean;
-    description?: string;
-    modules: DashboardPresetModules;
-    createdAt?: string;
-    updatedAt?: string;
-  };
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const DASHBOARD_PRESET_FORMAT = 'acu_dashboard_preset_v1';
   const DASHBOARD_DEFAULT_PRESET_ID = '__builtin_dashboard_default__';
@@ -3846,57 +3582,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     getACTION_ICON_MAP: () => ACTION_ICON_MAP,
   });
 
-  interface GlobalInteractionAction {
-    label: string;
-    icon?: string;
-    type?: string;
-    template?: string;
-    auto_send?: boolean;
-  }
-
-  interface GlobalInteractionRow {
-    rowIndex: number;
-    title: string;
-    iconName: string;
-    actions: GlobalInteractionAction[];
-    searchText: string;
-  }
-
-  interface GlobalInteractionGroup {
-    tableKey: string;
-    tableName: string;
-    rows: GlobalInteractionRow[];
-  }
-
-  type GlobalInteractionSectionKind =
-    | 'character'
-    | 'map'
-    | 'item'
-    | 'equipment'
-    | 'task'
-    | 'skill'
-    | 'faction'
-    | 'generic';
-
-  interface GlobalInteractionSection {
-    kind: GlobalInteractionSectionKind;
-    title: string;
-    icon: string;
-    order: number;
-    groups: GlobalInteractionGroup[];
-  }
-
-  interface GlobalInteractionSectionMeta {
-    kind: GlobalInteractionSectionKind;
-    title: string;
-    icon: string;
-    order: number;
-    keywords: string[];
-  }
-
-  interface GlobalInteractionActionRuleGroup {
-    table_keywords: string[];
-  }
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const GLOBAL_INTERACTION_NAME_HEADERS = createGlobalInteractionNameHeaders({
 
@@ -4449,118 +4135,11 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
 
   });
 
-  type CustomTableNameIconModuleId =
-    | 'table-name'
-    | 'item'
-    | 'equipment'
-    | 'faction'
-    | 'global-interaction-panel'
-    | 'global-interaction-map-marker'
-    | 'shop'
-    | 'avatar-manager'
-    | 'relationship-graph'
-    | 'map-character-node'
-    | 'character-interaction-panel'
-    | 'alias-resolution'
-    | 'user-graph-resolution';
-
-  type CustomTableNameIconSection =
-    | 'table'
-    | 'map'
-    | 'item'
-    | 'equipment'
-    | 'faction'
-    | 'shop'
-    | 'task'
-    | 'skill'
-    | 'generic'
-    | 'character'
-    | 'relationship'
-    | 'alias'
-    | 'user';
-
-  interface CustomTableNameIconContext {
-    moduleId: CustomTableNameIconModuleId;
-    tableName: string;
-    section: CustomTableNameIconSection;
-    name: string;
-  }
-
-  type CustomTableNameIconSourceType = 'url' | 'local';
-
-  type CustomTableNameIconInvalidSourceReason =
-    | 'invalid_url'
-    | 'invalid_protocol'
-    | 'svg_url'
-    | 'svg_mime'
-    | 'unsupported_mime'
-    | 'oversize';
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const CUSTOM_TABLE_NAME_ICON_PACK_SCHEMA_VERSION = 1;
 
-  interface CustomTableNameIconEntry extends CustomTableNameIconContext {
-    sourceType: CustomTableNameIconSourceType;
-    imageUrl: string;
-    localIconKey: string | null;
-    imageMimeType: string | null;
-    imageSize: number | null;
-    createdAt: number;
-    updatedAt: number;
-  }
-
-  interface CustomTableNameIconPackEntryMetadata {
-    imageMimeType: string | null;
-    imageSize: number | null;
-    missingLocalBinary?: boolean;
-    originalLocalKey?: string | null;
-  }
-
-  interface CustomTableNameIconPackEntry extends CustomTableNameIconContext {
-    sourceType: CustomTableNameIconSourceType;
-    url?: string;
-    localKey?: string | null;
-    metadata: CustomTableNameIconPackEntryMetadata;
-  }
-
-  interface CustomTableNameIconPack {
-    schemaVersion: number;
-    exportedAt: string;
-    entries: CustomTableNameIconPackEntry[];
-  }
-
-  interface CustomTableNameIconPackImportAnalysis {
-    entriesToImport: CustomTableNameIconEntry[];
-    importedCount: number;
-    overwrittenCount: number;
-    skippedInvalidUrlCount: number;
-    skippedNonWhitelistCount: number;
-    skippedInvalidEntryCount: number;
-    localMissingCount: number;
-  }
-
-  interface ResolvedCustomTableNameIcon {
-    icon: string;
-    entry: CustomTableNameIconEntry | null;
-    key: string | null;
-    sourceType: CustomTableNameIconSourceType | null;
-    imageUrl: string | null;
-    localIconKey: string | null;
-    assetUrl: string | null;
-    reason: 'invalid' | 'invalid_source' | 'not_whitelisted' | 'missing' | 'resolved';
-  }
-
-  interface CustomTableNameIconImageRecord {
-    key: string;
-    blob: Blob;
-    size: number;
-    type: string;
-    updatedAt: number;
-  }
-
-  type DashboardCustomTableNameIconContextInfo = {
-    moduleId: CustomTableNameIconModuleId;
-    section: CustomTableNameIconSection;
-  };
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const DASHBOARD_MODULE_SECTION_KIND = createDashboardModuleSectionKind({
 
@@ -5503,58 +5082,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     setIsMapOpening: (v: any) => { isMapOpening = v; },
   });
 
-  type RelationGraphCell = string | number | null | undefined;
-  type RelationGraphRow = RelationGraphCell[];
-
-  interface RelationGraphTableInput {
-    headers?: RelationGraphCell[];
-    rows?: RelationGraphRow[];
-    key?: string;
-  }
-
-  interface RelationshipGraphSourceTableMatch {
-    tableName: string;
-    table: RelationGraphTableInput;
-  }
-
-  interface RelationshipGraphBuildOptions {
-    tableName?: string;
-  }
-
-  interface RelationshipGraphRenderOptions {
-    includePlayerRelations?: boolean;
-  }
-
-  interface RelationGraphNode {
-    name: string;
-    isPlayer: boolean;
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    radius: number;
-    tableKey: string;
-    rowIndex?: number;
-    isInScene?: boolean;
-    fixed?: boolean;
-  }
-
-  interface RelationGraphEdge {
-    source: string;
-    target: string;
-    labelsFromSource: string[];
-    labelsFromTarget: string[];
-  }
-
-  interface ParsedRelationshipItem {
-    name: string;
-    relation: string;
-  }
-
-  interface RelationGraphColumnMatch {
-    index: number;
-    isConfigured: boolean;
-  }
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const RELATION_GRAPH_FALLBACK_RELATION_COLUMN_KEYWORDS = ['人际关系', 'relation_state', 'relation_text'];
 
@@ -7108,50 +6636,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
 
   });
 
-  type RuntimeCrudRowData = Record<string, unknown>;
-
-  type RuntimeCrudCellUpdatePayload = {
-    tableName: string;
-    rowIndex: number;
-    colIdentifier: string | number;
-    value: unknown;
-    skipNotify?: boolean;
-    skipChatSave?: boolean;
-  };
-
-  type RuntimeCrudUpdateRowPayload = {
-    tableName: string;
-    rowIndex: number;
-    data: RuntimeCrudRowData;
-    skipNotify?: boolean;
-    skipChatSave?: boolean;
-  };
-
-  type RuntimeCrudInsertRowPayload = {
-    tableName: string;
-    data: RuntimeCrudRowData;
-    skipNotify?: boolean;
-    skipChatSave?: boolean;
-  };
-
-  type RuntimeCrudDeleteRowPayload = {
-    tableName: string;
-    rowIndex: number;
-    skipNotify?: boolean;
-    skipChatSave?: boolean;
-  };
-
-  type RuntimeCrudWriteApi = {
-    updateCell: (payload: RuntimeCrudCellUpdatePayload) => Promise<unknown> | unknown;
-    updateRow?: (payload: RuntimeCrudUpdateRowPayload) => Promise<unknown> | unknown;
-    insertRow: (payload: RuntimeCrudInsertRowPayload) => Promise<unknown> | unknown;
-    deleteRow: (payload: RuntimeCrudDeleteRowPayload) => Promise<unknown> | unknown;
-    getCurrentData?: () => unknown;
-    exportTableAsJson?: () => unknown;
-    refreshDataAndWorldbook?: () => Promise<unknown> | unknown;
-    triggerUpdate?: () => Promise<unknown> | unknown;
-    _notifyTableUpdate?: () => void;
-  };
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const assertRuntimeCrudApi = createAssertRuntimeCrudApi({
     getCore: (...a: any[]) => getCore(...a),
@@ -8574,46 +8059,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     getCore: (...a: any[]) => getCore(...a),
   });
 
-  type TemplateInspectionSeverity = 'error' | 'warning' | 'info';
-
-  type TemplateInspectionSheet = {
-    key: string;
-    name: string;
-    headers: string[];
-    note: string;
-  };
-
-  type TemplateInspectionIssue = {
-    severity: TemplateInspectionSeverity;
-    groupName: string;
-    title: string;
-    missing: string[];
-    impact: string;
-    suggestion: string;
-  };
-
-  type TemplateInspectionIssueGroup = {
-    name: string;
-    severity: TemplateInspectionSeverity;
-    issues: TemplateInspectionIssue[];
-  };
-
-  type TemplateInspectionResult = {
-    sheets: TemplateInspectionSheet[];
-    issues: TemplateInspectionIssue[];
-    checkedAt: string;
-  };
-
-  type TemplateTableRequirement = {
-    title: string;
-    severity: TemplateInspectionSeverity;
-    tableLabel: string;
-    tableMatches: string[];
-    requiredColumns?: { label: string; matches: string[] }[];
-    requiredNoteTags?: string[];
-    impact: string;
-    suggestion: string;
-  };
+  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
 
   const LATEST_TABLE_TEMPLATE_URL = 'https://discord.com/channels/1134557553011998840/1455849435325010046';
 
