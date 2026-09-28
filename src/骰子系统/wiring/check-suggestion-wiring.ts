@@ -61,7 +61,7 @@ import { STORAGE_KEY_REGEX_ACTIVE_PRESET, STORAGE_KEY_REGEX_RULES } from '../sha
 import { RollResult } from '../shared/types';
 
 export function createCheckSuggestionWiring(deps: any) {
-  const { AdvancedDicePresetManager, DEFAULT_CONTEST_OUTPUT_TEMPLATE, DEFAULT_OUTPUT_TEMPLATE, FONTS, MAX_HISTORY, NameAliasRegistry, PresetManager, RegexPresetManager, RegexTransformationManager, THEMES, TableTemplateRequirementPresetManager, ValidationRuleManager, acuDiceCharacters, acuDiceCheck, acuDiceContest, acuDiceEvents, acuDiceHistory, acuDicePresets, acuDiceProfiles, acuDiceReady, acuDiceRoll, appendRowInstantly, applyAdvancedPresetOutcomePolicy, areAllTablesReversed, bindFavoritesEvents, bindTutorialButtonsIn, buildCheckValueText, buildNewTableTemplateRequirementPresetJsoncTemplate, buildTableTemplateRequirementPresetAgentPrompt, buildTableTemplateRequirementPresetAgentPromptFilename, cachedRawData, checkHistory, clearDiceLocalCacheData, clearModalStack, contestHistory, convertTavernRegexToRule, createSortableList, downloadAiPromptFile, downloadJsonFile, emitEvent, ensureCanonicalTableOrder, escapeHtml, evaluateCondition, evaluateConditionNumber, evaluateFormula, evaluateOutcomes, formatOutputTemplate, getAdvancedPresetDisplayOutcome, getAttributeEntryForCharacter, getAttributeValue, getCheckSuggestionPresetById, getConfig, getCore, getCurrentChatAvatarNodes, getHiddenTables, getIconForTableName, getJsonLikeErrorMessage, getNamedCheckParamText, getNavigationFontMetrics, getSavedTableOrder, getStableTableSort, getSuccessLevel, getTableData, getTableTemplateRequirementPresetStats, getTutorialButtonHtml, isRecordValue, isSettingsOpen, normalizeCollapseStyle, parseJsoncRecord, parseTableTemplateRequirementPresetJson, pickTextFile, popModal, processJsonData, pushModal, refreshDialogueIndentRender, refreshRegexRulesList, renderDeprecatedBadge, renderFavoritesPanel, renderInterface, replaceUserPlaceholders, resolveCanonicalCharacterName, resolveQuickSelectTarget, saveConfig, saveHiddenTables, saveTableOrder, scheduleDialogueIndentRender, setAllTablesReverse, setupOverlayClose, showActionPresetManager, showAddRegexRuleModal, showAddValidationRuleModal, showAttributePresetManager, showAvatarManager, showCustomTableNameIconManager, showDashboardPresetManager, showDebugConsoleModal, showDiceConfigBackupDialog, showDiceSystemConfirmDialog, showDiceSystemInputDialog, showManualUpdateDialog, showPresetConflictDialog, showPresetListDialog, showRenderPresetManager, smartInsertToTextarea, validateJsoncEditorConfig } = deps;
+  const { AdvancedDicePresetManager, DEFAULT_CONTEST_OUTPUT_TEMPLATE, DEFAULT_OUTPUT_TEMPLATE, FONTS, MAX_HISTORY, NameAliasRegistry, PresetManager, RegexPresetManager, RegexTransformationManager, THEMES, TableTemplateRequirementPresetManager, ValidationRuleManager, acuDiceCharacters, acuDiceCheck, acuDiceContest, acuDiceEvents, acuDiceHistory, acuDicePresets, acuDiceProfiles, acuDiceReady, acuDiceRoll, appendRowInstantly, applyAdvancedPresetOutcomePolicy, areAllTablesReversed, bindFavoritesEvents, bindTutorialButtonsIn, buildCheckValueText, buildNewTableTemplateRequirementPresetJsoncTemplate, buildTableTemplateRequirementPresetAgentPrompt, buildTableTemplateRequirementPresetAgentPromptFilename, cachedRawData_ACC, checkHistory, clearDiceLocalCacheData, clearModalStack, contestHistory, convertTavernRegexToRule, createSortableList, downloadAiPromptFile, downloadJsonFile, emitEvent, ensureCanonicalTableOrder, escapeHtml, evaluateCondition, evaluateConditionNumber, evaluateFormula, evaluateOutcomes, formatOutputTemplate, getAdvancedPresetDisplayOutcome, getAttributeEntryForCharacter, getAttributeValue, getCheckSuggestionPresetById, getConfig, getCore, getCurrentChatAvatarNodes, getHiddenTables, getIconForTableName, getJsonLikeErrorMessage, getNamedCheckParamText, getNavigationFontMetrics, getSavedTableOrder, getStableTableSort, getSuccessLevel, getTableData, getTableTemplateRequirementPresetStats, getTutorialButtonHtml, isRecordValue, isSettingsOpen_ACC, normalizeCollapseStyle, parseJsoncRecord, parseTableTemplateRequirementPresetJson, pickTextFile, popModal, processJsonData, pushModal, refreshDialogueIndentRender, refreshRegexRulesList, renderDeprecatedBadge, renderFavoritesPanel, renderInterface, replaceUserPlaceholders, resolveCanonicalCharacterName, resolveQuickSelectTarget, saveConfig, saveHiddenTables, saveTableOrder, scheduleDialogueIndentRender, setAllTablesReverse, setupOverlayClose, showActionPresetManager, showAddRegexRuleModal, showAddValidationRuleModal, showAttributePresetManager, showAvatarManager, showCustomTableNameIconManager, showDashboardPresetManager, showDebugConsoleModal, showDiceConfigBackupDialog, showDiceSystemConfirmDialog, showDiceSystemInputDialog, showManualUpdateDialog, showPresetConflictDialog, showPresetListDialog, showRenderPresetManager, smartInsertToTextarea, validateJsoncEditorConfig } = deps;
   const extractCheckSuggestionParams = (text: string): { rest: string; rawParams: CheckSuggestionRawParams } => {
     const rawParams: CheckSuggestionRawParams = {};
     const tokens = String(text || '')
@@ -146,7 +146,7 @@ export function createCheckSuggestionWiring(deps: any) {
   const refreshNameAliasesForCheckSuggestion = createRefreshNameAliasesForCheckSuggestion({
     getTableData: (...a: any[]) => getTableData(...a),
     processJsonData: (...a: any[]) => processJsonData(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     getNameAliasRegistry: () => NameAliasRegistry,
   });
 
@@ -366,7 +366,7 @@ export function createCheckSuggestionWiring(deps: any) {
     showNewFavoriteModal: (...a: any[]) => showNewFavoriteModal(...a),
     showSendToTableModal: (...a: any[]) => showSendToTableModal(...a),
     escapeHtml: (...a: any[]) => escapeHtml(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // 收藏卡片编辑弹窗
@@ -554,9 +554,9 @@ export function createCheckSuggestionWiring(deps: any) {
     STORAGE_KEY_REGEX_RULES: STORAGE_KEY_REGEX_RULES,
     THEMES: THEMES,
     ValidationRuleManager: ValidationRuleManager,
-    getCachedRawData: () => cachedRawData,
-    getIsSettingsOpen: () => isSettingsOpen,
-    setIsSettingsOpen: (v: any) => { isSettingsOpen = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    getIsSettingsOpen: () => isSettingsOpen_ACC.v,
+    setIsSettingsOpen: (v: any) => { isSettingsOpen_ACC.v = v; },
     getStableTableSort: (...a: any[]) => getStableTableSort(...a),
     ensureCanonicalTableOrder: (...a: any[]) => ensureCanonicalTableOrder(...a),
   });

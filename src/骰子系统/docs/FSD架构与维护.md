@@ -343,3 +343,9 @@ export function createXxx(deps: any) {
 - wiring 第五簇：检查建议/设置弹窗装配（495 行；defs 56 / after 6）→ `wiring/check-suggestion-wiring.ts`；
   - index 10,541 → 10,046 行；
   - 生成器新增「**已迁名字登记表**」：自动识别历史 wiring destructure，跨模块依赖全自动补 ctx（本批一次过闸）。
+
+## x4-g2（v7.1.0-x4g2）热修
+
+- 事故：主设置弹窗无法打开——`isSettingsOpen`/`cachedRawData`（index 侧 `let` 可变状态）被按快照传值，模块内 setter 对 const 赋值 → 打开设置即抛错；
+- 修复：可变外部状态改用**访问器对象** `NAME_ACC = { get v(){...}, set v(x){...} }`，模块内统一 `NAME_ACC.v` 读写（双向实时）；
+- 规范升级：生成器将自动检测「ctx ∩ index-let」并生成访问器（本批手工完成，后续自动化）。
