@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createCoreRuntimeWiring } from './wiring/core-runtime-wiring';
 import { createGachaDrawWiring } from './wiring/gacha-draw-wiring';
 import { createGachaSettingsWiring } from './wiring/gacha-settings-wiring';
 import { createGachaInventoryWiring } from './wiring/gacha-inventory-wiring';
@@ -1465,8 +1466,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   const safeUpdateAttribute = createSafeUpdateAttribute({
     getDbLockAPI: (...a: any[]) => getDbLockAPI(...a),
     getTableData: (...a: any[]) => getTableData(...a),
-    getCachedRawData: () => cachedRawData,
-    setCachedRawData: (v: any) => { cachedRawData = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
   });
 
   /**
@@ -1482,7 +1483,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     performSaveDataOnly: (...a: any[]) => performSaveDataOnly(...a),
     updateSingleAttribute: (...a: any[]) => updateSingleAttribute(...a),
     runInSaveQueue: (...a: any[]) => runInSaveQueue(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
 
@@ -2257,7 +2258,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   // [新增] 获取主角名字（用于判断是否是主角）
   const getPlayerName = createGetPlayerName({
     getTableData: (...a: any[]) => getTableData(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // [新增] 获取 SillyTavern Persona 名称（用于显示）
@@ -2487,7 +2488,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   const dialogueIndentRenderer = createDialogueIndentRenderer({
     getConfig: () => getConfig(),
     getDefaultTheme: () => String(DEFAULT_CONFIG.theme),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     getTableData: () => getTableData({ silent: true }),
     processJsonData: json => processJsonData(json),
     rebuildNameAliases: tables => NameAliasRegistry.rebuild(tables),
@@ -2683,7 +2684,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     getGachaRewardTargetTableLabel: (...a: any[]) => getGachaRewardTargetTableLabel(...a),
     getTableData: (...a: any[]) => getTableData(...a),
     normalizeGachaTargetTable: (...a: any[]) => normalizeGachaTargetTable(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   const renderGachaItemIconContent = createRenderGachaItemIconContent({
@@ -2893,7 +2894,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     processJsonData: (...a: any[]) => processJsonData(...a),
     weightedRandomSelect: (...a: any[]) => weightedRandomSelect(...a),
     getDashboardDataParser: () => DashboardDataParser,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // 选择检定属性
@@ -3100,1040 +3101,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     validate: (value: unknown) => T;
   }
 
-  const getJsonLikeErrorMessage = createGetJsonLikeErrorMessage({
-
-  });
-
-  const stripJsoncSyntax = createStripJsoncSyntax({
-    stripJsonComments: (...a: any[]) => stripJsonComments(...a),
-  });
-
-  const parseJsoncValue = createParseJsoncValue({
-    stripJsoncSyntax: (...a: any[]) => stripJsoncSyntax(...a),
-  });
-
-  const parseJsoncDocument = createParseJsoncDocument({
-    parseJsoncValue: (...a: any[]) => parseJsoncValue(...a),
-  });
-
-  const parseJsoncRecord = createParseJsoncRecord({
-    isRecordValue: (...a: any[]) => isRecordValue(...a),
-    parseJsoncDocument: (...a: any[]) => parseJsoncDocument(...a),
-  });
-
-  const downloadTextFile = createDownloadTextFile({
-
-  });
-
-  const downloadJsonFile = createDownloadJsonFile({
-    downloadTextFile: (...a: any[]) => downloadTextFile(...a),
-    getJSON_FILE_MIME: () => JSON_FILE_MIME,
-  });
-
-  const downloadJsoncFile = createDownloadJsoncFile({
-    downloadTextFile: (...a: any[]) => downloadTextFile(...a),
-    getJSONC_FILE_MIME: () => JSONC_FILE_MIME,
-  });
-
-  const downloadAiPromptFile = createDownloadAiPromptFile({
-    downloadTextFile: (...a: any[]) => downloadTextFile(...a),
-    getMARKDOWN_FILE_MIME: () => MARKDOWN_FILE_MIME,
-  });
-
-  const readTextFile = createReadTextFile({
-
-  });
-
-  const pickTextFile = createPickTextFile({
-    readTextFile: (...a: any[]) => readTextFile(...a),
-    JSONC_FILE_ACCEPT: JSONC_FILE_ACCEPT,
-  });
-
-  const validateJsoncEditorConfig = createValidateJsoncEditorConfig({
-    getJsonLikeErrorMessage: (...a: any[]) => getJsonLikeErrorMessage(...a),
-  });
-
-  const normalizeDashboardPresetModules = createNormalizeDashboardPresetModules({
-    isRecordValue: (...a: any[]) => isRecordValue(...a),
-    normalizeDashboardKeywordArray: (...a: any[]) => normalizeDashboardKeywordArray(...a),
-    normalizeDashboardPresetFilters: (...a: any[]) => normalizeDashboardPresetFilters(...a),
-    normalizeDashboardRelationshipGraphConfig: (...a: any[]) => normalizeDashboardRelationshipGraphConfig(...a),
-    DASHBOARD_PRESET_ADDITIONAL_COLUMNS: DASHBOARD_PRESET_ADDITIONAL_COLUMNS,
-    DASHBOARD_PRESET_MODULE_KEYS: DASHBOARD_PRESET_MODULE_KEYS,
-    DASHBOARD_RELATIONSHIP_GRAPH_MODULE_KEY: DASHBOARD_RELATIONSHIP_GRAPH_MODULE_KEY,
-    DASHBOARD_TABLE_CONFIG: DASHBOARD_TABLE_CONFIG,
-  });
-
-  const parseDashboardPresetJson = createParseDashboardPresetJson({
-
-    parseJsoncRecord: (...a: any[]) => parseJsoncRecord(...a),
-    getDASHBOARD_PRESET_FORMAT: () => DASHBOARD_PRESET_FORMAT,
-    normalizeDashboardPresetModules: (...a: any[]) => normalizeDashboardPresetModules(...a),
-  });
-
-  const createDashboardPresetEditorTemplate = createCreateDashboardPresetEditorTemplate({
-
-  });
-
-  const DashboardPresetManager = createDashboardPresetManager({
-    cloneDashboardPresetModules: (...a: any[]) => cloneDashboardPresetModules(...a),
-    createBuiltinDashboardPreset: (...a: any[]) => createBuiltinDashboardPreset(...a),
-    parseDashboardPresetJson: (...a: any[]) => parseDashboardPresetJson(...a),
-    DASHBOARD_DEFAULT_PRESET_ID: DASHBOARD_DEFAULT_PRESET_ID,
-    DASHBOARD_PRESET_FORMAT: DASHBOARD_PRESET_FORMAT,
-    STORAGE_KEY_ACTIVE_DASHBOARD_PRESET: STORAGE_KEY_ACTIVE_DASHBOARD_PRESET,
-    STORAGE_KEY_DASHBOARD_PRESETS: STORAGE_KEY_DASHBOARD_PRESETS,
-    setDashboardRuntimeConfigCache: (v: any) => { dashboardRuntimeConfigCache = v; },
-  });
-
-  const getActiveDashboardRelationshipGraphSources = createGetActiveDashboardRelationshipGraphSources({
-    getDASHBOARD_RELATIONSHIP_GRAPH_MODULE_KEY: () => DASHBOARD_RELATIONSHIP_GRAPH_MODULE_KEY,
-    getDashboardPresetManager: () => DashboardPresetManager,
-  });
-
-  const getDashboardRuntimeConfig = createGetDashboardRuntimeConfig({
-    cloneDashboardConfig: (...a: any[]) => cloneDashboardConfig(...a),
-    DASHBOARD_PRESET_ADDITIONAL_COLUMNS: DASHBOARD_PRESET_ADDITIONAL_COLUMNS,
-    DASHBOARD_PRESET_FILTER_KEYS: DASHBOARD_PRESET_FILTER_KEYS,
-    DASHBOARD_TABLE_CONFIG: DASHBOARD_TABLE_CONFIG,
-    DashboardPresetManager: DashboardPresetManager,
-    getDashboardRuntimeConfigCache: () => dashboardRuntimeConfigCache,
-    setDashboardRuntimeConfigCache: (v: any) => { dashboardRuntimeConfigCache = v; },
-  });
-
-  const getDashboardModuleConfig = createGetDashboardModuleConfig({
-    getDashboardRuntimeConfig: (...a: any[]) => getDashboardRuntimeConfig(...a),
-  });
-
-  // 仪表盘数据解析器
-  const DashboardDataParser = createDashboardDataParser({
-    getDashboardModuleConfig: (...a: any[]) => getDashboardModuleConfig(...a),
-  });
-  const getGMConfig = createGetGMConfig({
-    ActionPresetManager: ActionPresetManager,
-  });
-
-  // 统一的结果标签样式生成函数 - 返回 CSS 类名
-  const getResultBadgeClass = createGetResultBadgeClass({
-
-  });
-
-  // [统一] 交互选项的图标映射表，供所有渲染位置共享使用
-
-
-  /**
-   * 获取指定表格的默认交互动作
-   *
-   * [扩展点] 支持用户自定义规则，优先级：用户自定义规则 > 内置默认规则
-   * 将来可通过 config.custom_action_groups 添加用户定义的表格规则
-   * 例如用户可以为"神通表"定义固有选项"凝练"、"施展"
-   *
-   * @param tableName 表格名称（用于匹配动作组）
-   * @returns 匹配的动作列表（返回副本，避免变异原配置）
-   */
-  const getActionsForTable = createGetActionsForTable({
-    getGMConfig: (...a: any[]) => getGMConfig(...a),
-  });
-
-  /**
-   * 获取指定行的完整交互选项列表
-   * 合并逻辑：默认动作 + AI生成的自定义动作（去重）
-   *
-   * @param tableName 表格名称（用于匹配默认动作）
-   * @param headers 表头数组
-   * @param rowData 行数据数组
-   * @returns 完整的动作列表（默认动作在前，自定义动作在后）
-   */
-  const getInteractOptionsForRow = createGetInteractOptionsForRow({
-    getActionsForTable: (...a: any[]) => getActionsForTable(...a),
-    getACTION_ICON_MAP: () => ACTION_ICON_MAP,
-  });
-
-  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
-
-  const GLOBAL_INTERACTION_NAME_HEADERS = createGlobalInteractionNameHeaders({
-
-  });
-  const GLOBAL_INTERACTION_NAME_HEADER_KEYWORDS = createGlobalInteractionNameHeaderKeywords({
-
-  });
-  const GLOBAL_INTERACTION_NON_NAME_HEADER_KEYWORDS = createGlobalInteractionNonNameHeaderKeywords({
-
-  });
-  const GLOBAL_INTERACTION_INDEX_HEADERS = ['序号', '编号', '索引', 'index', 'order', 'id', '#'];
-  const GLOBAL_INTERACTION_DEBUG_PREFIX = '[DICE][GlobalInteractionsDebug]';
-  const GLOBAL_INTERACTION_DEFAULT_SECTION_META = createGlobalInteractionDefaultSectionMeta({
-
-  });
-
-
-  const debugGlobalInteraction = createDebugGlobalInteraction({
-    getGLOBAL_INTERACTION_DEBUG_PREFIX: () => GLOBAL_INTERACTION_DEBUG_PREFIX,
-  });
-
-  const isRecord = createIsRecord({
-
-  });
-
-  const isTwoDimensionalArray = createIsTwoDimensionalArray({
-
-  });
-  const normalizeInteractionLabel = createNormalizeInteractionLabel({
-
-  });
-
-  const dedupeInteractionActions = createDedupeInteractionActions({
-    normalizeInteractionLabel: (...a: any[]) => normalizeInteractionLabel(...a),
-  });
-
-  const getStringLikeCellText = createGetStringLikeCellText({
-
-  });
-
-  const isPureIndexCell = createIsPureIndexCell({
-    getStringLikeCellText: (...a: any[]) => getStringLikeCellText(...a),
-    getGLOBAL_INTERACTION_INDEX_HEADERS: () => GLOBAL_INTERACTION_INDEX_HEADERS,
-  });
-
-  const normalizeGlobalInteractionHeader = createNormalizeGlobalInteractionHeader({
-
-  });
-
-  const isLikelyGlobalInteractionNameHeader = createIsLikelyGlobalInteractionNameHeader({
-    normalizeGlobalInteractionHeader: (...a: any[]) => normalizeGlobalInteractionHeader(...a),
-    getGLOBAL_INTERACTION_NAME_HEADERS: () => GLOBAL_INTERACTION_NAME_HEADERS,
-    getGLOBAL_INTERACTION_NAME_HEADER_KEYWORDS: () => GLOBAL_INTERACTION_NAME_HEADER_KEYWORDS,
-    getGLOBAL_INTERACTION_NON_NAME_HEADER_KEYWORDS: () => GLOBAL_INTERACTION_NON_NAME_HEADER_KEYWORDS,
-  });
-
-  const resolveGlobalInteractionRowTitle = createResolveGlobalInteractionRowTitle({
-    getStringLikeCellText: (...a: any[]) => getStringLikeCellText(...a),
-    isLikelyGlobalInteractionNameHeader: (...a: any[]) => isLikelyGlobalInteractionNameHeader(...a),
-    isPureIndexCell: (...a: any[]) => isPureIndexCell(...a),
-    normalizeGlobalInteractionHeader: (...a: any[]) => normalizeGlobalInteractionHeader(...a),
-    GLOBAL_INTERACTION_NAME_HEADERS: GLOBAL_INTERACTION_NAME_HEADERS,
-  });
-
-  const buildGlobalInteractionSearchText = createBuildGlobalInteractionSearchText({
-
-  });
-
-  const normalizeGlobalInteractionCategoryText = createNormalizeGlobalInteractionCategoryText({
-
-  });
-  const getGlobalInteractionRuleKeywords = createGetGlobalInteractionRuleKeywords({
-    isRecord: (...a: any[]) => isRecord(...a),
-    getStringLikeCellText: (...a: any[]) => getStringLikeCellText(...a),
-  });
-
-  const getGlobalInteractionActionRuleGroups = createGetGlobalInteractionActionRuleGroups({
-    getGMConfig: (...a: any[]) => getGMConfig(...a),
-    getGlobalInteractionRuleKeywords: (...a: any[]) => getGlobalInteractionRuleKeywords(...a),
-  });
-
-  const getMatchedGlobalInteractionRuleKeywords = createGetMatchedGlobalInteractionRuleKeywords({
-    getGlobalInteractionActionRuleGroups: (...a: any[]) => getGlobalInteractionActionRuleGroups(...a),
-    normalizeGlobalInteractionCategoryText: (...a: any[]) => normalizeGlobalInteractionCategoryText(...a),
-  });
-
-  const resolveGlobalInteractionSectionMeta = createResolveGlobalInteractionSectionMeta({
-    getMatchedGlobalInteractionRuleKeywords: (...a: any[]) => getMatchedGlobalInteractionRuleKeywords(...a),
-    normalizeGlobalInteractionCategoryText: (...a: any[]) => normalizeGlobalInteractionCategoryText(...a),
-    resolveDashboardGlobalInteractionSectionKind: (...a: any[]) => resolveDashboardGlobalInteractionSectionKind(...a),
-    GLOBAL_INTERACTION_DEFAULT_SECTION_META: GLOBAL_INTERACTION_DEFAULT_SECTION_META,
-  });
-
-  const createGlobalInteractionSections = createCreateGlobalInteractionSections({
-    resolveGlobalInteractionSectionMeta: (...a: any[]) => resolveGlobalInteractionSectionMeta(...a),
-  });
-
-  const buildGlobalInteractionGroups = createBuildGlobalInteractionGroups({
-    buildGlobalInteractionSearchText: (...a: any[]) => buildGlobalInteractionSearchText(...a),
-    dedupeInteractionActions: (...a: any[]) => dedupeInteractionActions(...a),
-    getInteractOptionsForRow: (...a: any[]) => getInteractOptionsForRow(...a),
-    isRecord: (...a: any[]) => isRecord(...a),
-    isTwoDimensionalArray: (...a: any[]) => isTwoDimensionalArray(...a),
-    resolveCustomTableNameIconRowName: (...a: any[]) => resolveCustomTableNameIconRowName(...a),
-    resolveGlobalInteractionRowTitle: (...a: any[]) => resolveGlobalInteractionRowTitle(...a),
-  });
-
-  const executeTableInteractionAction = createExecuteTableInteractionAction({
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    extractNumericValue: (...a: any[]) => extractNumericValue(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    processTemplate: (...a: any[]) => processTemplate(...a),
-    setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    showDicePanel: (...a: any[]) => showDicePanel(...a),
-    smartInsertToTextarea: (...a: any[]) => smartInsertToTextarea(...a),
-  });
-
-  const isNumericCell = createIsNumericCell({
-
-  });
-
-  const extractNumericValue = createExtractNumericValue({
-
-  });
-
-  const parseAttributeString = createParseAttributeString({
-
-  });
-  // 解析人际关系字符串，推荐使用冒号格式，同时兼容旧式括号格式:
-  // 推荐格式: "人名:关系描述;人名:关系描述" 或 "与人名:关系描述;与人名:关系描述"
-  // 兼容格式: "人名(关系标签);人名(关系)"
-  const parseRelationshipString = createParseRelationshipString({
-
-  });
-
-  // [新增] 检测是否是人际关系格式
-  const isRelationshipCell = createIsRelationshipCell({
-
-  });
-
-  const processTemplate = createProcessTemplate({
-
-  });
-
-  // 固定显示的功能按钮
-  // 注意：保存按钮已移除，系统现在使用即时保存模式（每次编辑/删除后自动保存）
-  const ACTION_BUTTONS = createActionButtons({
-
-  });
-  type SpecialNavigationItem = {
-    key: string;
-    icon: string;
-    label: string;
-    id: string;
-    extraClass: string;
-    isActive?: boolean;
-    warningIcon?: boolean;
-    checkAvailable?: () => boolean;
-  };
-  type NavigationItem = {
-    key: string;
-    icon: string;
-    label: string;
-    isSpecial: boolean;
-    id?: string;
-    extraClass?: string;
-    isActive?: boolean;
-    warningIcon?: boolean;
-  };
-
-  let isInitialized = false;
-  let isSaving = false;
-  let saveQueue: Promise<void> = Promise.resolve(); // 保存队列，确保并发保存按顺序执行
-  let isEditingOrder = false;
-  let isSettingsOpen = false;
-  let isGachaItemEditorOpen = false;
-
-  // === 弹窗栈管理 ===
-  // 用于追踪弹窗打开顺序，关闭时自动返回上一个弹窗
-  type ModalEntry = {
-    name: string;
-    show: () => void;
-  };
-  const modalStack: ModalEntry[] = [];
-
-  /**
-   * 将弹窗推入栈中
-   * @param name 弹窗名称（用于调试）
-   * @param show 重新打开该弹窗的函数
-   */
-  const pushModal = createPushModal({
-    getModalStack: () => modalStack,
-  });
-
-  /**
-   * 从栈中弹出当前弹窗并返回上一个弹窗
-   * @returns 是否成功返回上一个弹窗
-   */
-  const popModal = createPopModal({
-    getModalStack: () => modalStack,
-  });
-
-  /**
-   * 清空弹窗栈（用于关闭所有弹窗或从根弹窗关闭）
-   */
-  const clearModalStack = createClearModalStack({
-    getModalStack: () => modalStack,
-  });
-
-  let currentDiffMap = new Set();
-  let observer = null;
-  let _boundRenderHandler = null;
-  let _boundReviewBaselineHandler = null;
-
-  // --- 全局状态变量 ---
-  let cachedRawData = null;
-  let hasUnsavedChanges = false;
-  // [修复] 存储待删除行的索引（按表格分组）
-  let pendingDeletions: Record<string, number[]> = {};
-  const getPendingDeletions = createGetPendingDeletions({
-    getPendingDeletions: () => pendingDeletions,
-  });
-  const clearPendingDeletions = createClearPendingDeletions({
-    getPendingDeletions: () => pendingDeletions,
-    setPendingDeletions: (v: any) => { pendingDeletions = v; },
-  });
-  const createSheetDataFingerprint = createCreateSheetDataFingerprint({
-
-  });
-
-  const isSameSheetData = createIsSameSheetData({
-    createSheetDataFingerprint: (...a: any[]) => createSheetDataFingerprint(...a),
-  });
-
-  const AUTO_REGEX_TRANSFORM_COOLDOWN_MS = 5000;
-  let lastAutoRegexTransformKey = '';
-  let lastAutoRegexTransformAt = 0;
-  const createRegexRuleSignature = createCreateRegexRuleSignature({
-
-  });
-  const createAutoRegexTransformKey = createCreateAutoRegexTransformKey({
-    createRegexRuleSignature: (...a: any[]) => createRegexRuleSignature(...a),
-    createSheetDataFingerprint: (...a: any[]) => createSheetDataFingerprint(...a),
-  });
-  const shouldSkipAutoRegexTransform = createShouldSkipAutoRegexTransform({
-    getLastAutoRegexTransformAt: () => lastAutoRegexTransformAt,
-    getLastAutoRegexTransformKey: () => lastAutoRegexTransformKey,
-    getAUTO_REGEX_TRANSFORM_COOLDOWN_MS: () => AUTO_REGEX_TRANSFORM_COOLDOWN_MS,
-  });
-
-  const rememberAutoRegexTransform = createRememberAutoRegexTransform({
-    getLastAutoRegexTransformKey: () => lastAutoRegexTransformKey,
-    setLastAutoRegexTransformKey: (v: any) => { lastAutoRegexTransformKey = v; },
-    getLastAutoRegexTransformAt: () => lastAutoRegexTransformAt,
-    setLastAutoRegexTransformAt: (v: any) => { lastAutoRegexTransformAt = v; },
-  });
-
-  let isAutoTransforming = false; // 防止自动转换循环触发
-  let tablePageStates = {};
-  let tableSearchStates = {};
-  let lastOptionHash = null;
-  let optionPanelVisible = false; // [新增] 选项面板可见性控制
-  // [修改] 初始化时从硬盘读取记忆
-
-  let tableScrollStates = {};
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY_SCROLL);
-    if (saved) tableScrollStates = JSON.parse(saved);
-  } catch (e) {
-    console.warn('[DICE]ACU Error:', e);
-  }
-  // [优化] 智能更新控制器：后端数据变动时，自动更新快照
-  const UpdateController = createUpdateController({
-    getTableData: (...a: any[]) => getTableData(...a),
-    isSameSheetData: (...a: any[]) => isSameSheetData(...a),
-    loadSnapshot: (...a: any[]) => loadSnapshot(...a),
-    getCachedRawData: () => cachedRawData,
-    getValidationEngine: () => ValidationEngine,
-    getValidationRuleManager: () => ValidationRuleManager,
-    renderInterface: () => renderInterface(),
-    updateValidationIndicator: (...a: any[]) => updateValidationIndicator(...a),
-    refreshChangesPanel: (...a: any[]) => refreshChangesPanel(...a),
-  });
-  // 更新导航栏验证指示器
-  const updateValidationIndicator = createUpdateValidationIndicator({
-    getCore: (...a: any[]) => getCore(...a),
-  });
-
-  // --- [重构] 上下文指纹工具 ---
-  const getCurrentContextFingerprint = createGetCurrentContextFingerprint({
-
-  });
-
-  // 全局状态追踪 (已清理死代码)
-
-
-  const COLLAPSE_STYLES = ['bar', 'pill', 'floating'] as const;
-  type CollapseStyle = (typeof COLLAPSE_STYLES)[number];
-
-  const normalizeCollapseStyle = createNormalizeCollapseStyle({
-    getCOLLAPSE_STYLES: () => COLLAPSE_STYLES,
-  });
-
-  const getNavigationFontMetrics = createGetNavigationFontMetrics({
-
-  });
-
-  const FONTS = createFontsList({
-
-  });
-
-  // 主题维护提示：这里控制设置界面的骰子系统主题选项。
-  // 新增、改名或改 theme id 时，同步更新 外部参考/数据库主题/acu-db-theme-dice-<theme-id>.json
-  // 的文件名、theme.id 和 theme.name，避免数据库本体主题与骰子系统主题脱节。
-  const THEMES = createThemes({
-
-  });
-
-  // [优化] 缓存 core 对象 (修复竞态条件 + 增强 ST 穿透查找)
-  let _coreCache = null;
-
-  const getAccessibleDocument = createGetAccessibleDocument({
-
-  });
-
-  const HOST_SELECTOR = '#chat, #send_form, #form_sheld, #send_textarea, #chat_input, #send_but';
-
-  const getTavernHostWindow = createGetTavernHostWindow({
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    HOST_SELECTOR: HOST_SELECTOR,
-  });
-
-  const getTavernHostDocument = createGetTavernHostDocument({
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    getTavernHostWindow: (...a: any[]) => getTavernHostWindow(...a),
-  });
-
-  const createElementFromHtml = createCreateElementFromHtml({
-
-  });
-
-  const collectHostAndLocalNodes = createCollectHostAndLocalNodes({
-    getTavernHostDocument: (...a: any[]) => getTavernHostDocument(...a),
-  });
-
-  const getCore = createGetCore({
-    getTavernHostWindow: (...a: any[]) => getTavernHostWindow(...a),
-    get_coreCache: () => _coreCache,
-    set_coreCache: (v: any) => { _coreCache = v; },
-  });
-
-  const ACU_DATABASE_NEW_UI_MENU_SELECTOR = '#acu-v2-menu-item';
-  const ACU_DATABASE_NEW_UI_API_METHODS = createAcuDatabaseNewUiApiMethods({
-
-  });
-  const ACU_DATABASE_MANUAL_UPDATE_API_METHODS = createAcuDatabaseManualUpdateApiMethods({
-
-  });
-  const ACU_DATABASE_V2_ROOT_SELECTOR = '#acu-app-v2, .acu-v2-app';
-  const ACU_DATABASE_FORM_FILL_NAV_SELECTOR = '[data-page-id="form-fill"]';
-  const ACU_DATABASE_MANUAL_UPDATE_PANEL_SELECTOR = '#form-fill-manual-panel';
-  const ACU_DATABASE_MANUAL_UPDATE_ACTION_SELECTOR = createAcuDatabaseManualUpdateActionSelector({
-
-  });
-  const ACU_DATABASE_LEGACY_MANUAL_UPDATE_BUTTON_SELECTOR = createAcuDatabaseLegacyManualUpdateButtonSelector({
-
-  });
-  const ACU_DATABASE_MANUAL_UPDATE_BUTTON_WAIT_MS = createAcuDatabaseManualUpdateButtonWaitMs({
-
-  });
-  const ACU_DATABASE_MANUAL_UPDATE_BUTTON_POLL_MS = createAcuDatabaseManualUpdateButtonPollMs({
-
-  });
-
-  const collectAccessibleRuntimeWindows = createCollectAccessibleRuntimeWindows({
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    getTavernHostWindow: (...a: any[]) => getTavernHostWindow(...a),
-  });
-
-  const runMaybeAsyncDatabaseUiOpener = createRunMaybeAsyncDatabaseUiOpener({
-
-  });
-
-  const openDatabaseNewUiViaApi = createOpenDatabaseNewUiViaApi({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    runMaybeAsyncDatabaseUiOpener: (...a: any[]) => runMaybeAsyncDatabaseUiOpener(...a),
-    getACU_DATABASE_NEW_UI_API_METHODS: () => ACU_DATABASE_NEW_UI_API_METHODS,
-  });
-
-  const openDatabaseNewUiViaMenuEntry = createOpenDatabaseNewUiViaMenuEntry({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    getACU_DATABASE_NEW_UI_MENU_SELECTOR: () => ACU_DATABASE_NEW_UI_MENU_SELECTOR,
-  });
-
-  const openLegacyDatabaseSettings = createOpenLegacyDatabaseSettings({
-    getCore: (...a: any[]) => getCore(...a),
-  });
-
-  const openDatabaseInterface = createOpenDatabaseInterface({
-    openDatabaseNewUiViaApi: (...a: any[]) => openDatabaseNewUiViaApi(...a),
-    openDatabaseNewUiViaMenuEntry: (...a: any[]) => openDatabaseNewUiViaMenuEntry(...a),
-    openLegacyDatabaseSettings: (...a: any[]) => openLegacyDatabaseSettings(...a),
-  });
-
-  type DatabaseVisualizerNewUiOpenResult = 'opened' | 'unavailable' | 'failed';
-
-  const openDatabaseVisualizerNewUiViaApi = createOpenDatabaseVisualizerNewUiViaApi({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    runMaybeAsyncDatabaseUiOpener: (...a: any[]) => runMaybeAsyncDatabaseUiOpener(...a),
-  });
-
-  const openLegacyDatabaseVisualizer = createOpenLegacyDatabaseVisualizer({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    runMaybeAsyncDatabaseUiOpener: (...a: any[]) => runMaybeAsyncDatabaseUiOpener(...a),
-  });
-
-  const openDatabaseVisualizerInterface = createOpenDatabaseVisualizerInterface({
-    openDatabaseVisualizerNewUiViaApi: (...a: any[]) => openDatabaseVisualizerNewUiViaApi(...a),
-    openLegacyDatabaseVisualizer: (...a: any[]) => openLegacyDatabaseVisualizer(...a),
-  });
-
-  type DatabaseManualUpdateResult =
-    | { status: 'updated'; source: string }
-    | { status: 'unavailable' }
-    | { status: 'failed'; error?: unknown; source?: string };
-
-  const waitForDatabaseUiTick = createWaitForDatabaseUiTick({
-  });
-
-  const isElementVisibleInLayout = createIsElementVisibleInLayout({
-
-  });
-
-  const normalizeDatabaseUiText = createNormalizeDatabaseUiText({
-
-  });
-
-  const isDatabaseManualUpdateActionButton = createIsDatabaseManualUpdateActionButton({
-    isDatabaseManualUpdateButtonText: (...a: any[]) => isDatabaseManualUpdateButtonText(...a),
-    normalizeDatabaseUiText: (...a: any[]) => normalizeDatabaseUiText(...a),
-    getACU_DATABASE_MANUAL_UPDATE_PANEL_SELECTOR: () => ACU_DATABASE_MANUAL_UPDATE_PANEL_SELECTOR,
-  });
-
-  const isDatabaseButtonDisabled = createIsDatabaseButtonDisabled({
-
-  });
-  const hasDatabaseNewUiRuntime = createHasDatabaseNewUiRuntime({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    getACU_DATABASE_V2_ROOT_SELECTOR: () => ACU_DATABASE_V2_ROOT_SELECTOR,
-    getACU_DATABASE_NEW_UI_MENU_SELECTOR: () => ACU_DATABASE_NEW_UI_MENU_SELECTOR,
-  });
-
-  const findDatabaseNewUiManualUpdateButton = createFindDatabaseNewUiManualUpdateButton({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    isElementVisibleInLayout: (...a: any[]) => isElementVisibleInLayout(...a),
-    isDatabaseManualUpdateActionButton: (...a: any[]) => isDatabaseManualUpdateActionButton(...a),
-    normalizeDatabaseUiText: (...a: any[]) => normalizeDatabaseUiText(...a),
-    isDatabaseButtonDisabled: (...a: any[]) => isDatabaseButtonDisabled(...a),
-    getACU_DATABASE_MANUAL_UPDATE_ACTION_SELECTOR: () => ACU_DATABASE_MANUAL_UPDATE_ACTION_SELECTOR,
-  });
-
-  const waitForDatabaseNewUiManualUpdateButton = createWaitForDatabaseNewUiManualUpdateButton({
-    findDatabaseNewUiManualUpdateButton: (...a: any[]) => findDatabaseNewUiManualUpdateButton(...a),
-    waitForDatabaseUiTick: (...a: any[]) => waitForDatabaseUiTick(...a),
-    ACU_DATABASE_MANUAL_UPDATE_BUTTON_POLL_MS: ACU_DATABASE_MANUAL_UPDATE_BUTTON_POLL_MS,
-    ACU_DATABASE_MANUAL_UPDATE_BUTTON_WAIT_MS: ACU_DATABASE_MANUAL_UPDATE_BUTTON_WAIT_MS,
-  });
-
-  const hasDatabaseManualUpdateSurface = createHasDatabaseManualUpdateSurface({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    isDatabaseManualUpdateActionButton: (...a: any[]) => isDatabaseManualUpdateActionButton(...a),
-    isElementVisibleInLayout: (...a: any[]) => isElementVisibleInLayout(...a),
-    getACU_DATABASE_MANUAL_UPDATE_ACTION_SELECTOR: () => ACU_DATABASE_MANUAL_UPDATE_ACTION_SELECTOR,
-    getACU_DATABASE_MANUAL_UPDATE_PANEL_SELECTOR: () => ACU_DATABASE_MANUAL_UPDATE_PANEL_SELECTOR,
-  });
-
-  const waitForDatabaseManualUpdateSurface = createWaitForDatabaseManualUpdateSurface({
-    hasDatabaseManualUpdateSurface: (...a: any[]) => hasDatabaseManualUpdateSurface(...a),
-    waitForDatabaseUiTick: (...a: any[]) => waitForDatabaseUiTick(...a),
-    ACU_DATABASE_MANUAL_UPDATE_BUTTON_POLL_MS: ACU_DATABASE_MANUAL_UPDATE_BUTTON_POLL_MS,
-    ACU_DATABASE_MANUAL_UPDATE_BUTTON_WAIT_MS: ACU_DATABASE_MANUAL_UPDATE_BUTTON_WAIT_MS,
-  });
-
-  const clickDatabaseNewUiFormFillNavigation = createClickDatabaseNewUiFormFillNavigation({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    isElementVisibleInLayout: (...a: any[]) => isElementVisibleInLayout(...a),
-    getACU_DATABASE_FORM_FILL_NAV_SELECTOR: () => ACU_DATABASE_FORM_FILL_NAV_SELECTOR,
-  });
-
-  const openDatabaseFormFillPage = createOpenDatabaseFormFillPage({
-    clickDatabaseNewUiFormFillNavigation: (...a: any[]) => clickDatabaseNewUiFormFillNavigation(...a),
-    hasDatabaseNewUiRuntime: (...a: any[]) => hasDatabaseNewUiRuntime(...a),
-    openDatabaseNewUiViaApi: (...a: any[]) => openDatabaseNewUiViaApi(...a),
-    openDatabaseNewUiViaMenuEntry: (...a: any[]) => openDatabaseNewUiViaMenuEntry(...a),
-    waitForDatabaseManualUpdateSurface: (...a: any[]) => waitForDatabaseManualUpdateSurface(...a),
-    waitForDatabaseUiTick: (...a: any[]) => waitForDatabaseUiTick(...a),
-    ACU_DATABASE_MANUAL_UPDATE_BUTTON_POLL_MS: ACU_DATABASE_MANUAL_UPDATE_BUTTON_POLL_MS,
-    ACU_DATABASE_MANUAL_UPDATE_BUTTON_WAIT_MS: ACU_DATABASE_MANUAL_UPDATE_BUTTON_WAIT_MS,
-  });
-
-  const runDatabaseManualUpdateViaNewUiButton = createRunDatabaseManualUpdateViaNewUiButton({
-    openDatabaseFormFillPage: (...a: any[]) => openDatabaseFormFillPage(...a),
-    waitForDatabaseNewUiManualUpdateButton: (...a: any[]) => waitForDatabaseNewUiManualUpdateButton(...a),
-  });
-
-  const runMaybeAsyncDatabaseManualUpdate = createRunMaybeAsyncDatabaseManualUpdate({
-
-  });
-
-  const runDatabaseManualUpdateViaApi = createRunDatabaseManualUpdateViaApi({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    runMaybeAsyncDatabaseManualUpdate: (...a: any[]) => runMaybeAsyncDatabaseManualUpdate(...a),
-    ACU_DATABASE_MANUAL_UPDATE_API_METHODS: ACU_DATABASE_MANUAL_UPDATE_API_METHODS,
-  });
-
-  const runDatabaseManualUpdateViaLegacyButton = createRunDatabaseManualUpdateViaLegacyButton({
-    collectAccessibleRuntimeWindows: (...a: any[]) => collectAccessibleRuntimeWindows(...a),
-    getAccessibleDocument: (...a: any[]) => getAccessibleDocument(...a),
-    getACU_DATABASE_LEGACY_MANUAL_UPDATE_BUTTON_SELECTOR: () => ACU_DATABASE_LEGACY_MANUAL_UPDATE_BUTTON_SELECTOR,
-  });
-
-  const runDatabaseManualUpdate = createRunDatabaseManualUpdate({
-    hasDatabaseNewUiRuntime: (...a: any[]) => hasDatabaseNewUiRuntime(...a),
-    runDatabaseManualUpdateViaApi: (...a: any[]) => runDatabaseManualUpdateViaApi(...a),
-    runDatabaseManualUpdateViaLegacyButton: (...a: any[]) => runDatabaseManualUpdateViaLegacyButton(...a),
-    runDatabaseManualUpdateViaNewUiButton: (...a: any[]) => runDatabaseManualUpdateViaNewUiButton(...a),
-  });
-
-  const getDatabaseManualUpdateErrorMessage = createGetDatabaseManualUpdateErrorMessage({
-
-  });
-
-  const showDatabaseManualUpdateFailure = createShowDatabaseManualUpdateFailure({
-    showDiceSystemConfirmDialog: (...a: any[]) => showDiceSystemConfirmDialog(...a),
-  });
-
-  const updateSaveButtonState = createUpdateSaveButtonState({
-    getCore: (...a: any[]) => getCore(...a),
-    getPendingDeletions: (...a: any[]) => getPendingDeletions(...a),
-    hasUnsavedChanges: (...a: any[]) => hasUnsavedChanges(...a),
-  });
-
-  const getIconForTableName = createGetIconForTableName({
-
-  });
-
-  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
-
-  const CUSTOM_TABLE_NAME_ICON_PACK_SCHEMA_VERSION = 1;
-
-  // [x4-b] 类型已迁出：见 ./shared/index-local-types.ts
-
-  const DASHBOARD_MODULE_SECTION_KIND = createDashboardModuleSectionKind({
-
-  });
-
-  const CUSTOM_TABLE_NAME_ICON_DASHBOARD_MODULE_CONTEXTS = createCustomTableNameIconDashboardModuleContexts({
-
-  });
-
-  const getDashboardModuleKeysForTableName = createGetDashboardModuleKeysForTableName({
-    getDashboardRuntimeConfig: (...a: any[]) => getDashboardRuntimeConfig(...a),
-    normalizeGlobalInteractionCategoryText: (...a: any[]) => normalizeGlobalInteractionCategoryText(...a),
-  });
-
-  const resolveDashboardGlobalInteractionSectionKind = createResolveDashboardGlobalInteractionSectionKind({
-    getDashboardModuleKeysForTableName: (...a: any[]) => getDashboardModuleKeysForTableName(...a),
-    getDASHBOARD_MODULE_SECTION_KIND: () => DASHBOARD_MODULE_SECTION_KIND,
-  });
-
-  const resolveDashboardCustomTableNameIconContextInfo = createResolveDashboardCustomTableNameIconContextInfo({
-    getDashboardModuleKeysForTableName: (...a: any[]) => getDashboardModuleKeysForTableName(...a),
-    getCUSTOM_TABLE_NAME_ICON_DASHBOARD_MODULE_CONTEXTS: () => CUSTOM_TABLE_NAME_ICON_DASHBOARD_MODULE_CONTEXTS,
-  });
-
-  const resolveDashboardCustomTableNameIconRowName = createResolveDashboardCustomTableNameIconRowName({
-    getDashboardModuleConfig: (...a: any[]) => getDashboardModuleConfig(...a),
-    getDashboardModuleKeysForTableName: (...a: any[]) => getDashboardModuleKeysForTableName(...a),
-    getStringLikeCellText: (...a: any[]) => getStringLikeCellText(...a),
-    getDashboardDataParser: () => DashboardDataParser,
-  });
-
-  const resolveCustomTableNameIconRowName = createResolveCustomTableNameIconRowName({
-    resolveDashboardCustomTableNameIconRowName: (...a: any[]) => resolveDashboardCustomTableNameIconRowName(...a),
-    resolveGlobalInteractionRowTitle: (...a: any[]) => resolveGlobalInteractionRowTitle(...a),
-  });
-
-  const CUSTOM_TABLE_NAME_ICON_MODULE_IDS = createCustomTableNameIconModuleIds({
-
-  });
-  const CUSTOM_TABLE_NAME_ICON_SECTIONS = createCustomTableNameIconSections({
-
-  });
-  const CUSTOM_TABLE_NAME_ICON_ALLOWED_PANEL_SECTIONS = createCustomTableNameIconAllowedPanelSections({
-
-  });
-  const CUSTOM_TABLE_NAME_ICON_DENIED_MODULES = createCustomTableNameIconDeniedModules({
-
-  });
-  const CUSTOM_TABLE_NAME_ICON_DENIED_SECTIONS = createCustomTableNameIconDeniedSections({
-
-  });
-  const CUSTOM_TABLE_NAME_ICON_DENIED_TABLE_NAMES = createCustomTableNameIconDeniedTableNames({
-
-  });
-
-  const isCustomTableNameIconModuleId = createIsCustomTableNameIconModuleId({
-    getCUSTOM_TABLE_NAME_ICON_MODULE_IDS: () => CUSTOM_TABLE_NAME_ICON_MODULE_IDS,
-  });
-
-  const isCustomTableNameIconSection = createIsCustomTableNameIconSection({
-    getCUSTOM_TABLE_NAME_ICON_SECTIONS: () => CUSTOM_TABLE_NAME_ICON_SECTIONS,
-  });
-  const normalizeCustomTableNameIconKeyPart = createNormalizeCustomTableNameIconKeyPart({
-
-  });
-
-  const isCustomTableNameIconTableDenied = createIsCustomTableNameIconTableDenied({
-    isNpcLikeTableName: (...a: any[]) => isNpcLikeTableName(...a),
-    isPlayerTableName: (...a: any[]) => isPlayerTableName(...a),
-    resolveDashboardGlobalInteractionSectionKind: (...a: any[]) => resolveDashboardGlobalInteractionSectionKind(...a),
-    getCUSTOM_TABLE_NAME_ICON_DENIED_TABLE_NAMES: () => CUSTOM_TABLE_NAME_ICON_DENIED_TABLE_NAMES,
-  });
-
-  const normalizeCustomTableNameIconContext = createNormalizeCustomTableNameIconContext({
-    isCustomTableNameIconModuleId: (...a: any[]) => isCustomTableNameIconModuleId(...a),
-    isCustomTableNameIconSection: (...a: any[]) => isCustomTableNameIconSection(...a),
-    normalizeCustomTableNameIconKeyPart: (...a: any[]) => normalizeCustomTableNameIconKeyPart(...a),
-  });
-
-  const getCustomTableNameIconContextKey = createGetCustomTableNameIconContextKey({
-    normalizeCustomTableNameIconKeyPart: (...a: any[]) => normalizeCustomTableNameIconKeyPart(...a),
-  });
-
-  const normalizeCustomTableNameIconEntry = createNormalizeCustomTableNameIconEntry({
-    isCustomTableNameIconImageUrlValid: (...a: any[]) => isCustomTableNameIconImageUrlValid(...a),
-    normalizeCustomTableNameIconContext: (...a: any[]) => normalizeCustomTableNameIconContext(...a),
-  });
-
-  const CUSTOM_TABLE_NAME_ICON_ALLOWED_LOCAL_MIME_TYPES = createCustomTableNameIconAllowedLocalMimeTypes({
-
-  });
-  const CUSTOM_TABLE_NAME_ICON_MAX_LOCAL_FILE_SIZE = 1024 * 1024;
-
-  const isCustomTableNameIconSvgMimeType = createIsCustomTableNameIconSvgMimeType({
-
-  });
-
-  const isCustomTableNameIconImageUrlValid = createIsCustomTableNameIconImageUrlValid({
-    getCustomTableNameIconImageUrlValidationError: (...a: any[]) => getCustomTableNameIconImageUrlValidationError(...a),
-  });
-
-  const getCustomTableNameIconImageUrlValidationError = createGetCustomTableNameIconImageUrlValidationError({
-    getRemoteImageUrlValidationError: (...a: any[]) => getRemoteImageUrlValidationError(...a),
-  });
-
-  const getCustomTableNameIconLocalFileValidationError = createGetCustomTableNameIconLocalFileValidationError({
-    isCustomTableNameIconSvgMimeType: (...a: any[]) => isCustomTableNameIconSvgMimeType(...a),
-    getCUSTOM_TABLE_NAME_ICON_ALLOWED_LOCAL_MIME_TYPES: () => CUSTOM_TABLE_NAME_ICON_ALLOWED_LOCAL_MIME_TYPES,
-    getCUSTOM_TABLE_NAME_ICON_MAX_LOCAL_FILE_SIZE: () => CUSTOM_TABLE_NAME_ICON_MAX_LOCAL_FILE_SIZE,
-  });
-
-
-  const isCustomTableNameIconContextAllowed = createIsCustomTableNameIconContextAllowed({
-    isCustomTableNameIconTableDenied: (...a: any[]) => isCustomTableNameIconTableDenied(...a),
-    CUSTOM_TABLE_NAME_ICON_ALLOWED_PANEL_SECTIONS: CUSTOM_TABLE_NAME_ICON_ALLOWED_PANEL_SECTIONS,
-    CUSTOM_TABLE_NAME_ICON_DENIED_MODULES: CUSTOM_TABLE_NAME_ICON_DENIED_MODULES,
-    CUSTOM_TABLE_NAME_ICON_DENIED_SECTIONS: CUSTOM_TABLE_NAME_ICON_DENIED_SECTIONS,
-  });
-
-  const getCustomTableNameIconFallbackContexts = createGetCustomTableNameIconFallbackContexts({
-    getCustomTableNameIconContextKey: (...a: any[]) => getCustomTableNameIconContextKey(...a),
-    isCustomTableNameIconContextAllowed: (...a: any[]) => isCustomTableNameIconContextAllowed(...a),
-  });
-
-  const CustomTableNameIconStoreManager = createCustomTableNameIconStoreManager({
-    getCustomTableNameIconContextKey: (...a: any[]) => getCustomTableNameIconContextKey(...a),
-    normalizeCustomTableNameIconEntry: (...a: any[]) => normalizeCustomTableNameIconEntry(...a),
-    STORAGE_KEY_CUSTOM_TABLE_NAME_ICONS: STORAGE_KEY_CUSTOM_TABLE_NAME_ICONS,
-  });
-
-  const resolveCustomTableNameIcon = createResolveCustomTableNameIcon({
-    getCustomTableNameIconContextKey: (...a: any[]) => getCustomTableNameIconContextKey(...a),
-    getCustomTableNameIconFallbackContexts: (...a: any[]) => getCustomTableNameIconFallbackContexts(...a),
-    isCustomTableNameIconContextAllowed: (...a: any[]) => isCustomTableNameIconContextAllowed(...a),
-    normalizeCustomTableNameIconContext: (...a: any[]) => normalizeCustomTableNameIconContext(...a),
-    normalizeCustomTableNameIconKeyPart: (...a: any[]) => normalizeCustomTableNameIconKeyPart(...a),
-    CustomTableNameIconStoreManager: CustomTableNameIconStoreManager,
-  });
-
-  const resolveCustomTableNameIconAssetUrl = createResolveCustomTableNameIconAssetUrl({
-    isCustomTableNameIconImageUrlValid: (...a: any[]) => isCustomTableNameIconImageUrlValid(...a),
-    resolveCustomTableNameIcon: (...a: any[]) => resolveCustomTableNameIcon(...a),
-  });
-
-  type CustomTableNameIconManagerCandidateSource = 'direct' | 'interaction' | 'saved';
-
-  interface CustomTableNameIconManagerRawSheet {
-    key: string;
-    name: string;
-    content: unknown[][];
-  }
-
-  interface CustomTableNameIconManagerCandidate {
-    context: CustomTableNameIconContext;
-    key: string;
-    tableKey: string;
-    source: CustomTableNameIconManagerCandidateSource;
-    searchText: string;
-  }
-
-  const CUSTOM_TABLE_NAME_ICON_MANAGER_MODULE_LABELS = createCustomTableNameIconManagerModuleLabels({
-
-  });
-
-  const CUSTOM_TABLE_NAME_ICON_MANAGER_SECTION_LABELS = createCustomTableNameIconManagerSectionLabels({
-
-  });
-
-  const CUSTOM_TABLE_NAME_ICON_MANAGER_DIRECT_MODULE_BY_SECTION = createCustomTableNameIconManagerDirectModuleBySection({
-
-  });
-
-  const getCustomTableNameIconManagerModuleLabel = createGetCustomTableNameIconManagerModuleLabel({
-    getCUSTOM_TABLE_NAME_ICON_MANAGER_MODULE_LABELS: () => CUSTOM_TABLE_NAME_ICON_MANAGER_MODULE_LABELS,
-  });
-
-  const getCustomTableNameIconManagerSectionLabel = createGetCustomTableNameIconManagerSectionLabel({
-    getCUSTOM_TABLE_NAME_ICON_MANAGER_SECTION_LABELS: () => CUSTOM_TABLE_NAME_ICON_MANAGER_SECTION_LABELS,
-  });
-
-  const getCustomTableNameIconManagerSourceLabel = createGetCustomTableNameIconManagerSourceLabel({
-
-  });
-
-  const getCustomTableNameIconManagerContextLabel = createGetCustomTableNameIconManagerContextLabel({
-    getCustomTableNameIconManagerModuleLabel: (...a: any[]) => getCustomTableNameIconManagerModuleLabel(...a),
-    getCustomTableNameIconManagerSectionLabel: (...a: any[]) => getCustomTableNameIconManagerSectionLabel(...a),
-    normalizeGlobalInteractionCategoryText: (...a: any[]) => normalizeGlobalInteractionCategoryText(...a),
-  });
-
-  const getCustomTableNameIconManagerLocalKey = createGetCustomTableNameIconManagerLocalKey({
-    getCustomTableNameIconContextKey: (...a: any[]) => getCustomTableNameIconContextKey(...a),
-  });
-
-  const getCustomTableNameIconManagerRawSheets = createGetCustomTableNameIconManagerRawSheets({
-    getTableData: (...a: any[]) => getTableData(...a),
-    isRecord: (...a: any[]) => isRecord(...a),
-    isTwoDimensionalArray: (...a: any[]) => isTwoDimensionalArray(...a),
-  });
-
-  const resolveCustomTableNameIconManagerDirectSection = createResolveCustomTableNameIconManagerDirectSection({
-    normalizeGlobalInteractionCategoryText: (...a: any[]) => normalizeGlobalInteractionCategoryText(...a),
-    resolveGlobalInteractionSectionMeta: (...a: any[]) => resolveGlobalInteractionSectionMeta(...a),
-  });
-
-  const createCustomTableNameIconManagerCandidate = createCreateCustomTableNameIconManagerCandidate({
-    getCustomTableNameIconContextKey: (...a: any[]) => getCustomTableNameIconContextKey(...a),
-    getCustomTableNameIconManagerModuleLabel: (...a: any[]) => getCustomTableNameIconManagerModuleLabel(...a),
-    getCustomTableNameIconManagerSectionLabel: (...a: any[]) => getCustomTableNameIconManagerSectionLabel(...a),
-    getCustomTableNameIconManagerSourceLabel: (...a: any[]) => getCustomTableNameIconManagerSourceLabel(...a),
-    isCustomTableNameIconContextAllowed: (...a: any[]) => isCustomTableNameIconContextAllowed(...a),
-    normalizeCustomTableNameIconContext: (...a: any[]) => normalizeCustomTableNameIconContext(...a),
-  });
-
-  const getCustomTableNameIconManagerCandidates = createGetCustomTableNameIconManagerCandidates({
-    buildGlobalInteractionGroups: (...a: any[]) => buildGlobalInteractionGroups(...a),
-    createCustomTableNameIconManagerCandidate: (...a: any[]) => createCustomTableNameIconManagerCandidate(...a),
-    getCustomTableNameIconManagerModuleLabel: (...a: any[]) => getCustomTableNameIconManagerModuleLabel(...a),
-    getCustomTableNameIconManagerRawSheets: (...a: any[]) => getCustomTableNameIconManagerRawSheets(...a),
-    getTableData: (...a: any[]) => getTableData(...a),
-    resolveCustomTableNameIconManagerDirectSection: (...a: any[]) => resolveCustomTableNameIconManagerDirectSection(...a),
-    resolveCustomTableNameIconRowName: (...a: any[]) => resolveCustomTableNameIconRowName(...a),
-    resolveDashboardCustomTableNameIconContextInfo: (...a: any[]) => resolveDashboardCustomTableNameIconContextInfo(...a),
-    resolveGlobalInteractionRowTitle: (...a: any[]) => resolveGlobalInteractionRowTitle(...a),
-    resolveGlobalInteractionSectionMeta: (...a: any[]) => resolveGlobalInteractionSectionMeta(...a),
-    CUSTOM_TABLE_NAME_ICON_MANAGER_DIRECT_MODULE_BY_SECTION: CUSTOM_TABLE_NAME_ICON_MANAGER_DIRECT_MODULE_BY_SECTION,
-    CustomTableNameIconStoreManager: CustomTableNameIconStoreManager,
-  });
-
-  const getCustomTableNameIconManagerInvalidSourceText = createGetCustomTableNameIconManagerInvalidSourceText({
-
-  });
-
-  const getCustomTableNameIconManagerEntryAsset = createGetCustomTableNameIconManagerEntryAsset({
-
-    isCustomTableNameIconImageUrlValid: (...a: any[]) => isCustomTableNameIconImageUrlValid(...a),
-  });
-
-  const normalizeCustomTableNameIconPackEntryMetadata = createNormalizeCustomTableNameIconPackEntryMetadata({
-
-  });
-
-  const normalizeCustomTableNameIconPackEntry = createNormalizeCustomTableNameIconPackEntry({
-    normalizeCustomTableNameIconContext: (...a: any[]) => normalizeCustomTableNameIconContext(...a),
-    normalizeCustomTableNameIconPackEntryMetadata: (...a: any[]) => normalizeCustomTableNameIconPackEntryMetadata(...a),
-  });
-
-  const buildCustomTableNameIconPackEntry = createBuildCustomTableNameIconPackEntry({
-    getCustomTableNameIconManagerLocalKey: (...a: any[]) => getCustomTableNameIconManagerLocalKey(...a),
-    isCustomTableNameIconContextAllowed: (...a: any[]) => isCustomTableNameIconContextAllowed(...a),
-    isCustomTableNameIconImageUrlValid: (...a: any[]) => isCustomTableNameIconImageUrlValid(...a),
-  });
-
-  const buildCustomTableNameIconPack = createBuildCustomTableNameIconPack({
-    buildCustomTableNameIconPackEntry: (...a: any[]) => buildCustomTableNameIconPackEntry(...a),
-    getCUSTOM_TABLE_NAME_ICON_PACK_SCHEMA_VERSION: () => CUSTOM_TABLE_NAME_ICON_PACK_SCHEMA_VERSION,
-    getCustomTableNameIconStoreManager: () => CustomTableNameIconStoreManager,
-  });
-
-  const downloadCustomTableNameIconPack = createDownloadCustomTableNameIconPack({
-
-  });
-
-  const analyzeCustomTableNameIconPackImport = createAnalyzeCustomTableNameIconPackImport({
-    getCustomTableNameIconContextKey: (...a: any[]) => getCustomTableNameIconContextKey(...a),
-    getCustomTableNameIconImageUrlValidationError: (...a: any[]) => getCustomTableNameIconImageUrlValidationError(...a),
-    getCustomTableNameIconManagerLocalKey: (...a: any[]) => getCustomTableNameIconManagerLocalKey(...a),
-    isCustomTableNameIconContextAllowed: (...a: any[]) => isCustomTableNameIconContextAllowed(...a),
-    normalizeCustomTableNameIconPackEntry: (...a: any[]) => normalizeCustomTableNameIconPackEntry(...a),
-    CUSTOM_TABLE_NAME_ICON_PACK_SCHEMA_VERSION: CUSTOM_TABLE_NAME_ICON_PACK_SCHEMA_VERSION,
-    CustomTableNameIconStoreManager: CustomTableNameIconStoreManager,
-  });
-
-  const getCustomTableNameIconPackImportSummaryText = createGetCustomTableNameIconPackImportSummaryText({
-
-  });
-
-  type DiceSystemConfirmTone = 'warning' | 'danger';
-
-  const showDiceSystemConfirmDialog = createShowDiceSystemConfirmDialog({
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-  });
-
-  const showDiceSystemInputDialog = createShowDiceSystemInputDialog({
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-  });
-
-  const showCustomTableNameIconManager = createShowCustomTableNameIconManager({
-    analyzeCustomTableNameIconPackImport: (...a: any[]) => analyzeCustomTableNameIconPackImport(...a),
-    bindEvents: (...a: any[]) => bindEvents(...a),
-    bindGlobalInteractionEvents: (...a: any[]) => bindGlobalInteractionEvents(...a),
-    bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a),
-    buildCustomTableNameIconPack: (...a: any[]) => buildCustomTableNameIconPack(...a),
-    downloadCustomTableNameIconPack: (...a: any[]) => downloadCustomTableNameIconPack(...a),
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    formatCssImageUrl: (...a: any[]) => formatCssImageUrl(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    getCustomTableNameIconImageUrlValidationError: (...a: any[]) => getCustomTableNameIconImageUrlValidationError(...a),
-    getCustomTableNameIconLocalFileValidationError: (...a: any[]) => getCustomTableNameIconLocalFileValidationError(...a),
-    getCustomTableNameIconManagerCandidates: (...a: any[]) => getCustomTableNameIconManagerCandidates(...a),
-    getCustomTableNameIconManagerContextLabel: (...a: any[]) => getCustomTableNameIconManagerContextLabel(...a),
-    getCustomTableNameIconManagerEntryAsset: (...a: any[]) => getCustomTableNameIconManagerEntryAsset(...a),
-    getCustomTableNameIconManagerInvalidSourceText: (...a: any[]) => getCustomTableNameIconManagerInvalidSourceText(...a),
-    getCustomTableNameIconManagerLocalKey: (...a: any[]) => getCustomTableNameIconManagerLocalKey(...a),
-    getCustomTableNameIconManagerModuleLabel: (...a: any[]) => getCustomTableNameIconManagerModuleLabel(...a),
-    getCustomTableNameIconPackImportSummaryText: (...a: any[]) => getCustomTableNameIconPackImportSummaryText(...a),
-    getTableData: (...a: any[]) => getTableData(...a),
-    getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a),
-    hydrateCustomTableNameIconsIn: (...a: any[]) => hydrateCustomTableNameIconsIn(...a),
-    processJsonData: (...a: any[]) => processJsonData(...a),
-    renderDashboard: (...a: any[]) => renderDashboard(...a),
-    renderGlobalInteractionsPanel: (...a: any[]) => renderGlobalInteractionsPanel(...a),
-    setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    showDiceSystemConfirmDialog: (...a: any[]) => showDiceSystemConfirmDialog(...a),
-    CustomTableNameIconStoreManager: CustomTableNameIconStoreManager,
-    STORAGE_KEY_DASHBOARD_ACTIVE: STORAGE_KEY_DASHBOARD_ACTIVE,
-    STORAGE_KEY_GLOBAL_INTERACTIONS_ACTIVE: STORAGE_KEY_GLOBAL_INTERACTIONS_ACTIVE,
-    loadDashboardNpcAvatars: (...a: any[]) => loadDashboardNpcAvatars(...a),
-    getCachedRawData: () => cachedRawData,
-  });
+  // [x4-k] 核心运行时/工具装配已迁出：见 ./wiring/core-runtime-wiring.ts
+  const { ACTION_BUTTONS, DashboardDataParser, DashboardPresetManager, FONTS, THEMES, UpdateController, buildGlobalInteractionGroups, clearModalStack, collectHostAndLocalNodes, createAutoRegexTransformKey, createDashboardPresetEditorTemplate, createElementFromHtml, createGlobalInteractionSections, debugGlobalInteraction, dedupeInteractionActions, downloadAiPromptFile, downloadJsonFile, downloadJsoncFile, executeTableInteractionAction, extractNumericValue, getActiveDashboardRelationshipGraphSources, getCore, getCurrentContextFingerprint, getDashboardModuleConfig, getDatabaseManualUpdateErrorMessage, getIconForTableName, getInteractOptionsForRow, getJsonLikeErrorMessage, getNavigationFontMetrics, getPendingDeletions, getResultBadgeClass, getTavernHostDocument, getTavernHostWindow, isCustomTableNameIconImageUrlValid, isNumericCell, isRecord, isTwoDimensionalArray, normalizeCollapseStyle, normalizeInteractionLabel, openDatabaseInterface, openDatabaseVisualizerInterface, parseAttributeString, parseDashboardPresetJson, parseJsoncDocument, parseJsoncRecord, parseJsoncValue, parseRelationshipString, pickTextFile, popModal, pushModal, readTextFile, rememberAutoRegexTransform, resolveCustomTableNameIcon, resolveDashboardCustomTableNameIconContextInfo, resolveGlobalInteractionSectionMeta, runDatabaseManualUpdate, shouldSkipAutoRegexTransform, showCustomTableNameIconManager, showDatabaseManualUpdateFailure, showDiceSystemConfirmDialog, showDiceSystemInputDialog, updateSaveButtonState, validateJsoncEditorConfig, _boundRenderHandler_ACC, _boundReviewBaselineHandler_ACC, cachedRawData_ACC, currentDiffMap_ACC, hasUnsavedChanges_ACC, isAutoTransforming_ACC, isEditingOrder_ACC, isInitialized_ACC, isSaving_ACC, isSettingsOpen_ACC, lastOptionHash_ACC, observer_ACC, optionPanelVisible_ACC, saveQueue_ACC, tablePageStates_ACC, tableScrollStates_ACC, tableSearchStates_ACC } = createCoreRuntimeWiring({ ActionPresetManager, DASHBOARD_DEFAULT_PRESET_ID, DASHBOARD_PRESET_ADDITIONAL_COLUMNS, DASHBOARD_PRESET_FILTER_KEYS, DASHBOARD_PRESET_FORMAT, DASHBOARD_PRESET_MODULE_KEYS, DASHBOARD_RELATIONSHIP_GRAPH_MODULE_KEY, JSONC_FILE_ACCEPT, JSONC_FILE_MIME, JSON_FILE_MIME, MARKDOWN_FILE_MIME, ValidationEngine, ValidationRuleManager, bindEvents: (...a: any[]) => bindEvents(...a), bindGlobalInteractionEvents: (...a: any[]) => bindGlobalInteractionEvents(...a), bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a), cloneDashboardConfig, cloneDashboardPresetModules, createBuiltinDashboardPreset, escapeHtml, formatCssImageUrl, getConfig: (...a: any[]) => getConfig(...a), getRemoteImageUrlValidationError, getTableData: (...a: any[]) => getTableData(...a), getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a), hydrateCustomTableNameIconsIn, isNpcLikeTableName, isPlayerTableName, isRecordValue, loadDashboardNpcAvatars: (...a: any[]) => loadDashboardNpcAvatars(...a), loadSnapshot: (...a: any[]) => loadSnapshot(...a), normalizeDashboardKeywordArray, normalizeDashboardPresetFilters, normalizeDashboardRelationshipGraphConfig, processJsonData: (...a: any[]) => processJsonData(...a), refreshChangesPanel: (...a: any[]) => refreshChangesPanel(...a), renderDashboard: (...a: any[]) => renderDashboard(...a), renderGlobalInteractionsPanel: (...a: any[]) => renderGlobalInteractionsPanel(...a), renderInterface: (...a: any[]) => renderInterface(...a), setupOverlayClose, showDicePanel: (...a: any[]) => showDicePanel(...a), smartInsertToTextarea, stripJsonComments, dashboardRuntimeConfigCache_ACC: { get v(){ return dashboardRuntimeConfigCache; }, set v(x){ dashboardRuntimeConfigCache = x; } } });
 
   const handleCustomTableNameIconImageDBPagehide = createHandleCustomTableNameIconImageDBPagehide({
 
@@ -4533,7 +3502,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     findPrimaryAttributeColumns: (...a: any[]) => findPrimaryAttributeColumns(...a),
     getTableData: (...a: any[]) => getTableData(...a),
     saveRowInstantly: (...a: any[]) => saveRowInstantly(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // [新增] 将属性写入角色表格
@@ -4547,7 +3516,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     parseAttributeString: (...a: any[]) => parseAttributeString(...a),
     saveRowInstantly: (...a: any[]) => saveRowInstantly(...a),
     AttributePresetManager: AttributePresetManager,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // [新增] 更新属性字符串中的单个属性值（用于燃运等功能）
@@ -4560,7 +3529,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     resolveAttributeAliasName: (...a: any[]) => resolveAttributeAliasName(...a),
     saveRowInstantly: (...a: any[]) => saveRowInstantly(...a),
     withTableTemplateCheckHint: (...a: any[]) => withTableTemplateCheckHint(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // [修复] 获取角色的完整属性列表（包括基础属性和特有属性等所有包含"属性"的列）
@@ -4570,7 +3539,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     findPrimaryAttributeColumns: (...a: any[]) => findPrimaryAttributeColumns(...a),
     getTableData: (...a: any[]) => getTableData(...a),
     parseAttributeString: (...a: any[]) => parseAttributeString(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
   // [新增] 自定义下拉菜单初始化函数
   const initCustomDropdown = createInitCustomDropdown({
@@ -4649,7 +3618,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     DiceHistoryStatsDB: DiceHistoryStatsDB,
     STORAGE_KEY_LAST_PRESET: STORAGE_KEY_LAST_PRESET,
     UpdateController: UpdateController,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     getMAX_HISTORY: () => MAX_HISTORY,
     getCheckHistory: () => checkHistory,
     getContestHistory: () => contestHistory,
@@ -4703,7 +3672,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     NameAliasRegistry: NameAliasRegistry,
     STORAGE_KEY_LAST_PRESET: STORAGE_KEY_LAST_PRESET,
     UpdateController: UpdateController,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     getMAX_HISTORY: () => MAX_HISTORY,
     getContestHistory: () => contestHistory,
   });
@@ -4725,7 +3694,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     DASHBOARD_TABLE_CONFIG: DASHBOARD_TABLE_CONFIG,
     DashboardDataParser: DashboardDataParser,
     NameAliasRegistry: NameAliasRegistry,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // 防止地图弹窗重复打开
@@ -4838,7 +3807,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     collectCurrentChatAvatarNodes: (...a: any[]) => collectCurrentChatAvatarNodes(...a),
     getTableData: (...a: any[]) => getTableData(...a),
     processJsonData: (...a: any[]) => processJsonData(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   interface RelationGraphLayoutPosition {
@@ -4867,7 +3836,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     warnTableTemplateIssue: (...a: any[]) => warnTableTemplateIssue(...a),
     AvatarManager: AvatarManager,
     NameAliasRegistry: NameAliasRegistry,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
   // ========================================
   // 头像裁剪弹窗 - 统一PC/移动端体验
@@ -4949,7 +3918,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     renderInterface: (...a: any[]) => renderInterface(...a),
     saveRowInstantly: (...a: any[]) => saveRowInstantly(...a),
     setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // [优化] 内存配置缓存
@@ -5219,8 +4188,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     setGachaCatalogCache: (v: any) => { gachaCatalogCache_ACC.v = v; },
     getGachaCatalogLoadTask: () => gachaCatalogLoadTask_ACC.v,
     setGachaCatalogLoadTask: (v: any) => { gachaCatalogLoadTask_ACC.v = v; },
-    getIsSettingsOpen: () => isSettingsOpen,
-    setIsSettingsOpen: (v: any) => { isSettingsOpen = v; },
+    getIsSettingsOpen: () => isSettingsOpen_ACC.v,
+    setIsSettingsOpen: (v: any) => { isSettingsOpen_ACC.v = v; },
   });
 
   const applyDiceConfigBackup = createApplyDiceConfigBackup({
@@ -5246,8 +4215,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     STORAGE_KEY_GACHA_ITEM_SETTINGS: STORAGE_KEY_GACHA_ITEM_SETTINGS,
     STORAGE_KEY_GACHA_POOL_SETTINGS: STORAGE_KEY_GACHA_POOL_SETTINGS,
     STORAGE_KEY_REGEX_RULES: STORAGE_KEY_REGEX_RULES,
-    getCachedRawData: () => cachedRawData,
-    setCachedRawData: (v: any) => { cachedRawData = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
     buildDiceConfigBackupTableOrder: (...a: any[]) => buildDiceConfigBackupTableOrder(...a),
     saveTableOrder: (...a: any[]) => saveTableOrder(...a),
     STORAGE_KEY_TABLE_ORDER: STORAGE_KEY_TABLE_ORDER,
@@ -5651,8 +4620,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     patchLatestChatSheetWithoutTracking: (...a: any[]) => patchLatestChatSheetWithoutTracking(...a),
     readRuntimeTableDataReference: (...a: any[]) => readRuntimeTableDataReference(...a),
     sanitizeRuntimeTableData: (...a: any[]) => sanitizeRuntimeTableData(...a),
-    getCachedRawData: () => cachedRawData,
-    setCachedRawData: (v: any) => { cachedRawData = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
   });
 
   const applyJsonCellFallbackForCrud = createApplyJsonCellFallbackForCrud({
@@ -5769,8 +4738,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     findRuntimeSheetEntryForCrud: (...a: any[]) => findRuntimeSheetEntryForCrud(...a),
     getTableData: (...a: any[]) => getTableData(...a),
     sanitizeRuntimeTableData: (...a: any[]) => sanitizeRuntimeTableData(...a),
-    getCachedRawData: () => cachedRawData,
-    setCachedRawData: (v: any) => { cachedRawData = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
   });
 
   const saveDataToDatabase = createSaveDataToDatabase({
@@ -5779,12 +4748,12 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     renderInterface: (...a: any[]) => renderInterface(...a),
     saveSnapshot: (...a: any[]) => saveSnapshot(...a),
     showDiceSystemConfirmDialog: (...a: any[]) => showDiceSystemConfirmDialog(...a),
-    getCurrentDiffMap: () => currentDiffMap,
-    setCurrentDiffMap: (v: any) => { currentDiffMap = v; },
-    getHasUnsavedChanges: () => hasUnsavedChanges,
-    setHasUnsavedChanges: (v: any) => { hasUnsavedChanges = v; },
-      getIsSaving: () => isSaving,
-    setIsSaving: (v: any) => { isSaving = v; },
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
+    getHasUnsavedChanges: () => hasUnsavedChanges_ACC.v,
+    setHasUnsavedChanges: (v: any) => { hasUnsavedChanges_ACC.v = v; },
+      getIsSaving: () => isSaving_ACC.v,
+    setIsSaving: (v: any) => { isSaving_ACC.v = v; },
 });
 
   const performSaveDataOnly = createPerformSaveDataOnly({
@@ -5794,8 +4763,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
 
   const runInSaveQueue = createRunInSaveQueue({
     getRuntimeErrorLogPayload: (...a: any[]) => getRuntimeErrorLogPayload(...a),
-    getSaveQueue: () => saveQueue,
-    setSaveQueue: (v: any) => { saveQueue = v; },
+    getSaveQueue: () => saveQueue_ACC.v,
+    setSaveQueue: (v: any) => { saveQueue_ACC.v = v; },
   });
 
   // [新增] 轻量级保存：只保存数据到数据库，不更新快照
@@ -5821,7 +4790,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   const resolveRuntimeMutationSource = createResolveRuntimeMutationSource({
 
     getTableData: (...a: any[]) => getTableData(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     loadSnapshot: (...a: any[]) => loadSnapshot(...a),
     findRuntimeSheetEntryForMutation: (...a: any[]) => findRuntimeSheetEntryForMutation(...a),
   });
@@ -5829,8 +4798,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   const updateRuntimeDataCacheAfterCrud = createUpdateRuntimeDataCacheAfterCrud({
     getTableData: (...a: any[]) => getTableData(...a),
     findRuntimeSheetEntryForMutation: (...a: any[]) => findRuntimeSheetEntryForMutation(...a),
-    getCachedRawData: () => cachedRawData,
-    setCachedRawData: (v: any) => { cachedRawData = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
   });
 
   // [新增] 即时保存单行数据并只更新该行快照
@@ -5864,8 +4833,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     saveSnapshot: (...a: any[]) => saveSnapshot(...a),
     setDiffDataRow: (...a: any[]) => setDiffDataRow(...a),
     updateRuntimeDataCacheAfterCrud: (...a: any[]) => updateRuntimeDataCacheAfterCrud(...a),
-    getCachedRawData: () => cachedRawData,
-    setCachedRawData: (v: any) => { cachedRawData = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
   });
 
   const appendRowInstantly = createAppendRowInstantly({
@@ -5934,7 +4903,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
     escapeHtml: (...a: any[]) => escapeHtml(...a),
     ValidationRuleManager: ValidationRuleManager,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // ========================================
@@ -5953,7 +4922,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
     showTableRuleFixModal: (...a: any[]) => showTableRuleFixModal(...a),
     escapeHtml: (...a: any[]) => escapeHtml(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
   });
 
   // ========================================
@@ -6296,7 +5265,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
     RegexTransformationEngine: RegexTransformationEngine,
     RegexTransformationManager: RegexTransformationManager,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
       getCore: (...a: any[]) => getCore(...a),
     getConfig: (...a: any[]) => getConfig(...a),
     escapeHtml: (...a: any[]) => escapeHtml(...a),
@@ -6328,7 +5297,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     processJsonData: (...a: any[]) => processJsonData(...a),
     getFullAttributesForCharacter: (...a: any[]) => getFullAttributesForCharacter(...a),
     getAttributeValue: (...a: any[]) => getAttributeValue(...a),
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     getDashboardDataParser: () => DashboardDataParser,
   });
   const acuDiceRoll = createAcuDiceRollInstance({
@@ -6363,7 +5332,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     processJsonData: (...a: any[]) => processJsonData(...a),
     resolveCanonicalCharacterName: (...a: any[]) => resolveCanonicalCharacterName(...a),
     NameAliasRegistry: NameAliasRegistry,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     getMAX_HISTORY: () => MAX_HISTORY,
     getContestHistory: () => contestHistory,
   });
@@ -6480,7 +5449,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     | { kind: 'invalid'; reason: string };
 
   // [x4-g] 检查建议/设置弹窗装配已迁出：见 ./wiring/check-suggestion-wiring.ts
-  const { AcuDiceAPI, executeCheckSuggestionCommand, getTemplateInspectionSheets, normalizeCheckSuggestionDiceFormula, showFavoriteEditModal, showSendToTableModal, showSettingsModal, showTagInputModal } = createCheckSuggestionWiring({ AdvancedDicePresetManager, DEFAULT_CONTEST_OUTPUT_TEMPLATE, DEFAULT_OUTPUT_TEMPLATE, FONTS, MAX_HISTORY, NameAliasRegistry, PresetManager, RegexPresetManager, RegexTransformationManager, THEMES, TableTemplateRequirementPresetManager, ValidationRuleManager, acuDiceCharacters, acuDiceCheck, acuDiceContest, acuDiceEvents, acuDiceHistory, acuDicePresets, acuDiceProfiles, acuDiceReady, acuDiceRoll, appendRowInstantly, applyAdvancedPresetOutcomePolicy, areAllTablesReversed, bindFavoritesEvents: (...a: any[]) => bindFavoritesEvents(...a), bindTutorialButtonsIn, buildCheckValueText, buildNewTableTemplateRequirementPresetJsoncTemplate, buildTableTemplateRequirementPresetAgentPrompt, buildTableTemplateRequirementPresetAgentPromptFilename, cachedRawData_ACC: { get v(){ return cachedRawData; }, set v(x){ cachedRawData = x; } }, checkHistory, clearDiceLocalCacheData, clearModalStack, contestHistory, convertTavernRegexToRule, createSortableList, downloadAiPromptFile, downloadJsonFile, emitEvent, ensureCanonicalTableOrder, escapeHtml, evaluateCondition, evaluateConditionNumber, evaluateFormula, evaluateOutcomes, formatOutputTemplate, getAdvancedPresetDisplayOutcome, getAttributeEntryForCharacter, getAttributeValue, getCheckSuggestionPresetById, getConfig, getCore, getCurrentChatAvatarNodes, getHiddenTables, getIconForTableName, getJsonLikeErrorMessage, getNamedCheckParamText, getNavigationFontMetrics, getSavedTableOrder, getStableTableSort, getSuccessLevel, getTableData, getTableTemplateRequirementPresetStats, getTutorialButtonHtml, isRecordValue, isSettingsOpen_ACC: { get v(){ return isSettingsOpen; }, set v(x){ isSettingsOpen = x; } }, normalizeCollapseStyle, parseJsoncRecord, parseTableTemplateRequirementPresetJson, pickTextFile, popModal, processJsonData, pushModal, refreshDialogueIndentRender, refreshRegexRulesList, renderDeprecatedBadge, renderFavoritesPanel: (...a: any[]) => renderFavoritesPanel(...a), renderInterface: (...a: any[]) => renderInterface(...a), replaceUserPlaceholders, resolveCanonicalCharacterName, resolveQuickSelectTarget, saveConfig, saveHiddenTables, saveTableOrder, scheduleDialogueIndentRender, setAllTablesReverse, setupOverlayClose, showActionPresetManager, showAddRegexRuleModal, showAddValidationRuleModal, showAttributePresetManager, showAvatarManager, showCustomTableNameIconManager, showDashboardPresetManager, showDebugConsoleModal, showDiceConfigBackupDialog, showDiceSystemConfirmDialog, showDiceSystemInputDialog, showManualUpdateDialog, showPresetConflictDialog, showPresetListDialog, showRenderPresetManager, smartInsertToTextarea, validateJsoncEditorConfig });
+  const { AcuDiceAPI, executeCheckSuggestionCommand, getTemplateInspectionSheets, normalizeCheckSuggestionDiceFormula, showFavoriteEditModal, showSendToTableModal, showSettingsModal, showTagInputModal } = createCheckSuggestionWiring({ AdvancedDicePresetManager, DEFAULT_CONTEST_OUTPUT_TEMPLATE, DEFAULT_OUTPUT_TEMPLATE, FONTS, MAX_HISTORY, NameAliasRegistry, PresetManager, RegexPresetManager, RegexTransformationManager, THEMES, TableTemplateRequirementPresetManager, ValidationRuleManager, acuDiceCharacters, acuDiceCheck, acuDiceContest, acuDiceEvents, acuDiceHistory, acuDicePresets, acuDiceProfiles, acuDiceReady, acuDiceRoll, appendRowInstantly, applyAdvancedPresetOutcomePolicy, areAllTablesReversed, bindFavoritesEvents: (...a: any[]) => bindFavoritesEvents(...a), bindTutorialButtonsIn, buildCheckValueText, buildNewTableTemplateRequirementPresetJsoncTemplate, buildTableTemplateRequirementPresetAgentPrompt, buildTableTemplateRequirementPresetAgentPromptFilename, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, checkHistory, clearDiceLocalCacheData, clearModalStack, contestHistory, convertTavernRegexToRule, createSortableList, downloadAiPromptFile, downloadJsonFile, emitEvent, ensureCanonicalTableOrder, escapeHtml, evaluateCondition, evaluateConditionNumber, evaluateFormula, evaluateOutcomes, formatOutputTemplate, getAdvancedPresetDisplayOutcome, getAttributeEntryForCharacter, getAttributeValue, getCheckSuggestionPresetById, getConfig, getCore, getCurrentChatAvatarNodes, getHiddenTables, getIconForTableName, getJsonLikeErrorMessage, getNamedCheckParamText, getNavigationFontMetrics, getSavedTableOrder, getStableTableSort, getSuccessLevel, getTableData, getTableTemplateRequirementPresetStats, getTutorialButtonHtml, isRecordValue, isSettingsOpen_ACC: { get v(){ return isSettingsOpen_ACC.v; }, set v(x){ isSettingsOpen_ACC.v = x; } }, normalizeCollapseStyle, parseJsoncRecord, parseTableTemplateRequirementPresetJson, pickTextFile, popModal, processJsonData, pushModal, refreshDialogueIndentRender, refreshRegexRulesList, renderDeprecatedBadge, renderFavoritesPanel: (...a: any[]) => renderFavoritesPanel(...a), renderInterface: (...a: any[]) => renderInterface(...a), replaceUserPlaceholders, resolveCanonicalCharacterName, resolveQuickSelectTarget, saveConfig, saveHiddenTables, saveTableOrder, scheduleDialogueIndentRender, setAllTablesReverse, setupOverlayClose, showActionPresetManager, showAddRegexRuleModal, showAddValidationRuleModal, showAttributePresetManager, showAvatarManager, showCustomTableNameIconManager, showDashboardPresetManager, showDebugConsoleModal, showDiceConfigBackupDialog, showDiceSystemConfirmDialog, showDiceSystemInputDialog, showManualUpdateDialog, showPresetConflictDialog, showPresetListDialog, showRenderPresetManager, smartInsertToTextarea, validateJsoncEditorConfig });
 
   // [优化] 渲染防抖：避免短时间内多次渲染导致重复日志
   let renderInterfaceTimer = null;
@@ -6813,7 +5782,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   const renderInterface = createRenderInterface({
     _renderInterfaceImpl: (...a: any[]) => _renderInterfaceImpl(...a),
     saveCurrentTabState: (...a: any[]) => saveCurrentTabState(...a),
-    getIsSettingsOpen: () => isSettingsOpen,
+    getIsSettingsOpen: () => isSettingsOpen_ACC.v,
     getRenderInterfacePending: () => renderInterfacePending,
     setRenderInterfacePending: (v: any) => { renderInterfacePending = v; },
     getRenderInterfaceTimer: () => renderInterfaceTimer,
@@ -6893,21 +5862,21 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     STORAGE_KEY_DASHBOARD_ACTIVE: STORAGE_KEY_DASHBOARD_ACTIVE,
     STORAGE_KEY_GLOBAL_INTERACTIONS_ACTIVE: STORAGE_KEY_GLOBAL_INTERACTIONS_ACTIVE,
     STORAGE_KEY_VALIDATION_MODE: STORAGE_KEY_VALIDATION_MODE,
-    getHasUnsavedChanges: () => hasUnsavedChanges,
-    getIsSaving: () => isSaving,
-    getTableScrollStates: () => tableScrollStates,
-    getObserver: () => observer,
-    setObserver: (v: any) => { observer = v; },
-    getIsAutoTransforming: () => isAutoTransforming,
-    setIsAutoTransforming: (v: any) => { isAutoTransforming = v; },
-    getCurrentDiffMap: () => currentDiffMap,
-    setCurrentDiffMap: (v: any) => { currentDiffMap = v; },
-    getOptionPanelVisible: () => optionPanelVisible,
-    setOptionPanelVisible: (v: any) => { optionPanelVisible = v; },
-    getLastOptionHash: () => lastOptionHash,
-    setLastOptionHash: (v: any) => { lastOptionHash = v; },
-    getCachedRawData: () => cachedRawData,
-    setCachedRawData: (v: any) => { cachedRawData = v; },
+    getHasUnsavedChanges: () => hasUnsavedChanges_ACC.v,
+    getIsSaving: () => isSaving_ACC.v,
+    getTableScrollStates: () => tableScrollStates_ACC.v,
+    getObserver: () => observer_ACC.v,
+    setObserver: (v: any) => { observer_ACC.v = v; },
+    getIsAutoTransforming: () => isAutoTransforming_ACC.v,
+    setIsAutoTransforming: (v: any) => { isAutoTransforming_ACC.v = v; },
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
+    getOptionPanelVisible: () => optionPanelVisible_ACC.v,
+    setOptionPanelVisible: (v: any) => { optionPanelVisible_ACC.v = v; },
+    getLastOptionHash: () => lastOptionHash_ACC.v,
+    setLastOptionHash: (v: any) => { lastOptionHash_ACC.v = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
     getStableTableSort: (...a: any[]) => getStableTableSort(...a),
     ensureCanonicalTableOrder: (...a: any[]) => ensureCanonicalTableOrder(...a),
   });
@@ -7068,7 +6037,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     getInteractOptionsForRow: (...a: any[]) => getInteractOptionsForRow(...a),
     showActionPresetManager: (...a: any[]) => showActionPresetManager(...a),
     STORAGE_KEY_GLOBAL_INTERACTION_COLLAPSED_SECTIONS: STORAGE_KEY_GLOBAL_INTERACTION_COLLAPSED_SECTIONS,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     getCleanupGlobalInteractionOutsideCapture: () => cleanupGlobalInteractionOutsideCapture,
     setCleanupGlobalInteractionOutsideCapture: (v: any) => { cleanupGlobalInteractionOutsideCapture = v; },
   });
@@ -7110,9 +6079,9 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     STORAGE_KEY_DASHBOARD_ACTIVE: STORAGE_KEY_DASHBOARD_ACTIVE,
     STORAGE_KEY_GLOBAL_INTERACTIONS_ACTIVE: STORAGE_KEY_GLOBAL_INTERACTIONS_ACTIVE,
     STORAGE_KEY_VALIDATION_MODE: STORAGE_KEY_VALIDATION_MODE,
-    getCachedRawData: () => cachedRawData,
-    getCurrentDiffMap: () => currentDiffMap,
-    setCurrentDiffMap: (v: any) => { currentDiffMap = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
   });
 
   // [新增] 刷新变更面板（辅助函数）
@@ -7123,9 +6092,9 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     getTableData: (...a: any[]) => getTableData(...a),
     renderChangesPanel: (...a: any[]) => renderChangesPanel(...a),
     updateChangesCount: (...a: any[]) => updateChangesCount(...a),
-    getCachedRawData: () => cachedRawData,
-    getCurrentDiffMap: () => currentDiffMap,
-    setCurrentDiffMap: (v: any) => { currentDiffMap = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
   });
 
   // [新增] 更新审核按钮计数（包含变更数 + 验证错误数）
@@ -7152,11 +6121,11 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     setDiffDataRow: (...a: any[]) => setDiffDataRow(...a),
     setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
     showDiceSystemConfirmDialog: (...a: any[]) => showDiceSystemConfirmDialog(...a),
-    getCachedRawData: () => cachedRawData,
-    getCurrentDiffMap: () => currentDiffMap,
-    setCurrentDiffMap: (v: any) => { currentDiffMap = v; },
-    getIsSettingsOpen: () => isSettingsOpen,
-    setIsSettingsOpen: (v: any) => { isSettingsOpen = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
+    getIsSettingsOpen: () => isSettingsOpen_ACC.v,
+    setIsSettingsOpen: (v: any) => { isSettingsOpen_ACC.v = v; },
   });
   // [新增] 变更面板专用单字段编辑弹窗
   const showChangeSingleFieldModal = createShowChangeSingleFieldModal({
@@ -7174,9 +6143,9 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     saveSnapshot: (...a: any[]) => saveSnapshot(...a),
     setDiffDataCell: (...a: any[]) => setDiffDataCell(...a),
     setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    getCachedRawData: () => cachedRawData,
-    getCurrentDiffMap: () => currentDiffMap,
-    setCurrentDiffMap: (v: any) => { currentDiffMap = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
   });
 
   // [新增] 多字段变更整体对比编辑弹窗
@@ -7196,9 +6165,9 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     saveSnapshot: (...a: any[]) => saveSnapshot(...a),
     setDiffDataRow: (...a: any[]) => setDiffDataRow(...a),
     setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    getCachedRawData: () => cachedRawData,
-    getCurrentDiffMap: () => currentDiffMap,
-    setCurrentDiffMap: (v: any) => { currentDiffMap = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
   });
   const renderDashboard = createRenderDashboard({
     buildAvatarBackgroundStyle: (...a: any[]) => buildAvatarBackgroundStyle(...a),
@@ -7306,10 +6275,10 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   type InventoryMetadataRoot = Record<string, InventoryMetadataScope>;
   type InventoryMetadataStore = Record<string, InventoryMetadataRoot>;
   // [x4-i] 抽卡设置/配置装配已迁出：见 ./wiring/gacha-settings-wiring.ts
-  const { DEFAULT_GACHA_SETTINGS_ITEM_FILTERS, GACHA_COMMON_WRITTEN_TARGET_COLUMN_KEYS, GACHA_CUSTOM_FIELD_KEY_MAX_LENGTH, GACHA_CUSTOM_FIELD_MAX_COUNT, GACHA_CUSTOM_FIELD_RESERVED_KEYS, GACHA_CUSTOM_FIELD_VALUE_MAX_LENGTH, GACHA_EFFECT_FIELD_ALIASES, GACHA_EQUIPMENT_WRITTEN_TARGET_COLUMN_KEYS, GACHA_SETTINGS_SORT_OPTIONS, GACHA_SETTINGS_SOURCE_FILTER_OPTIONS, GACHA_SETTINGS_STATUS_FILTER_OPTIONS, GACHA_TAG_FIELD_ALIASES, GACHA_TARGET_COLUMN_KEYS, GACHA_TARGET_COLUMN_LABELS, GACHA_TARGET_COLUMN_VALUE_MAX_LENGTH, GACHA_TARGET_TABLE_MAX_LENGTH, INVENTORY_QUALITY_FILTER_META, INVENTORY_TYPE_FILTER_META, addGachaShards, analyzeGachaCatalogImport, applyGachaCatalogImport, assertSaveStoredGachaStateSnapshot, bindCompositionSafeSearchInput, buildAdvancedPresetAgentPrompt, buildCrudColumnAliasMap, buildDefaultGachaPoolDefinition, buildGachaInventoryMetaRecord, buildStableGachaCustomItemId, canDeleteGachaPoolDefinition, cloneGachaCatalogItems, collectGachaLocalStorageSnapshot, compareGachaItemDefinitionsForDisplay, createDefaultGachaState, createEmptyGachaCatalog, createUniqueGachaItemId, deleteGachaItemSetting, downloadGachaCatalogJson, ensureGachaCatalogLoaded, ensureGachaPoolsForTags, exportGachaCatalogJson, formatGachaCatalogImportStatsText, formatGachaItemCardMeta, formatGachaPoolTags, formatGachaRewardDestinationLabel, getActiveGachaPoolTags, getAllGachaItemDefinitions, getAllGachaPoolConfigDefinitions, getAvailableGachaRewardTargets, getConfiguredGachaPoolDefinitions, getCustomGachaItemDefinitions, getGachaActivePoolTag, getGachaCatalogImportFailureMessage, getGachaCatalogItemsForExport, getGachaCustomFieldEntries, getGachaCustomFieldsSearchText, getGachaItemDefinitionFingerprint, getGachaItemDescriptionText, getGachaItemEffectText, getGachaItemTagsText, getGachaMinimumRarity, getGachaNamedCustomField, getGachaPickupItems, getGachaPoolDefinitions, getGachaPoolDisplayName, getGachaRarityIconClass, getGachaRarityRank, getGachaRewardFieldLimits, getGachaRewardParseResult, getGachaRewardParseResultForItem, getGachaRewardTargetOptions, getGachaRewardTargetTableLabel, getGachaShardLabel, getGachaState, getGachaTargetColumnEntries, getInventoryFilters, getInventoryFiltersCollapsedState, getInventoryPanelTarget, getRuntimeGachaRawData, getStoredGachaActivePoolTag, getStoredGachaItemSettings, getVisibleGachaPoolConfigDefinitions, hasGachaCustomFields, hasGachaRewardTableForItem, importGachaCatalogJsonFromFile, inferEquipmentTableTypeForGachaItem, isBuiltinGachaPoolId, isGachaFieldAlias, isGachaItemEnabled, isGachaRarity, mergeGachaCatalogRecordsToGlobalScope, migrateGachaCatalogRecordsToGlobalScope, normalizeGachaCatalogRecord, normalizeGachaCustomFields, normalizeGachaItemEnabled, normalizeGachaItemOrder, normalizeGachaPoolDefinition, normalizeGachaRewardTarget, normalizeGachaTargetColumns, normalizeGachaTargetTable, normalizeGachaTimestamp, normalizeImportedGachaItem, persistRawDataWithGacha, pickGachaItemDefinition, pickGachaRarity, recordGachaFortuneGain, renderGachaCustomFieldsDetailsHtml, renderGachaCustomFieldsPreviewHtml, restoreGachaLocalStorageSnapshot, saveGachaPoolSettings, saveInventoryFilters, saveInventoryFiltersCollapsedState, saveInventoryPanelTarget, saveStoredGachaActivePoolTag, saveStoredGachaCatalog, saveStoredGachaStateSnapshot, serializeGachaCatalogItemForExport, setEquipmentRowBasicFields, setGachaItemOrder, setGachaPoolOrder, setInventoryRowBasicFields, settleGachaFortuneForDiceEvent, showGachaCatalogClearDialog, showGachaSaveError, touchGachaActivity, truncateGachaText, updateGachaItemSetting, updateGachaPoolConfig, validateGachaCatalogImportItemTarget, gachaCatalogCache_ACC, gachaCatalogLoadTask_ACC } = createGachaSettingsWiring({ GACHA_CATALOG_GLOBAL_SCOPE_KEY, GACHA_TEST_DEFAULT_FORTUNE, INVENTORY_QUALITY_OPTIONS, INVENTORY_SORT_OPTIONS, INVENTORY_TYPE_OPTIONS, addCrudColumnAlias, applyGachaCustomFieldsToRow: (...a: any[]) => applyGachaCustomFieldsToRow(...a), assertCrudEnumConstraints, assertCrudInsertRequiredCells, assertCrudLengthConstraints, assertCrudRequiredColumnsRepresented, buildCrudEnumConstraintMap, cloneDiceConfigBackupValue, downloadJsonFile, downloadJsoncFile, escapeHtml, getConfig, getCore, getCrudColumnNameForHeader, getCrudSheetDdl, getCrudSqlCommentAliases, getCurrentContextFingerprint, getDbChatMessages, getInventoryGlobalContext: (...a: any[]) => getInventoryGlobalContext(...a), getInventoryMetadataForItem: (...a: any[]) => getInventoryMetadataForItem(...a), getJsonLikeErrorMessage, getRuntimeErrorMessage, getTableData, hasSheetKeys, parseCrudColumnDefinitionLine, parseEquipmentItems: (...a: any[]) => parseEquipmentItems(...a), parseInventoryItems: (...a: any[]) => parseInventoryItems(...a), parseJsoncValue, performSaveDataOnly, pickTextFile, refreshGachaShardShop: (...a: any[]) => refreshGachaShardShop(...a), refreshGachaVisualization: (...a: any[]) => refreshGachaVisualization(...a), runInSaveQueue, setupOverlayClose, showGachaSettingsDialog: (...a: any[]) => showGachaSettingsDialog(...a), stripCrudSqlNonStructuralComments, validateGachaCustomFieldsForTargetTable: (...a: any[]) => validateGachaCustomFieldsForTargetTable(...a), cachedRawData_ACC: { get v(){ return cachedRawData; }, set v(x){ cachedRawData = x; } }, lastHumanInputActivityAt_ACC: { get v(){ return lastHumanInputActivityAt; }, set v(x){ lastHumanInputActivityAt = x; } } });
+  const { DEFAULT_GACHA_SETTINGS_ITEM_FILTERS, GACHA_COMMON_WRITTEN_TARGET_COLUMN_KEYS, GACHA_CUSTOM_FIELD_KEY_MAX_LENGTH, GACHA_CUSTOM_FIELD_MAX_COUNT, GACHA_CUSTOM_FIELD_RESERVED_KEYS, GACHA_CUSTOM_FIELD_VALUE_MAX_LENGTH, GACHA_EFFECT_FIELD_ALIASES, GACHA_EQUIPMENT_WRITTEN_TARGET_COLUMN_KEYS, GACHA_SETTINGS_SORT_OPTIONS, GACHA_SETTINGS_SOURCE_FILTER_OPTIONS, GACHA_SETTINGS_STATUS_FILTER_OPTIONS, GACHA_TAG_FIELD_ALIASES, GACHA_TARGET_COLUMN_KEYS, GACHA_TARGET_COLUMN_LABELS, GACHA_TARGET_COLUMN_VALUE_MAX_LENGTH, GACHA_TARGET_TABLE_MAX_LENGTH, INVENTORY_QUALITY_FILTER_META, INVENTORY_TYPE_FILTER_META, addGachaShards, analyzeGachaCatalogImport, applyGachaCatalogImport, assertSaveStoredGachaStateSnapshot, bindCompositionSafeSearchInput, buildAdvancedPresetAgentPrompt, buildCrudColumnAliasMap, buildDefaultGachaPoolDefinition, buildGachaInventoryMetaRecord, buildStableGachaCustomItemId, canDeleteGachaPoolDefinition, cloneGachaCatalogItems, collectGachaLocalStorageSnapshot, compareGachaItemDefinitionsForDisplay, createDefaultGachaState, createEmptyGachaCatalog, createUniqueGachaItemId, deleteGachaItemSetting, downloadGachaCatalogJson, ensureGachaCatalogLoaded, ensureGachaPoolsForTags, exportGachaCatalogJson, formatGachaCatalogImportStatsText, formatGachaItemCardMeta, formatGachaPoolTags, formatGachaRewardDestinationLabel, getActiveGachaPoolTags, getAllGachaItemDefinitions, getAllGachaPoolConfigDefinitions, getAvailableGachaRewardTargets, getConfiguredGachaPoolDefinitions, getCustomGachaItemDefinitions, getGachaActivePoolTag, getGachaCatalogImportFailureMessage, getGachaCatalogItemsForExport, getGachaCustomFieldEntries, getGachaCustomFieldsSearchText, getGachaItemDefinitionFingerprint, getGachaItemDescriptionText, getGachaItemEffectText, getGachaItemTagsText, getGachaMinimumRarity, getGachaNamedCustomField, getGachaPickupItems, getGachaPoolDefinitions, getGachaPoolDisplayName, getGachaRarityIconClass, getGachaRarityRank, getGachaRewardFieldLimits, getGachaRewardParseResult, getGachaRewardParseResultForItem, getGachaRewardTargetOptions, getGachaRewardTargetTableLabel, getGachaShardLabel, getGachaState, getGachaTargetColumnEntries, getInventoryFilters, getInventoryFiltersCollapsedState, getInventoryPanelTarget, getRuntimeGachaRawData, getStoredGachaActivePoolTag, getStoredGachaItemSettings, getVisibleGachaPoolConfigDefinitions, hasGachaCustomFields, hasGachaRewardTableForItem, importGachaCatalogJsonFromFile, inferEquipmentTableTypeForGachaItem, isBuiltinGachaPoolId, isGachaFieldAlias, isGachaItemEnabled, isGachaRarity, mergeGachaCatalogRecordsToGlobalScope, migrateGachaCatalogRecordsToGlobalScope, normalizeGachaCatalogRecord, normalizeGachaCustomFields, normalizeGachaItemEnabled, normalizeGachaItemOrder, normalizeGachaPoolDefinition, normalizeGachaRewardTarget, normalizeGachaTargetColumns, normalizeGachaTargetTable, normalizeGachaTimestamp, normalizeImportedGachaItem, persistRawDataWithGacha, pickGachaItemDefinition, pickGachaRarity, recordGachaFortuneGain, renderGachaCustomFieldsDetailsHtml, renderGachaCustomFieldsPreviewHtml, restoreGachaLocalStorageSnapshot, saveGachaPoolSettings, saveInventoryFilters, saveInventoryFiltersCollapsedState, saveInventoryPanelTarget, saveStoredGachaActivePoolTag, saveStoredGachaCatalog, saveStoredGachaStateSnapshot, serializeGachaCatalogItemForExport, setEquipmentRowBasicFields, setGachaItemOrder, setGachaPoolOrder, setInventoryRowBasicFields, settleGachaFortuneForDiceEvent, showGachaCatalogClearDialog, showGachaSaveError, touchGachaActivity, truncateGachaText, updateGachaItemSetting, updateGachaPoolConfig, validateGachaCatalogImportItemTarget, gachaCatalogCache_ACC, gachaCatalogLoadTask_ACC } = createGachaSettingsWiring({ GACHA_CATALOG_GLOBAL_SCOPE_KEY, GACHA_TEST_DEFAULT_FORTUNE, INVENTORY_QUALITY_OPTIONS, INVENTORY_SORT_OPTIONS, INVENTORY_TYPE_OPTIONS, addCrudColumnAlias, applyGachaCustomFieldsToRow: (...a: any[]) => applyGachaCustomFieldsToRow(...a), assertCrudEnumConstraints, assertCrudInsertRequiredCells, assertCrudLengthConstraints, assertCrudRequiredColumnsRepresented, buildCrudEnumConstraintMap, cloneDiceConfigBackupValue, downloadJsonFile, downloadJsoncFile, escapeHtml, getConfig, getCore, getCrudColumnNameForHeader, getCrudSheetDdl, getCrudSqlCommentAliases, getCurrentContextFingerprint, getDbChatMessages, getInventoryGlobalContext: (...a: any[]) => getInventoryGlobalContext(...a), getInventoryMetadataForItem: (...a: any[]) => getInventoryMetadataForItem(...a), getJsonLikeErrorMessage, getRuntimeErrorMessage, getTableData, hasSheetKeys, parseCrudColumnDefinitionLine, parseEquipmentItems: (...a: any[]) => parseEquipmentItems(...a), parseInventoryItems: (...a: any[]) => parseInventoryItems(...a), parseJsoncValue, performSaveDataOnly, pickTextFile, refreshGachaShardShop: (...a: any[]) => refreshGachaShardShop(...a), refreshGachaVisualization: (...a: any[]) => refreshGachaVisualization(...a), runInSaveQueue, setupOverlayClose, showGachaSettingsDialog: (...a: any[]) => showGachaSettingsDialog(...a), stripCrudSqlNonStructuralComments, validateGachaCustomFieldsForTargetTable: (...a: any[]) => validateGachaCustomFieldsForTargetTable(...a), cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, lastHumanInputActivityAt_ACC: { get v(){ return lastHumanInputActivityAt; }, set v(x){ lastHumanInputActivityAt = x; } } });
 
   // [x4-j] 抽卡主流程/面板装配已迁出：见 ./wiring/gacha-draw-wiring.ts
-  const { applyGachaCustomFieldsToRow, buildGachaCustomFieldHeaderMap, clearGachaFortune, deleteGachaPoolConfig, findGachaDefinitionByInventoryItem, getGachaFortuneProgressView, getGachaItemGrantQuantity, getGachaReservedCustomFieldHeaders, getGachaShopProgressContainers, grantGachaReward, performGachaDraw, renderGachaPanelHtml, showGachaPickupItemDetail, showGachaPoolNameDialog, showGachaRecentRewardDetail, showGachaSettingsDialog, updateGachaFortuneProgressDom, updateGachaPoolTag, updateGachaShopProgressUi, validateGachaCustomFieldsForTargetTable } = createGachaDrawWiring({ DEFAULT_GACHA_SETTINGS_ITEM_FILTERS, GACHA_COMMON_WRITTEN_TARGET_COLUMN_KEYS, GACHA_EQUIPMENT_WRITTEN_TARGET_COLUMN_KEYS, GACHA_SETTINGS_SORT_OPTIONS, GACHA_SETTINGS_SOURCE_FILTER_OPTIONS, GACHA_SETTINGS_STATUS_FILTER_OPTIONS, addGachaShards, assertCrudEnumConstraints, assertCrudInsertRequiredCells, assertCrudLengthConstraints, assertCrudRequiredColumnsRepresented, assertSaveStoredGachaStateSnapshot, bindTutorialButtonsIn, buildCrudRequiredHeaderSet, buildDefaultGachaPoolDefinition, buildGachaCatalogAgentPrompt, buildGachaCatalogAgentPromptFilename, buildGachaInventoryMetaRecord, canDeleteGachaPoolDefinition, cloneGachaCatalogItems, cloneRuntimeDataValue, collectGachaLocalStorageSnapshot, collectHostAndLocalNodes, compareGachaItemDefinitionsForDisplay, createDefaultGachaState, createSortableList, deleteGachaItemSetting, downloadAiPromptFile, downloadGachaCatalogJson, ensureGachaCatalogLoaded, ensureGachaPoolsForTags, escapeHtml, formatGachaItemCardMeta, formatGachaPoolTags, formatGachaRewardDestinationLabel, gachaCatalogCache_ACC, gachaCatalogLoadTask_ACC, getAllGachaItemDefinitions, getAllGachaPoolConfigDefinitions, getAvailableGachaRewardTargets, getConfig, getConfiguredGachaPoolDefinitions, getCore, getCustomGachaItemDefinitions, getGachaActivePoolTag, getGachaCatalogItemsForExport, getGachaCustomFieldEntries, getGachaCustomFieldsSearchText, getGachaItemCustomTableNameIconContext, getGachaItemDescriptionText, getGachaItemEffectText, getGachaItemTagsText, getGachaMinimumRarity, getGachaPickupItems, getGachaPoolDefinitions, getGachaPoolDisplayName, getGachaRarityRank, getGachaRewardParseResultForItem, getGachaRewardTargetTableLabel, getGachaShardLabel, getGachaState, getGachaTargetColumnEntries, getJsonLikeErrorMessage, getRuntimeErrorMessage, getRuntimeGachaRawData, getStoredGachaActivePoolTag, getStoredGachaItemSettings, getTableData, getTutorialButtonHtml, getVisibleGachaPoolConfigDefinitions, hasGachaCustomFields, hydrateCustomTableNameIconsIn, importGachaCatalogJsonFromFile, isGachaItemEnabled, normalizeGachaTimestamp, parseInventoryItems: (...a: any[]) => parseInventoryItems(...a), persistRawDataWithGacha, pickGachaItemDefinition, pickGachaRarity, refreshGachaShardShop: (...a: any[]) => refreshGachaShardShop(...a), refreshGachaVisualization: (...a: any[]) => refreshGachaVisualization(...a), refreshInventoryVisualization: (...a: any[]) => refreshInventoryVisualization(...a), renderGachaCustomFieldsDetailsHtml, renderGachaCustomFieldsPreviewHtml, renderGachaItemIconContent, restoreGachaLocalStorageSnapshot, restoreMutableRuntimeValue, runInSaveQueue, saveGachaPoolSettings, saveStoredGachaActivePoolTag, saveStoredGachaCatalog, saveStoredGachaStateSnapshot, setEquipmentRowBasicFields, setGachaItemOrder, setGachaPoolOrder, setInventoryMetadataForItem: (...a: any[]) => setInventoryMetadataForItem(...a), setInventoryRowBasicFields, setupOverlayClose, showDiceSystemConfirmDialog, showGachaCatalogClearDialog, showGachaItemEditorDialog: (...a: any[]) => showGachaItemEditorDialog(...a), showGachaSaveError, touchGachaActivity, updateGachaItemSetting, updateGachaPoolConfig, warnTableTemplateIssue, withTableTemplateCheckHint, cachedRawData_ACC: { get v(){ return cachedRawData; }, set v(x){ cachedRawData = x; } }, gachaShopRootElement_ACC: { get v(){ return gachaShopRootElement; }, set v(x){ gachaShopRootElement = x; } } });
+  const { applyGachaCustomFieldsToRow, buildGachaCustomFieldHeaderMap, clearGachaFortune, deleteGachaPoolConfig, findGachaDefinitionByInventoryItem, getGachaFortuneProgressView, getGachaItemGrantQuantity, getGachaReservedCustomFieldHeaders, getGachaShopProgressContainers, grantGachaReward, performGachaDraw, renderGachaPanelHtml, showGachaPickupItemDetail, showGachaPoolNameDialog, showGachaRecentRewardDetail, showGachaSettingsDialog, updateGachaFortuneProgressDom, updateGachaPoolTag, updateGachaShopProgressUi, validateGachaCustomFieldsForTargetTable } = createGachaDrawWiring({ DEFAULT_GACHA_SETTINGS_ITEM_FILTERS, GACHA_COMMON_WRITTEN_TARGET_COLUMN_KEYS, GACHA_EQUIPMENT_WRITTEN_TARGET_COLUMN_KEYS, GACHA_SETTINGS_SORT_OPTIONS, GACHA_SETTINGS_SOURCE_FILTER_OPTIONS, GACHA_SETTINGS_STATUS_FILTER_OPTIONS, addGachaShards, assertCrudEnumConstraints, assertCrudInsertRequiredCells, assertCrudLengthConstraints, assertCrudRequiredColumnsRepresented, assertSaveStoredGachaStateSnapshot, bindTutorialButtonsIn, buildCrudRequiredHeaderSet, buildDefaultGachaPoolDefinition, buildGachaCatalogAgentPrompt, buildGachaCatalogAgentPromptFilename, buildGachaInventoryMetaRecord, canDeleteGachaPoolDefinition, cloneGachaCatalogItems, cloneRuntimeDataValue, collectGachaLocalStorageSnapshot, collectHostAndLocalNodes, compareGachaItemDefinitionsForDisplay, createDefaultGachaState, createSortableList, deleteGachaItemSetting, downloadAiPromptFile, downloadGachaCatalogJson, ensureGachaCatalogLoaded, ensureGachaPoolsForTags, escapeHtml, formatGachaItemCardMeta, formatGachaPoolTags, formatGachaRewardDestinationLabel, gachaCatalogCache_ACC, gachaCatalogLoadTask_ACC, getAllGachaItemDefinitions, getAllGachaPoolConfigDefinitions, getAvailableGachaRewardTargets, getConfig, getConfiguredGachaPoolDefinitions, getCore, getCustomGachaItemDefinitions, getGachaActivePoolTag, getGachaCatalogItemsForExport, getGachaCustomFieldEntries, getGachaCustomFieldsSearchText, getGachaItemCustomTableNameIconContext, getGachaItemDescriptionText, getGachaItemEffectText, getGachaItemTagsText, getGachaMinimumRarity, getGachaPickupItems, getGachaPoolDefinitions, getGachaPoolDisplayName, getGachaRarityRank, getGachaRewardParseResultForItem, getGachaRewardTargetTableLabel, getGachaShardLabel, getGachaState, getGachaTargetColumnEntries, getJsonLikeErrorMessage, getRuntimeErrorMessage, getRuntimeGachaRawData, getStoredGachaActivePoolTag, getStoredGachaItemSettings, getTableData, getTutorialButtonHtml, getVisibleGachaPoolConfigDefinitions, hasGachaCustomFields, hydrateCustomTableNameIconsIn, importGachaCatalogJsonFromFile, isGachaItemEnabled, normalizeGachaTimestamp, parseInventoryItems: (...a: any[]) => parseInventoryItems(...a), persistRawDataWithGacha, pickGachaItemDefinition, pickGachaRarity, refreshGachaShardShop: (...a: any[]) => refreshGachaShardShop(...a), refreshGachaVisualization: (...a: any[]) => refreshGachaVisualization(...a), refreshInventoryVisualization: (...a: any[]) => refreshInventoryVisualization(...a), renderGachaCustomFieldsDetailsHtml, renderGachaCustomFieldsPreviewHtml, renderGachaItemIconContent, restoreGachaLocalStorageSnapshot, restoreMutableRuntimeValue, runInSaveQueue, saveGachaPoolSettings, saveStoredGachaActivePoolTag, saveStoredGachaCatalog, saveStoredGachaStateSnapshot, setEquipmentRowBasicFields, setGachaItemOrder, setGachaPoolOrder, setInventoryMetadataForItem: (...a: any[]) => setInventoryMetadataForItem(...a), setInventoryRowBasicFields, setupOverlayClose, showDiceSystemConfirmDialog, showGachaCatalogClearDialog, showGachaItemEditorDialog: (...a: any[]) => showGachaItemEditorDialog(...a), showGachaSaveError, touchGachaActivity, updateGachaItemSetting, updateGachaPoolConfig, warnTableTemplateIssue, withTableTemplateCheckHint, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, gachaShopRootElement_ACC: { get v(){ return gachaShopRootElement; }, set v(x){ gachaShopRootElement = x; } } });
 
   const showGachaItemEditorDialog = createShowGachaItemEditorDialog({
     bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a),
@@ -7372,7 +6341,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     GACHA_TARGET_COLUMN_VALUE_MAX_LENGTH: GACHA_TARGET_COLUMN_VALUE_MAX_LENGTH,
     GACHA_TARGET_TABLE_MAX_LENGTH: GACHA_TARGET_TABLE_MAX_LENGTH,
     STORAGE_KEY_GACHA_POOL_SETTINGS: STORAGE_KEY_GACHA_POOL_SETTINGS,
-    getCachedRawData: () => cachedRawData,
+    getCachedRawData: () => cachedRawData_ACC.v,
     getGachaCatalogCache: () => gachaCatalogCache_ACC.v,
     setGachaCatalogCache: (v: any) => { gachaCatalogCache_ACC.v = v; },
     getGachaCatalogLoadTask: () => gachaCatalogLoadTask_ACC.v,
@@ -7382,7 +6351,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
 });
 
   // [x4-h] 抽卡/库存/商店装配已迁出：见 ./wiring/gacha-inventory-wiring.ts
-  const { bindEvents, bindFavoritesEvents, closeGachaVisualization, closePanel, ensureGachaHeartbeat, ensurePanelNavigationVisible, flushGachaHeartbeatProgress, getDataAreaForRoot, getInventoryGlobalContext, getInventoryMetadataForItem, loadDashboardNpcAvatars, parseEquipmentItems, parseInventoryItems, refreshGachaShardShop, refreshGachaVisualization, refreshInventoryVisualization, renderFavoritesPanel, renderTableContent, resolveExistingTableName, saveCurrentTabState, setActiveTableNavButton, setInventoryMetadataForItem, settleGachaFortuneForMessage, showGachaShardShop, showGachaVisualization, startGachaShopUiRefresh, syncHostRegenerateButtonVisibility, syncInventoryMetadataForRawData, warnMissingTableTarget } = createGachaInventoryWiring({ AvatarManager, BookmarkManager, DashboardDataParser, FLOATING_COLLAPSE_DRAG_THRESHOLD, GACHA_CATALOG_RAW_ROW_INDEX_PROP, GACHA_SHARD_EXCHANGE_COST, GACHA_SHOP_UI_REFRESH_MS, INVENTORY_QUALITY_FILTER_META, INVENTORY_SORT_OPTIONS, INVENTORY_TYPE_FILTER_META, INVENTORY_TYPE_OPTIONS, MvuModule, NameAliasRegistry, ValidationRuleManager, addGachaShards, applyStoredPanelHeight, bindChangesEvents, bindCompositionSafeSearchInput, bindGlobalInteractionEvents, buildCrudColumnAliasMap, buildRelationshipGraphTableFromPreset, canWriteMvuPanel, clampFloatingCollapsePosition, cleanupGlobalInteractionFloatingMenus, clearAllPanelStates, clearGachaFortune, cloneRuntimeDataValue, collectCurrentChatAvatarNodes, compareGachaItemDefinitionsForDisplay, consumePendingHumanInputSnapshot, countUnicodeCharacters, createCustomTableNameIconContext, createDefaultGachaState, ensureGachaCatalogLoaded, escapeHtml, executeTableInteractionAction, extractNumericValue, findGachaDefinitionByInventoryItem, findRowIndexByPrimaryKey, formatCssImageUrl, formatGachaItemCardMeta, formatGachaRewardDestinationLabel, getActiveDashboardRelationshipGraphSources, getActiveTabState, getAllGachaItemDefinitions, getAttributeValue, getCheckSuggestionItemsFromTable, getCollapsedState, getConfig, getConfiguredGachaPoolDefinitions, getCore, getCrudColumnNameForHeader, getCrudSqlTableName, getCurrentContextFingerprint, getDashboardModuleConfig, getDatabaseManualUpdateErrorMessage, getDbChatMessages, getElementEmoji, getFullAttributesForCharacter, getGachaActivePoolTag, getGachaItemCustomTableNameIconContext, getGachaItemDescriptionText, getGachaItemEffectText, getGachaItemGrantQuantity, getGachaPoolDefinitions, getGachaPoolDisplayName, getGachaRarityIconClass, getGachaRewardParseResultForItem, getGachaShardLabel, getGachaShopProgressContainers, getGachaState, getGachaTargetColumnEntries, getIconForTableName, getInteractOptionsForRow, getInventoryFilters, getInventoryFiltersCollapsedState, getInventoryPanelTarget, getOptionItemsFromTable, getOptionsCollapsedState, getPanelDragStartHeight, getSheetKeyByTableName, getTableData, getTableStyles, getTavernHostDocument, getTavernHostWindow, getTutorialButtonHtml, getVisibleGachaPoolConfigDefinitions, grantGachaReward, hasGachaCustomFields, hasGachaRewardTableForItem, hydrateCustomTableNameIconsIn, isCheckSuggestionTableName, isFloatingCollapseActive, isGachaItemEnabled, isGachaRarity, isOptionTableName, isTableReversed, normalizeDiffText, normalizeGachaTargetTable, openDatabaseInterface, openDatabaseVisualizerInterface, performGachaDraw, persistRawDataWithGacha, processJsonData, recordGachaFortuneGain, renderChangesPanel, renderCustomTableNameIconContent, renderDashboard, renderDataCardCellContent, renderGachaCustomFieldsDetailsHtml, renderGachaCustomFieldsPreviewHtml, renderGachaItemIconContent, renderGachaPanelHtml, renderGlobalInteractionsPanel, renderInterface, renderThemeIconContent, replaceUserPlaceholders, resetPanelRequestedHeight, runDatabaseManualUpdate, runInSaveQueue, safeDecodeURIComponent, safeEncodeURIComponent, saveActiveTabState, saveCollapsedState, saveConfig, saveDataToDatabase, saveInventoryFilters, saveInventoryFiltersCollapsedState, saveInventoryPanelTarget, saveOptionsCollapsedState, savePanelRequestedHeight, saveRowInstantly, saveStoredGachaStateSnapshot, saveTableStyles, scheduleFixedWrapperBoundsRefresh, scheduleViewportBoundsRefresh, setPanelRequestedHeight, setupOverlayClose, shouldShowReverseButton, showAvatarManager, showCardEditModal, showCellMenu: (...a: any[]) => showCellMenu(...a), showContestPanel, showDashboardPresetManager, showDatabaseManualUpdateFailure, showDicePanel, showDiceSystemInputDialog, showEditDialog: (...a: any[]) => showEditDialog(...a), showFavoriteEditModal, showGachaPickupItemDetail, showGachaRecentRewardDetail, showGachaSaveError, showGachaSettingsDialog, showMapVisualization, showRelationshipGraph, showSendToTableModal, showSettingsModal, smartInsertToTextarea, startTutorialFromButton, stripSystemInjectedContent, toggleTableReverse, touchGachaActivity, updateGachaFortuneProgressDom, updateGachaPoolTag, updateGachaShopProgressUi, warnTableTemplateIssue, withTableTemplateCheckHint, cachedRawData_ACC: { get v(){ return cachedRawData; }, set v(x){ cachedRawData = x; } }, currentDiffMap_ACC: { get v(){ return currentDiffMap; }, set v(x){ currentDiffMap = x; } }, gachaHeartbeatTimer_ACC: { get v(){ return gachaHeartbeatTimer; }, set v(x){ gachaHeartbeatTimer = x; } }, gachaShopRootElement_ACC: { get v(){ return gachaShopRootElement; }, set v(x){ gachaShopRootElement = x; } }, gachaShopUiRefreshTimer_ACC: { get v(){ return gachaShopUiRefreshTimer; }, set v(x){ gachaShopUiRefreshTimer = x; } }, hasUnsavedChanges_ACC: { get v(){ return hasUnsavedChanges; }, set v(x){ hasUnsavedChanges = x; } }, isEditingOrder_ACC: { get v(){ return isEditingOrder; }, set v(x){ isEditingOrder = x; } }, lastHumanInputActivityAt_ACC: { get v(){ return lastHumanInputActivityAt; }, set v(x){ lastHumanInputActivityAt = x; } }, suppressNextFloatingCollapseClick_ACC: { get v(){ return suppressNextFloatingCollapseClick; }, set v(x){ suppressNextFloatingCollapseClick = x; } }, tablePageStates_ACC: { get v(){ return tablePageStates; }, set v(x){ tablePageStates = x; } }, tableScrollStates_ACC: { get v(){ return tableScrollStates; }, set v(x){ tableScrollStates = x; } }, tableSearchStates_ACC: { get v(){ return tableSearchStates; }, set v(x){ tableSearchStates = x; } }, tutorialButtonEventsBound_ACC: { get v(){ return tutorialButtonEventsBound; }, set v(x){ tutorialButtonEventsBound = x; } } });
+  const { bindEvents, bindFavoritesEvents, closeGachaVisualization, closePanel, ensureGachaHeartbeat, ensurePanelNavigationVisible, flushGachaHeartbeatProgress, getDataAreaForRoot, getInventoryGlobalContext, getInventoryMetadataForItem, loadDashboardNpcAvatars, parseEquipmentItems, parseInventoryItems, refreshGachaShardShop, refreshGachaVisualization, refreshInventoryVisualization, renderFavoritesPanel, renderTableContent, resolveExistingTableName, saveCurrentTabState, setActiveTableNavButton, setInventoryMetadataForItem, settleGachaFortuneForMessage, showGachaShardShop, showGachaVisualization, startGachaShopUiRefresh, syncHostRegenerateButtonVisibility, syncInventoryMetadataForRawData, warnMissingTableTarget } = createGachaInventoryWiring({ AvatarManager, BookmarkManager, DashboardDataParser, FLOATING_COLLAPSE_DRAG_THRESHOLD, GACHA_CATALOG_RAW_ROW_INDEX_PROP, GACHA_SHARD_EXCHANGE_COST, GACHA_SHOP_UI_REFRESH_MS, INVENTORY_QUALITY_FILTER_META, INVENTORY_SORT_OPTIONS, INVENTORY_TYPE_FILTER_META, INVENTORY_TYPE_OPTIONS, MvuModule, NameAliasRegistry, ValidationRuleManager, addGachaShards, applyStoredPanelHeight, bindChangesEvents, bindCompositionSafeSearchInput, bindGlobalInteractionEvents, buildCrudColumnAliasMap, buildRelationshipGraphTableFromPreset, canWriteMvuPanel, clampFloatingCollapsePosition, cleanupGlobalInteractionFloatingMenus, clearAllPanelStates, clearGachaFortune, cloneRuntimeDataValue, collectCurrentChatAvatarNodes, compareGachaItemDefinitionsForDisplay, consumePendingHumanInputSnapshot, countUnicodeCharacters, createCustomTableNameIconContext, createDefaultGachaState, ensureGachaCatalogLoaded, escapeHtml, executeTableInteractionAction, extractNumericValue, findGachaDefinitionByInventoryItem, findRowIndexByPrimaryKey, formatCssImageUrl, formatGachaItemCardMeta, formatGachaRewardDestinationLabel, getActiveDashboardRelationshipGraphSources, getActiveTabState, getAllGachaItemDefinitions, getAttributeValue, getCheckSuggestionItemsFromTable, getCollapsedState, getConfig, getConfiguredGachaPoolDefinitions, getCore, getCrudColumnNameForHeader, getCrudSqlTableName, getCurrentContextFingerprint, getDashboardModuleConfig, getDatabaseManualUpdateErrorMessage, getDbChatMessages, getElementEmoji, getFullAttributesForCharacter, getGachaActivePoolTag, getGachaItemCustomTableNameIconContext, getGachaItemDescriptionText, getGachaItemEffectText, getGachaItemGrantQuantity, getGachaPoolDefinitions, getGachaPoolDisplayName, getGachaRarityIconClass, getGachaRewardParseResultForItem, getGachaShardLabel, getGachaShopProgressContainers, getGachaState, getGachaTargetColumnEntries, getIconForTableName, getInteractOptionsForRow, getInventoryFilters, getInventoryFiltersCollapsedState, getInventoryPanelTarget, getOptionItemsFromTable, getOptionsCollapsedState, getPanelDragStartHeight, getSheetKeyByTableName, getTableData, getTableStyles, getTavernHostDocument, getTavernHostWindow, getTutorialButtonHtml, getVisibleGachaPoolConfigDefinitions, grantGachaReward, hasGachaCustomFields, hasGachaRewardTableForItem, hydrateCustomTableNameIconsIn, isCheckSuggestionTableName, isFloatingCollapseActive, isGachaItemEnabled, isGachaRarity, isOptionTableName, isTableReversed, normalizeDiffText, normalizeGachaTargetTable, openDatabaseInterface, openDatabaseVisualizerInterface, performGachaDraw, persistRawDataWithGacha, processJsonData, recordGachaFortuneGain, renderChangesPanel, renderCustomTableNameIconContent, renderDashboard, renderDataCardCellContent, renderGachaCustomFieldsDetailsHtml, renderGachaCustomFieldsPreviewHtml, renderGachaItemIconContent, renderGachaPanelHtml, renderGlobalInteractionsPanel, renderInterface, renderThemeIconContent, replaceUserPlaceholders, resetPanelRequestedHeight, runDatabaseManualUpdate, runInSaveQueue, safeDecodeURIComponent, safeEncodeURIComponent, saveActiveTabState, saveCollapsedState, saveConfig, saveDataToDatabase, saveInventoryFilters, saveInventoryFiltersCollapsedState, saveInventoryPanelTarget, saveOptionsCollapsedState, savePanelRequestedHeight, saveRowInstantly, saveStoredGachaStateSnapshot, saveTableStyles, scheduleFixedWrapperBoundsRefresh, scheduleViewportBoundsRefresh, setPanelRequestedHeight, setupOverlayClose, shouldShowReverseButton, showAvatarManager, showCardEditModal, showCellMenu: (...a: any[]) => showCellMenu(...a), showContestPanel, showDashboardPresetManager, showDatabaseManualUpdateFailure, showDicePanel, showDiceSystemInputDialog, showEditDialog: (...a: any[]) => showEditDialog(...a), showFavoriteEditModal, showGachaPickupItemDetail, showGachaRecentRewardDetail, showGachaSaveError, showGachaSettingsDialog, showMapVisualization, showRelationshipGraph, showSendToTableModal, showSettingsModal, smartInsertToTextarea, startTutorialFromButton, stripSystemInjectedContent, toggleTableReverse, touchGachaActivity, updateGachaFortuneProgressDom, updateGachaPoolTag, updateGachaShopProgressUi, warnTableTemplateIssue, withTableTemplateCheckHint, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, currentDiffMap_ACC: { get v(){ return currentDiffMap_ACC.v; }, set v(x){ currentDiffMap_ACC.v = x; } }, gachaHeartbeatTimer_ACC: { get v(){ return gachaHeartbeatTimer; }, set v(x){ gachaHeartbeatTimer = x; } }, gachaShopRootElement_ACC: { get v(){ return gachaShopRootElement; }, set v(x){ gachaShopRootElement = x; } }, gachaShopUiRefreshTimer_ACC: { get v(){ return gachaShopUiRefreshTimer; }, set v(x){ gachaShopUiRefreshTimer = x; } }, hasUnsavedChanges_ACC: { get v(){ return hasUnsavedChanges_ACC.v; }, set v(x){ hasUnsavedChanges_ACC.v = x; } }, isEditingOrder_ACC: { get v(){ return isEditingOrder_ACC.v; }, set v(x){ isEditingOrder_ACC.v = x; } }, lastHumanInputActivityAt_ACC: { get v(){ return lastHumanInputActivityAt; }, set v(x){ lastHumanInputActivityAt = x; } }, suppressNextFloatingCollapseClick_ACC: { get v(){ return suppressNextFloatingCollapseClick; }, set v(x){ suppressNextFloatingCollapseClick = x; } }, tablePageStates_ACC: { get v(){ return tablePageStates_ACC.v; }, set v(x){ tablePageStates_ACC.v = x; } }, tableScrollStates_ACC: { get v(){ return tableScrollStates_ACC.v; }, set v(x){ tableScrollStates_ACC.v = x; } }, tableSearchStates_ACC: { get v(){ return tableSearchStates_ACC.v; }, set v(x){ tableSearchStates_ACC.v = x; } }, tutorialButtonEventsBound_ACC: { get v(){ return tutorialButtonEventsBound; }, set v(x){ tutorialButtonEventsBound = x; } } });
 
   let selectedSwapSource = null;
   const toggleOrderEditMode = createToggleOrderEditMode({
@@ -7394,8 +6363,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     STORAGE_KEY_ACTION_ORDER: STORAGE_KEY_ACTION_ORDER,
     getSelectedSwapSource: () => selectedSwapSource,
     setSelectedSwapSource: (v: any) => { selectedSwapSource = v; },
-      getIsEditingOrder: () => isEditingOrder,
-    setIsEditingOrder: (v: any) => { isEditingOrder = v; },
+      getIsEditingOrder: () => isEditingOrder_ACC.v,
+    setIsEditingOrder: (v: any) => { isEditingOrder_ACC.v = v; },
 });
 
   const initSortable = createInitSortable({
@@ -7432,11 +6401,11 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     showEditDialog: (...a: any[]) => showEditDialog(...a),
     showTagInputModal: (...a: any[]) => showTagInputModal(...a),
     updateSaveButtonState: (...a: any[]) => updateSaveButtonState(...a),
-    getCachedRawData: () => cachedRawData,
-    getCurrentDiffMap: () => currentDiffMap,
-    setCurrentDiffMap: (v: any) => { currentDiffMap = v; },
-    getHasUnsavedChanges: () => hasUnsavedChanges,
-    setHasUnsavedChanges: (v: any) => { hasUnsavedChanges = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
+    getHasUnsavedChanges: () => hasUnsavedChanges_ACC.v,
+    setHasUnsavedChanges: (v: any) => { hasUnsavedChanges_ACC.v = v; },
   });
 
   const showEditDialog = createShowEditDialog({
@@ -7493,28 +6462,28 @@ saveCurrentDatabaseSnapshotAsReviewBaseline: (...a: any[]) => saveCurrentDatabas
     MvuModule: MvuModule,
     STORAGE_KEY_SCROLL: STORAGE_KEY_SCROLL,
     UpdateController: UpdateController,
-    getCurrentDiffMap: () => currentDiffMap,
-    getIsEditingOrder: () => isEditingOrder,
-    getIsInitialized: () => isInitialized,
-    setIsInitialized: (v: any) => { isInitialized = v; },
-    getCachedRawData: () => cachedRawData,
-    setCachedRawData: (v: any) => { cachedRawData = v; },
-    getTablePageStates: () => tablePageStates,
-    setTablePageStates: (v: any) => { tablePageStates = v; },
-    getTableSearchStates: () => tableSearchStates,
-    setTableSearchStates: (v: any) => { tableSearchStates = v; },
-    getTableScrollStates: () => tableScrollStates,
-    setTableScrollStates: (v: any) => { tableScrollStates = v; },
-    getHasUnsavedChanges: () => hasUnsavedChanges,
-    setHasUnsavedChanges: (v: any) => { hasUnsavedChanges = v; },
-    getOptionPanelVisible: () => optionPanelVisible,
-    setOptionPanelVisible: (v: any) => { optionPanelVisible = v; },
-    get_boundRenderHandler: () => _boundRenderHandler,
-    set_boundRenderHandler: (v: any) => { _boundRenderHandler = v; },
-    get_boundReviewBaselineHandler: () => _boundReviewBaselineHandler,
-    set_boundReviewBaselineHandler: (v: any) => { _boundReviewBaselineHandler = v; },
-    getObserver: () => observer,
-    setObserver: (v: any) => { observer = v; },
+    getCurrentDiffMap: () => currentDiffMap_ACC.v,
+    getIsEditingOrder: () => isEditingOrder_ACC.v,
+    getIsInitialized: () => isInitialized_ACC.v,
+    setIsInitialized: (v: any) => { isInitialized_ACC.v = v; },
+    getCachedRawData: () => cachedRawData_ACC.v,
+    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
+    getTablePageStates: () => tablePageStates_ACC.v,
+    setTablePageStates: (v: any) => { tablePageStates_ACC.v = v; },
+    getTableSearchStates: () => tableSearchStates_ACC.v,
+    setTableSearchStates: (v: any) => { tableSearchStates_ACC.v = v; },
+    getTableScrollStates: () => tableScrollStates_ACC.v,
+    setTableScrollStates: (v: any) => { tableScrollStates_ACC.v = v; },
+    getHasUnsavedChanges: () => hasUnsavedChanges_ACC.v,
+    setHasUnsavedChanges: (v: any) => { hasUnsavedChanges_ACC.v = v; },
+    getOptionPanelVisible: () => optionPanelVisible_ACC.v,
+    setOptionPanelVisible: (v: any) => { optionPanelVisible_ACC.v = v; },
+    get_boundRenderHandler: () => _boundRenderHandler_ACC.v,
+    set_boundRenderHandler: (v: any) => { _boundRenderHandler_ACC.v = v; },
+    get_boundReviewBaselineHandler: () => _boundReviewBaselineHandler_ACC.v,
+    set_boundReviewBaselineHandler: (v: any) => { _boundReviewBaselineHandler_ACC.v = v; },
+    getObserver: () => observer_ACC.v,
+    setObserver: (v: any) => { observer_ACC.v = v; },
     getGachaHeartbeatTimer: () => gachaHeartbeatTimer,
     setGachaHeartbeatTimer: (v: any) => { gachaHeartbeatTimer = v; },
     getGachaShopUiRefreshTimer: () => gachaShopUiRefreshTimer,

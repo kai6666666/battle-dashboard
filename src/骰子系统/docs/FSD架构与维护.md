@@ -368,3 +368,11 @@ export function createXxx(deps: any) {
 - 事故：生成器补丁只改函数名、未同步 import 路径串（`createGachaDrawWiring` 指向 gacha-settings）→ webpack「not found」+ 运行时 undefined（构建 warning 抓出）→ 修复：import 路径同步；反思：生成器改造须全量替换「名字 + 路径 + 注释」三元组；
 - 闸门：smoke OK / warnings 12（基线）/ tsc 本模块 TS2304=0；
 - 「段内 let / outer-let 暴露」两机制本批零触发（块内零 let 定义、仅 2 个 outer 引用），运行平稳。
+## x4-k（v7.1.0-x4k）
+- wiring 第九簇：核心运行时/工具装配（1,034 行；defs 202 / aft 80 / ext 43）→ `wiring/core-runtime-wiring.ts`；
+  - index 7,841 → 6,809 行；
+- 机制：**17 个段内 let 自动暴露**（含 cachedRawData 49 处外引）——模块内建存取器 + 返回 `_ACC` + 段外引用改写 `_ACC.v` 全自动；
+- 事故1：段外替换误伤字符串（-observer_ACC.v 路径串污染）→构建 6 错；护栏：替换需加字符串/引号上下文防护；
+- 事故2：insert 路径串未同步（createCoreRuntimeWiring 误指向 gacha-settings）→名字+路径+注释三元组替换规范再次加强；
+- 事故3：Impl as 别名第 3 例与 hasUnsavedChanges 值 boolean 却当函数转发（TS2349 历史误用）——已修；
+- 闸门：smoke OK / warnings 12（基线）/ 本模块 TS2304=0（全项目总数回 108 基线）。
