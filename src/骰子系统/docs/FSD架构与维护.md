@@ -388,3 +388,9 @@ export function createXxx(deps: any) {
 - 机制：段内let暴露照常；新增前置侦察（构造闭合+解构行扫描）使本批一次过闸；
 - 事故沉淀：生成器派生时断言/路径两处需手工修补（reps-0-match检测法定位）；
 - 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数108基线）。
+## x4-n（v7.1.0-x4n）
+- wiring 第十二簇：地图/关系图/头像/配置装配（406行；defs39 / aft20 / ext45）→「wiring/visualization-wiring.ts」；
+  - index 5,649 → 5,246行；
+- 机制：段内let暴露（_configCache/isMapOpening）；构造闭合+解构行前置侦察；
+- 事故沉淀：type漏网补齐（AcuDiceProfilePackage/Source）；断言与insert路径的reps顺序问题（函数名先换→路径行模式失配）；
+- 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数108基线）。
