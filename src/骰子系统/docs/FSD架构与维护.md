@@ -376,3 +376,9 @@ export function createXxx(deps: any) {
 - 事故2：insert 路径串未同步（createCoreRuntimeWiring 误指向 gacha-settings）→名字+路径+注释三元组替换规范再次加强；
 - 事故3：Impl as 别名第 3 例与 hasUnsavedChanges 值 boolean 却当函数转发（TS2349 历史误用）——已修；
 - 闸门：smoke OK / warnings 12（基线）/ 本模块 TS2304=0（全项目总数回 108 基线）。
+## x4-l（v7.1.0-x4l）
+- wiring 第十簇：教程/Diff/数据读写装配（647行；defs113 / aft56 / ext27）→「wiring/runtime-save-wiring.ts」；
+  - index 6,809 → 6,165行；
+- 机制升级：提取器识别「局部解构行」（const {A,B} = createXxx）——其名字纳入内部符号集，不再误入 ctx（修复双重声明）；
+- 事故沉淀：①解构行名字误判（核心修复）；②insert路径未同步（第4次）；③归一化Im器第四例（normalizeDiffHeader）；④补 import type（TutorialModule/RuntimeCrudWriteApi）；⑤heredoc行合并（改用 python -c）；
+- 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数回108基线）。
