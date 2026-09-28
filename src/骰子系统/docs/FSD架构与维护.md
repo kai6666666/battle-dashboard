@@ -382,3 +382,9 @@ export function createXxx(deps: any) {
 - 机制升级：提取器识别「局部解构行」（const {A,B} = createXxx）——其名字纳入内部符号集，不再误入 ctx（修复双重声明）；
 - 事故沉淀：①解构行名字误判（核心修复）；②insert路径未同步（第4次）；③归一化Im器第四例（normalizeDiffHeader）；④补 import type（TutorialModule/RuntimeCrudWriteApi）；⑤heredoc行合并（改用 python -c）；
 - 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数回108基线）。
+## x4-m（v7.1.0-x4m）
+- wiring 第十一簇：表格状态/渲染工具装配（519行；defs86 / aft62 / ext70）→「wiring/table-state-wiring.ts」；
+  - index 6,165 → 5,649行；
+- 机制：段内let暴露照常；新增前置侦察（构造闭合+解构行扫描）使本批一次过闸；
+- 事故沉淀：生成器派生时断言/路径两处需手工修补（reps-0-match检测法定位）；
+- 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数108基线）。
