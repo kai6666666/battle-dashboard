@@ -349,3 +349,9 @@ export function createXxx(deps: any) {
 - 事故：主设置弹窗无法打开——`isSettingsOpen`/`cachedRawData`（index 侧 `let` 可变状态）被按快照传值，模块内 setter 对 const 赋值 → 打开设置即抛错；
 - 修复：可变外部状态改用**访问器对象** `NAME_ACC = { get v(){...}, set v(x){...} }`，模块内统一 `NAME_ACC.v` 读写（双向实时）；
 - 规范升级：生成器将自动检测「ctx ∩ index-let」并生成访问器（本批手工完成，后续自动化）。
+## x4-h（v7.1.0-x4h）
+- wiring 第六簇：抽卡/库存/商店装配（876 行；defs 91 / after 9 / ext 167）→ `wiring/gacha-inventory-wiring.ts`；
+  - index 10,046 → 9,173 行；
+- 生成器升级：**`ctx ∩ index-let` 自动存取器化**——13 个可变状态（cachedRawData / gachaHeartbeatTimer / gachaShopRootElement / tablePageStates 等）共 51 处引用自动改写为 `NAME_ACC.v` 双向读写；
+- 事故沉淀：`NAME: NAME` 简写形态的**对象 key 侧**被误替换（`NAME_ACC.v:` 成为非法 key）→ webpack/ts 双报错；修复：键位还原 `NAME:`、值位用 `NAME_ACC.v`；后续生成器键位替换须加「冒号位置」防护；
+- 闸门：tsc 全项目扫描（TS2304=0；TS2556×134 为主力类型债，与历届模块同款）；smoke OK。
