@@ -355,3 +355,10 @@ export function createXxx(deps: any) {
 - 生成器升级：**`ctx ∩ index-let` 自动存取器化**——13 个可变状态（cachedRawData / gachaHeartbeatTimer / gachaShopRootElement / tablePageStates 等）共 51 处引用自动改写为 `NAME_ACC.v` 双向读写；
 - 事故沉淀：`NAME: NAME` 简写形态的**对象 key 侧**被误替换（`NAME_ACC.v:` 成为非法 key）→ webpack/ts 双报错；修复：键位还原 `NAME:`、值位用 `NAME_ACC.v`；后续生成器键位替换须加「冒号位置」防护；
 - 闸门：tsc 全项目扫描（TS2304=0；TS2556×134 为主力类型债，与历届模块同款）；smoke OK。
+## x4-i（v7.1.0-x4i）
+- wiring 第七簇：抽卡设置/配置装配（926 行；defs 181 / aft 130 / ext 42）→ `wiring/gacha-settings-wiring.ts`；
+  - index 9,173 → 8,250 行；
+- 生成器升级：**「段内 let」暴露**——块内定义但被块外引用的可变状态（gachaCatalogCache / gachaCatalogLoadTask）自动「模块内建存取器 + 返回 `_ACC` + 段外引用改写 `_ACC.v`」；
+- 事故1：`export { XxxImpl as Xxx }` 别名导入被拍扁为直接名 → 模块 import「不存在的导出」（warning + 运行时 undefined）→ 修复：保留 `Impl as` 映射；新增「import ↔ 源导出」一致性扫描；
+- 事故2：`import { type X, type Y }` inline type 前缀未剥离 → 4 个 type 名漏出 impmap → 模块漏导入（TS2304×8）→ 修复：补 `import type`；生成器后续需剥离 `type ` 前缀；
+- 闸门：smoke OK / TDZ=0 / spread=0 / tsc 本模块 TS2304=0（214 条为历届同款类型债）。
