@@ -362,3 +362,9 @@ export function createXxx(deps: any) {
 - 事故1：`export { XxxImpl as Xxx }` 别名导入被拍扁为直接名 → 模块 import「不存在的导出」（warning + 运行时 undefined）→ 修复：保留 `Impl as` 映射；新增「import ↔ 源导出」一致性扫描；
 - 事故2：`import { type X, type Y }` inline type 前缀未剥离 → 4 个 type 名漏出 impmap → 模块漏导入（TS2304×8）→ 修复：补 `import type`；生成器后续需剥离 `type ` 前缀；
 - 闸门：smoke OK / TDZ=0 / spread=0 / tsc 本模块 TS2304=0（214 条为历届同款类型债）。
+## x4-j（v7.1.0-x4j）
+- wiring 第八簇：抽卡主流程/面板装配（413 行；defs 47 / aft 20 / ext 107）→ `wiring/gacha-draw-wiring.ts`；
+  - index 8,250 → 7,841 行；
+- 事故：生成器补丁只改函数名、未同步 import 路径串（`createGachaDrawWiring` 指向 gacha-settings）→ webpack「not found」+ 运行时 undefined（构建 warning 抓出）→ 修复：import 路径同步；反思：生成器改造须全量替换「名字 + 路径 + 注释」三元组；
+- 闸门：smoke OK / warnings 12（基线）/ tsc 本模块 TS2304=0；
+- 「段内 let / outer-let 暴露」两机制本批零触发（块内零 let 定义、仅 2 个 outer 引用），运行平稳。
