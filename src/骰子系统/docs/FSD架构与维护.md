@@ -426,3 +426,10 @@ export function createXxx(deps: any) {
 - 机制（首次）：前置保留组（x4-s-pre）——与既有接线存在前向依赖的10项定义（正则规则/排除词/RENDER_* 常量/getDiceConfig）保留在 index、置于 x4-r 接线之前；模块经 ctx 注入（修复 x4-r ctx 直传引用因后置接线造成的 TDZ）；
 - 事故沉淀：①后置接线使 x4-r ctx 的直传前向引用 TDZ（smoke FAIL: Cannot access st）——bundle 快照列号定位 + x4-s-pre 保留组修复；②注释词误配第2例（模块内历史注释含 ValidationRuleManager → used 误算 → TS6133，已移除 ctx 项）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133 44回基线）。
+## x4-t（v7.1.0-x4t）
+- wiring 第十八簇：动作预设与运算引擎装配（251行；defs42 / aft33 / ext10 / late7）→「wiring/action-engine-wiring.ts」；
+  - index 3,034 → 2,786行；
+- 机制：1个段内let暴露（dashboardRuntimeConfigCache_ACC）；特例：DashboardDataParser（late对象 getter + `.v` 替换）、cachedRawData_ACC（_ACC透传）；x4-q/x4-r/x4-d 对段内defs的引用均为惰性箭头（无前向TDZ风险，无需 x4-s-pre 式保留组）；
+- 类型：DashboardConfigMap → import type（shared/index-local-types）；4个 JSONC工具 interface 随段（外部使用方为 @ts-nocheck 裸名，符合惯例）；
+- 沉淀：①judgeCrazyRollResult 模块内未用（TS6133 +1）——历史死代码（注释标明保留），按惯例不清理；②x4-t 接线 ctx 含 DashboardDataParser getter 特例（消费方为 `() => DashboardDataParser` 惰性形态，getter+`.v` 替换精确命中）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133 45（+1已注明的历史死代码））。
