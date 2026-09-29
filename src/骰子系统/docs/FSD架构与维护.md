@@ -433,3 +433,9 @@ export function createXxx(deps: any) {
 - 类型：DashboardConfigMap → import type（shared/index-local-types）；4个 JSONC工具 interface 随段（外部使用方为 @ts-nocheck 裸名，符合惯例）；
 - 沉淀：①judgeCrazyRollResult 模块内未用（TS6133 +1）——历史死代码（注释标明保留），按惯例不清理；②x4-t 接线 ctx 含 DashboardDataParser getter 特例（消费方为 `() => DashboardDataParser` 惰性形态，getter+`.v` 替换精确命中）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133 45（+1已注明的历史死代码））。
+## x4-u（v7.1.0-x4u）
+- wiring 第十九簇：初始化引导与诊断工具装配（215行；defs4 / aft2 / ext45 / late1）→「wiring/bootstrap-wiring.ts」；
+  - index 2,786 → 2,573行；
+- 机制：无段内let；1个late（bindAcuDiceGachaRegexActions，惰性箭头）；window.testPairedTableFix / window.diagnoseDiceVariables 诊断工具随段；段前接线对 init/showEditDialog 的引用均为惰性箭头；
+- 流程升级（首次）：SCRIPT_VERSION 随批次更新纳入 apply 脚本（v7.1.0-x4t → v7.1.0-x4u），杜绝版本号滞留；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持；新增软错误 TS2339×2 / TS7006×8——window挂载与测试函数隐式any，历史同款）。
