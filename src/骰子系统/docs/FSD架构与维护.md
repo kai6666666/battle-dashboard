@@ -401,3 +401,10 @@ export function createXxx(deps: any) {
 - 类型处理：CheckHistoryExtension → import type（shared/advanced-preset-types）；DiceStatsScope → 迁至 shared/index-local-types.ts；AcuDice namespace → 模块内declare占位（悬空等价，待x5统一）；
 - 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数108基线）；
 - 事故沉淀：①防重复断言误判（migrate注释含x4-o字样 → 改用preset-api-wiring标记）；②heredoc回显乱但内容完好（ast校验为准）。
+## x4-p（v7.1.0-x4p）
+- wiring 第十四簇：渲染防抖/视口监听/浮动折叠装配（428行；defs66 / aft7 / ext73 / late15）→「wiring/render-interface-wiring.ts」；
+  - index 4,823 → 4,398行；
+- 机制：24个段内let（23个自动存取器+1个暴露 suppressNextFloatingCollapseClick_ACC）；late含 bindEvents/renderChangesPanel 等（惰性箭头）；
+- 类型：FloatingCollapsePosition 随段；无新增特殊 import（AcuDice 相关零命中）；
+- 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数108基线）；TS7034×1（renderInterfaceTimer）与 core-runtime/visualization 历史同款；
+- 事故沉淀：reps顺序问题再现（函数名先换→insert路径失配）→ 路径单独替换规范二次确认。
