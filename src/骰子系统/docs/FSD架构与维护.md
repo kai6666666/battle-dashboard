@@ -445,3 +445,8 @@ export function createXxx(deps: any) {
 - 机制：无段内let、无late、无特例（全部直传）；18个库存/抽卡元数据类型随段（供 features 使用，裸名 @ts-nocheck）；
 - 事故沉淀：inline type import（`type GachaRewardTargetColumns` 语法）未被 impmap 解析 → 模块 TS2304+1 → 已补 import type 修复（生成器待沉淀支持 inline type imports）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数回108基线；TS6133=45保持；TS6196 +9（迁移类型"模块内未用"，历史同款））。
+## x4-w（v7.1.0-x4w）
+- wiring 第二十一簇：全局交互面板装配（160行；defs17 / aft6 / ext57 / late2）→「wiring/global-interaction-wiring.ts」；
+  - index 2,386 → 2,229行；
+- 机制：无段内let；2个late（bindCompositionSafeSearchInput @x4-v接线 / closePanel @x4-i接线，均惰性箭头）；ext57 直传为主；11个渲染子组件（RowCard/Section/TableGroup/Mark等）模块内互用；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
