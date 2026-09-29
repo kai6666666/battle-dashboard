@@ -564,3 +564,5 @@
     impact: string;
     suggestion: string;
   };
+// [x4-o] 自 index.ts 迁出（骰子统计作用域）
+export type DiceStatsScope = 'chat' | 'character' | 'global';

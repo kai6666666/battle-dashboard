@@ -394,3 +394,10 @@ export function createXxx(deps: any) {
 - 机制：段内let暴露（_configCache/isMapOpening）；构造闭合+解构行前置侦察；
 - 事故沉淀：type漏网补齐（AcuDiceProfilePackage/Source）；断言与insert路径的reps顺序问题（函数名先换→路径行模式失配）；
 - 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数108基线）。
+## x4-o（v7.1.0-x4o）
+- wiring 第十三簇：预设管理/AcuDice API装配（426行；defs48 / aft29 / ext74 / late5）→「wiring/preset-api-wiring.ts」；
+  - index 5,246 → 4,823行；
+- 机制：reg两空格版正式化（可收集接线解构名465个）→ ext纳入接线名（AcuDiceAPI/cachedRawData_ACC等）；新增「_ACC透传wrapper」与「late对象getter+文本替换」（AcuDiceAPI）；
+- 类型处理：CheckHistoryExtension → import type（shared/advanced-preset-types）；DiceStatsScope → 迁至 shared/index-local-types.ts；AcuDice namespace → 模块内declare占位（悬空等价，待x5统一）；
+- 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数108基线）；
+- 事故沉淀：①防重复断言误判（migrate注释含x4-o字样 → 改用preset-api-wiring标记）；②heredoc回显乱但内容完好（ast校验为准）。
