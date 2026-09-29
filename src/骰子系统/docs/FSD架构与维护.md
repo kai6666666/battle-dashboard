@@ -420,3 +420,9 @@ export function createXxx(deps: any) {
 - 机制：1个段内let暴露（h_ACC）；RenderPreset体系类型块整体随段（1472-1533）；
 - 沉淀：注释词误配——`// [x4-o] DiceStatsScope...` 注释内词被 Used 收集误算 → 多余 import type → TS6133（已移除）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线）。
+## x4-s（v7.1.0-x4s）
+- wiring 第十七簇：表格图标与工具装配（273行；defs34 / aft29 / ext50 / late27）→「wiring/table-icon-tools-wiring.ts」；
+  - index 3,303 → 3,034行；
+- 机制（首次）：前置保留组（x4-s-pre）——与既有接线存在前向依赖的10项定义（正则规则/排除词/RENDER_* 常量/getDiceConfig）保留在 index、置于 x4-r 接线之前；模块经 ctx 注入（修复 x4-r ctx 直传引用因后置接线造成的 TDZ）；
+- 事故沉淀：①后置接线使 x4-r ctx 的直传前向引用 TDZ（smoke FAIL: Cannot access st）——bundle 快照列号定位 + x4-s-pre 保留组修复；②注释词误配第2例（模块内历史注释含 ValidationRuleManager → used 误算 → TS6133，已移除 ctx 项）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133 44回基线）。
