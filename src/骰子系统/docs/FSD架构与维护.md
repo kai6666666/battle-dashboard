@@ -408,3 +408,9 @@ export function createXxx(deps: any) {
 - 类型：FloatingCollapsePosition 随段；无新增特殊 import（AcuDice 相关零命中）；
 - 闸门：smoke OK / warnings12（基线）/ 本模块 TS2304=0（总数108基线）；TS7034×1（renderInterfaceTimer）与 core-runtime/visualization 历史同款；
 - 事故沉淀：reps顺序问题再现（函数名先换→insert路径失配）→ 路径单独替换规范二次确认。
+## x4-q（v7.1.0-x4q）
+- wiring 第十五簇：输入区/发送链/文本缓存与工具装配（553行；defs89 / aft54 / ext18 / late18）→「wiring/composer-input-wiring.ts」；
+  - index 4,398 → 3,848行；
+- 机制：7个段内let（3自动存取器+4暴露：gachaHeartbeatTimer/gachaShopRootElement/gachaShopUiRefreshTimer/lastHumanInputActivityAt）；
+- 类型盲点热修：escapeHtml（粘连线隐藏定义）纳入defs；别名导入修复：escapeRegExpLiteralImpl as escapeRegExpLiteral（Impl as第5例，warning消除回基线12）；
+- 闸门：smoke OK / warnings12（基线，与x4p diff IDENTICAL）/ 本模块 TS2304=0（总数108基线）。
