@@ -439,3 +439,9 @@ export function createXxx(deps: any) {
 - 机制：无段内let；1个late（bindAcuDiceGachaRegexActions，惰性箭头）；window.testPairedTableFix / window.diagnoseDiceVariables 诊断工具随段；段前接线对 init/showEditDialog 的引用均为惰性箭头；
 - 流程升级（首次）：SCRIPT_VERSION 随批次更新纳入 apply 脚本（v7.1.0-x4t → v7.1.0-x4u），杜绝版本号滞留；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持；新增软错误 TS2339×2 / TS7006×8——window挂载与测试函数隐式any，历史同款）。
+## x4-v（v7.1.0-x4v）
+- wiring 第二十簇：变更审核面板与库存过滤元数据装配（190行；defs9 / aft9 / ext34 / late0）→「wiring/review-panel-wiring.ts」；
+  - index 2,573 → 2,386行；
+- 机制：无段内let、无late、无特例（全部直传）；18个库存/抽卡元数据类型随段（供 features 使用，裸名 @ts-nocheck）；
+- 事故沉淀：inline type import（`type GachaRewardTargetColumns` 语法）未被 impmap 解析 → 模块 TS2304+1 → 已补 import type 修复（生成器待沉淀支持 inline type imports）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数回108基线；TS6133=45保持；TS6196 +9（迁移类型"模块内未用"，历史同款））。
