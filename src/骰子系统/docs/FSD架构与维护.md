@@ -414,3 +414,9 @@ export function createXxx(deps: any) {
 - 机制：7个段内let（3自动存取器+4暴露：gachaHeartbeatTimer/gachaShopRootElement/gachaShopUiRefreshTimer/lastHumanInputActivityAt）；
 - 类型盲点热修：escapeHtml（粘连线隐藏定义）纳入defs；别名导入修复：escapeRegExpLiteralImpl as escapeRegExpLiteral（Impl as第5例，warning消除回基线12）；
 - 闸门：smoke OK / warnings12（基线，与x4p diff IDENTICAL）/ 本模块 TS2304=0（总数108基线）。
+## x4-r（v7.1.0-x4r）
+- wiring 第十六簇：渲染预设/头像身份/对话缩进装配（548行；defs55 / aft33 / ext19 / late9）→「wiring/avatar-identity-wiring.ts」；
+  - index 3,848 → 3,303行；
+- 机制：1个段内let暴露（h_ACC）；RenderPreset体系类型块整体随段（1472-1533）；
+- 沉淀：注释词误配——`// [x4-o] DiceStatsScope...` 注释内词被 Used 收集误算 → 多余 import type → TS6133（已移除）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线）。
