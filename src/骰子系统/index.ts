@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createContestPanelWiring } from './wiring/contest-panel-wiring';
 import { createBindChangesEventsWiring } from './wiring/bind-changes-events-wiring';
 import { createTableOrderCellMenuWiring } from './wiring/table-order-cellmenu-wiring';
 import { createGachaEditorDialogWiring } from './wiring/gacha-editor-dialog-wiring';
@@ -1510,58 +1511,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   // [x4-m] 表格状态/渲染工具装配已迁出：见 ./wiring/table-state-wiring.ts
   const { addClearButton, applyStoredPanelHeight, areAllTablesReversed, buildCheckValueText, canWriteMvuPanel, cleanupGlobalInteractionFloatingMenus, clearAllPanelStates, clearGlobalInteractionOutsideCapture, clearPresetAttributesForCharacter, ensureCanonicalTableOrder, generateRPGAttributes, getActivePanelHeightKey, getActiveTabState, getAttributeEntryForCharacter, getAttributeValue, getAttributesForCharacter, getBadgeStyle, getCheckSuggestionItemsFromTable, getCollapsedState, getDiceQuickSelectCharacterList, getFullAttributesForCharacter, getHiddenTables, getNamedCheckParamText, getOptionItemsFromTable, getOptionsCollapsedState, getPanelDragStartHeight, getRandomSkillPool, getSavedTableOrder, getStableTableSort, getStoredPanelHeight, getTableHeights, getTableStyles, initCustomDropdown, isCheckSuggestionTableName, isOptionTableName, isSameAttributeAlias, isTableReversed, loadSnapshot, maybeRefreshReviewBaselineAtFillStart, renderCheckSuggestionOptionButtonHtml, renderDataCardCellContent, renderOptionButtonHtml, resetPanelRequestedHeight, resolveQuickSelectTarget, saveActiveTabState, saveCollapsedState, saveCurrentDatabaseSnapshotAsReviewBaseline, saveHiddenTables, saveOptionsCollapsedState, savePanelRequestedHeight, saveSnapshot, saveTableHeights, saveTableOrder, saveTableStyles, setAllTablesReverse, setPanelRequestedHeight, shouldShowReverseButton, showDicePanel, toggleTableReverse, updateSingleAttribute, writeAttributesToCharacter, cleanupGlobalInteractionOutsideCapture_ACC } = createTableStateWiring({ AdvancedDicePresetManager, AttributePresetManager, DEFAULT_OUTPUT_TEMPLATE, DashboardDataParser, DiceHistoryStatsDB, MAX_HISTORY: (...a: any[]) => MAX_HISTORY(...a), MAX_PANEL_HEIGHT, MIN_PANEL_HEIGHT, MvuModule, PANEL_VIEWPORT_TOP_GUTTER, RenderPresetManager, UpdateController, applyAdvancedPresetOutcomePolicy, bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a), cachedRawData_ACC, characterNamesMatch, checkHistory: (...a: any[]) => checkHistory(...a), contestHistory: (...a: any[]) => contestHistory(...a), countRuntimeDataChanges: (...a: any[]) => countRuntimeDataChanges(...a), emitEvent: (...a: any[]) => emitEvent(...a), errorTableTemplateIssue, escapeHtml, evaluateCondition, evaluateConditionNumber, evaluateFormula, evaluateOutcomes, executeEffects, executeSecondaryEffectsChain, extractNumericValue, findAttributeColumnIndices, findCharacterAttributeRow, findPrimaryAttributeColumns, formatOutputTemplate, generateAttributeValue, getAdvancedPresetDisplayOutcome, getConfig: (...a: any[]) => getConfig(...a), getCore, getCurrentContextFingerprint, getDashboardModuleConfig, getDashboardNpcListData: (...a: any[]) => getDashboardNpcListData(...a), getDiceConfig, getResultBadgeClass, getTableData: (...a: any[]) => getTableData(...a), getTavernHostDocument, getTavernHostWindow, getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a), hasSheetKeys: (...a: any[]) => hasSheetKeys(...a), hideDiceResultsInUserMessages, isAttributeQuickSelectTarget, isComplexCondition, isNumericCell, normalizeAttributeQuickSelectConfig, parseAttributeString, parseRelationshipString, pickFallbackAttributeColumn, processJsonData: (...a: any[]) => processJsonData(...a), renderDiceHistoryStatsHtml, replaceUserPlaceholders, resolveCanonicalCharacterName, safeEncodeURIComponent, saveDiceConfig, saveRowInstantly: (...a: any[]) => saveRowInstantly(...a), setTextareaValueAndNotify, setupOverlayClose, showAdvancedPresetManager: (...a: any[]) => showAdvancedPresetManager(...a), showContestPanel: (...a: any[]) => showContestPanel(...a), showDiceSystemConfirmDialog, showGlobalDiceHistoryDialog: (...a: any[]) => showGlobalDiceHistoryDialog(...a), smartInsertToTextarea, withTableTemplateCheckHint });
 
-  // 判定成功等级（供对抗检定面板和 API contest() 共用）
-  const getSuccessLevel = createGetSuccessLevel({
-
-  });
-
-  // [新增] 显示对抗检定面板
-  const showContestPanel = createShowContestPanel({
-    addClearButton: (...a: any[]) => addClearButton(...a),
-    applyAdvancedPresetOutcomePolicy: (...a: any[]) => applyAdvancedPresetOutcomePolicy(...a),
-    bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a),
-    buildCheckValueText: (...a: any[]) => buildCheckValueText(...a),
-    clearPresetAttributesForCharacter: (...a: any[]) => clearPresetAttributesForCharacter(...a),
-    emitEvent: (...a: any[]) => emitEvent(...a),
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    evaluateCondition: (...a: any[]) => evaluateCondition(...a),
-    evaluateConditionNumber: (...a: any[]) => evaluateConditionNumber(...a),
-    evaluateFormula: (...a: any[]) => evaluateFormula(...a),
-    evaluateOutcomes: (...a: any[]) => evaluateOutcomes(...a),
-    formatOutputTemplate: (...a: any[]) => formatOutputTemplate(...a),
-    generateRPGAttributes: (...a: any[]) => generateRPGAttributes(...a),
-    getAdvancedPresetDisplayOutcome: (...a: any[]) => getAdvancedPresetDisplayOutcome(...a),
-    getAttributeEntryForCharacter: (...a: any[]) => getAttributeEntryForCharacter(...a),
-    getAttributesForCharacter: (...a: any[]) => getAttributesForCharacter(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    getDiceConfig: (...a: any[]) => getDiceConfig(...a),
-    getDiceQuickSelectCharacterList: (...a: any[]) => getDiceQuickSelectCharacterList(...a),
-    getFullAttributesForCharacter: (...a: any[]) => getFullAttributesForCharacter(...a),
-    getRandomSkillPool: (...a: any[]) => getRandomSkillPool(...a),
-    getResultBadgeClass: (...a: any[]) => getResultBadgeClass(...a),
-    getTableData: (...a: any[]) => getTableData(...a),
-    getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a),
-    initCustomDropdown: (...a: any[]) => initCustomDropdown(...a),
-    processJsonData: (...a: any[]) => processJsonData(...a),
-    replaceUserPlaceholders: (...a: any[]) => replaceUserPlaceholders(...a),
-    resolveCanonicalCharacterName: (...a: any[]) => resolveCanonicalCharacterName(...a),
-    resolveQuickSelectTarget: (...a: any[]) => resolveQuickSelectTarget(...a),
-    saveDiceConfig: (...a: any[]) => saveDiceConfig(...a),
-    showAdvancedPresetManager: (...a: any[]) => showAdvancedPresetManager(...a),
-    showDicePanel: (...a: any[]) => showDicePanel(...a),
-    showGlobalDiceHistoryDialog: (...a: any[]) => showGlobalDiceHistoryDialog(...a),
-    smartInsertToTextarea: (...a: any[]) => smartInsertToTextarea(...a),
-    writeAttributesToCharacter: (...a: any[]) => writeAttributesToCharacter(...a),
-    AdvancedDicePresetManager: AdvancedDicePresetManager,
-    DEFAULT_CONTEST_OUTPUT_TEMPLATE: DEFAULT_CONTEST_OUTPUT_TEMPLATE,
-    NameAliasRegistry: NameAliasRegistry,
-    STORAGE_KEY_LAST_PRESET: STORAGE_KEY_LAST_PRESET,
-    UpdateController: UpdateController,
-    getCachedRawData: () => cachedRawData_ACC.v,
-    getMAX_HISTORY: () => MAX_HISTORY,
-    getContestHistory: () => contestHistory,
-  });
+  // [x4-ae] 对抗检定面板与成功等级装配已迁出：见 ./wiring/contest-panel-wiring.ts
+  const { getSuccessLevel, showContestPanel } = createContestPanelWiring({ AdvancedDicePresetManager, DEFAULT_CONTEST_OUTPUT_TEMPLATE, MAX_HISTORY: { get v(){ return MAX_HISTORY; } }, NameAliasRegistry, UpdateController, addClearButton, applyAdvancedPresetOutcomePolicy, bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a), buildCheckValueText, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, clearPresetAttributesForCharacter, contestHistory: { get v(){ return contestHistory; } }, emitEvent: (...a: any[]) => emitEvent(...a), escapeHtml, evaluateCondition, evaluateConditionNumber, evaluateFormula, evaluateOutcomes, formatOutputTemplate, generateRPGAttributes, getAdvancedPresetDisplayOutcome, getAttributeEntryForCharacter, getAttributesForCharacter, getConfig: (...a: any[]) => getConfig(...a), getCore, getDiceConfig, getDiceQuickSelectCharacterList, getFullAttributesForCharacter, getRandomSkillPool, getResultBadgeClass, getTableData: (...a: any[]) => getTableData(...a), getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a), initCustomDropdown, processJsonData: (...a: any[]) => processJsonData(...a), replaceUserPlaceholders, resolveCanonicalCharacterName, resolveQuickSelectTarget, saveDiceConfig, showAdvancedPresetManager: (...a: any[]) => showAdvancedPresetManager(...a), showDicePanel, showGlobalDiceHistoryDialog: (...a: any[]) => showGlobalDiceHistoryDialog(...a), smartInsertToTextarea, writeAttributesToCharacter });
 
   // [x4-n] 地图/关系图/头像/配置装配已迁出：见 ./wiring/visualization-wiring.ts
   const { DICE_CONFIG_BACKUP_FORMAT, DICE_CONFIG_BACKUP_SCHEMA_VERSION, DICE_PROFILE_COLLAPSED_SECTIONS_STORAGE_KEY, DICE_PROFILE_INDEX_STORAGE_KEY, DICE_PROFILE_LAST_APPLIED_STORAGE_KEY, DICE_PROFILE_PRE_APPLY_SNAPSHOT_LIMIT, DICE_PROFILE_SKIPPED_PROMPTS_STORAGE_KEY, buildRelationshipGraphTableFromPreset, clearDiceLocalCacheData, collectCurrentChatAvatarNodes, getConfig, getCurrentChatAvatarNodes, getDashboardNpcListData, saveConfig, showAvatarManager, showCardEditModal, showManualUpdateDialog, showMapVisualization, showRelationshipGraph, _configCache_ACC } = createVisualizationWiring({ AvatarManager, DashboardDataParser, DiceHistoryStatsDB, NameAliasRegistry, USER_NODE_KEY, applyConfigStyles: (...a: any[]) => applyConfigStyles(...a), avatarHexToHsl, bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a), buildAvatarBackgroundStyle, cachedRawData_ACC, characterNamesMatch, clampAvatarNumber, createGlobalInteractionCustomTableNameIconContext, escapeHtml, formatCssImageUrl, getActiveDashboardRelationshipGraphSources, getAvatarFallbackColor, getCore, getDashboardModuleConfig, getDiceConfig, getElementEmoji, getImageUrlValidationMessage, getPlayerName, getRemoteImageUrlValidationError, getTableData: (...a: any[]) => getTableData(...a), getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a), hslToAvatarHex, hydrateCustomTableNameIconsIn, inferAvatarImageColor, loadSnapshot, normalizeAvatarHexColor, normalizeCollapseStyle, parseRelationshipString, processJsonData: (...a: any[]) => processJsonData(...a), refreshDialogueIndentRender, renderCustomTableNameIconContent, renderInterface: (...a: any[]) => renderInterface(...a), replaceUserPlaceholders, resolveBatchLocationEmojis, resolveUserGraphName, saveDiceConfig, saveRowInstantly: (...a: any[]) => saveRowInstantly(...a), setupOverlayClose, warnTableTemplateIssue, withTableTemplateCheckHint });
