@@ -450,3 +450,8 @@ export function createXxx(deps: any) {
   - index 2,386 → 2,229行；
 - 机制：无段内let；2个late（bindCompositionSafeSearchInput @x4-v接线 / closePanel @x4-i接线，均惰性箭头）；ext57 直传为主；11个渲染子组件（RowCard/Section/TableGroup/Mark等）模块内互用；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
+## x4-x（v7.1.0-x4x）
+- wiring 第二十二簇：抽卡API装配（145行；defs15 / aft1 / ext42 / late0）→「wiring/gacha-api-wiring.ts」；
+  - index 2,229 → 2,087行；
+- 机制：无段内let、无late、全直传；14个序列化/管理子件内部互用，仅 acuDiceGachaApi 暴露（被 gachaRegexActions 引用）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
