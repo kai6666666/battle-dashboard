@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createDiceConfigBackupApplyWiring } from './wiring/dice-config-backup-apply-wiring';
 import { createContestPanelWiring } from './wiring/contest-panel-wiring';
 import { createBindChangesEventsWiring } from './wiring/bind-changes-events-wiring';
 import { createTableOrderCellMenuWiring } from './wiring/table-order-cellmenu-wiring';
@@ -1525,35 +1526,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   // [x4-y] 配置备份恢复链装配已迁出：见 ./wiring/dice-config-backup-restore-wiring.ts
   const { getDiceConfigBackupTableTemplateRollbackSnapshot, normalizeDiceConfigBackupGachaCatalogResourceRecord, restoreDiceConfigBackupGachaCatalogSnapshot, restoreDiceConfigBackupModuleResources, restoreDiceConfigBackupTableTemplateRollbackSnapshot, syncDiceConfigBackupRuntimeAfterRestore } = createDiceConfigBackupRestoreWiring({ ActionPresetManager, AdvancedDicePresetManager, AttributePresetManager, AvatarManager, DICE_CONFIG_BACKUP_GACHA_CATALOG_RESOURCE_KEY, DICE_CONFIG_BACKUP_TABLE_TEMPLATE_RESOURCE_KEY, DashboardPresetManager, GACHA_CATALOG_GLOBAL_SCOPE_KEY, PresetManager, RegexPresetManager, RegexTransformationManager, RenderPresetManager, TableTemplateRequirementPresetManager, ValidationRuleManager, _configCache_ACC: { get v(){ return _configCache_ACC.v; }, set v(x){ _configCache_ACC.v = x; } }, applyConfigStyles: (...a: any[]) => applyConfigStyles(...a), cloneDiceConfigBackupValue, cloneGachaCatalogItems: (...a: any[]) => cloneGachaCatalogItems(...a), createEmptyGachaCatalog: (...a: any[]) => createEmptyGachaCatalog(...a), dashboardRuntimeConfigCache_ACC: { get v(){ return dashboardRuntimeConfigCache_ACC.v; }, set v(x){ dashboardRuntimeConfigCache_ACC.v = x; } }, ensureGachaPoolsForTags: (...a: any[]) => ensureGachaPoolsForTags(...a), gachaCatalogCache_ACC: { get v(){ return gachaCatalogCache_ACC.v; }, set v(x){ gachaCatalogCache_ACC.v = x; } }, gachaCatalogLoadTask_ACC: { get v(){ return gachaCatalogLoadTask_ACC.v; }, set v(x){ gachaCatalogLoadTask_ACC.v = x; } }, getConfig, getCore, getDiceConfigBackupTableTemplateApi, getRuntimeGachaRawData: (...a: any[]) => getRuntimeGachaRawData(...a), isDiceConfigBackupRecord, isGachaItemEnabled: (...a: any[]) => isGachaItemEnabled(...a), isSettingsOpen_ACC: { get v(){ return isSettingsOpen_ACC.v; }, set v(x){ isSettingsOpen_ACC.v = x; } }, mergeGachaCatalogRecordsToGlobalScope: (...a: any[]) => mergeGachaCatalogRecordsToGlobalScope(...a), migrateGachaCatalogRecordsToGlobalScope: (...a: any[]) => migrateGachaCatalogRecordsToGlobalScope(...a), normalizeGachaCatalogRecord: (...a: any[]) => normalizeGachaCatalogRecord(...a), normalizeImportedGachaItem: (...a: any[]) => normalizeImportedGachaItem(...a), refreshDicePanelPresets: (...a: any[]) => refreshDicePanelPresets(...a), refreshGachaShardShop: (...a: any[]) => refreshGachaShardShop(...a), refreshGachaVisualization: (...a: any[]) => refreshGachaVisualization(...a), renderInterface: (...a: any[]) => renderInterface(...a), showGachaSettingsDialog: (...a: any[]) => showGachaSettingsDialog(...a), validateGachaCatalogImportItemTarget: (...a: any[]) => validateGachaCatalogImportItemTarget(...a) });
 
-  const applyDiceConfigBackup = createApplyDiceConfigBackup({
-    applyDiceConfigBackupActiveValue: (...a: any[]) => applyDiceConfigBackupActiveValue(...a),
-    applyDiceConfigBackupValue: (...a: any[]) => applyDiceConfigBackupValue(...a),
-    collectDiceConfigBackupGachaCatalogRollbackSnapshot: (...a: any[]) => collectDiceConfigBackupGachaCatalogRollbackSnapshot(...a),
-    getDiceConfigBackupModuleDefinition: (...a: any[]) => getDiceConfigBackupModuleDefinition(...a),
-    getDiceConfigBackupTableTemplateRollbackSnapshot: (...a: any[]) => getDiceConfigBackupTableTemplateRollbackSnapshot(...a),
-    getRuntimeGachaRawData: (...a: any[]) => getRuntimeGachaRawData(...a),
-    getTableData: (...a: any[]) => getTableData(...a),
-    hasDiceConfigBackupTableTemplateResource: (...a: any[]) => hasDiceConfigBackupTableTemplateResource(...a),
-    normalizeDiceConfigBackupGachaItemSettings: (...a: any[]) => normalizeDiceConfigBackupGachaItemSettings(...a),
-    normalizeDiceConfigBackupSelectedModuleIds: (...a: any[]) => normalizeDiceConfigBackupSelectedModuleIds(...a),
-    remapDiceConfigBackupGachaItemSettings: (...a: any[]) => remapDiceConfigBackupGachaItemSettings(...a),
-    restoreDiceConfigBackupGachaCatalogSnapshot: (...a: any[]) => restoreDiceConfigBackupGachaCatalogSnapshot(...a),
-    restoreDiceConfigBackupModuleResources: (...a: any[]) => restoreDiceConfigBackupModuleResources(...a),
-    restoreDiceConfigBackupTableTemplateRollbackSnapshot: (...a: any[]) => restoreDiceConfigBackupTableTemplateRollbackSnapshot(...a),
-    syncDiceConfigBackupRuntimeAfterRestore: (...a: any[]) => syncDiceConfigBackupRuntimeAfterRestore(...a),
-    DICE_CONFIG_BACKUP_ACTIVE_KEY_TO_PRESET_KEY: DICE_CONFIG_BACKUP_ACTIVE_KEY_TO_PRESET_KEY,
-    DICE_CONFIG_BACKUP_FORMAT: DICE_CONFIG_BACKUP_FORMAT,
-    DICE_CONFIG_BACKUP_GACHA_CATALOG_RESOURCE_KEY: DICE_CONFIG_BACKUP_GACHA_CATALOG_RESOURCE_KEY,
-    DICE_CONFIG_BACKUP_SCHEMA_VERSION: DICE_CONFIG_BACKUP_SCHEMA_VERSION,
-    STORAGE_KEY_GACHA_ITEM_SETTINGS: STORAGE_KEY_GACHA_ITEM_SETTINGS,
-    STORAGE_KEY_GACHA_POOL_SETTINGS: STORAGE_KEY_GACHA_POOL_SETTINGS,
-    STORAGE_KEY_REGEX_RULES: STORAGE_KEY_REGEX_RULES,
-    getCachedRawData: () => cachedRawData_ACC.v,
-    setCachedRawData: (v: any) => { cachedRawData_ACC.v = v; },
-    buildDiceConfigBackupTableOrder: (...a: any[]) => buildDiceConfigBackupTableOrder(...a),
-    saveTableOrder: (...a: any[]) => saveTableOrder(...a),
-    STORAGE_KEY_TABLE_ORDER: STORAGE_KEY_TABLE_ORDER,
-  });
+  // [x4-af] 配置备份应用装配已迁出：见 ./wiring/dice-config-backup-apply-wiring.ts
+  const { applyDiceConfigBackup } = createDiceConfigBackupApplyWiring({ DICE_CONFIG_BACKUP_ACTIVE_KEY_TO_PRESET_KEY, DICE_CONFIG_BACKUP_FORMAT, DICE_CONFIG_BACKUP_GACHA_CATALOG_RESOURCE_KEY, DICE_CONFIG_BACKUP_SCHEMA_VERSION, applyDiceConfigBackupActiveValue, applyDiceConfigBackupValue, buildDiceConfigBackupTableOrder, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, collectDiceConfigBackupGachaCatalogRollbackSnapshot, getDiceConfigBackupModuleDefinition, getDiceConfigBackupTableTemplateRollbackSnapshot, getRuntimeGachaRawData: (...a: any[]) => getRuntimeGachaRawData(...a), getTableData: (...a: any[]) => getTableData(...a), hasDiceConfigBackupTableTemplateResource, normalizeDiceConfigBackupGachaItemSettings, normalizeDiceConfigBackupSelectedModuleIds, remapDiceConfigBackupGachaItemSettings, restoreDiceConfigBackupGachaCatalogSnapshot, restoreDiceConfigBackupModuleResources, restoreDiceConfigBackupTableTemplateRollbackSnapshot, saveTableOrder, syncDiceConfigBackupRuntimeAfterRestore });
 
   // [x4-e] 骰子配置备份/角色档案装配已迁出：见 ./wiring/dice-profile-backup-wiring.ts
   const { applyDiceProfile, createDiceProfileRuntimeId, deleteDiceProfileRecord, detectCharacterDiceProfile, downloadDiceConfigBackupJson, downloadDiceProfileJson, downloadDiceProfileTavernRegex, exportDiceProfile, getAllDiceConfigBackupModuleIds, getDiceConfigBackupSelectedModuleIdsFromDialog, getDiceProfileCharacterContext, getDiceProfilePromptState, importDiceProfile, normalizeDiceProfileRecord, refreshDiceProfileIndex, renderDiceConfigBackupModuleRows, saveCurrentDiceProfile, saveDiceProfileRecord, scheduleCharacterDiceProfileDetection, toDiceProfileSummary } = createDiceProfileBackupWiring({ DICE_PROFILE_INDEX_STORAGE_KEY, DICE_PROFILE_LAST_APPLIED_STORAGE_KEY, DICE_PROFILE_PRE_APPLY_SNAPSHOT_LIMIT, DICE_PROFILE_SKIPPED_PROMPTS_STORAGE_KEY, applyDiceConfigBackup, buildDiceConfigBackup, cloneDiceConfigBackupValue, downloadJsonFile, getConfig, getCore, getDiceConfigBackupModuleDefinition, getDiceConfigBackupModuleResourceCount, getDiceConfigBackupRecordString, getDiceStatsContext, hasDiceConfigBackupRecoverableStorage, hasDiceConfigBackupTableTemplateResource, isDiceConfigBackupRecord, normalizeDiceConfigBackupSelectedModuleIds, parseDiceConfigBackup, parseJsoncDocument, renderDeprecatedBadge, setupOverlayClose, showDiceSystemConfirmDialog, escapeHtml });

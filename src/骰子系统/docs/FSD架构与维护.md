@@ -491,3 +491,8 @@ export function createXxx(deps: any) {
   - index 1,691 → 1,642行；
 - 机制：2个getter特例（MAX_HISTORY / contestHistory：`()=>X` 形态 → ctx getter + 模块内 `.v` 替换——AcuDiceAPI 同款）；本模块 tsc 零错误（第3例）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=46保持）。
+## x4-af（v7.1.0-x4af）
+- wiring 第三十簇：配置备份应用装配（29行；defs1 / aft1 / ext22 / late2）→「wiring/dice-config-backup-apply-wiring.ts」；
+  - index 1,642 → 1,616行；
+- 机制：无段内let；2个late（getRuntimeGachaRawData / getTableData，惰性箭头）；本模块 tsc 零错误（第4例）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=46保持）。
