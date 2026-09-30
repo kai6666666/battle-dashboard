@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createTableOrderCellMenuWiring } from './wiring/table-order-cellmenu-wiring';
 import { createGachaEditorDialogWiring } from './wiring/gacha-editor-dialog-wiring';
 import { createDiceProfilePanelWiring } from './wiring/dice-profile-panel-wiring';
 import { createAttrPresetPanelWiring } from './wiring/attr-preset-panel-wiring';
@@ -1681,60 +1682,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   // [x4-h_ACC.v] 抽卡/库存/商店装配已迁出：见 ./wiring/gacha-inventory-wiring.ts
   const { bindEvents, bindFavoritesEvents, closeGachaVisualization, closePanel, ensureGachaHeartbeat, ensurePanelNavigationVisible, flushGachaHeartbeatProgress, getDataAreaForRoot, getInventoryGlobalContext, getInventoryMetadataForItem, loadDashboardNpcAvatars, parseEquipmentItems, parseInventoryItems, refreshGachaShardShop, refreshGachaVisualization, refreshInventoryVisualization, renderFavoritesPanel, renderTableContent, resolveExistingTableName, saveCurrentTabState, setActiveTableNavButton, setInventoryMetadataForItem, settleGachaFortuneForMessage, showGachaShardShop, showGachaVisualization, startGachaShopUiRefresh, syncHostRegenerateButtonVisibility, syncInventoryMetadataForRawData, warnMissingTableTarget } = createGachaInventoryWiring({ AvatarManager, BookmarkManager, DashboardDataParser, FLOATING_COLLAPSE_DRAG_THRESHOLD, GACHA_CATALOG_RAW_ROW_INDEX_PROP, GACHA_SHARD_EXCHANGE_COST, GACHA_SHOP_UI_REFRESH_MS, INVENTORY_QUALITY_FILTER_META, INVENTORY_SORT_OPTIONS, INVENTORY_TYPE_FILTER_META, INVENTORY_TYPE_OPTIONS, MvuModule, NameAliasRegistry, ValidationRuleManager, addGachaShards, applyStoredPanelHeight, bindChangesEvents, bindCompositionSafeSearchInput, bindGlobalInteractionEvents, buildCrudColumnAliasMap, buildRelationshipGraphTableFromPreset, canWriteMvuPanel, clampFloatingCollapsePosition, cleanupGlobalInteractionFloatingMenus, clearAllPanelStates, clearGachaFortune, cloneRuntimeDataValue, collectCurrentChatAvatarNodes, compareGachaItemDefinitionsForDisplay, consumePendingHumanInputSnapshot, countUnicodeCharacters, createCustomTableNameIconContext, createDefaultGachaState, ensureGachaCatalogLoaded, escapeHtml, executeTableInteractionAction, extractNumericValue, findGachaDefinitionByInventoryItem, findRowIndexByPrimaryKey, formatCssImageUrl, formatGachaItemCardMeta, formatGachaRewardDestinationLabel, getActiveDashboardRelationshipGraphSources, getActiveTabState, getAllGachaItemDefinitions, getAttributeValue, getCheckSuggestionItemsFromTable, getCollapsedState, getConfig, getConfiguredGachaPoolDefinitions, getCore, getCrudColumnNameForHeader, getCrudSqlTableName, getCurrentContextFingerprint, getDashboardModuleConfig, getDatabaseManualUpdateErrorMessage, getDbChatMessages, getElementEmoji, getFullAttributesForCharacter, getGachaActivePoolTag, getGachaItemCustomTableNameIconContext, getGachaItemDescriptionText, getGachaItemEffectText, getGachaItemGrantQuantity, getGachaPoolDefinitions, getGachaPoolDisplayName, getGachaRarityIconClass, getGachaRewardParseResultForItem, getGachaShardLabel, getGachaShopProgressContainers, getGachaState, getGachaTargetColumnEntries, getIconForTableName, getInteractOptionsForRow, getInventoryFilters, getInventoryFiltersCollapsedState, getInventoryPanelTarget, getOptionItemsFromTable, getOptionsCollapsedState, getPanelDragStartHeight, getSheetKeyByTableName, getTableData, getTableStyles, getTavernHostDocument, getTavernHostWindow, getTutorialButtonHtml, getVisibleGachaPoolConfigDefinitions, grantGachaReward, hasGachaCustomFields, hasGachaRewardTableForItem, hydrateCustomTableNameIconsIn, isCheckSuggestionTableName, isFloatingCollapseActive, isGachaItemEnabled, isGachaRarity, isOptionTableName, isTableReversed, normalizeDiffText, normalizeGachaTargetTable, openDatabaseInterface, openDatabaseVisualizerInterface, performGachaDraw, persistRawDataWithGacha, processJsonData, recordGachaFortuneGain, renderChangesPanel, renderCustomTableNameIconContent, renderDashboard, renderDataCardCellContent, renderGachaCustomFieldsDetailsHtml, renderGachaCustomFieldsPreviewHtml, renderGachaItemIconContent, renderGachaPanelHtml, renderGlobalInteractionsPanel, renderInterface, renderThemeIconContent, replaceUserPlaceholders, resetPanelRequestedHeight, runDatabaseManualUpdate, runInSaveQueue, safeDecodeURIComponent, safeEncodeURIComponent, saveActiveTabState, saveCollapsedState, saveConfig, saveDataToDatabase, saveInventoryFilters, saveInventoryFiltersCollapsedState, saveInventoryPanelTarget, saveOptionsCollapsedState, savePanelRequestedHeight, saveRowInstantly, saveStoredGachaStateSnapshot, saveTableStyles, scheduleFixedWrapperBoundsRefresh, scheduleViewportBoundsRefresh, setPanelRequestedHeight, setupOverlayClose, shouldShowReverseButton, showAvatarManager, showCardEditModal, showCellMenu: (...a: any[]) => showCellMenu(...a), showContestPanel, showDashboardPresetManager, showDatabaseManualUpdateFailure, showDicePanel, showDiceSystemInputDialog, showEditDialog: (...a: any[]) => showEditDialog(...a), showFavoriteEditModal, showGachaPickupItemDetail, showGachaRecentRewardDetail, showGachaSaveError, showGachaSettingsDialog, showMapVisualization, showRelationshipGraph, showSendToTableModal, showSettingsModal, smartInsertToTextarea, startTutorialFromButton, stripSystemInjectedContent, toggleTableReverse, touchGachaActivity, updateGachaFortuneProgressDom, updateGachaPoolTag, updateGachaShopProgressUi, warnTableTemplateIssue, withTableTemplateCheckHint, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, currentDiffMap_ACC: { get v(){ return currentDiffMap_ACC.v; }, set v(x){ currentDiffMap_ACC.v = x; } }, gachaHeartbeatTimer_ACC: { get v(){ return gachaHeartbeatTimer_ACC.v; }, set v(x){ gachaHeartbeatTimer_ACC.v = x; } }, gachaShopRootElement_ACC: { get v(){ return gachaShopRootElement_ACC.v; }, set v(x){ gachaShopRootElement_ACC.v = x; } }, gachaShopUiRefreshTimer_ACC: { get v(){ return gachaShopUiRefreshTimer_ACC.v; }, set v(x){ gachaShopUiRefreshTimer_ACC.v = x; } }, hasUnsavedChanges_ACC: { get v(){ return hasUnsavedChanges_ACC.v; }, set v(x){ hasUnsavedChanges_ACC.v = x; } }, isEditingOrder_ACC: { get v(){ return isEditingOrder_ACC.v; }, set v(x){ isEditingOrder_ACC.v = x; } }, lastHumanInputActivityAt_ACC: { get v(){ return lastHumanInputActivityAt_ACC.v; }, set v(x){ lastHumanInputActivityAt_ACC.v = x; } }, suppressNextFloatingCollapseClick_ACC: { get v(){ return suppressNextFloatingCollapseClick_ACC.v; }, set v(x){ suppressNextFloatingCollapseClick_ACC.v = x; } }, tablePageStates_ACC: { get v(){ return tablePageStates_ACC.v; }, set v(x){ tablePageStates_ACC.v = x; } }, tableScrollStates_ACC: { get v(){ return tableScrollStates_ACC.v; }, set v(x){ tableScrollStates_ACC.v = x; } }, tableSearchStates_ACC: { get v(){ return tableSearchStates_ACC.v; }, set v(x){ tableSearchStates_ACC.v = x; } }, tutorialButtonEventsBound_ACC: { get v(){ return tutorialButtonEventsBound_ACC.v; }, set v(x){ tutorialButtonEventsBound_ACC.v = x; } } });
 
-  let selectedSwapSource = null;
-  const toggleOrderEditMode = createToggleOrderEditMode({
-    getCore: (...a: any[]) => getCore(...a),
-    initSortable: (...a: any[]) => initSortable(...a),
-    renderInterface: (...a: any[]) => renderInterface(...a),
-    saveTableOrder: (...a: any[]) => saveTableOrder(...a),
-    syncHostRegenerateButtonVisibility: (...a: any[]) => syncHostRegenerateButtonVisibility(...a),
-    STORAGE_KEY_ACTION_ORDER: STORAGE_KEY_ACTION_ORDER,
-    getSelectedSwapSource: () => selectedSwapSource,
-    setSelectedSwapSource: (v: any) => { selectedSwapSource = v; },
-      getIsEditingOrder: () => isEditingOrder_ACC.v,
-    setIsEditingOrder: (v: any) => { isEditingOrder_ACC.v = v; },
-});
-
-  const initSortable = createInitSortable({
-    getCore: (...a: any[]) => getCore(...a),
-    MAX_ACTION_BUTTONS: MAX_ACTION_BUTTONS,
-    getSelectedSwapSource: () => selectedSwapSource,
-    setSelectedSwapSource: (v: any) => { selectedSwapSource = v; },
-  });
-
-  const showCellMenu = createShowCellMenu({
-    appendRowInstantly: (...a: any[]) => appendRowInstantly(...a),
-    deleteRowInstantly: (...a: any[]) => deleteRowInstantly(...a),
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    findDiffSnapshotEntry: (...a: any[]) => findDiffSnapshotEntry(...a),
-    findRowIndexByPrimaryKey: (...a: any[]) => findRowIndexByPrimaryKey(...a),
-    findRuntimeSheetEntryForMutation: (...a: any[]) => findRuntimeSheetEntryForMutation(...a),
-    generateDiffMap: (...a: any[]) => generateDiffMap(...a),
-    getBadgeStyle: (...a: any[]) => getBadgeStyle(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    getDiffDataRow: (...a: any[]) => getDiffDataRow(...a),
-    getDiffSheetByKey: (...a: any[]) => getDiffSheetByKey(...a),
-    getSheetHeaders: (...a: any[]) => getSheetHeaders(...a),
-    getSheetKeyByTableName: (...a: any[]) => getSheetKeyByTableName(...a),
-    getTableData: (...a: any[]) => getTableData(...a),
-    loadSnapshot: (...a: any[]) => loadSnapshot(...a),
-    renderInterface: (...a: any[]) => renderInterface(...a),
-    safeDecodeURIComponent: (...a: any[]) => safeDecodeURIComponent(...a),
-    safeEncodeURIComponent: (...a: any[]) => safeEncodeURIComponent(...a),
-    saveRowInstantly: (...a: any[]) => saveRowInstantly(...a),
-    showCardEditModal: (...a: any[]) => showCardEditModal(...a),
-    showDiceSystemConfirmDialog: (...a: any[]) => showDiceSystemConfirmDialog(...a),
-    showDiceSystemInputDialog: (...a: any[]) => showDiceSystemInputDialog(...a),
-    showEditDialog: (...a: any[]) => showEditDialog(...a),
-    showTagInputModal: (...a: any[]) => showTagInputModal(...a),
-    updateSaveButtonState: (...a: any[]) => updateSaveButtonState(...a),
-    getCachedRawData: () => cachedRawData_ACC.v,
-    getCurrentDiffMap: () => currentDiffMap_ACC.v,
-    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
-    getHasUnsavedChanges: () => hasUnsavedChanges_ACC.v,
-    setHasUnsavedChanges: (v: any) => { hasUnsavedChanges_ACC.v = v; },
-  });
+  // [x4-ac] 表格排序编辑与单元格菜单装配已迁出：见 ./wiring/table-order-cellmenu-wiring.ts
+  const { showCellMenu } = createTableOrderCellMenuWiring({ MAX_ACTION_BUTTONS, appendRowInstantly, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, currentDiffMap_ACC: { get v(){ return currentDiffMap_ACC.v; }, set v(x){ currentDiffMap_ACC.v = x; } }, deleteRowInstantly, escapeHtml, findDiffSnapshotEntry, findRowIndexByPrimaryKey, findRuntimeSheetEntryForMutation, generateDiffMap, getBadgeStyle, getConfig, getCore, getDiffDataRow, getDiffSheetByKey, getSheetHeaders, getSheetKeyByTableName, getTableData, hasUnsavedChanges_ACC: { get v(){ return hasUnsavedChanges_ACC.v; }, set v(x){ hasUnsavedChanges_ACC.v = x; } }, isEditingOrder_ACC: { get v(){ return isEditingOrder_ACC.v; }, set v(x){ isEditingOrder_ACC.v = x; } }, loadSnapshot, renderInterface, safeDecodeURIComponent, safeEncodeURIComponent, saveRowInstantly, saveTableOrder, showCardEditModal, showDiceSystemConfirmDialog, showDiceSystemInputDialog, showEditDialog: (...a: any[]) => showEditDialog(...a), showTagInputModal, syncHostRegenerateButtonVisibility, updateSaveButtonState });
 
   // [x4-u] 初始化引导与诊断工具装配已迁出：见 ./wiring/bootstrap-wiring.ts
   const { init, showEditDialog } = createBootstrapWiring({ ErrorHandler, MvuModule, UpdateController, _boundRenderHandler_ACC: { get v(){ return _boundRenderHandler_ACC.v; }, set v(x){ _boundRenderHandler_ACC.v = x; } }, _boundReviewBaselineHandler_ACC: { get v(){ return _boundReviewBaselineHandler_ACC.v; }, set v(x){ _boundReviewBaselineHandler_ACC.v = x; } }, addStyles, bindAcuDiceGachaRegexActions: (...a: any[]) => bindAcuDiceGachaRegexActions(...a), bindHumanInputTracking, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, capturePendingHumanInputSnapshot, currentDiffMap_ACC: { get v(){ return currentDiffMap_ACC.v; }, set v(x){ currentDiffMap_ACC.v = x; } }, ensureGachaHeartbeat, escapeHtml, flushGachaHeartbeatProgress, gachaHeartbeatTimer_ACC: { get v(){ return gachaHeartbeatTimer_ACC.v; }, set v(x){ gachaHeartbeatTimer_ACC.v = x; } }, gachaShopUiRefreshTimer_ACC: { get v(){ return gachaShopUiRefreshTimer_ACC.v; }, set v(x){ gachaShopUiRefreshTimer_ACC.v = x; } }, generateCrazyRoll, getActiveTabState, getConfig, getCore, getDiceConfig, getTutorialModule, hasRuntimeTableReadApi, hasUnsavedChanges_ACC: { get v(){ return hasUnsavedChanges_ACC.v; }, set v(x){ hasUnsavedChanges_ACC.v = x; } }, hideDiceResultsInUserMessages, interceptTextareaValue, isEditingOrder_ACC: { get v(){ return isEditingOrder_ACC.v; }, set v(x){ isEditingOrder_ACC.v = x; } }, isFloatingCollapseActive, isInitialized_ACC: { get v(){ return isInitialized_ACC.v; }, set v(x){ isInitialized_ACC.v = x; } }, maybeRefreshReviewBaselineAtFillStart, observer_ACC: { get v(){ return observer_ACC.v; }, set v(x){ observer_ACC.v = x; } }, optionPanelVisible_ACC: { get v(){ return optionPanelVisible_ACC.v; }, set v(x){ optionPanelVisible_ACC.v = x; } }, renderInterface, restoreDiceResultBeforeSend, saveCurrentDatabaseSnapshotAsReviewBaseline, scheduleCharacterDiceProfileDetection, scheduleDialogueIndentRender, setTextareaValueAndNotify, settleGachaFortuneForMessage, setupOverlayClose, shouldTriggerCrazyMode, smartInsertToTextarea, tablePageStates_ACC: { get v(){ return tablePageStates_ACC.v; }, set v(x){ tablePageStates_ACC.v = x; } }, tableScrollStates_ACC: { get v(){ return tableScrollStates_ACC.v; }, set v(x){ tableScrollStates_ACC.v = x; } }, tableSearchStates_ACC: { get v(){ return tableSearchStates_ACC.v; }, set v(x){ tableSearchStates_ACC.v = x; } } });
