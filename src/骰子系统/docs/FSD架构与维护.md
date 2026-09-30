@@ -471,3 +471,8 @@ export function createXxx(deps: any) {
   - index 1,913 → 1,846行；
 - 机制：无段内let；2个late（bindTutorialButtonsIn / getTutorialButtonHtml @x4-l接线，惰性箭头）；8件内部互用仅 showDiceConfigBackupDialog 暴露；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
+## x4-ab（v7.1.0-x4ab）
+- wiring 第二十六簇：抽卡物品编辑弹窗装配（69行；defs1 / aft1 / ext63 / late5）→「wiring/gacha-editor-dialog-wiring.ts」；
+  - index 1,846 → 1,780行；
+- 机制：无段内let；5个late（parseInventoryItems / parseEquipmentItems / refreshGacha* / startGachaShopUiRefresh，均惰性箭头）；本模块 tsc 零错误（首例）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
