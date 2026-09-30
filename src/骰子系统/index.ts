@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createBindChangesEventsWiring } from './wiring/bind-changes-events-wiring';
 import { createTableOrderCellMenuWiring } from './wiring/table-order-cellmenu-wiring';
 import { createGachaEditorDialogWiring } from './wiring/gacha-editor-dialog-wiring';
 import { createDiceProfilePanelWiring } from './wiring/dice-profile-panel-wiring';
@@ -1626,47 +1627,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   // [x4-w] 全局交互面板装配已迁出：见 ./wiring/global-interaction-wiring.ts
   const { bindGlobalInteractionEvents, bindOptionEvents, injectIndependentOptions, insertHtmlToPage, renderChangesPanel, renderGlobalInteractionsPanel } = createGlobalInteractionWiring({ AvatarManager, ValidationEngine, asDiffRecord, bindCompositionSafeSearchInput: (...a: any[]) => bindCompositionSafeSearchInput(...a), bindTutorialButtonsIn, buildAvatarBackgroundStyle, buildGlobalInteractionGroups, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, cleanupGlobalInteractionOutsideCapture_ACC: { get v(){ return cleanupGlobalInteractionOutsideCapture_ACC.v; }, set v(x){ cleanupGlobalInteractionOutsideCapture_ACC.v = x; } }, clearComposerIfCurrentText, clearGlobalInteractionOutsideCapture, closePanel: (...a: any[]) => closePanel(...a), createDiffRowMatcher, createElementFromHtml, createGlobalInteractionCustomTableNameIconContext, createGlobalInteractionSections, debugGlobalInteraction, dedupeInteractionActions, escapeHtml, executeCheckSuggestionCommand, executeTableInteractionAction, findDiffSnapshotEntry, formatCssImageUrl, getConfig, getCore, getDiffRowDisplayTitle, getDiffSheetIdentity, getElementEmoji, getIconForTableName, getInteractOptionsForRow, getLocationEmoji, getPanelDragStartHeight, getResolvedComposerText, getStableTableSort, getTableData, getTavernHostDocument, getTutorialButtonHtml, isRecord, isTwoDimensionalArray, loadSnapshot, normalizeDiffRow, normalizeInteractionLabel, renderCustomTableNameIconContent, renderDeprecatedBadge, renderIcon, renderThemeIconContent, replaceUserPlaceholders, resetPanelRequestedHeight, safeDecodeURIComponent, safeEncodeURIComponent, savePanelRequestedHeight, sendChatTextAndTrigger, setPanelRequestedHeight, showActionPresetManager, smartInsertToTextarea, startTutorialFromButton, takeDiffRowMatch });
 
-  // [新增] 绑定变更面板事件
-  const bindChangesEvents = createBindChangesEvents({
-    appendRowInstantly: (...a: any[]) => appendRowInstantly(...a),
-    closePanel: (...a: any[]) => closePanel(...a),
-    deleteRowInstantly: (...a: any[]) => deleteRowInstantly(...a),
-    findDiffSnapshotEntry: (...a: any[]) => findDiffSnapshotEntry(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    getDiffDataRow: (...a: any[]) => getDiffDataRow(...a),
-    getDiffSheetByKey: (...a: any[]) => getDiffSheetByKey(...a),
-    getPanelDragStartHeight: (...a: any[]) => getPanelDragStartHeight(...a),
-    getTableData: (...a: any[]) => getTableData(...a),
-    loadSnapshot: (...a: any[]) => loadSnapshot(...a),
-    refreshChangesPanel: (...a: any[]) => refreshChangesPanel(...a),
-    removeDiffDataRow: (...a: any[]) => removeDiffDataRow(...a),
-    renderChangesPanel: (...a: any[]) => renderChangesPanel(...a),
-    renderInterface: (...a: any[]) => renderInterface(...a),
-    resetPanelRequestedHeight: (...a: any[]) => resetPanelRequestedHeight(...a),
-    resolveExistingTableName: (...a: any[]) => resolveExistingTableName(...a),
-    safeDecodeURIComponent: (...a: any[]) => safeDecodeURIComponent(...a),
-    saveActiveTabState: (...a: any[]) => saveActiveTabState(...a),
-    saveDataToDatabase: (...a: any[]) => saveDataToDatabase(...a),
-    savePanelRequestedHeight: (...a: any[]) => savePanelRequestedHeight(...a),
-    saveRowInstantly: (...a: any[]) => saveRowInstantly(...a),
-    saveSnapshot: (...a: any[]) => saveSnapshot(...a),
-    setActiveTableNavButton: (...a: any[]) => setActiveTableNavButton(...a),
-    setDiffDataCell: (...a: any[]) => setDiffDataCell(...a),
-    setDiffDataRow: (...a: any[]) => setDiffDataRow(...a),
-    setPanelRequestedHeight: (...a: any[]) => setPanelRequestedHeight(...a),
-    showChangeEditModal: (...a: any[]) => showChangeEditModal(...a),
-    showChangeSingleFieldModal: (...a: any[]) => showChangeSingleFieldModal(...a),
-    showRowCompareEditModal: (...a: any[]) => showRowCompareEditModal(...a),
-    showSmartFixModal: (...a: any[]) => showSmartFixModal(...a),
-    updateChangesCount: (...a: any[]) => updateChangesCount(...a),
-    warnMissingTableTarget: (...a: any[]) => warnMissingTableTarget(...a),
-    STORAGE_KEY_DASHBOARD_ACTIVE: STORAGE_KEY_DASHBOARD_ACTIVE,
-    STORAGE_KEY_GLOBAL_INTERACTIONS_ACTIVE: STORAGE_KEY_GLOBAL_INTERACTIONS_ACTIVE,
-    STORAGE_KEY_VALIDATION_MODE: STORAGE_KEY_VALIDATION_MODE,
-    getCachedRawData: () => cachedRawData_ACC.v,
-    getCurrentDiffMap: () => currentDiffMap_ACC.v,
-    setCurrentDiffMap: (v: any) => { currentDiffMap_ACC.v = v; },
-  });
+  // [x4-ad] 变更面板事件绑定装配已迁出：见 ./wiring/bind-changes-events-wiring.ts
+  const { bindChangesEvents } = createBindChangesEventsWiring({ appendRowInstantly, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, closePanel: (...a: any[]) => closePanel(...a), currentDiffMap_ACC: { get v(){ return currentDiffMap_ACC.v; }, set v(x){ currentDiffMap_ACC.v = x; } }, deleteRowInstantly, findDiffSnapshotEntry, getCore, getDiffDataRow, getDiffSheetByKey, getPanelDragStartHeight, getTableData, loadSnapshot, refreshChangesPanel: (...a: any[]) => refreshChangesPanel(...a), removeDiffDataRow, renderChangesPanel, renderInterface, resetPanelRequestedHeight, resolveExistingTableName: (...a: any[]) => resolveExistingTableName(...a), safeDecodeURIComponent, saveActiveTabState, saveDataToDatabase, savePanelRequestedHeight, saveRowInstantly, saveSnapshot, setActiveTableNavButton: (...a: any[]) => setActiveTableNavButton(...a), setDiffDataCell, setDiffDataRow, setPanelRequestedHeight, showChangeEditModal: (...a: any[]) => showChangeEditModal(...a), showChangeSingleFieldModal: (...a: any[]) => showChangeSingleFieldModal(...a), showRowCompareEditModal: (...a: any[]) => showRowCompareEditModal(...a), showSmartFixModal, updateChangesCount: (...a: any[]) => updateChangesCount(...a), warnMissingTableTarget: (...a: any[]) => warnMissingTableTarget(...a) });
 
   // [x4-v] 变更审核面板与库存过滤元数据装配已迁出：见 ./wiring/review-panel-wiring.ts
   const { INVENTORY_QUALITY_OPTIONS, INVENTORY_SORT_OPTIONS, INVENTORY_TYPE_OPTIONS, refreshChangesPanel, renderDashboard, showChangeEditModal, showChangeSingleFieldModal, showRowCompareEditModal, updateChangesCount } = createReviewPanelWiring({ AvatarManager, DashboardDataParser, NameAliasRegistry, ValidationEngine, bindChangesEvents, buildAvatarBackgroundStyle, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, countRuntimeDataChanges, createCustomTableNameIconContext, currentDiffMap_ACC: { get v(){ return currentDiffMap_ACC.v; }, set v(x){ currentDiffMap_ACC.v = x; } }, escapeHtml, findDiffSnapshotEntry, generateDiffMap, getConfig, getCore, getDashboardNpcListData, getDiffDataRow, getDiffSheetByKey, getElementEmoji, getTableData, getTutorialButtonHtml, isSettingsOpen_ACC: { get v(){ return isSettingsOpen_ACC.v; }, set v(x){ isSettingsOpen_ACC.v = x; } }, loadSnapshot, normalizeDiffRow, parseAttributeString, renderChangesPanel, renderCustomTableNameIconContent, replaceUserPlaceholders, saveRowInstantly, saveSnapshot, setDiffDataCell, setDiffDataRow, setupOverlayClose, showDiceSystemConfirmDialog });

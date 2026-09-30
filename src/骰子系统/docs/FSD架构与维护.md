@@ -481,3 +481,8 @@ export function createXxx(deps: any) {
   - index 1,780 → 1,729行；
 - 机制：1个段内let（selectedSwapSource，纯内部不暴露）；late 1个（showEditDialog @x4-u接线，惰性箭头）；仅 showCellMenu 暴露；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=46（+1：toggleOrderEditMode 历史死代码）；TS7034/7005（selectedSwapSource 隐式any，历史同款））。
+## x4-ad（v7.1.0-x4ad）
+- wiring 第二十八簇：变更面板事件绑定装配（41行；defs1 / aft1 / ext34 / late9）→「wiring/bind-changes-events-wiring.ts」；
+  - index 1,729 → 1,691行；
+- 机制：无段内let；9个late（closePanel / refreshChangesPanel / showChangeEditModal 等，均惰性箭头）；本模块 tsc 零错误（第2例）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=46保持）。
