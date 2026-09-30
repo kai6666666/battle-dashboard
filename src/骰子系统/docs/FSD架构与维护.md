@@ -455,3 +455,9 @@ export function createXxx(deps: any) {
   - index 2,229 → 2,087行；
 - 机制：无段内let、无late、全直传；14个序列化/管理子件内部互用，仅 acuDiceGachaApi 暴露（被 gachaRegexActions 引用）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
+## x4-y（v7.1.0-x4y）—— x4 收口：index ≤2,000 达成
+- wiring 第二十三簇：配置备份恢复链装配（102行；defs11 / aft6 / ext40 / late18）→「wiring/dice-config-backup-restore-wiring.ts」；
+  - index 2,087 → 1,988行；
+- 机制：无段内let；18个late（x4-i/j/l等接线产物，惰性箭头 + _ACC透传×2）；x4-f接线对段内 normalize...ResourceRecord 的引用为惰性箭头；
+- 里程碑：x4系列 13,018行 → 1,988行（-84.7%），「≤2,000行纯装配」目标达成；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createDiceConfigBackupRestoreWiring } from './wiring/dice-config-backup-restore-wiring';
 import { createGachaApiWiring } from './wiring/gacha-api-wiring';
 import { createGlobalInteractionWiring } from './wiring/global-interaction-wiring';
 import { createReviewPanelWiring } from './wiring/review-panel-wiring';
@@ -1565,108 +1566,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   // [x4-f] 配置备份核心装配已迁出：见 ./wiring/dice-config-backup-core-wiring.ts
   const { DICE_CONFIG_BACKUP_ACTIVE_KEY_TO_PRESET_KEY, DICE_CONFIG_BACKUP_GACHA_CATALOG_RESOURCE_KEY, DICE_CONFIG_BACKUP_TABLE_TEMPLATE_RESOURCE_KEY, applyDiceConfigBackupActiveValue, applyDiceConfigBackupValue, buildDiceConfigBackup, buildDiceConfigBackupTableOrder, cloneDiceConfigBackupValue, collectDiceConfigBackupGachaCatalogRollbackSnapshot, getDiceConfigBackupModuleDefinition, getDiceConfigBackupModuleResourceCount, getDiceConfigBackupPresetRecordId, getDiceConfigBackupRecordString, getDiceConfigBackupTableTemplateApi, getDiceConfigBackupWarningCount, hasDiceConfigBackupRecoverableStorage, hasDiceConfigBackupTableTemplateResource, isDiceConfigBackupRecord, normalizeDiceConfigBackupGachaItemSettings, normalizeDiceConfigBackupSelectedModuleIds, parseDiceConfigBackup, remapDiceConfigBackupGachaItemSettings, showDiceConfigBackupPrivacyConfirm } = createDiceConfigBackupCoreWiring({ CUSTOM_ROLL_MODE, DASHBOARD_DEFAULT_PRESET_ID, DEPRECATED_BUILTIN_REGEX_RULE_IDS, DICE_CONFIG_BACKUP_FORMAT, DICE_CONFIG_BACKUP_SCHEMA_VERSION, PresetManager, RENDER_DEFAULT_PRESET_ID, RegexPresetManager, buildDefaultGachaPoolDefinition: (...a: any[]) => buildDefaultGachaPoolDefinition(...a), cloneGachaCatalogItems: (...a: any[]) => cloneGachaCatalogItems(...a), getConfig, getCore, getCrazyModeConfig, getDiceConfig, getRuntimeGachaRawData: (...a: any[]) => getRuntimeGachaRawData(...a), isBuiltinGachaPoolId: (...a: any[]) => isBuiltinGachaPoolId(...a), migrateGachaCatalogRecordsToGlobalScope: (...a: any[]) => migrateGachaCatalogRecordsToGlobalScope(...a), normalizeDiceConfigBackupGachaCatalogResourceRecord: (...a: any[]) => normalizeDiceConfigBackupGachaCatalogResourceRecord(...a), normalizeGachaCatalogRecord: (...a: any[]) => normalizeGachaCatalogRecord(...a), normalizeGachaItemEnabled: (...a: any[]) => normalizeGachaItemEnabled(...a), normalizeGachaItemOrder: (...a: any[]) => normalizeGachaItemOrder(...a), normalizeGachaPoolDefinition: (...a: any[]) => normalizeGachaPoolDefinition(...a), parseJsoncDocument, showDiceSystemConfirmDialog, TableTemplateRequirementPresetManager, BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS });
 
-  const normalizeDiceConfigBackupGachaCatalogItems = createNormalizeDiceConfigBackupGachaCatalogItems({
-    isGachaItemEnabled: (...a: any[]) => isGachaItemEnabled(...a),
-    normalizeImportedGachaItem: (...a: any[]) => normalizeImportedGachaItem(...a),
-    validateGachaCatalogImportItemTarget: (...a: any[]) => validateGachaCatalogImportItemTarget(...a),
-  });
-
-  const normalizeDiceConfigBackupGachaCatalogResourceRecord = createNormalizeDiceConfigBackupGachaCatalogResourceRecord({
-    isDiceConfigBackupRecord: (...a: any[]) => isDiceConfigBackupRecord(...a),
-    normalizeDiceConfigBackupGachaCatalogItems: (...a: any[]) => normalizeDiceConfigBackupGachaCatalogItems(...a),
-  });
-
-  const getDiceConfigBackupGachaItemNameKey = createGetDiceConfigBackupGachaItemNameKey({
-
-  });
-
-  const mergeDiceConfigBackupGachaCatalogItems = createMergeDiceConfigBackupGachaCatalogItems({
-    cloneDiceConfigBackupValue: (...a: any[]) => cloneDiceConfigBackupValue(...a),
-    cloneGachaCatalogItems: (...a: any[]) => cloneGachaCatalogItems(...a),
-    getDiceConfigBackupGachaItemNameKey: (...a: any[]) => getDiceConfigBackupGachaItemNameKey(...a),
-  });
-
-  const getDiceConfigBackupTableTemplateRollbackSnapshot = createGetDiceConfigBackupTableTemplateRollbackSnapshot({
-    cloneDiceConfigBackupValue: (...a: any[]) => cloneDiceConfigBackupValue(...a),
-    getDiceConfigBackupTableTemplateApi: (...a: any[]) => getDiceConfigBackupTableTemplateApi(...a),
-    isDiceConfigBackupRecord: (...a: any[]) => isDiceConfigBackupRecord(...a),
-  });
-
-  const restoreDiceConfigBackupTableTemplateRollbackSnapshot = createRestoreDiceConfigBackupTableTemplateRollbackSnapshot({
-    cloneDiceConfigBackupValue: (...a: any[]) => cloneDiceConfigBackupValue(...a),
-    getDiceConfigBackupTableTemplateApi: (...a: any[]) => getDiceConfigBackupTableTemplateApi(...a),
-    isDiceConfigBackupRecord: (...a: any[]) => isDiceConfigBackupRecord(...a),
-  });
-
-  const restoreDiceConfigBackupGachaCatalogRecords = createRestoreDiceConfigBackupGachaCatalogRecords({
-    cloneGachaCatalogItems: (...a: any[]) => cloneGachaCatalogItems(...a),
-    createEmptyGachaCatalog: (...a: any[]) => createEmptyGachaCatalog(...a),
-    ensureGachaPoolsForTags: (...a: any[]) => ensureGachaPoolsForTags(...a),
-    getRuntimeGachaRawData: (...a: any[]) => getRuntimeGachaRawData(...a),
-    mergeDiceConfigBackupGachaCatalogItems: (...a: any[]) => mergeDiceConfigBackupGachaCatalogItems(...a),
-    mergeGachaCatalogRecordsToGlobalScope: (...a: any[]) => mergeGachaCatalogRecordsToGlobalScope(...a),
-    migrateGachaCatalogRecordsToGlobalScope: (...a: any[]) => migrateGachaCatalogRecordsToGlobalScope(...a),
-    normalizeDiceConfigBackupGachaCatalogResourceRecord: (...a: any[]) => normalizeDiceConfigBackupGachaCatalogResourceRecord(...a),
-    normalizeGachaCatalogRecord: (...a: any[]) => normalizeGachaCatalogRecord(...a),
-    GACHA_CATALOG_GLOBAL_SCOPE_KEY: GACHA_CATALOG_GLOBAL_SCOPE_KEY,
-    getGachaCatalogCache: () => gachaCatalogCache_ACC.v,
-    setGachaCatalogCache: (v: any) => { gachaCatalogCache_ACC.v = v; },
-  });
-
-  const restoreDiceConfigBackupTableTemplate = createRestoreDiceConfigBackupTableTemplate({
-    cloneDiceConfigBackupValue: (...a: any[]) => cloneDiceConfigBackupValue(...a),
-    getDiceConfigBackupTableTemplateApi: (...a: any[]) => getDiceConfigBackupTableTemplateApi(...a),
-    isDiceConfigBackupRecord: (...a: any[]) => isDiceConfigBackupRecord(...a),
-  });
-
-  const restoreDiceConfigBackupModuleResources = createRestoreDiceConfigBackupModuleResources({
-    restoreDiceConfigBackupGachaCatalogRecords: (...a: any[]) => restoreDiceConfigBackupGachaCatalogRecords(...a),
-    restoreDiceConfigBackupTableTemplate: (...a: any[]) => restoreDiceConfigBackupTableTemplate(...a),
-    DICE_CONFIG_BACKUP_GACHA_CATALOG_RESOURCE_KEY: DICE_CONFIG_BACKUP_GACHA_CATALOG_RESOURCE_KEY,
-    DICE_CONFIG_BACKUP_TABLE_TEMPLATE_RESOURCE_KEY: DICE_CONFIG_BACKUP_TABLE_TEMPLATE_RESOURCE_KEY,
-  });
-
-  const restoreDiceConfigBackupGachaCatalogSnapshot = createRestoreDiceConfigBackupGachaCatalogSnapshot({
-    cloneDiceConfigBackupValue: (...a: any[]) => cloneDiceConfigBackupValue(...a),
-    getGachaCatalogCache: () => gachaCatalogCache_ACC.v,
-    setGachaCatalogCache: (v: any) => { gachaCatalogCache_ACC.v = v; },
-    getGachaCatalogLoadTask: () => gachaCatalogLoadTask_ACC.v,
-    setGachaCatalogLoadTask: (v: any) => { gachaCatalogLoadTask_ACC.v = v; },
-  });
-
-  const syncDiceConfigBackupRuntimeAfterRestore = createSyncDiceConfigBackupRuntimeAfterRestore({
-    applyConfigStyles: (...a: any[]) => applyConfigStyles(...a),
-    cloneDiceConfigBackupValue: (...a: any[]) => cloneDiceConfigBackupValue(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    refreshDicePanelPresets: (...a: any[]) => refreshDicePanelPresets(...a),
-    refreshGachaShardShop: (...a: any[]) => refreshGachaShardShop(...a),
-    refreshGachaVisualization: (...a: any[]) => refreshGachaVisualization(...a),
-    renderInterface: (...a: any[]) => renderInterface(...a),
-    showGachaSettingsDialog: (...a: any[]) => showGachaSettingsDialog(...a),
-    ActionPresetManager: ActionPresetManager,
-    AdvancedDicePresetManager: AdvancedDicePresetManager,
-    AttributePresetManager: AttributePresetManager,
-    AvatarManager: AvatarManager,
-    DashboardPresetManager: DashboardPresetManager,
-    PresetManager: PresetManager,
-    RegexPresetManager: RegexPresetManager,
-    RegexTransformationManager: RegexTransformationManager,
-    RenderPresetManager: RenderPresetManager,
-    STORAGE_KEY_REGEX_RULES: STORAGE_KEY_REGEX_RULES,
-    TableTemplateRequirementPresetManager: TableTemplateRequirementPresetManager,
-    ValidationRuleManager: ValidationRuleManager,
-    get_configCache: () => _configCache_ACC.v,
-    set_configCache: (v: any) => { _configCache_ACC.v = v; },
-    getDashboardRuntimeConfigCache: () => dashboardRuntimeConfigCache_ACC.v,
-    setDashboardRuntimeConfigCache: (v: any) => { dashboardRuntimeConfigCache_ACC.v = v; },
-    getGachaCatalogCache: () => gachaCatalogCache_ACC.v,
-    setGachaCatalogCache: (v: any) => { gachaCatalogCache_ACC.v = v; },
-    getGachaCatalogLoadTask: () => gachaCatalogLoadTask_ACC.v,
-    setGachaCatalogLoadTask: (v: any) => { gachaCatalogLoadTask_ACC.v = v; },
-    getIsSettingsOpen: () => isSettingsOpen_ACC.v,
-    setIsSettingsOpen: (v: any) => { isSettingsOpen_ACC.v = v; },
-  });
+  // [x4-y] 配置备份恢复链装配已迁出：见 ./wiring/dice-config-backup-restore-wiring.ts
+  const { getDiceConfigBackupTableTemplateRollbackSnapshot, normalizeDiceConfigBackupGachaCatalogResourceRecord, restoreDiceConfigBackupGachaCatalogSnapshot, restoreDiceConfigBackupModuleResources, restoreDiceConfigBackupTableTemplateRollbackSnapshot, syncDiceConfigBackupRuntimeAfterRestore } = createDiceConfigBackupRestoreWiring({ ActionPresetManager, AdvancedDicePresetManager, AttributePresetManager, AvatarManager, DICE_CONFIG_BACKUP_GACHA_CATALOG_RESOURCE_KEY, DICE_CONFIG_BACKUP_TABLE_TEMPLATE_RESOURCE_KEY, DashboardPresetManager, GACHA_CATALOG_GLOBAL_SCOPE_KEY, PresetManager, RegexPresetManager, RegexTransformationManager, RenderPresetManager, TableTemplateRequirementPresetManager, ValidationRuleManager, _configCache_ACC: { get v(){ return _configCache_ACC.v; }, set v(x){ _configCache_ACC.v = x; } }, applyConfigStyles: (...a: any[]) => applyConfigStyles(...a), cloneDiceConfigBackupValue, cloneGachaCatalogItems: (...a: any[]) => cloneGachaCatalogItems(...a), createEmptyGachaCatalog: (...a: any[]) => createEmptyGachaCatalog(...a), dashboardRuntimeConfigCache_ACC: { get v(){ return dashboardRuntimeConfigCache_ACC.v; }, set v(x){ dashboardRuntimeConfigCache_ACC.v = x; } }, ensureGachaPoolsForTags: (...a: any[]) => ensureGachaPoolsForTags(...a), gachaCatalogCache_ACC: { get v(){ return gachaCatalogCache_ACC.v; }, set v(x){ gachaCatalogCache_ACC.v = x; } }, gachaCatalogLoadTask_ACC: { get v(){ return gachaCatalogLoadTask_ACC.v; }, set v(x){ gachaCatalogLoadTask_ACC.v = x; } }, getConfig, getCore, getDiceConfigBackupTableTemplateApi, getRuntimeGachaRawData: (...a: any[]) => getRuntimeGachaRawData(...a), isDiceConfigBackupRecord, isGachaItemEnabled: (...a: any[]) => isGachaItemEnabled(...a), isSettingsOpen_ACC: { get v(){ return isSettingsOpen_ACC.v; }, set v(x){ isSettingsOpen_ACC.v = x; } }, mergeGachaCatalogRecordsToGlobalScope: (...a: any[]) => mergeGachaCatalogRecordsToGlobalScope(...a), migrateGachaCatalogRecordsToGlobalScope: (...a: any[]) => migrateGachaCatalogRecordsToGlobalScope(...a), normalizeGachaCatalogRecord: (...a: any[]) => normalizeGachaCatalogRecord(...a), normalizeImportedGachaItem: (...a: any[]) => normalizeImportedGachaItem(...a), refreshDicePanelPresets: (...a: any[]) => refreshDicePanelPresets(...a), refreshGachaShardShop: (...a: any[]) => refreshGachaShardShop(...a), refreshGachaVisualization: (...a: any[]) => refreshGachaVisualization(...a), renderInterface: (...a: any[]) => renderInterface(...a), showGachaSettingsDialog: (...a: any[]) => showGachaSettingsDialog(...a), validateGachaCatalogImportItemTarget: (...a: any[]) => validateGachaCatalogImportItemTarget(...a) });
 
   const applyDiceConfigBackup = createApplyDiceConfigBackup({
     applyDiceConfigBackupActiveValue: (...a: any[]) => applyDiceConfigBackupActiveValue(...a),
