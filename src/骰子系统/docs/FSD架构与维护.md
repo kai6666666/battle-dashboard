@@ -466,3 +466,8 @@ export function createXxx(deps: any) {
   - index 1,988 → 1,913行；
 - 机制：无段内let；1个late（renderInterface，惰性箭头）；?raw 默认导入（attributePresetAgentPromptTemplate）；SortableListOptions（x4-o 段残余 type）随段；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
+## x4-aa（v7.1.0-x4aa）
+- wiring 第二十五簇：骰子档案面板装配（70行；defs8 / aft1 / ext31 / late2）→「wiring/dice-profile-panel-wiring.ts」；
+  - index 1,913 → 1,846行；
+- 机制：无段内let；2个late（bindTutorialButtonsIn / getTutorialButtonHtml @x4-l接线，惰性箭头）；8件内部互用仅 showDiceConfigBackupDialog 暴露；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。

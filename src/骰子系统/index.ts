@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createDiceProfilePanelWiring } from './wiring/dice-profile-panel-wiring';
 import { createAttrPresetPanelWiring } from './wiring/attr-preset-panel-wiring';
 import { createDiceConfigBackupRestoreWiring } from './wiring/dice-config-backup-restore-wiring';
 import { createGachaApiWiring } from './wiring/gacha-api-wiring';
@@ -1602,76 +1603,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
 
   // [x4-e] 骰子配置备份/角色档案装配已迁出：见 ./wiring/dice-profile-backup-wiring.ts
   const { applyDiceProfile, createDiceProfileRuntimeId, deleteDiceProfileRecord, detectCharacterDiceProfile, downloadDiceConfigBackupJson, downloadDiceProfileJson, downloadDiceProfileTavernRegex, exportDiceProfile, getAllDiceConfigBackupModuleIds, getDiceConfigBackupSelectedModuleIdsFromDialog, getDiceProfileCharacterContext, getDiceProfilePromptState, importDiceProfile, normalizeDiceProfileRecord, refreshDiceProfileIndex, renderDiceConfigBackupModuleRows, saveCurrentDiceProfile, saveDiceProfileRecord, scheduleCharacterDiceProfileDetection, toDiceProfileSummary } = createDiceProfileBackupWiring({ DICE_PROFILE_INDEX_STORAGE_KEY, DICE_PROFILE_LAST_APPLIED_STORAGE_KEY, DICE_PROFILE_PRE_APPLY_SNAPSHOT_LIMIT, DICE_PROFILE_SKIPPED_PROMPTS_STORAGE_KEY, applyDiceConfigBackup, buildDiceConfigBackup, cloneDiceConfigBackupValue, downloadJsonFile, getConfig, getCore, getDiceConfigBackupModuleDefinition, getDiceConfigBackupModuleResourceCount, getDiceConfigBackupRecordString, getDiceStatsContext, hasDiceConfigBackupRecoverableStorage, hasDiceConfigBackupTableTemplateResource, isDiceConfigBackupRecord, normalizeDiceConfigBackupSelectedModuleIds, parseDiceConfigBackup, parseJsoncDocument, renderDeprecatedBadge, setupOverlayClose, showDiceSystemConfirmDialog, escapeHtml });
-  const getDiceProfileCollapsedSections = createGetDiceProfileCollapsedSections({
-    getDICE_PROFILE_COLLAPSED_SECTIONS_STORAGE_KEY: () => DICE_PROFILE_COLLAPSED_SECTIONS_STORAGE_KEY,
-  });
-
-  const saveDiceProfileCollapsedSections = createSaveDiceProfileCollapsedSections({
-    getDICE_PROFILE_COLLAPSED_SECTIONS_STORAGE_KEY: () => DICE_PROFILE_COLLAPSED_SECTIONS_STORAGE_KEY,
-  });
-
-  const getDiceProfileSourceLabel = createGetDiceProfileSourceLabel({
-
-  });
-
-  const isDiceProfileCharacterSource = createIsDiceProfileCharacterSource({
-
-  });
-
-  const renderDiceProfileSummaryRow = createRenderDiceProfileSummaryRow({
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    getDiceProfileSourceLabel: (...a: any[]) => getDiceProfileSourceLabel(...a),
-    isDiceProfileCharacterSource: (...a: any[]) => isDiceProfileCharacterSource(...a),
-  });
-
-  const renderDiceProfileTabPanel = createRenderDiceProfileTabPanel({
-    renderDiceProfileSummaryRow: (...a: any[]) => renderDiceProfileSummaryRow(...a),
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-  });
-
-  const renderDiceProfileManagerBody = createRenderDiceProfileManagerBody({
-    detectCharacterDiceProfile: (...a: any[]) => detectCharacterDiceProfile(...a),
-    getDiceProfileCollapsedSections: (...a: any[]) => getDiceProfileCollapsedSections(...a),
-    isDiceProfileCharacterSource: (...a: any[]) => isDiceProfileCharacterSource(...a),
-    refreshDiceProfileIndex: (...a: any[]) => refreshDiceProfileIndex(...a),
-    renderDiceConfigBackupModuleRows: (...a: any[]) => renderDiceConfigBackupModuleRows(...a),
-    renderDiceProfileTabPanel: (...a: any[]) => renderDiceProfileTabPanel(...a),
-    toDiceProfileSummary: (...a: any[]) => toDiceProfileSummary(...a),
-    DICE_CONFIG_BACKUP_MODULES: DICE_CONFIG_BACKUP_MODULES,
-    DICE_PROFILE_PRE_APPLY_SNAPSHOT_LIMIT: DICE_PROFILE_PRE_APPLY_SNAPSHOT_LIMIT,
-  });
-
-  const showDiceConfigBackupDialog = createShowDiceConfigBackupDialog({
-    applyDiceProfile: (...a: any[]) => applyDiceProfile(...a),
-    bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a),
-    buildDiceConfigBackup: (...a: any[]) => buildDiceConfigBackup(...a),
-    createDiceProfileRuntimeId: (...a: any[]) => createDiceProfileRuntimeId(...a),
-    deleteDiceProfileRecord: (...a: any[]) => deleteDiceProfileRecord(...a),
-    downloadDiceConfigBackupJson: (...a: any[]) => downloadDiceConfigBackupJson(...a),
-    downloadDiceProfileJson: (...a: any[]) => downloadDiceProfileJson(...a),
-    downloadDiceProfileTavernRegex: (...a: any[]) => downloadDiceProfileTavernRegex(...a),
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    exportDiceProfile: (...a: any[]) => exportDiceProfile(...a),
-    getAllDiceConfigBackupModuleIds: (...a: any[]) => getAllDiceConfigBackupModuleIds(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    getDiceConfigBackupSelectedModuleIdsFromDialog: (...a: any[]) => getDiceConfigBackupSelectedModuleIdsFromDialog(...a),
-    getDiceConfigBackupWarningCount: (...a: any[]) => getDiceConfigBackupWarningCount(...a),
-    getDiceProfileCollapsedSections: (...a: any[]) => getDiceProfileCollapsedSections(...a),
-    getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a),
-    importDiceProfile: (...a: any[]) => importDiceProfile(...a),
-    isDiceProfileCharacterSource: (...a: any[]) => isDiceProfileCharacterSource(...a),
-    normalizeDiceProfileRecord: (...a: any[]) => normalizeDiceProfileRecord(...a),
-    pickTextFile: (...a: any[]) => pickTextFile(...a),
-    renderDiceProfileManagerBody: (...a: any[]) => renderDiceProfileManagerBody(...a),
-    saveCurrentDiceProfile: (...a: any[]) => saveCurrentDiceProfile(...a),
-    saveDiceProfileCollapsedSections: (...a: any[]) => saveDiceProfileCollapsedSections(...a),
-    saveDiceProfileRecord: (...a: any[]) => saveDiceProfileRecord(...a),
-    setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    showDiceConfigBackupPrivacyConfirm: (...a: any[]) => showDiceConfigBackupPrivacyConfirm(...a),
-    showDiceSystemConfirmDialog: (...a: any[]) => showDiceSystemConfirmDialog(...a),
-    showDiceSystemInputDialog: (...a: any[]) => showDiceSystemInputDialog(...a),
-  });
+  // [x4-aa] 骰子档案面板装配已迁出：见 ./wiring/dice-profile-panel-wiring.ts
+  const { showDiceConfigBackupDialog } = createDiceProfilePanelWiring({ DICE_PROFILE_COLLAPSED_SECTIONS_STORAGE_KEY, DICE_PROFILE_PRE_APPLY_SNAPSHOT_LIMIT, applyDiceProfile, bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a), buildDiceConfigBackup, createDiceProfileRuntimeId, deleteDiceProfileRecord, detectCharacterDiceProfile, downloadDiceConfigBackupJson, downloadDiceProfileJson, downloadDiceProfileTavernRegex, escapeHtml, exportDiceProfile, getAllDiceConfigBackupModuleIds, getConfig, getCore, getDiceConfigBackupSelectedModuleIdsFromDialog, getDiceConfigBackupWarningCount, getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a), importDiceProfile, normalizeDiceProfileRecord, pickTextFile, refreshDiceProfileIndex, renderDiceConfigBackupModuleRows, saveCurrentDiceProfile, saveDiceProfileRecord, setupOverlayClose, showDiceConfigBackupPrivacyConfirm, showDiceSystemConfirmDialog, showDiceSystemInputDialog, toDiceProfileSummary });
 
   // [x4-l] 运行时数据读写/保存装配已迁出：见 ./wiring/runtime-save-wiring.ts
   const { addCrudColumnAlias, addStyles, appendRowInstantly, applyConfigStyles, asDiffRecord, assertCrudEnumConstraints, assertCrudInsertRequiredCells, assertCrudLengthConstraints, assertCrudRequiredColumnsRepresented, bindTutorialButtonsIn, buildCrudEnumConstraintMap, buildCrudRequiredHeaderSet, cloneRuntimeDataValue, countRuntimeDataChanges, createDiffRowMatcher, deleteRowInstantly, findDiffSnapshotEntry, findRuntimeSheetEntryForMutation, generateDiffMap, getCrudColumnNameForHeader, getCrudSheetDdl, getCrudSqlCommentAliases, getCrudSqlTableName, getDbChatMessages, getDiffDataRow, getDiffRowDisplayTitle, getDiffSheetByKey, getDiffSheetIdentity, getRuntimeErrorMessage, getSheetHeaders, getTableData, getTutorialButtonHtml, getTutorialModule, hasRuntimeTableReadApi, hasSheetKeys, normalizeDiffRow, normalizeDiffText, parseCrudColumnDefinitionLine, performSaveDataOnly, processJsonData, refreshRegexRulesList, removeDiffDataRow, restoreMutableRuntimeValue, runInSaveQueue, saveDataOnly, saveDataToDatabase, saveRowInstantly, saveSheetsViaJsonFloorWithoutTracking, setDiffDataCell, setDiffDataRow, showAddValidationRuleModal, showSmartFixModal, startTutorialFromButton, stripCrudSqlNonStructuralComments, takeDiffRowMatch, tutorialButtonEventsBound_ACC } = createRuntimeSaveWiring({ FONTS, GACHA_CATALOG_RAW_ROW_INDEX_PROP, RegexTransformationManager, ValidationRuleManager, buildCrudColumnAliasMap: (...a: any[]) => buildCrudColumnAliasMap(...a), cachedRawData_ACC, collectHostAndLocalNodes, countUnicodeCharacters, currentDiffMap_ACC, errorTableTemplateIssue, escapeHtml, getConfig, getCore, getNavigationFontMetrics, getPendingDeletions, getTavernHostDocument, getTavernHostWindow, hasUnsavedChanges_ACC, isSaving_ACC, loadSnapshot, renderInterface: (...a: any[]) => renderInterface(...a), saveQueue_ACC, saveSnapshot, setupOverlayClose, showDiceSystemConfirmDialog, showTableRuleFixModal: (...a: any[]) => showTableRuleFixModal(...a), syncInventoryMetadataForRawData: (...a: any[]) => syncInventoryMetadataForRawData(...a) });
