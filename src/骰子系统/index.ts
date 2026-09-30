@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createAttrPresetPanelWiring } from './wiring/attr-preset-panel-wiring';
 import { createDiceConfigBackupRestoreWiring } from './wiring/dice-config-backup-restore-wiring';
 import { createGachaApiWiring } from './wiring/gacha-api-wiring';
 import { createGlobalInteractionWiring } from './wiring/global-interaction-wiring';
@@ -1674,84 +1675,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
 
   // [x4-l] 运行时数据读写/保存装配已迁出：见 ./wiring/runtime-save-wiring.ts
   const { addCrudColumnAlias, addStyles, appendRowInstantly, applyConfigStyles, asDiffRecord, assertCrudEnumConstraints, assertCrudInsertRequiredCells, assertCrudLengthConstraints, assertCrudRequiredColumnsRepresented, bindTutorialButtonsIn, buildCrudEnumConstraintMap, buildCrudRequiredHeaderSet, cloneRuntimeDataValue, countRuntimeDataChanges, createDiffRowMatcher, deleteRowInstantly, findDiffSnapshotEntry, findRuntimeSheetEntryForMutation, generateDiffMap, getCrudColumnNameForHeader, getCrudSheetDdl, getCrudSqlCommentAliases, getCrudSqlTableName, getDbChatMessages, getDiffDataRow, getDiffRowDisplayTitle, getDiffSheetByKey, getDiffSheetIdentity, getRuntimeErrorMessage, getSheetHeaders, getTableData, getTutorialButtonHtml, getTutorialModule, hasRuntimeTableReadApi, hasSheetKeys, normalizeDiffRow, normalizeDiffText, parseCrudColumnDefinitionLine, performSaveDataOnly, processJsonData, refreshRegexRulesList, removeDiffDataRow, restoreMutableRuntimeValue, runInSaveQueue, saveDataOnly, saveDataToDatabase, saveRowInstantly, saveSheetsViaJsonFloorWithoutTracking, setDiffDataCell, setDiffDataRow, showAddValidationRuleModal, showSmartFixModal, startTutorialFromButton, stripCrudSqlNonStructuralComments, takeDiffRowMatch, tutorialButtonEventsBound_ACC } = createRuntimeSaveWiring({ FONTS, GACHA_CATALOG_RAW_ROW_INDEX_PROP, RegexTransformationManager, ValidationRuleManager, buildCrudColumnAliasMap: (...a: any[]) => buildCrudColumnAliasMap(...a), cachedRawData_ACC, collectHostAndLocalNodes, countUnicodeCharacters, currentDiffMap_ACC, errorTableTemplateIssue, escapeHtml, getConfig, getCore, getNavigationFontMetrics, getPendingDeletions, getTavernHostDocument, getTavernHostWindow, hasUnsavedChanges_ACC, isSaving_ACC, loadSnapshot, renderInterface: (...a: any[]) => renderInterface(...a), saveQueue_ACC, saveSnapshot, setupOverlayClose, showDiceSystemConfirmDialog, showTableRuleFixModal: (...a: any[]) => showTableRuleFixModal(...a), syncInventoryMetadataForRawData: (...a: any[]) => syncInventoryMetadataForRawData(...a) });
-  const showTableRuleFixModal = createShowTableRuleFixModal({
-    deleteRowInstantly: (...a: any[]) => deleteRowInstantly(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    renderInterface: (...a: any[]) => renderInterface(...a),
-    saveDataOnly: (...a: any[]) => saveDataOnly(...a),
-    setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    warnTableTemplateIssue: (...a: any[]) => warnTableTemplateIssue(...a),
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    ValidationEngine: ValidationEngine,
-  });
-
-  // ========================================
-  // 属性预设管理面板
-  // ========================================
-
-  const showAttributePresetManager = createShowAttributePresetManager({
-    bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a),
-    downloadJsonFile: (...a: any[]) => downloadJsonFile(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    getJsonLikeErrorMessage: (...a: any[]) => getJsonLikeErrorMessage(...a),
-    getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a),
-    parseJsoncRecord: (...a: any[]) => parseJsoncRecord(...a),
-    popModal: (...a: any[]) => popModal(...a),
-    pushModal: (...a: any[]) => pushModal(...a),
-    readTextFile: (...a: any[]) => readTextFile(...a),
-    setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    showAttributePresetEditor: (...a: any[]) => showAttributePresetEditor(...a),
-    showDiceSystemConfirmDialog: (...a: any[]) => showDiceSystemConfirmDialog(...a),
-    showPresetConflictDialog: (...a: any[]) => showPresetConflictDialog(...a),
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    ATTRIBUTE_QUICK_SELECT_DEFAULT: ATTRIBUTE_QUICK_SELECT_DEFAULT,
-    AttributePresetManager: AttributePresetManager,
-    JSONC_FILE_ACCEPT: JSONC_FILE_ACCEPT,
-    STORAGE_KEY_ACTIVE_ATTR_PRESET: STORAGE_KEY_ACTIVE_ATTR_PRESET,
-  });
-
-  // 规则预设编辑器
-  const buildNewAttributePresetJsoncTemplate = createBuildNewAttributePresetJsoncTemplate({
-
-  });
-
-  const showAttributePresetEditor = createShowAttributePresetEditor({
-    bindTutorialButtonsIn: (...a: any[]) => bindTutorialButtonsIn(...a),
-    buildNewAttributePresetJsoncTemplate: (...a: any[]) => buildNewAttributePresetJsoncTemplate(...a),
-    downloadAiPromptFile: (...a: any[]) => downloadAiPromptFile(...a),
-    getConfig: (...a: any[]) => getConfig(...a),
-    getCore: (...a: any[]) => getCore(...a),
-    getJsonLikeErrorMessage: (...a: any[]) => getJsonLikeErrorMessage(...a),
-    getTutorialButtonHtml: (...a: any[]) => getTutorialButtonHtml(...a),
-    normalizeAttributeQuickSelectConfig: (...a: any[]) => normalizeAttributeQuickSelectConfig(...a),
-    parseJsoncRecord: (...a: any[]) => parseJsoncRecord(...a),
-    popModal: (...a: any[]) => popModal(...a),
-    pushModal: (...a: any[]) => pushModal(...a),
-    setupOverlayClose: (...a: any[]) => setupOverlayClose(...a),
-    escapeHtml: (...a: any[]) => escapeHtml(...a),
-    AttributePresetManager: AttributePresetManager,
-    attributePresetAgentPromptTemplate: attributePresetAgentPromptTemplate,
-    validateJsoncEditorConfig: validateJsoncEditorConfig,
-  });
-
-  // ========================================
-  // 高级骰子预设UI
-  // ========================================
-  type SortableListOptions = {
-    container: JQuery | HTMLElement;
-    itemSelector: string;
-    handleSelector?: string;
-    cancelSelector?: string;
-    onOrderChange: (newOrder: string[]) => void;
-    getItemId: (item: HTMLElement) => string | null;
-    canStartDrag?: () => boolean;
-    ghostClass?: string;
-    dragClass?: string;
-    placeholderClass?: string;
-    indicatorClass?: string;
-    longPressDelay?: number;
-  };
+  // [x4-z] 属性预设面板与表格规则修复装配已迁出：见 ./wiring/attr-preset-panel-wiring.ts
+  const { showAttributePresetManager, showTableRuleFixModal } = createAttrPresetPanelWiring({ AttributePresetManager, JSONC_FILE_ACCEPT, ValidationEngine, bindTutorialButtonsIn, deleteRowInstantly, downloadAiPromptFile, downloadJsonFile, escapeHtml, getConfig, getCore, getJsonLikeErrorMessage, getTutorialButtonHtml, normalizeAttributeQuickSelectConfig, parseJsoncRecord, popModal, pushModal, readTextFile, renderInterface: (...a: any[]) => renderInterface(...a), saveDataOnly, setupOverlayClose, showDiceSystemConfirmDialog, showPresetConflictDialog, validateJsoncEditorConfig, warnTableTemplateIssue });
 
   // [x4-o] 预设管理/AcuDice API装配已迁出：见 ./wiring/preset-api-wiring.ts
   const { MAX_HISTORY, acuDiceCharacters, acuDiceCheck, acuDiceContest, acuDiceEvents, acuDiceHistory, acuDicePresets, acuDiceProfiles, acuDiceReady, acuDiceRoll, buildGachaCatalogAgentPromptFilename, buildTableTemplateRequirementPresetAgentPromptFilename, checkHistory, contestHistory, createSortableList, defineAcuDiceOnWindow, dispatchReadyEvent, emitEvent, notifyReady, refreshDicePanelPresets, rootWindow, showActionPresetManager, showAddRegexRuleModal, showAdvancedPresetManager, showDashboardPresetManager, showDebugConsoleModal, showGlobalDiceHistoryDialog, showPresetListDialog, showRenderPresetManager } = createPresetApiWiring({ ActionPresetManager, AcuDiceAPI: { get v(){ return AcuDiceAPI; } }, AdvancedDicePresetManager, DASHBOARD_DEFAULT_PRESET_ID, DASHBOARD_PRESET_MODULE_KEYS, DASHBOARD_RELATIONSHIP_GRAPH_MODULE_KEY, DashboardDataParser, DashboardPresetManager, DiceHistoryStatsDB, NameAliasRegistry, RENDER_DEFAULT_PRESET_ID, RegexTransformationEngine, RegexTransformationManager, RenderPresetManager, applyDiceProfile, bindTutorialButtonsIn, buildActionPresetAgentPrompt, buildAdvancedPresetAgentPrompt: (...a: any[]) => buildAdvancedPresetAgentPrompt(...a), buildDashboardPresetAgentPrompt, buildRenderPresetAgentPrompt, cachedRawData_ACC: { get v(){ return cachedRawData_ACC.v; }, set v(x){ cachedRawData_ACC.v = x; } }, clearModalStack, cloneDashboardPresetModules, cloneRenderPresetRules, createDashboardPresetEditorTemplate, createRenderPresetEditorTemplate, detectCharacterDiceProfile, downloadAiPromptFile, downloadJsonFile, escapeHtml, evaluateFormula, exportDiceProfile, getAdvancedPresetErrorMessage, getAttributeValue, getConfig, getCore, getCrazyModeConfig, getDiceConfig, getDiceProfileCharacterContext, getDiceProfilePromptState, getFullAttributesForCharacter, getJsonLikeErrorMessage, getSuccessLevel, getTableData, getTutorialButtonHtml, hideDiceResultsInUserMessages, importDiceProfile, isRecordValue, normalizeCheckSuggestionDiceFormula: (...a: any[]) => normalizeCheckSuggestionDiceFormula(...a), parseAdvancedPresetText, parseDashboardPresetJson, parseJsoncRecord, parseJsoncValue, parseRenderPresetJson, pickTextFile, popModal, processJsonData, pushModal, readTextFile, refreshDialogueIndentRender, refreshDiceProfileIndex, refreshRegexRulesList, renderDiceHistoryStatsHtml, renderInterface: (...a: any[]) => renderInterface(...a), resolveCanonicalCharacterName, saveCrazyModeConfig, saveCurrentDiceProfile, saveDiceConfig, settleGachaFortuneForDiceEvent: (...a: any[]) => settleGachaFortuneForDiceEvent(...a), setupOverlayClose, showAttributePresetManager, showDiceSystemConfirmDialog, toDiceProfileSummary, validateJsoncEditorConfig });

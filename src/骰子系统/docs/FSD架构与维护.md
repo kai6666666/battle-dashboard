@@ -461,3 +461,8 @@ export function createXxx(deps: any) {
 - 机制：无段内let；18个late（x4-i/j/l等接线产物，惰性箭头 + _ACC透传×2）；x4-f接线对段内 normalize...ResourceRecord 的引用为惰性箭头；
 - 里程碑：x4系列 13,018行 → 1,988行（-84.7%），「≤2,000行纯装配」目标达成；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
+## x4-z（v7.1.0-x4z）
+- wiring 第二十四簇：属性预设面板与表格规则修复装配（78行；defs4 / aft2 / ext24 / late1 / defImp1(?raw)）→「wiring/attr-preset-panel-wiring.ts」；
+  - index 1,988 → 1,913行；
+- 机制：无段内let；1个late（renderInterface，惰性箭头）；?raw 默认导入（attributePresetAgentPromptTemplate）；SortableListOptions（x4-o 段残余 type）随段；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=45保持）。
