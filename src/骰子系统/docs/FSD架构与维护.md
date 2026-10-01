@@ -513,3 +513,11 @@ export function createXxx(deps: any) {
 - 守恒证据：非空行序列逐行一致（1,486行）；构建产物与 x4-ah 逐字节对比仅差 1 字节（版本号 h→i）；tsc 日志与 x4-ah diff=0；
 - 机制：x4 系列正式封板 —— index 13,018 → 1,486行（-88.6%），结构 = 装配接线群 + 启动序列 + x4-s-pre 保留组；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ TS2304=108（TS6133=46保持）。
+## x6-a（v7.1.0-x6a）—— 验证体系启动：test harness 骨架
+- node 桩冒烟（load_x4j_check.js）升级为可扩展 test harness：
+  - tests/harness.js（JSDOM 沙盒加载器，jsdom/jquery 多级回退解析）；
+  - tests/run.js（runner，自动发现 cases/*，非 0 退出码聚合）；
+  - tests/cases/01-load.js（启动无致命异常）/ 02-api.js（AcuDice API 面）/ 03-version.js（bundle ↔ constants.ts 版本一致性）；
+- 入口：pnpm test / node tests/run.js [bundle路径]；
+- 运行结果：PASS 3/3；产物与 x4-ai 对比仅差版本字符串（字节 -1）；tsc diff=0；warnings12 IDENTICAL；guardrails 全过；
+- 注：tests/ 位于 repo 根，不参与构建与体积门；x6 系列后续批：纯逻辑单测 / jsdom 面板冒烟 / CI nightly。
