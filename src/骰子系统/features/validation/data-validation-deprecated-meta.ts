@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * data-validation-deprecated-meta.ts
  * Feature-Sliced 模块（数据常量）。

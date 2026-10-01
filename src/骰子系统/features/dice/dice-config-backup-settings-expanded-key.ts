@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * dice-config-backup-settings-expanded-key.ts
  * Feature-Sliced 模块（数据常量）。
