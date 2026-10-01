@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-legacy-gacha-state-from-raw-data.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

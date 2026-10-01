@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * rgb-to-avatar-hex.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createRgbToAvatarHex(deps: any) {
+export function createRgbToAvatarHex(_deps: any) {
   const rgbToAvatarHex = (r: number, g: number, b: number): string => {
     const toHex = (value: number) =>
       Math.max(0, Math.min(255, Math.round(value)))

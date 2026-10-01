@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-attribute-range-bounds.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetAttributeRangeBounds(deps: any) {
+type AttributeRuleAttributeConfig = Record<string, any>;
+
+export function createGetAttributeRangeBounds(_deps: any) {
   const getAttributeRangeBounds = (
     attributes: AttributeRuleAttributeConfig[] | undefined,
     fallback: [number, number],
