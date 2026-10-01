@@ -552,3 +552,12 @@ export function createXxx(deps: any) {
 - devDependencies 新增 jsdom ^22.1.0、fake-indexeddb ^6.2.5（harness 回退链在 CI 经 jsdom / fake-indexeddb 直接命中）；
 - pnpm-lock.yaml 同步更新（v9.0；frozen 一致性已验证）；
 - 本地等效验证：14/14 PASS、guardrails 过、YAML 解析通过；推送即触发首次 run（feat/refactor-x push）。
+## x7-a（v7.1.0-x7a）—— 性能与产物启动：bundle 体积门 + 模块构成侦察
+- 新增 bundle 体积门（scripts/guardrails/）：
+  - baseline-bundle-size.json：stable.js 基线 2,946,361 B（容差 16KB）、stable.js.map 基线 6,808,513 B（容差 64KB）；
+  - check-guardrails.mjs 新增第③节：超预算即失败（CI/nightly/本地通用）；已做超预算模拟验证（退出码 1）；
+- 侦察（webpack stats）：
+  - 项目 7 个编译目标；stable.js = 1406 模块 / 10.7MB 源码；
+  - stable 中 vue/react/pixi = 0（纯 DOM/jQuery 确认）；
+  - TOP 模块：mvu-module 104K / tutorial-steps 92K / contest-panel 85K / bind-events 79K / relationship-graph 73K / SQL-json?raw 58.9K / styles 约 1MB 级；
+- 后续批（x7-b+）候选：重模块初始化推迟、样式/字符串减重、依赖审计结论落地。

@@ -68,9 +68,21 @@ for (const r of nocheckNow) {
   if (!nocheckBaseline.has(r)) errors.push(`[@ts-nocheck] 新增目录禁用标记：${r}`);
 }
 
+//3) bundle volume gate (x7-a)
+const bundleBaseline = readJson('scripts/guardrails/baseline-bundle-size.json');
+const bundleReport = [];
+for (const [bp, cfg] of Object.entries(bundleBaseline.files || {})) {
+  const abs = path.join(ROOT, bp);
+  if (!fs.existsSync(abs)) { errors.push('[bundle体积] 缺失文件：' + bp + '（请先构建）'); continue; }
+  const size = fs.statSync(abs).size;
+  const limit = (cfg.size || 0) + (cfg.tolerance || 0);
+  if (size > limit) errors.push('[bundle体积] 超预算：' + bp + '（' + size + ' B > ' + cfg.size + ' + ' + cfg.tolerance + '）');
+  bundleReport.push(bp + ': ' + size + ' B / 预算 ' + limit + ' B');
+}
 console.log(`[guardrails] 扫描 TS 文件：${files.length}`);
 console.log(`[guardrails] >100KB 文件：${files.filter(f => fs.statSync(f).size > LARGE_LIMIT).length} / 冻结名单 ${Object.keys(largeBaseline).length}`);
 console.log(`[guardrails] @ts-nocheck 文件：${nocheckNow.length} / 冻结名单 ${nocheckBaseline.size}`);
+console.log('[guardrails] bundle体积：' + bundleReport.join(' | '));
 
 if (errors.length) {
   console.error('[guardrails] ❌ 护栏失败：');
