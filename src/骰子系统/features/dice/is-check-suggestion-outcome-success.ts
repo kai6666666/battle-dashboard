@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * is-check-suggestion-outcome-success.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { OutcomeLevel } from '../../shared/advanced-preset-types';
+
 export function createIsCheckSuggestionOutcomeSuccess(deps: any) {
   const isCheckSuggestionOutcomeSuccess = (outcome: OutcomeLevel): boolean => {
     return (

@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * resolve-dashboard-global-interaction-section-kind.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type GlobalInteractionSectionKind = string;
+
 export function createResolveDashboardGlobalInteractionSectionKind(deps: any) {
   const resolveDashboardGlobalInteractionSectionKind = (tableName: string): GlobalInteractionSectionKind | null => {
     for (const moduleKey of deps.getDashboardModuleKeysForTableName(tableName)) {

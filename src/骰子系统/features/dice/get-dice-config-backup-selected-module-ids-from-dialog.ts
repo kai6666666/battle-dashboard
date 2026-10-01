@@ -1,8 +1,23 @@
-// @ts-nocheck
 /**
  * get-dice-config-backup-selected-module-ids-from-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupModuleId =
+  | 'uiLayout'
+  | 'diceConfig'
+  | 'advancedPresets'
+  | 'attributePresets'
+  | 'actionGm'
+  | 'dashboardPresets'
+  | 'renderPresets'
+  | 'tableTemplate'
+  | 'tableTemplateRequirementPresets'
+  | 'validation'
+  | 'regex'
+  | 'avatarMap'
+  | 'customIcons'
+  | 'gachaSettings';
+
 export function createGetDiceConfigBackupSelectedModuleIdsFromDialog(deps: any) {
   const getDiceConfigBackupSelectedModuleIdsFromDialog = (dialog: JQuery): DiceConfigBackupModuleId[] =>
     deps.normalizeDiceConfigBackupSelectedModuleIds(

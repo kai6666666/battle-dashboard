@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * get-dice-config-backup-rule-records.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetDiceConfigBackupRuleRecords(deps: any) {
+export function createGetDiceConfigBackupRuleRecords(_deps: any) {
   const getDiceConfigBackupRuleRecords = (
     value: unknown,
     sanitizeRule: (rule: unknown) => Record<string, unknown> | null,

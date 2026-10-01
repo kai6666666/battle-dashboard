@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * resolve-textarea-text-with-hidden-dice.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = any;
+
 export function createResolveTextareaTextWithHiddenDice(deps: any) {
   const resolveTextareaTextWithHiddenDice = (
     textarea: AcuDiceTextareaElement,
