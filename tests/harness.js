@@ -26,6 +26,11 @@ function resolveJquery() {
   return tryRequire(cands);
 }
 
+function resolveFakeIdb() {
+  const cands = [process.env.FAKE_IDB_PATH, 'fake-indexeddb', '/tmp/node_modules/fake-indexeddb', path.join(process.env.TSBUILD || '/tmp/tsbuild', 'node_modules', 'fake-indexeddb')].filter(Boolean);
+  try { return tryRequire(cands); } catch (e) { return null; }
+}
+
 function mkProxy(name) {
   return new Proxy(function () {}, {
     get(t, p) {
@@ -45,6 +50,7 @@ function loadBundle(bundlePath) {
   const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://example.com/', pretendToBeVisual: true });
   const win = dom.window;
   const jq = resolveJquery();
+  const fidb = resolveFakeIdb();
   const $ = (jq && jq.fn) ? jq : jq(win);
   win.$ = $;
   win.jQuery = $;
@@ -68,8 +74,27 @@ function loadBundle(bundlePath) {
     matchMedia: win.matchMedia ? win.matchMedia.bind(win) : () => ({ matches: false, addEventListener() {}, removeEventListener() {} }),
     Vue: mkProxy('Vue'), $: $, jQuery: $, toastr: win.toastr,
     SillyTavern: win.SillyTavern, TavernHelper: win.TavernHelper, tavern: win.tavern,
+    indexedDB: fidb && fidb.indexedDB,
+    IDBKeyRange: fidb && fidb.IDBKeyRange,
+    IDBFactory: fidb && fidb.IDBFactory,
+    IDBRequest: fidb && fidb.IDBRequest,
+    IDBOpenDBRequest: fidb && fidb.IDBOpenDBRequest,
+    IDBTransaction: fidb && fidb.IDBTransaction,
+    IDBObjectStore: fidb && fidb.IDBObjectStore,
+    IDBDatabase: fidb && fidb.IDBDatabase,
+    IDBCursor: fidb && fidb.IDBCursor,
+    IDBCursorWithValue: fidb && fidb.IDBCursorWithValue,
+    IDBIndex: fidb && fidb.IDBIndex,
+    IDBVersionChangeEvent: fidb && fidb.IDBVersionChangeEvent,
     crypto: require('crypto').webcrypto,
   };
+  const domClasses = ['HTMLElement', 'Element', 'Node', 'DocumentFragment', 'Event', 'CustomEvent', 'MouseEvent', 'KeyboardEvent', 'FocusEvent', 'InputEvent', 'TouchEvent', 'PointerEvent', 'DragEvent', 'WheelEvent', 'HTMLInputElement', 'HTMLTextAreaElement', 'HTMLSelectElement', 'HTMLButtonElement', 'HTMLDivElement', 'HTMLSpanElement', 'HTMLImageElement', 'HTMLAnchorElement', 'HTMLCanvasElement', 'DOMParser', 'XMLSerializer', 'NodeList', 'HTMLCollection', 'DOMRect', 'Range', 'Selection', 'Text', 'Comment', 'AbortController', 'AbortSignal'];
+  for (const k of domClasses) { if (win[k] !== undefined) sandbox[k] = win[k]; }
+  const autoDeny = new Set(['Function', 'Proxy', 'Reflect', 'Object', 'Array', 'Promise', 'Symbol', 'Map', 'Set', 'WeakMap', 'WeakSet', 'Date', 'RegExp', 'Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError', 'Number', 'Boolean', 'String', 'BigInt', 'ArrayBuffer', 'SharedArrayBuffer', 'DataView', 'Atomics', 'JSON', 'Math', 'FinalizationRegistry', 'WeakRef']);
+  for (const k of Object.getOwnPropertyNames(win)) {
+    if (autoDeny.has(k) || (k in sandbox)) continue;
+    try { const v = win[k]; if (typeof v === 'function' && /^[A-Z]/.test(k)) { sandbox[k] = v; } } catch (e) {}
+  }
   vm.createContext(sandbox);
   const code = fs.readFileSync(bundlePath, 'utf8');
   let bootError = null;

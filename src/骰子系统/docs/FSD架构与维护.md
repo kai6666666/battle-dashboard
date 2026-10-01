@@ -536,3 +536,12 @@ export function createXxx(deps: any) {
   - 08-presets.js：listPresets 内置预设 / active preset id / listCharacters 只读面；
 - 用例总数 7 → 11（PASS 11/11，~4.5s）；产物与 x6-b 仅差版本字符串；tsc diff=0；guardrails 全过；
 - 已知事实（记录，未修复）：沙盒环境 getHistory() 抛 "map is not a function"（依赖环境存储差异，非本次范围）。
+## x6-d（v7.1.0-x6d）—— jsdom 面板开合冒烟：gacha 三面板开关闭环
+- harness 升级（环境仿真深化）：
+  - 注入 fake-indexeddb（面板渲染链路依赖 IndexedDB）；
+  - 注入常用 DOM 类 + 自动补齐 win 全部大写构造器（HTMLElement / Document 等）；
+- 新增用例（3 个，全开关闭环、无残留）：
+  - 09-shop-toggle.js：openShop → .acu-gacha-shell 渲染 + 状态快照 → closeShop → DOM 归零；
+  - 10-settings-toggle.js：openSettings → 对话框渲染 → 点击 .acu-gacha-settings-close → 500ms → DOM 归零；
+  - 11-shard-toggle.js：openShardShop → 渲染 + 关闭按钮 → closeShop → DOM 归零（备注：shard 关闭按钮点击未接入自动化，统一用 closeShop）；
+- 用例总数 11 → 14（PASS 14/14）；产物与 x6-c 仅差版本字符串；tsc diff=0；guardrails 全过。
