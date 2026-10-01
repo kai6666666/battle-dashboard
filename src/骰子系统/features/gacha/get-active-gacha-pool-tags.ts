@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-active-gacha-pool-tags.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

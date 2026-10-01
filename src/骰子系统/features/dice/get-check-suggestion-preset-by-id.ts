@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * get-check-suggestion-preset-by-id.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+
 export function createGetCheckSuggestionPresetById(deps: any) {
   const getCheckSuggestionPresetById = (presetId: string | null | undefined): AdvancedDicePreset | null => {
     const presets = deps.getAdvancedDicePresetManager().getAllPresets() as AdvancedDicePreset[];
