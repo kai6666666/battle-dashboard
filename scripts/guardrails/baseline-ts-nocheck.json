@@ -1239,7 +1239,5 @@
   "src/骰子系统/shared/styles/part-03-icons.ts",
   "src/骰子系统/shared/styles/part-04-validation.ts",
   "src/骰子系统/shared/styles/part-05-validation.ts",
-  "src/骰子系统/shared/styles/part-06-inventory.ts",
-  "src/骰子系统/shared/table-utils.ts",
-  "src/骰子系统/shared/ui/init-sortable.ts"
+  "src/骰子系统/shared/styles/part-06-inventory.ts"
 ]
