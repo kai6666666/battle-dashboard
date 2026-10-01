@@ -507,3 +507,9 @@ export function createXxx(deps: any) {
   - index 1,609 → 1,531行（-78；1,610 → 1,532 元素）；
 - 机制：AST 不变（符号多重集守恒 symdiff=0）；构建产物与 x4-ag 逐字节对比仅差 1 字节（版本号 g→h）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ TS2304=108（tsc 日志与 x4-ag diff=0；TS6133=46保持）。
+## x4-ai（v7.1.0-x4ai）—— 空行清理收尾，x4 系列封板
+- 残余深挖第二弹（纯格式重写）：删除 index 全部 45 个空行（文件零反引号，无多行字符串风险）；
+  - index 1,531 → 1,486行（-45）；
+- 守恒证据：非空行序列逐行一致（1,486行）；构建产物与 x4-ah 逐字节对比仅差 1 字节（版本号 h→i）；tsc 日志与 x4-ah diff=0；
+- 机制：x4 系列正式封板 —— index 13,018 → 1,486行（-88.6%），结构 = 装配接线群 + 启动序列 + x4-s-pre 保留组；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ TS2304=108（TS6133=46保持）。
