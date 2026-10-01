@@ -568,3 +568,11 @@ export function createXxx(deps: any) {
 - 收益：源码 -211,305B；bundle 2,946,361 → 2,721,437（-224,924B，-7.6%）；map -16,122B；
 - baseline-bundle-size.json 同步下调（2,721,437 / 6,792,391）；
 - 闸门：harness 14/14 / warnings 12 IDENTICAL / TS2304=108 / guardrails（含体积门）全过。
+## x7-c（v7.1.0-x7c）—— 06 系列整体拼接 minify + mvu/styles 减重：bundle 再 -58KB
+- 06 系列（a-d 四片）：整体拼接（116,798 字符）→ csso 压缩 → 验证（D 2422 / R 553 全等、无危险字符）→ 规则边界重切 4 段（rejoin 逐字节验证）；-35.5KB；
+- mvu/styles.ts：单文件压缩（38,061 → 21,028，-45%）+ AST 守恒；-17.6KB；
+- 幂等自检全通过（06 重跑 rejoin-ok、mvu delta=0）；
+- 收益：bundle 2,721,437 → 2,663,165（-58,272B）；map -18,846B；
+- baseline 同步下调（2,663,165 / 6,773,355）；
+- x7 系列累计：2,946,361 → 2,663,165（-283,196B，-9.6%）；
+- 闸门：harness 14/14 / warnings 12 IDENTICAL / TS2304=108 / guardrails 全过。
