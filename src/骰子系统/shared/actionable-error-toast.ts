@@ -15,7 +15,7 @@ export type ActionableErrorToastSuggestion =
 
 export interface ActionableErrorToastOptions {
   title?: string;
-  toastrOptions?: ToastrOptions;
+  toastrOptions?: Record<string, unknown>; // x7-d: @types/toastr>=2.1.44 不再全局暴露 ToastrOptions
   suggestion?: ActionableErrorToastSuggestion | string;
   developerHint?: boolean;
 }

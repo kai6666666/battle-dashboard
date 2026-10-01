@@ -576,3 +576,8 @@ export function createXxx(deps: any) {
 - baseline 同步下调（2,663,165 / 6,773,355）；
 - x7 系列累计：2,946,361 → 2,663,165（-283,196B，-9.6%）；
 - 闸门：harness 14/14 / warnings 12 IDENTICAL / TS2304=108 / guardrails 全过。
+## x7-d（v7.1.0-x7d）—— 依赖审计（-7 运行时依赖）+ 构建环境对齐
+- 依赖清理：移除 7 个零引用运行时依赖（@pixi/react、@vueuse/components、@vueuse/integrations、@vueuse/shared、react-dom、vue3-pixi、gsap）；dependencies 24 → 17；经全项目扫描（1438 文件 + 构建配置 + AutoImport/ProvidePlugin 上下文）判定；
+- 构建环境对齐：tsbuild 与 repo manifest/lock 对齐（webpack 5.109.2 → 5.111.1 等）；产物差异定性为「webpack runtime 官方输出变化」（warnings 12 完全一致、harness 14/14）；
+- 类型修复：@types/toastr ≥2.1.44 不再全局暴露 ToastrOptions → actionable-error-toast.ts 本地宽松化（TS2304 回到 108 基线；类型擦除零产物影响——重建 md5 与修复前逐字节一致）；
+- 闸门：harness 14/14 / warnings 12 IDENTICAL / TS2304=108 / guardrails 全过；baseline 更新（2,662,942 / 6,772,714）。
