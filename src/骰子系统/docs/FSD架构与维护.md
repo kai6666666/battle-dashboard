@@ -581,3 +581,25 @@ export function createXxx(deps: any) {
 - 构建环境对齐：tsbuild 与 repo manifest/lock 对齐（webpack 5.109.2 → 5.111.1 等）；产物差异定性为「webpack runtime 官方输出变化」（warnings 12 完全一致、harness 14/14）；
 - 类型修复：@types/toastr ≥2.1.44 不再全局暴露 ToastrOptions → actionable-error-toast.ts 本地宽松化（TS2304 回到 108 基线；类型擦除零产物影响——重建 md5 与修复前逐字节一致）；
 - 闸门：harness 14/14 / warnings 12 IDENTICAL / TS2304=108 / guardrails 全过；baseline 更新（2,662,942 / 6,772,714）。
+## x7-e（v7.1.0-x7e）—— 全系列总检（x1 → x7 全景复核）
+### 一、bundle 体积全演进（git 历史回溯，77 tags 全量）
+| 阶段 | 关键点 | 字节 |
+|---|---|---|
+| 基线（x1） | 重构开始 | 2,723,178 |
+| x2-x3 | 巨文件拆分 + DB CSS 重接线（x3b +93KB） | 2,826,280 |
+| x4 系列 | index 拆解 31 批（wiring 化开销 +119KB） | 峰值 2,946,362 |
+| x6 | 验证体系（bundle 零影响） | 2,946,361 |
+| x7 | 三连减重（b/c/d） | **x7d 2,662,942** |
+- 峰值较基线 +223,183（+8.2%）；x7 减重较峰值 -283,419（-9.6%）；最终较基线 **-60,236（-2.2%）**。
+### 二、核验清单
+- index.ts 13,018 → 1,486 行（-88.6%）；TS 文件 1,399；@ts-nocheck 冻结 1,300/1,306；>100KB 仅 index。
+- 测试体系：14 用例（11 文件）+ harness；tests-nightly（3 触发）+ guardrails CI 全绿（推送即验）。
+- 体积门：baseline-bundle-size.json（2,662,942 / 6,772,714）；依赖面：dependencies 24 → 17；构建环境对齐（webpack 5.111.1）。
+- 远程一致性：77 tags 本地=远程；加载器 @v7.1.0-x7d；CDN 双节点验证流程全覆盖。
+### 三、遗留清单（未来候选）
+1. x5 类型债治理（长期，当前 TS2304=108 / TS6133=46）；
+2. 重模块懒初始化（需深度侦察，风险高）；
+3. 沙盒 getHistory() 抛错（x6-c 记录，非产品逻辑）；
+4. tutorial / build-settings-html 等大字符串（暂缓：HTML minify 风险）。
+### 四、结论
+x1→x7 全链条（护栏→拆分→收口→深挖→验证→产物）完成；产物净值较重构前 -60KB，index 体积 -88.6%，自动化验证与体积门持续护航。
