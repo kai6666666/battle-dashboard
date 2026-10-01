@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * dice-profile-db.ts
  * Feature-Sliced: 骰子配置档案 IndexedDB 适配器（自包含）
  */
+type DiceProfileRecord = Record<string, any>;
 
   export const DiceProfileDB = {
     DB_NAME: 'acu_dice_profiles',

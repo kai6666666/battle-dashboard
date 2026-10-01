@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * strip-crud-sql-block-comments.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createStripCrudSqlBlockComments(deps: any) {
+export function createStripCrudSqlBlockComments(_deps: any) {
   const stripCrudSqlBlockComments = (ddl: unknown): string => {
     const text = String(ddl || '');
     let result = '';

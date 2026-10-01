@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * bind-composition-safe-search-input.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBindCompositionSafeSearchInput(deps: any) {
+type CompositionSafeSearchBinding = Record<string, any>;
+type CompositionSafeSearchOptions = Record<string, any>;
+type CompositionSafeSearchPayload = Record<string, any>;
+export function createBindCompositionSafeSearchInput(_deps: any) {
   const bindCompositionSafeSearchInput = (
     binding: CompositionSafeSearchBinding,
     options: CompositionSafeSearchOptions,
@@ -43,12 +45,12 @@ export function createBindCompositionSafeSearchInput(deps: any) {
 
     const bindEvent = (eventName: string, handler: (this: HTMLInputElement) => void) => {
       if (selector) {
-        root.on(`${eventName}${suffix}`, selector, function () {
+        root.on(`${eventName}${suffix}`, selector, function (this: any) {
           handler.call(this as HTMLInputElement);
         });
         return;
       }
-      root.on(`${eventName}${suffix}`, function () {
+      root.on(`${eventName}${suffix}`, function (this: any) {
         handler.call(this as HTMLInputElement);
       });
     };

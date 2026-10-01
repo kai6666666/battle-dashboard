@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * extract-numeric-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createExtractNumericValue(deps: any) {
-  const extractNumericValue = value => {
+export function createExtractNumericValue(_deps: any) {
+  const extractNumericValue = (value: unknown) => {
     if (!value) return 0;
     const str = String(value).trim();
     // 处理分数形式 (50/100 -> 取第一个数)

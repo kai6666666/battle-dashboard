@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * add-styles.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { MAIN_STYLES } from './styles';
 import { SCRIPT_ID } from './constants';
+declare global { interface Window { _acuStylesInjected?: boolean } }
 export function createAddStyles(deps: any) {
   const addStyles = () => {
     const targetDocument = deps.getTavernHostDocument();

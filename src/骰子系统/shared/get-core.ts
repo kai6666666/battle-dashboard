@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * get-core.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+declare global { interface Window { jQuery?: any; AutoCardUpdaterAPI?: any; SillyTavern?: any } }
 export function createGetCore(deps: any) {
   const getCore = () => {
     const w = deps.getTavernHostWindow();

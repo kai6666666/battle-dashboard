@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * strip-lone-surrogates.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createStripLoneSurrogates(deps: any) {
+export function createStripLoneSurrogates(_deps: any) {
   const stripLoneSurrogates = (value: string): string => {
     let sanitized = '';
     for (let i = 0; i < value.length; i++) {

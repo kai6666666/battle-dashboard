@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * custom-table-name-icon-image-db.ts
  * Feature-Sliced: 自定义表格图标图片 IndexedDB 适配器（自包含）
  */
+type CustomTableNameIconImageRecord = Record<string, any>;
 
   export const CustomTableNameIconImageDB = {
     DB_NAME: 'acu_custom_table_name_icon_images',

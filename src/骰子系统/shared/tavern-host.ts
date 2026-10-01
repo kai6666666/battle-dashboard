@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * tavern-host.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -20,7 +19,7 @@ export function createGetTavernHostWindow(deps: any) {
         const parentWindow = cursor.parent;
         if (!deps.getAccessibleDocument(parentWindow)) break;
         addWindow(parentWindow);
-        cursor = parentWindow;
+        cursor = parentWindow as typeof window;
       }
     } catch {
       // 跨域或宿主限制时保留已收集的窗口
@@ -38,7 +37,7 @@ export function createGetTavernHostWindow(deps: any) {
 
       const viewportWidth = targetWindow.innerWidth || doc.documentElement.clientWidth || 0;
       const viewportHeight = targetWindow.innerHeight || doc.documentElement.clientHeight || 0;
-      const anchors = Array.from(doc.querySelectorAll<HTMLElement>(deps.HOST_SELECTOR));
+      const anchors = Array.from((doc as Document).querySelectorAll<HTMLElement>(deps.HOST_SELECTOR));
 
       return anchors.some(el => {
         const rect = el.getBoundingClientRect();

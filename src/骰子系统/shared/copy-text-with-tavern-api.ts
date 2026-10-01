@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * copy-text-with-tavern-api.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCopyTextWithTavernApi(deps: any) {
+export function createCopyTextWithTavernApi(_deps: any) {
   const copyTextWithTavernApi = async (text: string): Promise<boolean> => {
     try {
       if (window.TavernHelper && window.TavernHelper.triggerSlash) {

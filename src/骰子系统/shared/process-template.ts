@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * process-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createProcessTemplate(deps: any) {
-  const processTemplate = (template, cardData, headers) => {
+export function createProcessTemplate(_deps: any) {
+  const processTemplate = (template: string, cardData: any[], headers: any[]) => {
     if (!template || !cardData) return template;
     let result = template;
     const name = cardData[1] || '未知';

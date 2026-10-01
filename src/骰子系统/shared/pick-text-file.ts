@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * pick-text-file.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from './actionable-error-toast';
+interface TextFileSelection { file: File; text: string; }
 export function createPickTextFile(deps: any) {
   const pickTextFile = (accept = deps.JSONC_FILE_ACCEPT): Promise<TextFileSelection | null> =>
     new Promise(resolve => {
@@ -22,8 +22,8 @@ export function createPickTextFile(deps: any) {
           return;
         }
         deps.readTextFile(file)
-          .then(text => resolve({ file, text }))
-          .catch(error => {
+          .then((text: string) => resolve({ file, text }))
+          .catch((error: unknown) => {
             console.error('[DICE]读取文件失败:', error);
             if (window.toastr)
               showActionableErrorToast('文件读取失败，浏览器没有成功读取所选文件。', { suggestion: 'importExport' });

@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * default-dialogue-indent-tag-blacklist.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createDefaultDialogueIndentTagBlacklist(deps: any) {
+export function createDefaultDialogueIndentTagBlacklist(_deps: any) {
   const DEFAULT_DIALOGUE_INDENT_TAG_BLACKLIST = [
     'summary',
     'tucao',

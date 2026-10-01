@@ -1,26 +1,26 @@
-// @ts-nocheck
 /**
  * store.ts
  * Feature-Sliced: shared 层 - localStorage 存储适配器（含最后快照 key 常量）。
  */
+declare global { interface Window { _acuQuotaAlerted?: boolean } }
 
 export const STORAGE_KEY_LAST_SNAPSHOT = 'acu_data_snapshot_v19';
 
   export const Store = {
-    get: (key, def = null) => {
+    get: (key: string, def: unknown = null) => {
       try {
-        return JSON.parse(localStorage.getItem(key)) ?? def;
+        return JSON.parse(localStorage.getItem(key) as string) ?? def;
       } catch {
         return def;
       }
     },
-    set: (key, val): boolean => {
+    set: (key: string, val: unknown): boolean => {
       try {
         localStorage.setItem(key, JSON.stringify(val));
         return true;
       } catch (e) {
         // 捕获存储空间已满错误
-        if (e.name === 'QuotaExceededError' || e.message.includes('quota')) {
+        if ((e as any).name === 'QuotaExceededError' || (e as any).message.includes('quota')) {
           console.warn('[DICE]ACU 存储空间已满，触发静默清理策略...');
           try {
             // 1. 优先删除最占空间的“数据快照” (不影响功能，只会导致下次刷新暂时没有蓝色高亮)

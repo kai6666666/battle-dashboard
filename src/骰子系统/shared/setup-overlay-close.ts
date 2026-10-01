@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * setup-overlay-close.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createSetupOverlayClose(deps: any) {
+export function createSetupOverlayClose(_deps: any) {
   const setupOverlayClose = ($overlay: JQuery, overlayClass: string, onClose: () => void) => {
     const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 

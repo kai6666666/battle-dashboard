@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * find-runtime-function.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -14,7 +13,7 @@ export function createFindRuntimeFunction(deps: any) {
       if (typeof helperFn === 'function') return helperFn.bind(tavernHelper);
     }
 
-    const globalFn = globalThis?.[name];
+    const globalFn = (globalThis as any)?.[name];
     return typeof globalFn === 'function' ? globalFn.bind(globalThis) : null;
   };
   return findRuntimeFunction;

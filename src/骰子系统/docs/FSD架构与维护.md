@@ -609,3 +609,9 @@ x1→x7 全链条（护栏→拆分→收口→深挖→验证→产物）完成
 - KPI：@ts-nocheck 1300 → 1270（-30）；冻结名单 1306 → 1276；
 - 质量守恒：TS2304=108 / TS6133=46 回归基线（30 文件零残留错误）；产物字节级验证（除版本 2 字节）；
 - 闸门：harness 14/14 / warnings 12 IDENTICAL / guardrails 全过。
+## x5-b（v7.1.0-x5b）—— 类型债治理第二弹：shared/ 剩余 33 文件收官
+- shared/ 去 @ts-nocheck 33 文件（19-257行），114 处暴露错误全部零收敛；
+- 修复模式：悬空类型本地化 ×15（RegexTransformationRule / EffectResult / TextFileSelection / DiceProfileRecord / FavoriteItem / CustomTableNameIcon* 等）、declare global ×6（Window 扩展：_acuStylesInjected / _acuQuotaAlerted / jQuery / SillyTavern 等）、参数类型化 ×28（deps→_deps / 隐式 any→unknown|string|事件类型）、tavern-host 跨窗口断言、store 配额防御、convert 的 TavernRegex 运行时形态本地化（camelCase vs snake）；
+- 冻结点：1276 → 1243（−33；KPI −20~30 达标）；
+- 缺口标记：table-utils（60错）/ init-sortable（46错）本批回退 → x5-c 专攻；
+- 闸门：harness 14/14 / warnings 12 IDENTICAL / TS2304=108 / TS6133=46（基线保持）；产物 +4 字节（findRegex 防 undefined 的 || 空串）。

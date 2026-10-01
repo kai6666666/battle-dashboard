@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * shared/constants.ts
  * Feature-Sliced: shared 层 - 无业务逻辑的全局常量与版本号。
@@ -40,7 +39,7 @@ export const PRIMARY_KEYS = {
 // 预设格式版本号（全局共享，用于数据验证规则、管理属性规则等）
 export const PRESET_FORMAT_VERSION = '1.8.4';
 // 脚本版本号
-export const SCRIPT_VERSION = 'v7.1.0-x5a';
+export const SCRIPT_VERSION = 'v7.1.0-x5b';
 
 // ========================================
 // 纯逻辑工具（无副作用）
