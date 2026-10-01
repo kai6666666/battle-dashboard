@@ -561,3 +561,10 @@ export function createXxx(deps: any) {
   - stable 中 vue/react/pixi = 0（纯 DOM/jQuery 确认）；
   - TOP 模块：mvu-module 104K / tutorial-steps 92K / contest-panel 85K / bind-events 79K / relationship-graph 73K / SQL-json?raw 58.9K / styles 约 1MB 级；
 - 后续批（x7-b+）候选：重模块初始化推迟、样式/字符串减重、依赖审计结论落地。
+## x7-b（v7.1.0-x7b）—— styles 群 CSS 减重：bundle -220KB
+- 范围与方法：18 个完整分片 CSS（01a-01d / 02a-c / 03a-c / 04a-c / 05a-d / 07）经 csso 保守压缩（restructure:false）+ AST 守恒验证（声明数 / 规则数全等）；
+- 跳过：6 个聚合器（无模板串）+ 4 个 06 系列分片（x3-j 按空行四等分切割，单文件花括号不平衡——留给 x7-c「整体拼接 minify」方案）；
+- 幂等自检：二次 / 三次运行 delta=0（稳定态）；
+- 收益：源码 -211,305B；bundle 2,946,361 → 2,721,437（-224,924B，-7.6%）；map -16,122B；
+- baseline-bundle-size.json 同步下调（2,721,437 / 6,792,391）；
+- 闸门：harness 14/14 / warnings 12 IDENTICAL / TS2304=108 / guardrails（含体积门）全过。
