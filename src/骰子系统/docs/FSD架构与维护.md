@@ -521,3 +521,10 @@ export function createXxx(deps: any) {
 - 入口：pnpm test / node tests/run.js [bundle路径]；
 - 运行结果：PASS 3/3；产物与 x4-ai 对比仅差版本字符串（字节 -1）；tsc diff=0；warnings12 IDENTICAL；guardrails 全过；
 - 注：tests/ 位于 repo 根，不参与构建与体积门；x6 系列后续批：纯逻辑单测 / jsdom 面板冒烟 / CI nightly。
+## x6-b（v7.1.0-x6b）—— 纯逻辑单测首批：roll 引擎 + gacha 结构契约
+- test harness 升级：bundle 通过 getBundle() 惰性单例共享（全部用例单次加载，总耗时 ~4s）；
+- 新增用例：
+  - 04-roll.js：骰子表达式引擎（N d1 确定性 ×6 / 随机值域 ×4×25 / 返回形状 {total, formula, breakdown}）；
+  - 05-gacha-state.js：gacha getState 只读结构契约（fortune / wallet.shards×7档 / pity / activePoolTag / recentRewards）；
+- 用例总数 3 → 7（PASS 7/7）；产物与 x6-a 仅差版本字符串；tsc diff=0；warnings12 IDENTICAL；guardrails 全过；
+- 事实沉淀：jsdom + pretendToBeVisual 使 node 不自动退出 —— 一次性脚本须显式 process.exit(0)（runner 已含）。
