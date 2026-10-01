@@ -545,3 +545,10 @@ export function createXxx(deps: any) {
   - 10-settings-toggle.js：openSettings → 对话框渲染 → 点击 .acu-gacha-settings-close → 500ms → DOM 归零；
   - 11-shard-toggle.js：openShardShop → 渲染 + 关闭按钮 → closeShop → DOM 归零（备注：shard 关闭按钮点击未接入自动化，统一用 closeShop）；
 - 用例总数 11 → 14（PASS 14/14）；产物与 x6-c 仅差版本字符串；tsc diff=0；guardrails 全过。
+## x6-e（v7.1.0-x6e）—— CI 挂 nightly（x6 系列收官）
+- 新增 .github/workflows/tests-nightly.yml：
+  - 触发：schedule（每日 UTC 18:00 / cron 0 18 * * *）+ workflow_dispatch + push（feat/refactor-x，paths-ignore dist）；
+  - 流水线：checkout → node 24 → pnpm 10 → pnpm install --frozen-lockfile → pnpm build → node tests/run.js dist/骰子系统/stable.js → guardrails；
+- devDependencies 新增 jsdom ^22.1.0、fake-indexeddb ^6.2.5（harness 回退链在 CI 经 jsdom / fake-indexeddb 直接命中）；
+- pnpm-lock.yaml 同步更新（v9.0；frozen 一致性已验证）；
+- 本地等效验证：14/14 PASS、guardrails 过、YAML 解析通过；推送即触发首次 run（feat/refactor-x push）。
