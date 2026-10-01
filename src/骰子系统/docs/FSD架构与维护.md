@@ -496,3 +496,9 @@ export function createXxx(deps: any) {
   - index 1,642 → 1,616行；
 - 机制：无段内let；2个late（getRuntimeGachaRawData / getTableData，惰性箭头）；本模块 tsc 零错误（第4例）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=46保持）。
+## x4-ag（v7.1.0-x4ag）—— x4 残余清理完毕
+- wiring 第三十一簇：抽卡正则动作装配（10行；defs2 / aft1 / ext4 / late0）→「wiring/gacha-regex-actions-wiring.ts」；
+  - index 1,616 → 1,609行；
+- 机制：无段内let、无late、全直传；本模块 tsc 零错误（第5例）；
+- 收官：index 13,018 → 1,609行（-87.6%）；残余=装配接线群+启动序列+x4-s-pre 保留组（40行，机制性保留）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=46保持）。

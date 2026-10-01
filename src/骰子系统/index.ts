@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ELEMENT_EMOJI_MAP, LOCATION_EMOJI_MAP, RELATION_ICON_MAP } from './shared/emoji-maps';
+import { createGachaRegexActionsWiring } from './wiring/gacha-regex-actions-wiring';
 import { createDiceConfigBackupApplyWiring } from './wiring/dice-config-backup-apply-wiring';
 import { createContestPanelWiring } from './wiring/contest-panel-wiring';
 import { createBindChangesEventsWiring } from './wiring/bind-changes-events-wiring';
@@ -1578,16 +1579,8 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   // [x4-x] 抽卡API装配已迁出：见 ./wiring/gacha-api-wiring.ts
   const { acuDiceGachaApi } = createGachaApiWiring({ analyzeGachaCatalogImport, applyGachaCatalogImport, assertSaveStoredGachaStateSnapshot, buildDefaultGachaPoolDefinition, canDeleteGachaPoolDefinition, closeGachaVisualization, compareGachaItemDefinitionsForDisplay, createDefaultGachaState, deleteGachaItemSetting, deleteGachaPoolConfig, emitEvent, ensureGachaCatalogLoaded, exportGachaCatalogJson, formatGachaCatalogImportStatsText, getActiveGachaPoolTags, getAllGachaItemDefinitions, getAllGachaPoolConfigDefinitions, getConfiguredGachaPoolDefinitions, getCustomGachaItemDefinitions, getGachaActivePoolTag, getGachaCatalogImportFailureMessage, getGachaFortuneProgressView, getGachaState, getRuntimeGachaRawData, getVisibleGachaPoolConfigDefinitions, isBuiltinGachaPoolId, isGachaItemEnabled, normalizeGachaPoolDefinition, performGachaDraw, recordGachaFortuneGain, refreshGachaShardShop, refreshGachaVisualization, runInSaveQueue, saveGachaPoolSettings, saveStoredGachaCatalog, serializeGachaCatalogItemForExport, showDiceSystemConfirmDialog, showGachaSettingsDialog, showGachaShardShop, showGachaVisualization, touchGachaActivity, updateGachaPoolTag });
 
-  const gachaRegexActions = createGachaRegexActionsInstance({
-    getCore: (...a: any[]) => getCore(...a),
-    getRuntimeErrorMessage: (...a: any[]) => getRuntimeErrorMessage(...a),
-    getAcuDiceGachaApi: () => acuDiceGachaApi,
-    getRootWindow: () => rootWindow,
-  });
-
-  const bindAcuDiceGachaRegexActions = createBindAcuDiceGachaRegexActions({
-    gachaRegexActions: gachaRegexActions,
-  });
+  // [x4-ag] 抽卡正则动作装配已迁出：见 ./wiring/gacha-regex-actions-wiring.ts
+  const { bindAcuDiceGachaRegexActions } = createGachaRegexActionsWiring({ acuDiceGachaApi, getCore, getRuntimeErrorMessage, rootWindow });
 
   (AcuDiceAPI as Record<string, unknown>).gacha = acuDiceGachaApi;
 
