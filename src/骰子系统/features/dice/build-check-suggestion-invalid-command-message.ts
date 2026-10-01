@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-check-suggestion-invalid-command-message.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildCheckSuggestionInvalidCommandMessage(deps: any) {
+export function createBuildCheckSuggestionInvalidCommandMessage(_deps: any) {
   const buildCheckSuggestionInvalidCommandMessage = (reason: string): string => {
     const normalizedReason = String(reason || '骰子命令解析失败').trim();
     const separator = /[。！？!?]$/.test(normalizedReason) ? '' : '。';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * compare-gacha-item-definitions-for-display.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

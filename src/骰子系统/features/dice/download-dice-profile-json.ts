@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * download-dice-profile-json.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceProfileRecord = { id: string; [key: string]: any };
+
 export function createDownloadDiceProfileJson(deps: any) {
   const downloadDiceProfileJson = (profile: DiceProfileRecord): void => {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
