@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * get-image-url-validation-message.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetImageUrlValidationMessage(deps: any) {
+
+/** x5-a：拆分后本地化类型（原定义：wiring/composer-input-wiring.ts） */
+type ImageUrlValidationReason = 'invalid_url' | 'invalid_protocol' | 'svg_url';
+export function createGetImageUrlValidationMessage(_deps: any) {
   const getImageUrlValidationMessage = (label: string, reason: ImageUrlValidationReason | null): string => {
     if (reason === 'svg_url') return `${label}不支持 SVG 图片，请使用 PNG、JPEG、WebP 或 GIF。`;
     if (reason === 'invalid_protocol')

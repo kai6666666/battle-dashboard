@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * weighted-random-select.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createWeightedRandomSelect(deps: any) {
-  const weightedRandomSelect = items => {
+export function createWeightedRandomSelect(_deps: any) {
+  const weightedRandomSelect = (items: Array<{ weight?: number }> | null | undefined) => {
     if (!items || items.length === 0) return null;
     const totalWeight = items.reduce((sum, item) => sum + (item.weight || 1), 0);
     let random = Math.random() * totalWeight;

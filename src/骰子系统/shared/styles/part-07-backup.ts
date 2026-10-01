@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * part-07-backup.ts — part-07-backup.ts — 从 shared/styles.ts 拆分（按原始顺序拼接，内容不变）
  * 包含章节（1）：配置备份与还原弹窗

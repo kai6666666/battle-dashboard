@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * table-nav-special-keys.ts
  * 导航盘「特殊项」键顺序（与设置弹窗 / 导航条的特殊按钮保持一致）。

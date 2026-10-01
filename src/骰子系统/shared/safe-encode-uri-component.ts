@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * safe-encode-uri-component.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

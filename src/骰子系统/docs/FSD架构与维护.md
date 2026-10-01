@@ -603,3 +603,9 @@ export function createXxx(deps: any) {
 4. tutorial / build-settings-html 等大字符串（暂缓：HTML minify 风险）。
 ### 四、结论
 x1→x7 全链条（护栏→拆分→收口→深挖→验证→产物）完成；产物净值较重构前 -60KB，index 体积 -88.6%，自动化验证与体积门持续护航。
+## x5-a（v7.1.0-x5a）—— 类型债治理首批：shared/ 30 文件去 @ts-nocheck
+- 范围：30 个最小 shared/ 文件（9-22 行工具 + 1 聚合器）移除 @ts-nocheck；
+- 修复暴露错误：17×deps→_deps、weighted-random-select 参数类型、2 处死代码清理、2×ImageUrlValidationReason 本地化（原定义 wiring/composer-input-wiring）、actionable-error-toast 补 Window.toastr 全局声明（顺手修复既有 TS2339）；
+- KPI：@ts-nocheck 1300 → 1270（-30）；冻结名单 1306 → 1276；
+- 质量守恒：TS2304=108 / TS6133=46 回归基线（30 文件零残留错误）；产物字节级验证（除版本 2 字节）；
+- 闸门：harness 14/14 / warnings 12 IDENTICAL / guardrails 全过。
