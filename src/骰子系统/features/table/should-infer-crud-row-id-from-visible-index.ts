@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * should-infer-crud-row-id-from-visible-index.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CrudExistingRowPatchInput = Record<string, any>;
+
 export function createShouldInferCrudRowIdFromVisibleIndex(deps: any) {
   const shouldInferCrudRowIdFromVisibleIndex = (input: CrudExistingRowPatchInput): boolean => {
     const firstHeader = deps.normalizeDiffHeader(input.headers[0]);

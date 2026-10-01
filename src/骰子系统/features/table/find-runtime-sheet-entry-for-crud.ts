@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * find-runtime-sheet-entry-for-crud.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiffSheet = { content?: unknown[]; [key: string]: any };
+
 export function createFindRuntimeSheetEntryForCrud(deps: any) {
   const findRuntimeSheetEntryForCrud = (
     latestData: unknown,

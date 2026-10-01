@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * normalize-collapse-style.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CollapseStyle = string;
+
 export function createNormalizeCollapseStyle(deps: any) {
   const normalizeCollapseStyle = (value: unknown): CollapseStyle => {
     const style = String(value || '').trim();
