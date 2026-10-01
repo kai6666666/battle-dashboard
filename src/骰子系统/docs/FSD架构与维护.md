@@ -528,3 +528,11 @@ export function createXxx(deps: any) {
   - 05-gacha-state.js：gacha getState 只读结构契约（fortune / wallet.shards×7档 / pity / activePoolTag / recentRewards）；
 - 用例总数 3 → 7（PASS 7/7）；产物与 x6-a 仅差版本字符串；tsc diff=0；warnings12 IDENTICAL；guardrails 全过；
 - 事实沉淀：jsdom + pretendToBeVisual 使 node 不自动退出 —— 一次性脚本须显式 process.exit(0)（runner 已含）。
+## x6-c（v7.1.0-x6c）—— 单测扩展第二批：roll 语法形态 + check 检定 + 预设只读面
+- 新增用例：
+  - 06-roll-syntax.js：乘法 / 减法 / 括号 / 多骰组 / 空白容忍（全确定性）；
+  - 07-check.js：coc 检定不变量（roll∈[1,100] / margin=target-roll / success=roll≤target / rule=coc）+ 缺目标报错契约；
+    - 测试价值实证：margin 契约初判 roll-target → 实测修正为 target-roll；
+  - 08-presets.js：listPresets 内置预设 / active preset id / listCharacters 只读面；
+- 用例总数 7 → 11（PASS 11/11，~4.5s）；产物与 x6-b 仅差版本字符串；tsc diff=0；guardrails 全过；
+- 已知事实（记录，未修复）：沙盒环境 getHistory() 抛 "map is not a function"（依赖环境存储差异，非本次范围）。
