@@ -478,8 +478,8 @@ import { createNormalizeTableNameList } from './features/table/normalize-table-n
 import { createNormalizeStorableImageUrl } from './features/avatars/normalize-storable-image-url';
 import { createNormalizeSheetKeys } from './features/table/normalize-sheet-keys';
 import { createNormalizeGachaItemOrder } from './features/gacha/normalize-gacha-item-order';
-import { createNormalizeDiffText } from './features/table/normalize-diff-text';
-import { createNormalizeDatabaseUiText } from './features/table/normalize-database-ui-text';
+import { createNormalizeDiffText, normalizeDiffHeaderImpl as normalizeDiffHeader } from './features/table/normalize-diff-text';
+import { createNormalizeDatabaseUiText, isDatabaseManualUpdateButtonTextImpl as isDatabaseManualUpdateButtonText } from './features/table/normalize-database-ui-text';
 import { createNormalizeCrudSqlComment } from './features/table/normalize-crud-sql-comment';
 import { createNormalizeAcuDiceGachaImportMode } from './features/api/normalize-acu-dice-gacha-import-mode';
 import { createIsSameKeywordSet } from './shared/is-same-keyword-set';
@@ -644,7 +644,7 @@ import { createAcuDatabaseManualUpdateApiMethods } from './features/table/acu-da
 import { createWithTableTemplateCheckHint } from './features/table/with-table-template-check-hint';
 import { createShouldTriggerCrazyMode } from './features/dice/should-trigger-crazy-mode';
 import { createSetDiceConfigBackupValue } from './features/dice/set-dice-config-backup-value';
-import { createSerializeGachaPoolDefinitionForExport } from './features/gacha/serialize-gacha-pool-definition-for-export';
+import { createSerializeGachaPoolDefinitionForExport, buildGachaExportNamePartImpl as buildGachaExportNamePart } from './features/gacha/serialize-gacha-pool-definition-for-export';
 import { createSerializeAcuDiceGachaDrawOutcome } from './features/api/serialize-acu-dice-gacha-draw-outcome';
 import { createSaveDiceProfileIndex } from './features/dice/save-dice-profile-index';
 import { createSaveCurrentDatabaseSnapshotAsReviewBaseline } from './features/table/save-current-database-snapshot-as-review-baseline';
@@ -661,7 +661,7 @@ import { createReadTextFile } from './features/table/read-text-file';
 import { createReadRuntimeTableDataReference } from './features/table/read-runtime-table-data-reference';
 import { createPatchLatestChatSheetCellWithoutTracking } from './features/table/patch-latest-chat-sheet-cell-without-tracking';
 import { createParseCheckSuggestionPrimitiveValue } from './features/dice/parse-check-suggestion-primitive-value';
-import { createNormalizeTrackedText } from './shared/normalize-tracked-text';
+import { createNormalizeTrackedText, escapeRegExpLiteralImpl as escapeRegExpLiteral } from './shared/normalize-tracked-text';
 import { createNormalizeGachaTimestamp } from './features/gacha/normalize-gacha-timestamp';
 import { createNormalizeCheckSuggestionDiceFormula } from './features/dice/normalize-check-suggestion-dice-formula';
 import { createNormalizeAcuDiceGachaInteger } from './features/api/normalize-acu-dice-gacha-integer';
@@ -690,13 +690,8 @@ import { createDispatchReadyEvent } from './features/api/dispatch-ready-event';
 import { createConsumeCrudWriteOptions } from './features/table/consume-crud-write-options';
 import { createCloneRuntimeDataValue } from './shared/clone-runtime-data-value';
 import { createBuildGlobalInteractionSearchText } from './features/table/build-global-interaction-search-text';
-import { createBuildCustomTableNameIconPack } from './features/table/build-custom-table-name-icon-pack';
+import { createBuildCustomTableNameIconPack, getCustomTableNameIconPackDownloadFileNameImpl as getCustomTableNameIconPackDownloadFileName } from './features/table/build-custom-table-name-icon-pack';
 import { createBuildAttributeRulesContent } from './features/dice/build-attribute-rules-content';
-import { isDatabaseManualUpdateButtonTextImpl as isDatabaseManualUpdateButtonText } from './features/table/normalize-database-ui-text';
-import { normalizeDiffHeaderImpl as normalizeDiffHeader } from './features/table/normalize-diff-text';
-import { escapeRegExpLiteralImpl as escapeRegExpLiteral } from './shared/normalize-tracked-text';
-import { buildGachaExportNamePartImpl as buildGachaExportNamePart } from './features/gacha/serialize-gacha-pool-definition-for-export';
-import { getCustomTableNameIconPackDownloadFileNameImpl as getCustomTableNameIconPackDownloadFileName } from './features/table/build-custom-table-name-icon-pack';
 import { createAssertCrudJsonFallbackAllowed } from './features/table/assert-crud-json-fallback-allowed';
 import { createAddCrudColumnAlias } from './features/table/add-crud-column-alias';
 import { createViewportBottomAnchorSelectors } from './features/ui/viewport-bottom-anchor-selectors';
@@ -1316,28 +1311,8 @@ import { computeEffectVariables, computePendingEffectVariables, parseEffectValue
 import { alignAndFixPairedTables, isValueInRelationTable, getRelationOptions, getColumnExamples, getRowKey, getNearestValidNumber, extractCodesFromTable, buildCodeMapping } from './shared/table-utils';
 import { ConsoleCaptureManager } from './features/console/console-capture-manager';
 import { suggestFormatValue, parseTavernFindRegex, getDbLockAPI } from './shared/misc-utils';
-import {
-  NameAliasRegistryCore,
-  parseCharacterName,
-  getDisplayName,
-  findNameColumnIndex,
-  findExplicitAttributeTableNameColumnIndex,
-  getRowDisplayName,
-  isCharacterTable,
-  CHARACTER_NAME_COLUMN_KEYS,
-  ATTRIBUTE_TABLE_NAME_COLUMN_KEYS,
-} from './entities/name-alias';
-import {
-  SCRIPT_ID,
-  DICE_ROOT_CLASS,
-  DICE_ROOT_SELECTOR,
-  HOST_REGENERATE_HIDDEN_CLASS,
-  HOST_REGENERATE_BUTTON_SELECTOR,
-  PRIMARY_KEYS,
-  PRESET_FORMAT_VERSION,
-  SCRIPT_VERSION,
-  isNpcTableName,
-} from './shared/constants';
+import { NameAliasRegistryCore, parseCharacterName, getDisplayName, findNameColumnIndex, findExplicitAttributeTableNameColumnIndex, getRowDisplayName, isCharacterTable, CHARACTER_NAME_COLUMN_KEYS, ATTRIBUTE_TABLE_NAME_COLUMN_KEYS } from './entities/name-alias';
+import { SCRIPT_ID, DICE_ROOT_CLASS, DICE_ROOT_SELECTOR, HOST_REGENERATE_HIDDEN_CLASS, HOST_REGENERATE_BUTTON_SELECTOR, PRIMARY_KEYS, PRESET_FORMAT_VERSION, SCRIPT_VERSION, isNpcTableName } from './shared/constants';
 import advancedPresetAgentPromptTemplate from './docs/advanced-preset-agent-prompt.md?raw';
 import dashboardPresetAgentPromptTemplate from './docs/dashboard-preset-agent-prompt.md?raw';
 import attributePresetAgentPromptTemplate from './docs/attribute-preset-agent-prompt.md?raw';
@@ -1346,62 +1321,9 @@ import renderPresetAgentPromptTemplate from './docs/render-preset-agent-prompt.m
 import gachaCatalogAgentPromptTemplate from './docs/gacha-catalog-agent-prompt.md?raw';
 import tableTemplateRequirementPresetAgentPromptTemplate from './docs/table-template-requirement-preset-agent-prompt.md?raw';
 import defaultTableTemplateRequirementRaw from './骰子表格SQL_v4.3.json?raw';
-import {
-  DEFAULT_TABLE_TEMPLATE_REQUIREMENT_PRESET_ID,
-  TABLE_TEMPLATE_REQUIREMENT_PRESET_FORMAT,
-  buildTableTemplateAppendRepairPlan,
-  cloneTemplateValue,
-  createBuiltinTableTemplateRequirementPreset,
-  exportTableTemplateRequirementPreset,
-  getTemplateInspectionSheets as getRequirementInspectionSheets,
-  inspectTableTemplateWithPreset,
-  normalizeTableTemplateRequirementPreset,
-} from './features/table/table-template-requirements';
-import {
-  BUILTIN_GACHA_POOL_DEFINITIONS,
-  GACHA_CATALOG_EXPORT_KIND,
-  GACHA_CATALOG_VERSION,
-  FORTUNE_CURRENCY_NAME,
-  GACHA_ACTIVE_HEARTBEAT_MS,
-  GACHA_ACTIVE_SECONDS_PER_FORTUNE,
-  GACHA_CHECK_REWARD,
-  GACHA_CHARS_PER_FORTUNE,
-  GACHA_DRAW_COST_SINGLE,
-  GACHA_DRAW_COST_TEN,
-  GACHA_ITEM_DEFINITIONS,
-  GACHA_LEGEND_PITY_THRESHOLD,
-  GACHA_MESSAGE_REWARD,
-  GACHA_POOL_TAGS,
-  GACHA_RARE_PITY_THRESHOLD,
-  GACHA_RARITY_ORDER,
-  GACHA_RARITY_WEIGHTS,
-  GACHA_RECENT_REWARD_LIMIT,
-  GACHA_REWARD_TARGETS,
-  GACHA_SHARD_VALUES,
-  GACHA_UNIQUE_RARITY,
-  type GachaPoolDefinition,
-  type GachaCustomFields,
-  type GachaItemDefinition,
-  type GachaPoolTag,
-  type GachaRarity,
-  type GachaRewardTarget,
-  type GachaRewardTargetColumnKey,
-  type GachaRewardTargetColumns,
-} from './entities/gacha-items';
-import {
-  ACU_DICE_PROFILE_FORMAT,
-  computeAcuDiceProfileFingerprint,
-  createAcuDiceProfileMarker,
-  decodeAcuDiceProfileMarkerPayload,
-  extractAcuDiceProfileMarkerPayloads,
-  getAcuDiceProfilePromptKey,
-  getAcuDiceProfileSourceKey,
-  normalizeAcuDiceProfilePackage,
-  normalizeAcuDiceProfileSource,
-  type AcuDiceProfilePackage,
-  type AcuDiceProfileSource,
-  type NormalizeAcuDiceProfileOptions,
-} from './features/profiles/profile-packages';
+import { DEFAULT_TABLE_TEMPLATE_REQUIREMENT_PRESET_ID, TABLE_TEMPLATE_REQUIREMENT_PRESET_FORMAT, buildTableTemplateAppendRepairPlan, cloneTemplateValue, createBuiltinTableTemplateRequirementPreset, exportTableTemplateRequirementPreset, getTemplateInspectionSheets as getRequirementInspectionSheets, inspectTableTemplateWithPreset, normalizeTableTemplateRequirementPreset } from './features/table/table-template-requirements';
+import { BUILTIN_GACHA_POOL_DEFINITIONS, GACHA_CATALOG_EXPORT_KIND, GACHA_CATALOG_VERSION, FORTUNE_CURRENCY_NAME, GACHA_ACTIVE_HEARTBEAT_MS, GACHA_ACTIVE_SECONDS_PER_FORTUNE, GACHA_CHECK_REWARD, GACHA_CHARS_PER_FORTUNE, GACHA_DRAW_COST_SINGLE, GACHA_DRAW_COST_TEN, GACHA_ITEM_DEFINITIONS, GACHA_LEGEND_PITY_THRESHOLD, GACHA_MESSAGE_REWARD, GACHA_POOL_TAGS, GACHA_RARE_PITY_THRESHOLD, GACHA_RARITY_ORDER, GACHA_RARITY_WEIGHTS, GACHA_RECENT_REWARD_LIMIT, GACHA_REWARD_TARGETS, GACHA_SHARD_VALUES, GACHA_UNIQUE_RARITY, type GachaPoolDefinition, type GachaCustomFields, type GachaItemDefinition, type GachaPoolTag, type GachaRarity, type GachaRewardTarget, type GachaRewardTargetColumnKey, type GachaRewardTargetColumns } from './entities/gacha-items';
+import { ACU_DICE_PROFILE_FORMAT, computeAcuDiceProfileFingerprint, createAcuDiceProfileMarker, decodeAcuDiceProfileMarkerPayload, extractAcuDiceProfileMarkerPayloads, getAcuDiceProfilePromptKey, getAcuDiceProfileSourceKey, normalizeAcuDiceProfilePackage, normalizeAcuDiceProfileSource, type AcuDiceProfilePackage, type AcuDiceProfileSource, type NormalizeAcuDiceProfileOptions } from './features/profiles/profile-packages';
 import { GachaCatalogDB } from './features/gacha/gacha-catalog-db';
 import { GachaShardWallet, GachaCatalog, GachaCatalogRecord, GachaCatalogCache, GachaCatalogLoadTask, GachaCatalogImportMode, NormalizedGachaCatalogItem, GachaCatalogImportAnalysis, GachaCatalogImportStats, GachaSettingsItemSourceFilter, GachaSettingsItemStatusFilter, GachaSettingsItemSortMode, GachaSettingsItemFilterState, GachaSettingsFilterField, GachaSettingsFilterOption, NormalizedImportedGachaPools, GachaPoolSettingsRecord, GachaItemSettingsEntry, GachaItemSettingsRecord, GachaPityState, GachaRecentRewardRecord, GachaInputStats, GachaState, GachaFortuneProgressView, GachaDrawOutcome } from './features/gacha/gacha-types';
 import { createEmptyShardWallet, GACHA_DUPLICATE_REROLL_LIMIT, GACHA_PICKUP_WEIGHT_MULTIPLIER, GACHA_PICKUP_CHAT_DEPTH_BUCKET, GACHA_PICKUP_RARITIES, GACHA_PICKUP_FALLBACK_LIMIT, GACHA_ALL_POOL_TAG, GACHA_CUSTOM_ONLY_POOL_TAG, GACHA_REWARD_FIELD_LIMITS, normalizeGachaPoolId, normalizeGachaPoolName, cloneGachaState, getGachaStateBalanceScore, mergeLegacyGachaStateForLocalStorage } from './features/gacha/gacha-helpers';

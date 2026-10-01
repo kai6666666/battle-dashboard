@@ -502,3 +502,8 @@ export function createXxx(deps: any) {
 - 机制：无段内let、无late、全直传；本模块 tsc 零错误（第5例）；
 - 收官：index 13,018 → 1,609行（-87.6%）；残余=装配接线群+启动序列+x4-s-pre 保留组（40行，机制性保留）；
 - 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ 本模块 TS2304=0（总数108基线；TS6133=46保持）。
+## x4-ah（v7.1.0-x4ah）—— import 区深挖：多行块压缩与重复导入合并
+- 残余深挖第一弹（纯格式重写，零语义）：5 个多行 import 块压缩为单行 + 5 组重复模块导入合并；
+  - index 1,609 → 1,531行（-78；1,610 → 1,532 元素）；
+- 机制：AST 不变（符号多重集守恒 symdiff=0）；构建产物与 x4-ag 逐字节对比仅差 1 字节（版本号 g→h）；
+- 闸门：smoke OK / warnings12（基线，diff IDENTICAL）/ TS2304=108（tsc 日志与 x4-ag diff=0；TS6133=46保持）。
