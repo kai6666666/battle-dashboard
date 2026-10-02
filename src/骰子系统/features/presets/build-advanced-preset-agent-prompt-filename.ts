@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-advanced-preset-agent-prompt-filename.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildAdvancedPresetAgentPromptFilename(deps: any) {
+export function createBuildAdvancedPresetAgentPromptFilename(_deps: any) {
   const buildAdvancedPresetAgentPromptFilename = (presetName: string): string => {
     const safeName =
       presetName

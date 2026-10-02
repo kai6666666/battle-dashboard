@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-gacha-catalog-agent-prompt-filename.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildGachaCatalogAgentPromptFilename(deps: any) {
+export function createBuildGachaCatalogAgentPromptFilename(_deps: any) {
   const buildGachaCatalogAgentPromptFilename = (poolName: string): string => {
     const safeName =
       poolName

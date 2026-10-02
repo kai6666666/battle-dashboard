@@ -1,9 +1,38 @@
-// @ts-nocheck
 /**
  * get-dice-config-backup-available-module-ids.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DICE_CONFIG_BACKUP_MODULES } from './dice-config-backup-modules';
+interface DiceConfigBackupModulePayload {
+  storage: Record<string, unknown>;
+  resources?: Record<string, unknown>;
+  warnings?: string[];
+}
+interface DiceConfigBackupDocument {
+  format: string;
+  schemaVersion: number;
+  exportedAt: string;
+  scriptVersion: string;
+  presetFormatVersion: string;
+  modules: Partial<Record<string, DiceConfigBackupModulePayload>>;
+}
+
+type DiceConfigBackupModuleId =
+  | 'uiLayout'
+  | 'diceConfig'
+  | 'advancedPresets'
+  | 'attributePresets'
+  | 'actionGm'
+  | 'dashboardPresets'
+  | 'renderPresets'
+  | 'tableTemplate'
+  | 'tableTemplateRequirementPresets'
+  | 'validation'
+  | 'regex'
+  | 'avatarMap'
+  | 'customIcons'
+  | 'gachaSettings';
+
 export function createGetDiceConfigBackupAvailableModuleIds(deps: any) {
   const getDiceConfigBackupAvailableModuleIds = (backup: DiceConfigBackupDocument): DiceConfigBackupModuleId[] =>
     DICE_CONFIG_BACKUP_MODULES.filter(module => {

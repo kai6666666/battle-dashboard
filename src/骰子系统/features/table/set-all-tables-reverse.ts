@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * set-all-tables-reverse.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createSetAllTablesReverse(deps: any) {
-  const setAllTablesReverse = (tableNames, enabled) => {
+  const setAllTablesReverse = (tableNames: any, enabled: any) => {
     const targetNames = deps.normalizeTableNameList(tableNames);
     if (targetNames.length === 0) return;
 
@@ -12,7 +11,7 @@ export function createSetAllTablesReverse(deps: any) {
     if (enabled) {
       deps.saveReverseTables(Array.from(new Set([...deps.getNormalizedReverseTables(), ...targetNames])));
     } else {
-      deps.saveReverseTables(deps.getNormalizedReverseTables().filter(name => !targetSet.has(name)));
+      deps.saveReverseTables(deps.getNormalizedReverseTables().filter((name: any) => !targetSet.has(name)));
     }
   };
   return setAllTablesReverse;

@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * read-runtime-table-data.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createReadRuntimeTableData(deps: any) {
+export function createReadRuntimeTableData(_deps: any) {
   const readRuntimeTableData = (api: unknown): unknown => {
     const record = api as Record<string, unknown> | null | undefined;
     if (typeof record?.getCurrentData === 'function') {

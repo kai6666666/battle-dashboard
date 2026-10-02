@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * create-builtin-dashboard-preset.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DASHBOARD_TABLE_CONFIG } from '../dashboard/dashboard-table-config';
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
+type DashboardPreset = Record<string, any>;
+
 export function createCreateBuiltinDashboardPreset(deps: any) {
   const createBuiltinDashboardPreset = (): DashboardPreset => ({
     format: deps.getDASHBOARD_PRESET_FORMAT(),
