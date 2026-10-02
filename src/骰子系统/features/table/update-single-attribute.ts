@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * update-single-attribute.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceRawData = Record<string, any>;
 export function createUpdateSingleAttribute(deps: any) {
   const updateSingleAttribute = async (
     charName: string,
@@ -65,7 +65,7 @@ export function createUpdateSingleAttribute(deps: any) {
     for (const colIdx of attrColIndices) {
       const cellStr = String(targetSheet.content[targetRowIndex][colIdx] || '');
       const parsed = deps.parseAttributeString(cellStr);
-      if (parsed.some(attr => attr.name === targetAttrName)) {
+      if (parsed.some((attr: any) => attr.name === targetAttrName)) {
         targetColIndex = colIdx;
         break;
       }
@@ -78,7 +78,7 @@ export function createUpdateSingleAttribute(deps: any) {
     const existingStr = String(targetSheet.content[targetRowIndex][targetColIndex] || '');
     const existingAttrs = deps.parseAttributeString(existingStr);
     const existingMap: Record<string, number> = {};
-    existingAttrs.forEach(attr => {
+    existingAttrs.forEach((attr: any) => {
       existingMap[attr.name] = attr.value;
     });
 
@@ -130,7 +130,7 @@ export function createUpdateSingleAttribute(deps: any) {
     const processedNames = new Set<string>();
 
     // 先按原有顺序处理
-    existingAttrs.forEach(attr => {
+    existingAttrs.forEach((attr: any) => {
       const val = existingMap[attr.name];
       if (val !== undefined) {
         resultParts.push(`${attr.name}:${val}`);

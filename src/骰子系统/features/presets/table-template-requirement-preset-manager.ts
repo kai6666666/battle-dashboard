@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * table-template-requirement-preset-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,15 +6,15 @@ import { Store } from '../../shared/storage/store';
 import { DEFAULT_TABLE_TEMPLATE_REQUIREMENT_PRESET_ID, cloneTemplateValue, exportTableTemplateRequirementPreset, normalizeTableTemplateRequirementPreset } from '../table/table-template-requirements';
 export function createTableTemplateRequirementPresetManager(deps: any) {
   const TableTemplateRequirementPresetManager = (() => {
-    let _cache = null;
+    let _cache: any = null;
 
     const getStoredPresets = () => {
       const stored = Store.get(deps.STORAGE_KEY_TABLE_TEMPLATE_REQUIREMENT_PRESETS, []);
       return Array.isArray(stored) ? stored : [];
     };
 
-    const getBuiltinPresets = () => deps.BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS.map(preset => cloneTemplateValue(preset));
-    const getBuiltinPresetIds = () => new Set(deps.BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS.map(preset => preset.id));
+    const getBuiltinPresets = () => deps.BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS.map((preset: any) => cloneTemplateValue(preset));
+    const getBuiltinPresetIds = () => new Set(deps.BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS.map((preset: any) => preset.id));
 
     const getCustomPresets = () => {
       const builtinIds = getBuiltinPresetIds();
@@ -36,12 +35,12 @@ export function createTableTemplateRequirementPresetManager(deps: any) {
       return Array.from(customById.values());
     };
 
-    const saveCustomPresets = presets => {
+    const saveCustomPresets = (presets: any) => {
       Store.set(
         deps.STORAGE_KEY_TABLE_TEMPLATE_REQUIREMENT_PRESETS,
         presets
-          .filter(preset => preset && preset.builtin !== true && !getBuiltinPresetIds().has(preset.id))
-          .map(preset => ({
+          .filter((preset: any) => preset && preset.builtin !== true && !getBuiltinPresetIds().has(preset.id))
+          .map((preset: any) => ({
             ...preset,
             builtin: false,
           })),
@@ -60,8 +59,8 @@ export function createTableTemplateRequirementPresetManager(deps: any) {
       return id;
     };
 
-    const sortPresets = presets =>
-      presets.sort((left, right) => {
+    const sortPresets = (presets: any) =>
+      presets.sort((left: any, right: any) => {
         const orderDiff = Number(left.order || 999) - Number(right.order || 999);
         if (orderDiff !== 0) return orderDiff;
         return String(left.name || '').localeCompare(String(right.name || ''));
@@ -74,8 +73,8 @@ export function createTableTemplateRequirementPresetManager(deps: any) {
         return _cache;
       },
 
-      getPresetById(id) {
-        return this.getAllPresets().find(preset => preset.id === id) || null;
+      getPresetById(id: any) {
+        return this.getAllPresets().find((preset: any) => preset.id === id) || null;
       },
 
       getActivePresetId() {
@@ -94,7 +93,7 @@ export function createTableTemplateRequirementPresetManager(deps: any) {
         _cache = null;
       },
 
-      setActivePresetId(id) {
+      setActivePresetId(id: any) {
         const preset = this.getPresetById(id);
         if (!preset) return false;
         Store.set(deps.STORAGE_KEY_ACTIVE_TABLE_TEMPLATE_REQUIREMENT_PRESET, preset.id);
@@ -102,7 +101,7 @@ export function createTableTemplateRequirementPresetManager(deps: any) {
         return true;
       },
 
-      createPreset(input) {
+      createPreset(input: any) {
         const normalized = normalizeTableTemplateRequirementPreset(input, getUniqueId());
         if (!normalized) return null;
         const customPresets = getCustomPresets();
@@ -117,8 +116,8 @@ export function createTableTemplateRequirementPresetManager(deps: any) {
         return preset;
       },
 
-      updatePreset(id, input) {
-        if (deps.BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS.some(preset => preset.id === id)) {
+      updatePreset(id: any, input: any) {
+        if (deps.BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS.some((preset: any) => preset.id === id)) {
           throw new Error('内置模板检验预设不能直接修改，请先复制为自定义预设。');
         }
         const customPresets = getCustomPresets();
@@ -137,8 +136,8 @@ export function createTableTemplateRequirementPresetManager(deps: any) {
         return true;
       },
 
-      deletePreset(id) {
-        if (deps.BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS.some(preset => preset.id === id)) {
+      deletePreset(id: any) {
+        if (deps.BUILTIN_TABLE_TEMPLATE_REQUIREMENT_PRESETS.some((preset: any) => preset.id === id)) {
           throw new Error('内置模板检验预设不能删除。');
         }
         const customPresets = getCustomPresets();
@@ -151,12 +150,12 @@ export function createTableTemplateRequirementPresetManager(deps: any) {
         return true;
       },
 
-      exportPreset(id) {
+      exportPreset(id: any) {
         const preset = this.getPresetById(id);
         return preset ? exportTableTemplateRequirementPreset(preset) : null;
       },
 
-      importPreset(jsonText) {
+      importPreset(jsonText: any) {
         const parsed = deps.parseTableTemplateRequirementPresetJson(jsonText);
         const normalized = normalizeTableTemplateRequirementPreset(parsed, getUniqueId('imported_table_template_requirement'));
         if (!normalized) return null;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/gacha/gacha-regex-actions.ts
  * Feature-Sliced: 骰子商店正则按钮（data-acu-gacha-action）的 DOM 事件集群。
@@ -195,7 +194,7 @@ export class GachaRegexActions {
 
     $('body')
       .off('click.acu_gacha_regex_action')
-      .on('click.acu_gacha_regex_action', ACUDICE_GACHA_REGEX_ACTION_SELECTOR, function (event) {
+      .on('click.acu_gacha_regex_action', ACUDICE_GACHA_REGEX_ACTION_SELECTOR, function (this: any, event: any) {
         event.preventDefault();
         event.stopPropagation();
         void self.handle(this as HTMLElement);
@@ -203,7 +202,7 @@ export class GachaRegexActions {
 
     $('body')
       .off('keydown.acu_gacha_regex_action')
-      .on('keydown.acu_gacha_regex_action', ACUDICE_GACHA_REGEX_ACTION_SELECTOR, function (event) {
+      .on('keydown.acu_gacha_regex_action', ACUDICE_GACHA_REGEX_ACTION_SELECTOR, function (this: any, event: any) {
         if (event.key !== 'Enter' && event.key !== ' ') return;
         event.preventDefault();
         event.stopPropagation();

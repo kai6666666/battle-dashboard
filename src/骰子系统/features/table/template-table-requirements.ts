@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * template-table-requirements.ts
  * Feature-Sliced 模块（数据常量）。
  */
+import type { TemplateTableRequirement } from '../../shared/index-local-types';
 
 export const TEMPLATE_TABLE_REQUIREMENTS: TemplateTableRequirement[] = [
     {

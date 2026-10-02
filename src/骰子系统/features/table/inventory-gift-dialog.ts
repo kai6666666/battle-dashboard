@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * inventory-gift-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createShowInventoryGiftDialog(deps: any) {
-  const showInventoryGiftDialog = async rowIndex => {
+  const showInventoryGiftDialog = async (rowIndex: any) => {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
     const rawData = deps.getCachedRawData() || deps.getTableData();
@@ -16,7 +15,7 @@ export function createShowInventoryGiftDialog(deps: any) {
 
     const characters = deps.getInventoryCharacters(rawData);
     const charactersWithAvatar = await Promise.all(
-      characters.map(async character => {
+      characters.map(async (character: any) => {
         const avatarUrl = await deps.AvatarManager.getAsync(character.name);
         return {
           ...character,
@@ -136,7 +135,7 @@ export function createShowInventoryGiftDialog(deps: any) {
     deps.setupOverlayClose(dialog, 'acu-edit-overlay', () => dialog.remove());
     dialog.on('click', '.acu-inventory-gift-close', () => dialog.remove());
     dialog.on('click', '.acu-inventory-gift-cancel', () => dialog.remove());
-    dialog.on('click', '.acu-inventory-gift-filter-toggle', function () {
+    dialog.on('click', '.acu-inventory-gift-filter-toggle', function (this: any) {
       const $button = $(this);
       const nextOnlyPresent = String($button.attr('data-only-present') || 'false') !== 'true';
       $button
@@ -145,7 +144,7 @@ export function createShowInventoryGiftDialog(deps: any) {
         .toggleClass('active', nextOnlyPresent);
       refreshGiftList(nextOnlyPresent);
     });
-    dialog.on('click', '.acu-inventory-gift-target', function () {
+    dialog.on('click', '.acu-inventory-gift-target', function (this: any) {
       const targetName = String($(this).data('name') || '').trim();
       if (!targetName) return;
       deps.smartInsertToTextarea(`<user>将${item.name}赠与${targetName}。`, 'action');

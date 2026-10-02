@@ -1,14 +1,14 @@
-// @ts-nocheck
 /**
  * apply-existing-row-cell-patches-via-crud.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CrudExistingRowPatchInput = Record<string, any>;
 export function createApplyExistingRowCellPatchesViaCrud(deps: any) {
   const applyExistingRowCellPatchesViaCrud = async (input: CrudExistingRowPatchInput): Promise<Set<number>> => {
     const changedColumns =
       input.changedColumns || deps.getCrudChangedColumns(input.headers, input.currentRow, input.nextRow);
     const writableColumns = new Set<number>(
-      Array.from(changedColumns).filter(index => index > 0 && Boolean(input.headers[index])),
+      Array.from(changedColumns as number[]).filter(index => index > 0 && Boolean(input.headers[index])),
     );
     if (writableColumns.size === 0) return writableColumns;
 

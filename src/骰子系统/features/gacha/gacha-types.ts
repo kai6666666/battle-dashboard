@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/gacha/gacha-types.ts
  * Feature-Sliced: features/gacha 域的纯类型模型（运行时全部被擦除，零运行时影响）。

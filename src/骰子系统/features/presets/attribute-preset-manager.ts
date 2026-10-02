@@ -1,13 +1,13 @@
-// @ts-nocheck
 /**
  * attribute-preset-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 import { Store } from '../../shared/storage/store';
+import type { AttributePresetConfig } from '../../shared/advanced-preset-types';
 export function createAttributePresetManager(deps: any) {
   const AttributePresetManager = (() => {
-    let _cache = null;
+    let _cache: any = null;
 
     return {
       // 获取所有预设（内置 + 自定义，自动检测并更新版本）
@@ -45,11 +45,11 @@ export function createAttributePresetManager(deps: any) {
       getActivePreset() {
         const activeId = Store.get(deps.STORAGE_KEY_ACTIVE_ATTR_PRESET, null);
         if (!activeId) return null;
-        return this.getAllPresets().find(p => p.id === activeId) || null;
+        return this.getAllPresets().find((p: any) => p.id === activeId) || null;
       },
 
       // 设置激活的预设
-      setActivePreset(id) {
+      setActivePreset(id: any) {
         try {
           // 如果id是空字符串，设置为null
           const finalId = id === '' || id === undefined ? null : id;
@@ -82,7 +82,7 @@ export function createAttributePresetManager(deps: any) {
       },
 
       // 创建自定义预设
-      createPreset(preset) {
+      createPreset(preset: any) {
         const stored = Store.get(deps.STORAGE_KEY_ATTRIBUTE_PRESETS, []) as AttributePresetConfig[];
         const newPreset = {
           ...preset,
@@ -100,7 +100,7 @@ export function createAttributePresetManager(deps: any) {
       },
 
       // 更新自定义预设
-      updatePreset(id, updates) {
+      updatePreset(id: any, updates: any) {
         const stored = Store.get(deps.STORAGE_KEY_ATTRIBUTE_PRESETS, []) as AttributePresetConfig[];
         const index = stored.findIndex(p => p.id === id);
         if (index < 0) return false;
@@ -114,7 +114,7 @@ export function createAttributePresetManager(deps: any) {
       },
 
       // 删除自定义预设
-      deletePreset(id) {
+      deletePreset(id: any) {
         const stored = Store.get(deps.STORAGE_KEY_ATTRIBUTE_PRESETS, []) as AttributePresetConfig[];
         const filtered = stored.filter(p => p.id !== id);
         if (filtered.length === stored.length) return false;
@@ -129,8 +129,8 @@ export function createAttributePresetManager(deps: any) {
       },
 
       // 导出预设为 JSON
-      exportPreset(id) {
-        const preset = this.getAllPresets().find(p => p.id === id);
+      exportPreset(id: any) {
+        const preset = this.getAllPresets().find((p: any) => p.id === id);
         if (!preset) return null;
         const exported = {
           format: 'acu_attr_preset_v1',
@@ -142,7 +142,7 @@ export function createAttributePresetManager(deps: any) {
       },
 
       // 从 JSON/JSONC 导入预设
-      importPreset(jsonStr, autoUpdate = false) {
+      importPreset(jsonStr: any, autoUpdate = false) {
         try {
           const data = deps.parseJsoncRecord(jsonStr, '属性预设');
 

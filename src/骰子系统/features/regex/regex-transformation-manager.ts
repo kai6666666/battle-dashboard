@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * regex-transformation-manager.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
  */
 
+import type { RegexTransformationRule } from '../../shared/index-local-types';
 import { Store } from '../../shared/storage/store';
 
 export function createRegexTransformationManager(deps: any) {
@@ -40,22 +40,22 @@ export function createRegexTransformationManager(deps: any) {
     },
 
     // 保存启用状态
-    _saveEnabledStates(states) {
+    _saveEnabledStates(states: any) {
       Store.set(deps.STORAGE_KEY_REGEX_ENABLED, states);
       this._enabledCache = states;
     },
 
     // 获取启用的规则
     getEnabledRules() {
-      return this.getAllRules().filter(rule => rule.enabled !== false);
+      return this.getAllRules().filter((rule: any) => rule.enabled !== false);
     },
 
     // 根据作用域获取适用的规则
-    getApplicableRules(tableName, columnName) {
+    getApplicableRules(tableName: any, columnName: any) {
       const allRules = this.getEnabledRules();
 
       return allRules
-        .filter(rule => {
+        .filter((rule: any) => {
           // 检查作用域是否匹配
           switch (rule.scope.type) {
             case 'global':
@@ -73,14 +73,14 @@ export function createRegexTransformationManager(deps: any) {
               return false;
           }
         })
-        .sort((a, b) => b.priority - a.priority); // 按优先级降序排列
+        .sort((a: any, b: any) => b.priority - a.priority); // 按优先级降序排列
     },
 
     // 切换规则启用状态
-    toggleRuleEnabled(ruleId, enabled) {
+    toggleRuleEnabled(ruleId: any, enabled: any) {
       // 更新 STORAGE_KEY_REGEX_RULES 中的规则状态
       const rules = Store.get(deps.STORAGE_KEY_REGEX_RULES, []);
-      const ruleIndex = rules.findIndex(r => r.id === ruleId);
+      const ruleIndex = rules.findIndex((r: any) => r.id === ruleId);
       if (ruleIndex !== -1) {
         rules[ruleIndex].enabled = enabled;
         Store.set(deps.STORAGE_KEY_REGEX_RULES, rules);
@@ -96,7 +96,7 @@ export function createRegexTransformationManager(deps: any) {
     },
 
     // 添加自定义规则
-    addCustomRule(rule) {
+    addCustomRule(rule: any) {
       const rules = Store.get(deps.STORAGE_KEY_REGEX_RULES, []);
 
       // 验证必填字段
@@ -143,9 +143,9 @@ export function createRegexTransformationManager(deps: any) {
     },
 
     // 删除规则
-    removeRule(ruleId) {
+    removeRule(ruleId: any) {
       const rules = Store.get(deps.STORAGE_KEY_REGEX_RULES, []);
-      const index = rules.findIndex(r => r.id === ruleId);
+      const index = rules.findIndex((r: any) => r.id === ruleId);
       if (index === -1) return false;
 
       rules.splice(index, 1);
@@ -159,9 +159,9 @@ export function createRegexTransformationManager(deps: any) {
     },
 
     // 更新规则
-    updateRule(ruleId, updates) {
+    updateRule(ruleId: any, updates: any) {
       const rules = Store.get(deps.STORAGE_KEY_REGEX_RULES, []);
-      const index = rules.findIndex(r => r.id === ruleId);
+      const index = rules.findIndex((r: any) => r.id === ruleId);
       if (index === -1) return false;
 
       rules[index] = {
@@ -180,8 +180,8 @@ export function createRegexTransformationManager(deps: any) {
     },
 
     // 获取单个规则
-    getRule(ruleId) {
-      return this.getAllRules().find(r => r.id === ruleId);
+    getRule(ruleId: any) {
+      return this.getAllRules().find((r: any) => r.id === ruleId);
     },
 
     // 清除缓存

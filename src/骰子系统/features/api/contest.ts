@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/api/contest.ts
  * Feature-Sliced: 对外 API 的对抗检定（contest）方法。

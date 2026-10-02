@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * show-inventory-detail-menu.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type InventoryEditableField = string;
+type InventoryMenuScope = 'card' | 'summary' | 'meta' | 'field';
 export function createShowInventoryDetailMenu(deps: any) {
   const showInventoryDetailMenu = (
     event: JQuery.ClickEvent,
@@ -66,7 +67,7 @@ export function createShowInventoryDetailMenu(deps: any) {
       $overlay.length && typeof $overlay[0].getBoundingClientRect === 'function'
         ? $overlay[0].getBoundingClientRect()
         : null;
-    const rawEvent = event.originalEvent;
+    const rawEvent = event.originalEvent as any;
     const touchPoint = rawEvent && 'touches' in rawEvent && rawEvent.touches.length > 0 ? rawEvent.touches[0] : null;
     const changedTouchPoint =
       rawEvent && 'changedTouches' in rawEvent && rawEvent.changedTouches.length > 0
@@ -111,7 +112,7 @@ export function createShowInventoryDetailMenu(deps: any) {
     };
 
     backdrop.on('click', closeAll);
-    menu.on('click', '[data-action]', function () {
+    menu.on('click', '[data-action]', function (this: any) {
       const action = String($(this).data('action') || '');
       const nextFieldKey = String($(this).data('field-key') || '') as InventoryEditableField;
       closeAll();

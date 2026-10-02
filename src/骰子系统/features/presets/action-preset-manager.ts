@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * action-preset-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,7 +6,7 @@ import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 import { Store } from '../../shared/storage/store';
 export function createActionPresetManager(deps: any) {
   const ActionPresetManager = (() => {
-    let _cache = null;
+    let _cache: any = null;
 
     return {
       // 获取所有预设（内置 + 用户自定义）
@@ -19,8 +18,8 @@ export function createActionPresetManager(deps: any) {
       },
 
       // 根据ID获取单个预设
-      getPresetById(id) {
-        return this.getAllPresets().find(p => p.id === id) || null;
+      getPresetById(id: any) {
+        return this.getAllPresets().find((p: any) => p.id === id) || null;
       },
 
       // 获取当前激活的预设ID（默认为内置预设）
@@ -37,7 +36,7 @@ export function createActionPresetManager(deps: any) {
       },
 
       // 设置激活的预设（'__none__' 表示全部关闭）
-      setActivePresetId(id) {
+      setActivePresetId(id: any) {
         try {
           const finalId = id === '' || id === undefined || id === null ? '__none__' : id;
           Store.set(deps.STORAGE_KEY_ACTIVE_ACTION_PRESET, finalId);
@@ -51,7 +50,7 @@ export function createActionPresetManager(deps: any) {
       },
 
       // 创建自定义预设
-      createPreset(preset) {
+      createPreset(preset: any) {
         const stored = Store.get(deps.STORAGE_KEY_ACTION_PRESETS, []);
         const newPreset = {
           format: 'acu_action_preset_v1',
@@ -69,9 +68,9 @@ export function createActionPresetManager(deps: any) {
       },
 
       // 更新自定义预设
-      updatePreset(id, updates) {
+      updatePreset(id: any, updates: any) {
         const stored = Store.get(deps.STORAGE_KEY_ACTION_PRESETS, []);
-        const index = stored.findIndex(p => p.id === id);
+        const index = stored.findIndex((p: any) => p.id === id);
         if (index < 0) return false;
         stored[index] = { ...stored[index], ...updates, version: PRESET_FORMAT_VERSION };
         Store.set(deps.STORAGE_KEY_ACTION_PRESETS, stored);
@@ -81,9 +80,9 @@ export function createActionPresetManager(deps: any) {
       },
 
       // 删除自定义预设
-      deletePreset(id) {
+      deletePreset(id: any) {
         const stored = Store.get(deps.STORAGE_KEY_ACTION_PRESETS, []);
-        const filtered = stored.filter(p => p.id !== id);
+        const filtered = stored.filter((p: any) => p.id !== id);
         if (filtered.length === stored.length) return false;
         Store.set(deps.STORAGE_KEY_ACTION_PRESETS, filtered);
         _cache = null;
@@ -96,7 +95,7 @@ export function createActionPresetManager(deps: any) {
       },
 
       // 导出预设为 JSON
-      exportPreset(id) {
+      exportPreset(id: any) {
         const preset = this.getPresetById(id);
         if (!preset) return null;
         const exported = {
@@ -110,7 +109,7 @@ export function createActionPresetManager(deps: any) {
       },
 
       // 从 JSON/JSONC 导入预设
-      importPreset(jsonStr) {
+      importPreset(jsonStr: any) {
         try {
           const data = deps.parseJsoncRecord(jsonStr, '交互规则预设');
 

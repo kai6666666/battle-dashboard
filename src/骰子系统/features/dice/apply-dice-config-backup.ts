@@ -1,8 +1,11 @@
-// @ts-nocheck
 /**
  * apply-dice-config-backup.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupPendingActiveWrite = Record<string, any>;
+type DiceConfigBackupApplyStats = Record<string, any>;
+type DiceConfigBackupModuleId = string;
+type DiceConfigBackupDocument = Record<string, any>;
 export function createApplyDiceConfigBackup(deps: any) {
   const applyDiceConfigBackup = async (
     backup: DiceConfigBackupDocument,
@@ -34,7 +37,7 @@ export function createApplyDiceConfigBackup(deps: any) {
     );
     const gachaItemSettingSourceIds = new Set(Object.keys(incomingGachaItemSettings?.items || {}));
 
-    selectedIds.forEach(moduleId => {
+    selectedIds.forEach((moduleId: any) => {
       const definition = deps.getDiceConfigBackupModuleDefinition(moduleId);
       const payload = backup.modules[moduleId];
       if (!definition || !payload) return;

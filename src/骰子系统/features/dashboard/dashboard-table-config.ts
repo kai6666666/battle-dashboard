@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * dashboard-table-config.ts
  * Feature-Sliced 模块（数据常量）。
  */
 import { CHARACTER_NAME_COLUMN_KEYS } from '../../entities/name-alias';
+import type { DashboardConfigMap } from '../../shared/index-local-types';
 
 export const DASHBOARD_TABLE_CONFIG: DashboardConfigMap = {
     global: {

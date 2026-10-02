@@ -1,16 +1,15 @@
-// @ts-nocheck
 /**
  * change-edit-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowChangeEditModal(deps: any) {
-  const showChangeEditModal = (row, headers, tableName, rowIndex, tableKey) => {
+  const showChangeEditModal = (row: any, headers: any, tableName: any, rowIndex: any, tableKey: any) => {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
 
     const inputsHtml = row
-      .map((cell, idx) => {
+      .map((cell: any, idx: any) => {
         if (idx === 0) return '';
         const headerName = headers[idx] || `列 ${idx}`;
         const val = cell || '';
@@ -39,7 +38,7 @@ export function createShowChangeEditModal(deps: any) {
     $('body').append(dialog);
 
     // [修复] 自动高度调节逻辑
-    const adjustHeight = el => {
+    const adjustHeight = (el: any) => {
       // 关键修复：使用 auto 而不是 0px，防止布局塌陷并正确获取 scrollHeight
       el.style.height = 'auto';
       const contentHeight = el.scrollHeight + 2;
@@ -50,16 +49,16 @@ export function createShowChangeEditModal(deps: any) {
 
     // 1. 初始化时：使用 requestAnimationFrame 确保在 DOM 渲染后执行
     requestAnimationFrame(() => {
-      dialog.find('textarea').each(function () {
+      dialog.find('textarea').each(function (this: any) {
         adjustHeight(this);
       });
     });
 
     // 2. 输入时：实时调整
-    dialog.find('textarea').on('input', function () {
+    dialog.find('textarea').on('input', function (this: any) {
       adjustHeight(this);
     });
-    dialog.find('textarea').on('input', function () {
+    dialog.find('textarea').on('input', function (this: any) {
       adjustHeight(this);
     });
 
@@ -81,7 +80,7 @@ export function createShowChangeEditModal(deps: any) {
 
         const nextRow = [...currentRow];
         let hasChanges = false;
-        dialog.find('textarea').each(function () {
+        dialog.find('textarea').each(function (this: any) {
           const colIdx = parseInt($(this).data('col'));
           const newVal = $(this).val();
           if (String(nextRow[colIdx]) !== String(newVal)) {
@@ -102,7 +101,7 @@ export function createShowChangeEditModal(deps: any) {
             });
           } catch (e) {
             console.error('[DICE]ACU 保存失败:', e);
-            let errorMessage = e.message || '保存出错，请检查数据格式和大小';
+            let errorMessage = (e as any).message || '保存出错，请检查数据格式和大小';
             // 检查是否是 "Settings could not be saved" 相关的错误
             const errorMsg = String(e);
             if (
