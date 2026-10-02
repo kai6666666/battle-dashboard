@@ -1,15 +1,18 @@
-// @ts-nocheck
 /**
  * parse-dice-config-backup.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupParseResult = Record<string, any>;
+type DiceConfigBackupModuleId = string;
+type DiceConfigBackupModulePayload = Record<string, any>;
+
 export function createParseDiceConfigBackup(deps: any) {
   const parseDiceConfigBackup = (text: string): DiceConfigBackupParseResult => {
     const parsed = deps.parseJsoncDocument({
       text,
       emptyMessage: '备份文件内容为空',
       invalidJsonMessage: '备份文件不是有效的 JSON/JSONC',
-      validate: value => {
+      validate: (value: any) => {
         if (!deps.isDiceConfigBackupRecord(value)) throw new Error('备份文件结构无效');
         return value;
       },
@@ -23,7 +26,7 @@ export function createParseDiceConfigBackup(deps: any) {
     const warnings: string[] = [];
     const modules: Partial<Record<DiceConfigBackupModuleId, DiceConfigBackupModulePayload>> = {};
 
-    Object.entries(parsed.modules).forEach(([rawModuleId, rawPayload]) => {
+    Object.entries(parsed.modules).forEach(([rawModuleId, rawPayload]: any) => {
       if (!deps.isDiceConfigBackupModuleId(rawModuleId)) {
         warnings.push(`备份文件包含未知模块 "${rawModuleId}"，已跳过。`);
         return;

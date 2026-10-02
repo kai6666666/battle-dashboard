@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * merge-gacha-catalog-records.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GACHA_CATALOG_VERSION } from '../../entities/gacha-items';
+type GachaCatalogRecord = Record<string, any>;
+type GachaItemDefinition = Record<string, any>;
+
 export function createMergeGachaCatalogRecordsToGlobalScope(deps: any) {
   const mergeGachaCatalogRecordsToGlobalScope = (
     records: readonly GachaCatalogRecord[],
@@ -29,7 +31,7 @@ export function createMergeGachaCatalogRecordsToGlobalScope(deps: any) {
     normalizedRecords.forEach(record => {
       version = Math.max(version, record.version || 1);
       updatedAt = Math.max(updatedAt, Number(record.updatedAt) || 0);
-      record.items.forEach(item => {
+      record.items.forEach((item: any) => {
         const id = String(item.id || '').trim();
         if (!id) return;
         const incoming: GachaItemDefinition = deps.cloneDiceConfigBackupValue({ ...item, id });

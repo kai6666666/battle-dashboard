@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * resolve-custom-table-name-icon.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type ResolvedCustomTableNameIcon = Record<string, any>;
+
+import type { CustomTableNameIconContext } from '../../shared/index-local-types';
 export function createResolveCustomTableNameIcon(deps: any) {
   const resolveCustomTableNameIcon = (
     defaultIcon: string,

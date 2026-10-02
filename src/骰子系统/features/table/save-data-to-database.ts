@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * save-data-to-database.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createSaveDataToDatabase(deps: any) {
-  const saveDataToDatabase = async (tableData, skipRender = false, commitDeletes = false) => {
+  const saveDataToDatabase = async (tableData: any, skipRender = false, commitDeletes = false) => {
     if (deps.getIsSaving()) {
       console.warn('[DICE]保存操作正在进行中，跳过重复请求');
       return;
@@ -25,18 +24,18 @@ export function createSaveDataToDatabase(deps: any) {
       deps.saveSnapshot(dataToSave);
       deps.setHasUnsavedChanges(false);
       deps.setCurrentDiffMap(new Set());
-      if (window.acuModifiedSet) window.acuModifiedSet.clear();
+      if ((window as any).acuModifiedSet) (window as any).acuModifiedSet.clear();
       console.info('[DICE]本地状态已更新，未保存更改已清除');
 
       if (!skipRender) {
         deps.renderInterface();
       }
     } catch (e) {
-      const errorMessage = e.message || '保存出错，请检查数据格式和数据库版本';
+      const errorMessage = (e as any).message || '保存出错，请检查数据格式和数据库版本';
       console.error('[DICE]保存数据失败:', {
-        error: e,
+        error: e as any,
         message: errorMessage,
-        stack: e.stack,
+        stack: (e as any).stack,
       });
       if (window.toastr) {
         showActionableErrorToast(errorMessage, { title: '保存失败', suggestion: 'save', toastrOptions: { timeOut: 7000 } });

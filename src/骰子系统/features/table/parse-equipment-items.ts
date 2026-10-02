@@ -1,10 +1,12 @@
-// @ts-nocheck
 /**
  * parse-equipment-items.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type GachaRewardParseOptions = Record<string, any>;
+type InventoryParsedItem = Record<string, any>;
+
 export function createParseEquipmentItems(deps: any) {
-  const parseEquipmentItems = (rawData, options: GachaRewardParseOptions = {}) => {
+  const parseEquipmentItems = (rawData: any, options: GachaRewardParseOptions = {}) => {
     const equipmentResult = deps.getEquipmentResult(rawData, options);
     if (!equipmentResult?.data) {
       return {
@@ -23,7 +25,7 @@ export function createParseEquipmentItems(deps: any) {
     if (options.requireNameColumn) deps.assertGachaRewardNameColumn(tableName, headers, colMap);
 
     const items = rows
-      .map((row, rowIndex) => {
+      .map((row: any, rowIndex: any) => {
         const name = String(row[colMap.name] ?? '').trim();
         if (!name) return null;
         const rawRowIndex = Number((row as Record<string, unknown>)[deps.GACHA_CATALOG_RAW_ROW_INDEX_PROP]);
@@ -53,7 +55,7 @@ export function createParseEquipmentItems(deps: any) {
           isChanged: isNew || quantityChanged,
         };
       })
-      .filter((item): item is InventoryParsedItem => Boolean(item));
+      .filter((item: any): item is InventoryParsedItem => Boolean(item));
 
     return { tableName, tableKey: equipmentResult.key || '', headers, items, colMap };
   };

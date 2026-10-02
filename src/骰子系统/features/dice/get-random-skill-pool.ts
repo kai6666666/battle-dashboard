@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-random-skill-pool.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -13,7 +12,7 @@ export function createGetRandomSkillPool(deps: any) {
 
         // 添加基本属性
         if (preset.baseAttributes && Array.isArray(preset.baseAttributes)) {
-          preset.baseAttributes.forEach(attr => {
+          preset.baseAttributes.forEach((attr: any) => {
             const attrName = typeof attr === 'string' ? attr : attr && attr.name;
             if (attrName) {
               allAttrs.add(attrName);
@@ -23,7 +22,7 @@ export function createGetRandomSkillPool(deps: any) {
 
         // 添加特殊属性
         if (preset.specialAttributes && Array.isArray(preset.specialAttributes)) {
-          preset.specialAttributes.forEach(attr => {
+          preset.specialAttributes.forEach((attr: any) => {
             const attrName = typeof attr === 'string' ? attr : attr && attr.name;
             if (attrName) {
               allAttrs.add(attrName);
@@ -45,7 +44,7 @@ export function createGetRandomSkillPool(deps: any) {
 
           // 添加基本属性
           if (p.baseAttributes && Array.isArray(p.baseAttributes)) {
-            p.baseAttributes.forEach(attr => {
+            p.baseAttributes.forEach((attr: any) => {
               const attrName = typeof attr === 'string' ? attr : attr && attr.name;
               if (attrName) {
                 allAttrs.add(attrName);
@@ -55,7 +54,7 @@ export function createGetRandomSkillPool(deps: any) {
 
           // 添加特殊属性
           if (p.specialAttributes && Array.isArray(p.specialAttributes)) {
-            p.specialAttributes.forEach(attr => {
+            p.specialAttributes.forEach((attr: any) => {
               const attrName = typeof attr === 'string' ? attr : attr && attr.name;
               if (attrName) {
                 allAttrs.add(attrName);

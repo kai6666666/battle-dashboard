@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * gacha-shard-exchange-confirm.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,7 +7,7 @@ export function createShowGachaShardExchangeConfirm(deps: any) {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
     const rawData = deps.getCachedRawData() || deps.getTableData();
-    const item = deps.getAllGachaItemDefinitions(rawData).find(definition => definition.id === itemId);
+    const item = deps.getAllGachaItemDefinitions(rawData).find((definition: any) => definition.id === itemId);
     if (!item) return;
     if (!deps.isGachaItemEnabled(item)) {
       if (window.toastr) window.toastr.warning('这个物品已禁用，暂时无法兑换');
@@ -66,7 +65,7 @@ export function createShowGachaShardExchangeConfirm(deps: any) {
       overlayEl.style.setProperty('z-index', '31360', 'important');
     }
     deps.setupOverlayClose(overlay, 'acu-gacha-shard-confirm-overlay', () => overlay.remove());
-    overlay.on('click', '.acu-gacha-shard-confirm-btn', function (event) {
+    overlay.on('click', '.acu-gacha-shard-confirm-btn', function (this: any, event: any) {
       event.stopPropagation();
       const action = String($(this).data('action') || '');
       overlay.remove();

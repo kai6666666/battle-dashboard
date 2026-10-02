@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * render-dice-profile-manager-body.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceCharacterProfileDetection = Record<string, any>;
+
 export function createRenderDiceProfileManagerBody(deps: any) {
   const renderDiceProfileManagerBody = async (): Promise<string> => {
     let characterDetection: DiceCharacterProfileDetection | null = null;
@@ -12,9 +13,9 @@ export function createRenderDiceProfileManagerBody(deps: any) {
       console.warn('[DICE][PROFILE]读取当前角色卡配置方案失败:', error);
     }
     const summaries = await deps.refreshDiceProfileIndex();
-    const snapshots = summaries.filter(summary => summary.source?.type === 'snapshot');
+    const snapshots = summaries.filter((summary: any) => summary.source?.type === 'snapshot');
     const regularProfiles = summaries.filter(
-      summary => summary.source?.type !== 'snapshot' && !deps.isDiceProfileCharacterSource(summary.source),
+      (summary: any) => summary.source?.type !== 'snapshot' && !deps.isDiceProfileCharacterSource(summary.source),
     );
     const characterProfiles = characterDetection ? [deps.toDiceProfileSummary(characterDetection.profile)] : [];
     const collapsedSections = deps.getDiceProfileCollapsedSections();
@@ -62,7 +63,7 @@ export function createRenderDiceProfileManagerBody(deps: any) {
               <button type="button" class="acu-config-backup-clear acu-setting-action-btn acu-config-backup-mini-btn">清空选择</button>
             </div>
             <div class="acu-config-backup-module-list acu-profile-module-list">
-              ${deps.renderDiceConfigBackupModuleRows(deps.DICE_CONFIG_BACKUP_MODULES.map(module => module.id))}
+              ${deps.renderDiceConfigBackupModuleRows(deps.DICE_CONFIG_BACKUP_MODULES.map((module: any) => module.id))}
             </div>
           </div>
         </section>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * update-controller.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。

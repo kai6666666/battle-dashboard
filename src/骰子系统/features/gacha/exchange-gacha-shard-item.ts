@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * exchange-gacha-shard-item.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { GachaDrawOutcome } from './gacha-types';
+
 export function createExchangeGachaShardItem(deps: any) {
   const exchangeGachaShardItem = async (itemId: string) => {
     try {
@@ -10,7 +11,7 @@ export function createExchangeGachaShardItem(deps: any) {
         const rawData = deps.getTableData({ silent: true }) || deps.getCachedRawData();
         if (!rawData) return;
         await deps.ensureGachaCatalogLoaded(rawData);
-        const item = deps.getAllGachaItemDefinitions(rawData).find(definition => definition.id === itemId);
+        const item = deps.getAllGachaItemDefinitions(rawData).find((definition: any) => definition.id === itemId);
         if (!item) return;
         if (!deps.isGachaItemEnabled(item)) {
           if (window.toastr) window.toastr.warning('这个物品已禁用，暂时无法兑换');

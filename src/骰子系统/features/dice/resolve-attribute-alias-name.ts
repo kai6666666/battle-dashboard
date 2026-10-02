@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * resolve-attribute-alias-name.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -10,7 +9,7 @@ export function createResolveAttributeAliasName(deps: any) {
     aliasCandidates: string[] = [],
   ): { name: string | null; reason?: string } => {
     const allAttrs = deps.getFullAttributesForCharacter(characterName)
-      .map(attr => attr.name)
+      .map((attr: any) => attr.name)
       .filter(Boolean);
     if (allAttrs.length === 0) {
       return { name: targetName || null };
@@ -31,7 +30,7 @@ export function createResolveAttributeAliasName(deps: any) {
     }
 
     const lowerMap = new Map<string, string>();
-    allAttrs.forEach(name => {
+    allAttrs.forEach((name: any) => {
       const lower = name.toLowerCase();
       if (!lowerMap.has(lower)) lowerMap.set(lower, name);
     });
@@ -43,7 +42,7 @@ export function createResolveAttributeAliasName(deps: any) {
     }
 
     const normalizedGroups = new Map<string, string[]>();
-    allAttrs.forEach(name => {
+    allAttrs.forEach((name: any) => {
       const key = deps.normalizeAttributeName(name);
       if (!key) return;
       const list = normalizedGroups.get(key) || [];

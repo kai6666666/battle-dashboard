@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * sync-dice-config-backup-runtime-after-restore.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { Store } from '../../shared/storage/store';
 import { setDatabaseToastMute } from '../../shared/database-toast-mute';
+type DiceConfigBackupModuleId = string;
+
 export function createSyncDiceConfigBackupRuntimeAfterRestore(deps: any) {
   const syncDiceConfigBackupRuntimeAfterRestore = (
     restoredModuleIds: readonly DiceConfigBackupModuleId[],
@@ -50,7 +51,7 @@ export function createSyncDiceConfigBackupRuntimeAfterRestore(deps: any) {
     if (options.closeSettings) {
       const { $ } = deps.getCore();
       $('.acu-edit-overlay')
-        .filter((_, element) => $(element).find('.acu-settings-dialog').length > 0)
+        .filter((_: any, element: any) => $(element).find('.acu-settings-dialog').length > 0)
         .remove();
       deps.setIsSettingsOpen(false);
       deps.renderInterface();

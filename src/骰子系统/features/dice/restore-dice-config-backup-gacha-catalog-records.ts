@@ -1,10 +1,12 @@
-// @ts-nocheck
 /**
  * restore-dice-config-backup-gacha-catalog-records.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GACHA_CATALOG_VERSION } from '../../entities/gacha-items';
 import { GachaCatalogDB } from '../../features/gacha/gacha-catalog-db';
+type DiceConfigBackupApplyStats = Record<string, any>;
+type GachaCatalogRecord = Record<string, any>;
+
 export function createRestoreDiceConfigBackupGachaCatalogRecords(deps: any) {
   const restoreDiceConfigBackupGachaCatalogRecords = async (
     recordsValue: unknown,
@@ -53,7 +55,7 @@ export function createRestoreDiceConfigBackupGachaCatalogRecords(deps: any) {
       items: mergedItems,
       updatedAt: Date.now(),
     };
-    const saved = await GachaCatalogDB.put(nextRecord);
+    const saved = await GachaCatalogDB.put(nextRecord as any);
     if (!saved) throw new Error('全局自定义物品目录保存失败');
     deps.setGachaCatalogCache({
       scopeKey: deps.GACHA_CATALOG_GLOBAL_SCOPE_KEY,
@@ -63,7 +65,7 @@ export function createRestoreDiceConfigBackupGachaCatalogRecords(deps: any) {
         updatedAt: nextRecord.updatedAt,
       },
     });
-    deps.ensureGachaPoolsForTags(incomingGlobalRecord.items.flatMap(item => [...item.poolTags]));
+    deps.ensureGachaPoolsForTags(incomingGlobalRecord.items.flatMap((item: any) => [...item.poolTags]));
   };
   return restoreDiceConfigBackupGachaCatalogRecords;
 }

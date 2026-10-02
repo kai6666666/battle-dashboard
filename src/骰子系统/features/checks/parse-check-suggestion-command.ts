@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * parse-check-suggestion-command.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CheckSuggestionParsedCommand = Record<string, any>;
+
 export function createParseCheckSuggestionCommand(deps: any) {
   const parseCheckSuggestionCommand = (rawCommand: string): CheckSuggestionParsedCommand => {
     const command = deps.normalizeCheckSuggestionCommandInput(rawCommand);

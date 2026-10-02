@@ -1,14 +1,16 @@
-// @ts-nocheck
 /**
  * build-advanced-preset-evaluation-context.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+type RollResult = Record<string, any>;
+
 export function createBuildAdvancedPresetEvaluationContext(deps: any) {
   const buildAdvancedPresetEvaluationContext = (
     preset: AdvancedDicePreset,
     rawContext?: Record<string, unknown>,
   ): Record<string, string | number | boolean | RollResult> => {
-    const rollRecord = rawContext && deps.isAdvancedPresetRecord(rawContext.roll) ? rawContext.roll : {};
+    const rollRecord: any = rawContext && deps.isAdvancedPresetRecord(rawContext.roll) ? rawContext.roll : {};
     const rollTotal = deps.coerceAdvancedPresetContextNumber(rawContext?.rollTotal ?? rollRecord.total, 50);
     const rollTags = deps.readAdvancedPresetContextTags(rawContext?.rollTags ?? rollRecord.tags);
     const context: Record<string, string | number | boolean | RollResult> = {
@@ -29,7 +31,7 @@ export function createBuildAdvancedPresetEvaluationContext(deps: any) {
     }
 
     if (Array.isArray(preset.customFields)) {
-      preset.customFields.forEach(field => {
+      preset.customFields.forEach((field: any) => {
         context[`$${field.id}`] = deps.coerceAdvancedPresetContextNumber(field.defaultValue, 0);
       });
     }
@@ -42,8 +44,8 @@ export function createBuildAdvancedPresetEvaluationContext(deps: any) {
 
     if (rawContext) {
       const vars = deps.isAdvancedPresetRecord(rawContext.vars) ? rawContext.vars : {};
-      Object.entries(vars).forEach(([key, value]) => deps.assignAdvancedPresetContextNumber(context, key, value));
-      Object.entries(rawContext).forEach(([key, value]) => {
+      Object.entries((vars || {}) as Record<string, any>).forEach(([key, value]: any) => deps.assignAdvancedPresetContextNumber(context, key, value));
+      Object.entries(rawContext).forEach(([key, value]: any) => {
         if (['roll', 'rollTotal', 'rollTags', 'vars', 'attr', 'attribute', 'dc', 'mod', 'skillMod'].includes(key)) {
           return;
         }
@@ -52,7 +54,7 @@ export function createBuildAdvancedPresetEvaluationContext(deps: any) {
     }
 
     if (Array.isArray(preset.derivedVars)) {
-      preset.derivedVars.forEach(spec => {
+      preset.derivedVars.forEach((spec: any) => {
         if (!spec || typeof spec.id !== 'string' || typeof spec.expr !== 'string') return;
         const evalResult = deps.evaluateCondition(spec.expr, context as Record<string, number>);
         if (!evalResult.success) return;

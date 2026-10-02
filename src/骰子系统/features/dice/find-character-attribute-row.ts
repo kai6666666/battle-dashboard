@@ -1,9 +1,12 @@
-// @ts-nocheck
 /**
  * find-character-attribute-row.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { findExplicitAttributeTableNameColumnIndex, findNameColumnIndex } from '../../entities/name-alias';
+type DiceRawData = Record<string, any>;
+type CharacterAttributeRowLookup = Record<string, any>;
+type DiceTableCell = unknown;
+
 export function createFindCharacterAttributeRow(deps: any) {
   const findCharacterAttributeRow = (
     characterName: unknown,

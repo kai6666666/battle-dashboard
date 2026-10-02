@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * bind-option-events.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,7 +7,7 @@ export function createBindOptionEvents(deps: any) {
     const { $ } = deps.getCore();
     $('body')
       .off('click.acu_check_suggestion')
-      .on('click.acu_check_suggestion', '.acu-check-suggestion-btn', async function (e) {
+      .on('click.acu_check_suggestion', '.acu-check-suggestion-btn', async function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -35,7 +34,7 @@ export function createBindOptionEvents(deps: any) {
     // 移除旧的直接绑定，改用 Body 委托，提升性能并防止动态元素事件丢失
     $('body')
       .off('click.acu_opt')
-      .on('click.acu_opt', '.acu-opt-btn', async function (e) {
+      .on('click.acu_opt', '.acu-opt-btn', async function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
 

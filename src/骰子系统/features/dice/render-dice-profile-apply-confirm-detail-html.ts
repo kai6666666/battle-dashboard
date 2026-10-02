@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * render-dice-profile-apply-confirm-detail-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupModuleId = string;
+
 export function createRenderDiceProfileApplyConfirmDetailHtml(deps: any) {
   const renderDiceProfileApplyConfirmDetailHtml = (
     moduleIds: readonly DiceConfigBackupModuleId[],

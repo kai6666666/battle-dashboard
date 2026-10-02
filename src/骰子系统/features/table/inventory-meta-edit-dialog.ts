@@ -1,11 +1,12 @@
-// @ts-nocheck
 /**
  * inventory-meta-edit-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type InventoryMetadataRecord = Record<string, any>;
+
 export function createShowInventoryMetaEditDialog(deps: any) {
-  const showInventoryMetaEditDialog = rowIndex => {
+  const showInventoryMetaEditDialog = (rowIndex: any) => {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
     const context = deps.getInventoryDetailContext(rowIndex);
