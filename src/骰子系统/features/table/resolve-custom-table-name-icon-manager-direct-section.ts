@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * resolve-custom-table-name-icon-manager-direct-section.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { CustomTableNameIconSection } from '../../shared/index-local-types';
+
 export function createResolveCustomTableNameIconManagerDirectSection(deps: any) {
   const resolveCustomTableNameIconManagerDirectSection = (tableName: string): CustomTableNameIconSection | null => {
     const normalizedName = deps.normalizeGlobalInteractionCategoryText(tableName);

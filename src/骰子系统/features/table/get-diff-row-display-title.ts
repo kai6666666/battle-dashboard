@@ -1,11 +1,12 @@
-// @ts-nocheck
 /**
  * get-diff-row-display-title.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiffRow = unknown[];
+
 export function createGetDiffRowDisplayTitle(deps: any) {
   const getDiffRowDisplayTitle = (headers: DiffRow, row: DiffRow, rowIndex: number): string => {
-    const preferred = deps.getDiffPreferredColumns(headers).filter(index => index > 0);
+    const preferred = deps.getDiffPreferredColumns(headers).filter((index: any) => index > 0);
     for (const colIndex of preferred) {
       const value = deps.normalizeDiffText(row[colIndex]);
       if (value) return value;

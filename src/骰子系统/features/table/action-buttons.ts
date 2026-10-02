@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * action-buttons.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createActionButtons(deps: any) {
+export function createActionButtons(_deps: any) {
   const ACTION_BUTTONS = [
     // { id: 'acu-btn-save-global', icon: 'fa-save', title: '保存所有修改' }, // 已废弃：使用即时保存
     { id: 'acu-btn-open-editor', icon: 'fa-database', title: '打开数据库' },

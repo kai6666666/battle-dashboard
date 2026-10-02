@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * render-gacha-item-icon-content.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { GachaItemDefinition } from '../../entities/gacha-items';
+import type { CustomTableNameIconContext } from '../../shared/index-local-types';
+
 export function createRenderGachaItemIconContent(deps: any) {
   const renderGachaItemIconContent = (
     item: Pick<GachaItemDefinition, 'name' | 'type' | 'icon'>,

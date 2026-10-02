@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * assert-gacha-reward-name-column.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type GachaRewardColumnMap = Record<string, any>;
+
 export function createAssertGachaRewardNameColumn(deps: any) {
   const assertGachaRewardNameColumn = (tableName: string, headers: unknown[], colMap: GachaRewardColumnMap): void => {
     if (colMap.name >= 0 && colMap.name < headers.length) return;

@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-template-inspection-severity-meta.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetTemplateInspectionSeverityMeta(deps: any) {
+type TemplateInspectionSeverity = string;
+
+export function createGetTemplateInspectionSeverityMeta(_deps: any) {
   const getTemplateInspectionSeverityMeta = (
     severity: TemplateInspectionSeverity,
   ): { label: string; icon: string; color: string } => {
