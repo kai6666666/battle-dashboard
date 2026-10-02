@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * refresh-viewport-input-target-listeners.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -13,16 +12,16 @@ export function createRefreshViewportInputTargetListeners(deps: any) {
     const eventHandler = deps.getViewportBoundsRefreshHandler() as EventListener;
     deps.setViewportInputObservedElements(elements);
 
-    elements.forEach(el => {
-      deps.VIEWPORT_BOTTOM_REFRESH_EVENTS.forEach(eventName => {
+    elements.forEach((el: any) => {
+      deps.VIEWPORT_BOTTOM_REFRESH_EVENTS.forEach((eventName: any) => {
         el.addEventListener(eventName, eventHandler, { capture: true, passive: true });
       });
     });
 
-    const ResizeObserverCtor = targetWindow.ResizeObserver || window.ResizeObserver;
+    const ResizeObserverCtor = (targetWindow as any).ResizeObserver || (window as any).ResizeObserver;
     if (ResizeObserverCtor) {
       deps.setViewportInputResizeObserver(new ResizeObserverCtor(() => deps.getViewportBoundsRefreshHandler()?.()));
-      elements.forEach(el => deps.getViewportInputResizeObserver()?.observe(el));
+      elements.forEach((el: any) => deps.getViewportInputResizeObserver()?.observe(el));
     }
   };
   return refreshViewportInputTargetListeners;

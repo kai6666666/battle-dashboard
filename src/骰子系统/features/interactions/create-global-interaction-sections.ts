@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * create-global-interaction-sections.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { GlobalInteractionGroup, GlobalInteractionSection, GlobalInteractionSectionKind } from '../../shared/index-local-types';
 export function createCreateGlobalInteractionSections(deps: any) {
   const createGlobalInteractionSections = (groups: GlobalInteractionGroup[]): GlobalInteractionSection[] => {
     const sectionByKind = new Map<GlobalInteractionSectionKind, GlobalInteractionSection>();

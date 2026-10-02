@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * extract-advanced-preset-json-candidates.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createExtractAdvancedPresetJsonCandidates(deps: any) {
+export function createExtractAdvancedPresetJsonCandidates(_deps: any) {
   const extractAdvancedPresetJsonCandidates = (sourceText: string): string[] => {
     const candidates: string[] = [];
     const text = sourceText.trim();

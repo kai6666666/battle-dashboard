@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * clamp-floating-collapse-position.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type FloatingCollapsePosition = Record<string, any>;
+
 export function createClampFloatingCollapsePosition(deps: any) {
   const clampFloatingCollapsePosition = (
     position: FloatingCollapsePosition | null,

@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * parse-advanced-preset-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedPresetParseResult = Record<string, any>;
+
 export function createParseAdvancedPresetText(deps: any) {
   const parseAdvancedPresetText = (
     sourceText: string,

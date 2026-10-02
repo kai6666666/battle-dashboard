@@ -1,11 +1,13 @@
-// @ts-nocheck
 /**
  * get-inventory-column-map.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DASHBOARD_TABLE_CONFIG } from '../../features/dashboard/dashboard-table-config';
+type GachaRewardColumnMap = Record<string, any>;
+type GachaRewardParseOptions = Record<string, any>;
+
 export function createGetInventoryColumnMap(deps: any) {
-  const getInventoryColumnMap = (inventoryResult, options: GachaRewardParseOptions = {}) => {
+  const getInventoryColumnMap = (inventoryResult: any, options: GachaRewardParseOptions = {}) => {
     const headers = inventoryResult?.data?.headers || [];
     const config = inventoryResult?.config || deps.getDashboardModuleConfig('bag') || DASHBOARD_TABLE_CONFIG.bag;
     const colMap: GachaRewardColumnMap = {

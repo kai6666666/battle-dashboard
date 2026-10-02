@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * normalize-imported-gacha-pool-tags.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -17,7 +16,7 @@ export function createNormalizeImportedGachaPoolTags(deps: any) {
       if (!tag) return;
       const aliasedTag = tagAliases[tag] || tag;
       if (aliasedTag === GACHA_ALL_POOL_TAG) {
-        deps.getGachaAllExpandablePoolTags().forEach(candidate => tags.add(candidate));
+        deps.getGachaAllExpandablePoolTags().forEach((candidate: any) => tags.add(candidate));
       } else {
         tags.add(aliasedTag);
       }

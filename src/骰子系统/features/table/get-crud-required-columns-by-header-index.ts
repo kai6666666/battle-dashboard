@@ -1,12 +1,11 @@
-// @ts-nocheck
 /**
  * get-crud-required-columns-by-header-index.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createGetCrudRequiredColumnsByHeaderIndex(deps: any) {
   const getCrudRequiredColumnsByHeaderIndex = (
-    headers,
-    sheet,
+    headers: any,
+    sheet: any,
     columnAliasMap = deps.buildCrudColumnAliasMap(sheet),
   ): Map<number, string> => {
     const result = new Map<number, string>();

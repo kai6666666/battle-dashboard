@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * patch-crud-sheet-in-message.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DbChatMessage = Record<string, any>;
+
 export function createPatchCrudSheetInMessage(deps: any) {
   const patchCrudSheetInMessage = (msg: DbChatMessage, sheetKey: string, desiredSheet: unknown): string[] => {
     const patchedKeys: string[] = [];
