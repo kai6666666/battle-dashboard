@@ -1,12 +1,11 @@
-// @ts-nocheck
 /**
  * get-crud-cell-value-for-write.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createGetCrudCellValueForWrite(deps: any) {
   const getCrudCellValueForWrite = (
-    headers,
-    row,
+    headers: any,
+    row: any,
     index: number,
     sheet: unknown,
     columnAliasMap = deps.buildCrudColumnAliasMap(sheet),

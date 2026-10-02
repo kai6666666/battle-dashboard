@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * normalize-gacha-message-id.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createNormalizeGachaMessageId(deps: any) {
+export function createNormalizeGachaMessageId(_deps: any) {
   const normalizeGachaMessageId = (messageId?: unknown): string => {
     if (typeof messageId === 'string' || typeof messageId === 'number') {
       return String(messageId).trim();

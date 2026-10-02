@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * get-success-level.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetSuccessLevel(deps: any) {
+export function createGetSuccessLevel(_deps: any) {
   const getSuccessLevel = function (roll: number, target: number, sides: number) {
     if (sides === 100) {
       if (roll <= 5) return { level: 3, name: '大成功', color: 'var(--acu-crit-success-text)' };

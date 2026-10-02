@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * open-database-visualizer-new-ui-via-api.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DatabaseVisualizerNewUiOpenResult = string;
+
 export function createOpenDatabaseVisualizerNewUiViaApi(deps: any) {
   const openDatabaseVisualizerNewUiViaApi = async (): Promise<DatabaseVisualizerNewUiOpenResult> => {
     let hasNewUiVisualizerApi = false;

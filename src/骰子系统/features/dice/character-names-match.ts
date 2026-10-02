@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * character-names-match.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -15,7 +14,7 @@ export function createCharacterNamesMatch(deps: any) {
     const storedKeys = new Set(
       deps.getCharacterNameCandidates(storedName).map(deps.normalizeCharacterNameForCompare).filter(Boolean),
     );
-    return deps.getCharacterNameCandidates(lookupRaw).some(candidate => {
+    return deps.getCharacterNameCandidates(lookupRaw).some((candidate: any) => {
       const key = deps.normalizeCharacterNameForCompare(candidate);
       return Boolean(key) && storedKeys.has(key);
     });

@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * get-gacha-reserved-custom-field-headers.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { GachaRewardTarget, GachaRewardTargetColumns } from '../../entities/gacha-items';
 export function createGetGachaReservedCustomFieldHeaders(deps: any) {
   const getGachaReservedCustomFieldHeaders = (
     target: GachaRewardTarget,
@@ -15,7 +15,7 @@ export function createGetGachaReservedCustomFieldHeaders(deps: any) {
     );
     const writtenKeys =
       target === 'equipment' ? deps.getGACHA_EQUIPMENT_WRITTEN_TARGET_COLUMN_KEYS() : deps.getGACHA_COMMON_WRITTEN_TARGET_COLUMN_KEYS();
-    deps.getGachaTargetColumnEntries(targetColumns).forEach(([key, headerName]) => {
+    deps.getGachaTargetColumnEntries(targetColumns).forEach(([key, headerName]: any) => {
       if (writtenKeys.has(key)) headers.add(headerName);
     });
     return headers;

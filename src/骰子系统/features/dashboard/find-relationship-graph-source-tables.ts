@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * find-relationship-graph-source-tables.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createFindRelationshipGraphSourceTables(deps: any) {
+type RelationGraphTableInput = Record<string, any>;
+type RelationshipGraphSourceTableMatch = Record<string, any>;
+
+export function createFindRelationshipGraphSourceTables(_deps: any) {
   const findRelationshipGraphSourceTables = (
     allTables: Record<string, RelationGraphTableInput>,
     tableKeywords: string[],

@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * get-diff-preferred-columns.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiffRow = unknown[];
+
 export function createGetDiffPreferredColumns(deps: any) {
   const getDiffPreferredColumns = (headers: DiffRow): number[] => {
     const indices: number[] = [];
@@ -10,10 +11,10 @@ export function createGetDiffPreferredColumns(deps: any) {
       if (index >= 0 && !indices.includes(index)) indices.push(index);
     };
 
-    headers.forEach((header, index) => {
+    headers.forEach((header: any, index) => {
       const normalized = deps.normalizeDiffHeader(header);
       if (!normalized) return;
-      if (deps.getDIFF_ID_HEADER_KEYWORDS().some(keyword => normalized.includes(keyword.toLowerCase()))) add(index);
+      if (deps.getDIFF_ID_HEADER_KEYWORDS().some((keyword: any) => normalized.includes(keyword.toLowerCase()))) add(index);
     });
 
     add(1);

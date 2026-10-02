@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * dice-config-backup-privacy-risk-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createDiceConfigBackupPrivacyRiskText(deps: any) {
+type DiceConfigBackupModuleId = string;
+
+export function createDiceConfigBackupPrivacyRiskText(_deps: any) {
   const DICE_CONFIG_BACKUP_PRIVACY_RISK_TEXT: Record<DiceConfigBackupModuleId, string> = {
     uiLayout: '风险较低，但会暴露主题、布局、表格顺序、隐藏项、折叠状态等使用偏好。',
     diceConfig: '可能暴露当前检定玩法偏好、疯狂模式权重、头像与图标联动开关、当前激活检定模式。',

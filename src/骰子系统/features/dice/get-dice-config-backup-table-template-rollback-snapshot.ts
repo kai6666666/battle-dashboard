@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * get-dice-config-backup-table-template-rollback-snapshot.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupTableTemplateRollbackSnapshot = Record<string, any>;
+
 export function createGetDiceConfigBackupTableTemplateRollbackSnapshot(deps: any) {
   const getDiceConfigBackupTableTemplateRollbackSnapshot = (): DiceConfigBackupTableTemplateRollbackSnapshot => {
     const api = deps.getDiceConfigBackupTableTemplateApi();

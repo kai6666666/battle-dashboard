@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * run-maybe-async-database-manual-update.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createRunMaybeAsyncDatabaseManualUpdate(deps: any) {
+type DatabaseManualUpdateResult = Record<string, any>;
+
+export function createRunMaybeAsyncDatabaseManualUpdate(_deps: any) {
   const runMaybeAsyncDatabaseManualUpdate = async (
     updater: () => unknown,
     source: string,
