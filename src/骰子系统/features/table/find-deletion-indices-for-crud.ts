@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * find-deletion-indices-for-crud.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createFindDeletionIndicesForCrud(deps: any) {
-  const findDeletionIndicesForCrud = (oldRows, desiredRows): number[] | null => {
+  const findDeletionIndicesForCrud = (oldRows: any, desiredRows: any): number[] | null => {
     if (desiredRows.length > oldRows.length) return null;
     const desiredKeys = desiredRows.map(deps.getStableRowKeyForCrud);
     const keepIndices: number[] = [];
@@ -24,7 +23,7 @@ export function createFindDeletionIndicesForCrud(deps: any) {
     }
 
     const keepSet = new Set(keepIndices);
-    return oldRows.map((_, index) => index).filter(index => !keepSet.has(index));
+    return oldRows.map((_: any, index: any) => index).filter((index: any) => !keepSet.has(index));
   };
   return findDeletionIndicesForCrud;
 }

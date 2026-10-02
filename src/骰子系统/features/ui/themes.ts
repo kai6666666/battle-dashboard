@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * themes.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createThemes(deps: any) {
+export function createThemes(_deps: any) {
   const THEMES = [
     { id: 'native', name: '跟随酒馆 (Adaptive)', icon: 'fa-circle-half-stroke' },
     { id: 'retro', name: '复古羊皮 (Retro)', icon: 'fa-scroll' },

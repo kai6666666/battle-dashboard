@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * sync-textarea-dice-cache-from-visible-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = any;
+
 export function createSyncTextareaDiceCacheFromVisibleText(deps: any) {
   const syncTextareaDiceCacheFromVisibleText = (
     textarea: AcuDiceTextareaElement,

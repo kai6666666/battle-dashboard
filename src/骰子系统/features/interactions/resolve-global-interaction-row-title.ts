@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * resolve-global-interaction-row-title.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,7 +7,7 @@ export function createResolveGlobalInteractionRowTitle(deps: any) {
     const exactNameColumnIndex = headers.findIndex(header => {
       const headerText = deps.normalizeGlobalInteractionHeader(header);
       return (
-        Boolean(headerText) && deps.GLOBAL_INTERACTION_NAME_HEADERS.some(keyword => headerText === keyword.toLowerCase())
+        Boolean(headerText) && deps.GLOBAL_INTERACTION_NAME_HEADERS.some((keyword: any) => headerText === keyword.toLowerCase())
       );
     });
     const nameColumnIndex =

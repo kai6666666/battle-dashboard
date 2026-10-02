@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * update-gacha-pool-config.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -10,7 +9,7 @@ export function createUpdateGachaPoolConfig(deps: any) {
     const id = normalizeGachaPoolId(poolId);
     if (!id) return false;
     const pools = deps.getConfiguredGachaPoolDefinitions();
-    const index = pools.findIndex(pool => pool.id === id);
+    const index = pools.findIndex((pool: any) => pool.id === id);
     if (index < 0) return false;
     const existing = pools[index];
     const enabledUpdate = updates.includeInAll ?? updates.visibleInTabs;

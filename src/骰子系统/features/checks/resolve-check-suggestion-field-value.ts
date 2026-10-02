@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * resolve-check-suggestion-field-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { CustomFieldConfig } from '../../shared/types';
+type CheckSuggestionParams = Record<string, any>;
+
 export function createResolveCheckSuggestionFieldValue(deps: any) {
   const resolveCheckSuggestionFieldValue = (
     field: CustomFieldConfig,

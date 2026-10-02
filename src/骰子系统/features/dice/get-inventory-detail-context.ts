@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-inventory-detail-context.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -13,7 +12,7 @@ export function createGetInventoryDetailContext(deps: any) {
       ? deps.getTableData({ silent: true }) || deps.cloneRuntimeDataValue(deps.getCachedRawData())
       : deps.getCachedRawData() || deps.getTableData();
     const parsed = target === 'equipment' ? deps.parseEquipmentItems(rawData) : deps.parseInventoryItems(rawData);
-    const item = parsed.items.find(candidate => candidate.rowIndex === rowIndex) || null;
+    const item = parsed.items.find((candidate: any) => candidate.rowIndex === rowIndex) || null;
     if (!rawData || !item || !item.tableKey) return null;
     const table = rawData[item.tableKey];
     const headers = Array.isArray(table?.content?.[0]) ? table.content[0] : parsed.headers;

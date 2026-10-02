@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * run-database-manual-update.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DatabaseManualUpdateResult = Record<string, any>;
+
 export function createRunDatabaseManualUpdate(deps: any) {
   const runDatabaseManualUpdate = async (): Promise<DatabaseManualUpdateResult> => {
     const newUiApiResult = await deps.runDatabaseManualUpdateViaApi({ includeLegacyApi: false });

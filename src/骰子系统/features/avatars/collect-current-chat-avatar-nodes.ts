@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * collect-current-chat-avatar-nodes.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { findNameColumnIndex } from '../../entities/name-alias';
+type RelationGraphTableInput = Record<string, any>;
+type AvatarManagerNode = Record<string, any>;
+
 export function createCollectCurrentChatAvatarNodes(deps: any) {
   const collectCurrentChatAvatarNodes = (allTables: Record<string, RelationGraphTableInput>): AvatarManagerNode[] => {
     const npcListData = deps.getDashboardNpcListData(allTables);
@@ -18,7 +20,7 @@ export function createCollectCurrentChatAvatarNodes(deps: any) {
       }
     }
 
-    npcListData.entries.forEach(npc => {
+    npcListData.entries.forEach((npc: any) => {
       const npcName = String(npc.name || '').trim();
       if (npcName) {
         nodeArr.push({ name: npcName, isPlayer: false, rowIndex: npc.index, tableKey: npc.tableKey });

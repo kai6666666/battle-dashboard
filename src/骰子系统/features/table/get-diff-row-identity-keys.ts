@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * get-diff-row-identity-keys.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiffRow = unknown[];
+
 export function createGetDiffRowIdentityKeys(deps: any) {
   const getDiffRowIdentityKeys = (headers: DiffRow, row: DiffRow): string[] => {
     const keys: string[] = [];
@@ -10,7 +11,7 @@ export function createGetDiffRowIdentityKeys(deps: any) {
       if (key && !keys.includes(key)) keys.push(key);
     };
 
-    deps.getDiffPreferredColumns(headers).forEach(colIndex => {
+    deps.getDiffPreferredColumns(headers).forEach((colIndex: any) => {
       const value = deps.normalizeDiffText(row[colIndex]);
       if (!value) return;
       const headerKey = deps.normalizeDiffHeader(headers[colIndex]);
@@ -20,7 +21,7 @@ export function createGetDiffRowIdentityKeys(deps: any) {
 
     const fullRowKey = row
       .slice(1)
-      .map(cell => deps.normalizeDiffText(cell))
+      .map((cell: any) => deps.normalizeDiffText(cell))
       .join('\u0001');
     if (fullRowKey.replace(/\u0001/g, '')) addKey(`full:${fullRowKey}`);
 
