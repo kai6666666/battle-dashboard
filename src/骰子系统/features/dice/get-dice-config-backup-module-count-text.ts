@@ -1,9 +1,24 @@
-// @ts-nocheck
 /**
  * get-dice-config-backup-module-count-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetDiceConfigBackupModuleCountText(deps: any) {
+type DiceConfigBackupModuleId =
+  | 'uiLayout'
+  | 'diceConfig'
+  | 'advancedPresets'
+  | 'attributePresets'
+  | 'actionGm'
+  | 'dashboardPresets'
+  | 'renderPresets'
+  | 'tableTemplate'
+  | 'tableTemplateRequirementPresets'
+  | 'validation'
+  | 'regex'
+  | 'avatarMap'
+  | 'customIcons'
+  | 'gachaSettings';
+
+export function createGetDiceConfigBackupModuleCountText(_deps: any) {
   const getDiceConfigBackupModuleCountText = (
     moduleId: DiceConfigBackupModuleId,
     storageCount: number,

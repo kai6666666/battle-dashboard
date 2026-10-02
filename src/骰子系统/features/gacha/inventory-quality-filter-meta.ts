@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * inventory-quality-filter-meta.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createInventoryQualityFilterMeta(deps: any) {
+type InventoryFilterButtonMeta<T = any> = { value: T; icon: string; label: string };
+type InventoryQualityFilter = string;
+
+export function createInventoryQualityFilterMeta(_deps: any) {
   const INVENTORY_QUALITY_FILTER_META: InventoryFilterButtonMeta<InventoryQualityFilter>[] = [
     { value: '全部', icon: 'fa-layer-group', label: '全部品质' },
     { value: '普通', icon: 'fa-circle', label: '普通' },

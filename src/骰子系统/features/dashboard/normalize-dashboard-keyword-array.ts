@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * normalize-dashboard-keyword-array.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createNormalizeDashboardKeywordArray(deps: any) {
+export function createNormalizeDashboardKeywordArray(_deps: any) {
   const normalizeDashboardKeywordArray = (value: unknown, label: string): string[] => {
     if (!Array.isArray(value)) {
       throw new Error(`${label} 必须是字符串数组`);

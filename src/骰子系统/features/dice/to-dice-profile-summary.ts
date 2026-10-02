@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * to-dice-profile-summary.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createToDiceProfileSummary(deps: any) {
+type DiceProfileRecord = { id: string; [key: string]: any };
+type DiceProfileSummary = Record<string, any>;
+
+export function createToDiceProfileSummary(_deps: any) {
   const toDiceProfileSummary = (record: DiceProfileRecord): DiceProfileSummary => ({
     id: record.id,
     name: record.name,

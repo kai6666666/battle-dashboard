@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { rollComplexDiceExpression } from './dice-engine';
 /**
  * parse-check-suggestion-modifier-value.ts

@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * format-gacha-relative-time.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createFormatGachaRelativeTime(deps: any) {
+export function createFormatGachaRelativeTime(_deps: any) {
   const formatGachaRelativeTime = (timestamp: number): string => {
     if (!timestamp) return '暂无';
     const elapsedSeconds = Math.max(0, Math.floor((Date.now() - timestamp) / 1000));
