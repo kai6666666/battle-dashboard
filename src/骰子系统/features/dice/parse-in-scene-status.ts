@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * parse-in-scene-status.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createParseInSceneStatus(deps: any) {
-  const parseInSceneStatus = (value, headerName) => {
+export function createParseInSceneStatus(_deps: any) {
+  const parseInSceneStatus = (value: any, headerName: any) => {
     const val = String(value || '')
       .trim()
       .toLowerCase();

@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-custom-table-name-icon-pack-import-summary-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetCustomTableNameIconPackImportSummaryText(deps: any) {
+type CustomTableNameIconPackImportAnalysis = Record<string, any>;
+
+export function createGetCustomTableNameIconPackImportSummaryText(_deps: any) {
   const getCustomTableNameIconPackImportSummaryText = (analysis: CustomTableNameIconPackImportAnalysis): string => {
     const lines = [
       `将导入 ${analysis.importedCount} 条图标映射。`,

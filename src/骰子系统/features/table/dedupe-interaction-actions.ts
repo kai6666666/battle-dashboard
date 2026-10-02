@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * dedupe-interaction-actions.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { GlobalInteractionAction } from '../../shared/index-local-types';
 export function createDedupeInteractionActions(deps: any) {
   const dedupeInteractionActions = (actions: GlobalInteractionAction[]): GlobalInteractionAction[] => {
     const seenLabels = new Set<string>();

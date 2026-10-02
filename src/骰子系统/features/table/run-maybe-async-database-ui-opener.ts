@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * run-maybe-async-database-ui-opener.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createRunMaybeAsyncDatabaseUiOpener(deps: any) {
+export function createRunMaybeAsyncDatabaseUiOpener(_deps: any) {
   const runMaybeAsyncDatabaseUiOpener = async (opener: () => unknown, context = '数据库界面'): Promise<boolean> => {
     try {
       const result = opener();

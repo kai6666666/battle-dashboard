@@ -4,6 +4,8 @@
  */
     `custom-table-name-icon-pack-${new Date().toISOString().slice(0, 10)}.json`;
 import type { CustomTableNameIconPack, CustomTableNameIconPackEntry } from '../../shared/index-local-types';
+export const getCustomTableNameIconPackDownloadFileName = (): string =>
+  'custom-table-name-icon-pack-' + new Date().toISOString().slice(0, 10) + '.json';
 export function createBuildCustomTableNameIconPack(deps: any) {
   const buildCustomTableNameIconPack = (): CustomTableNameIconPack => ({
     schemaVersion: deps.getCUSTOM_TABLE_NAME_ICON_PACK_SCHEMA_VERSION(),

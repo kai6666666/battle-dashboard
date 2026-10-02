@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * get-element-emoji.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { ELEMENT_EMOJI_MAP } from '../../shared/emoji-maps';
-export function createGetElementEmoji(deps: any) {
-  const getElementEmoji = (name, type) => {
+export function createGetElementEmoji(_deps: any) {
+  const getElementEmoji = (name: any, type: any) => {
     if (!name && !type) return null;
     const lowerName = name?.toLowerCase();
     const lowerType = type?.toLowerCase();

@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * get-inventory-field-column-index.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type InventoryEditableField = string;
+
 export function createGetInventoryFieldColumnIndex(deps: any) {
   const getInventoryFieldColumnIndex = (
     colMap: ReturnType<typeof deps.getInventoryColumnMap>,

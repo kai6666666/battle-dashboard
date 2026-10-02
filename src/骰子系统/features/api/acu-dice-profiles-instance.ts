@@ -1,10 +1,8 @@
-// @ts-nocheck
 /**
  * acu-dice-profiles-instance.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { AcuDiceProfiles } from './profiles';
-import { getAcuDiceProfilePromptKey } from '../profiles/profile-packages';
 export function createAcuDiceProfilesInstance(deps: any) {
   const acuDiceProfiles = new AcuDiceProfiles({
     refreshDiceProfileIndex: () => deps.refreshDiceProfileIndex(),

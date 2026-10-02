@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * extract-check-suggestion-target.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createExtractCheckSuggestionTarget(deps: any) {
+type CheckSuggestionCriteria = 'lte' | 'gte';
+
+export function createExtractCheckSuggestionTarget(_deps: any) {
   const extractCheckSuggestionTarget = (
     text: string,
   ): { rest: string; targetValue: number | null; criteria: CheckSuggestionCriteria } => {
