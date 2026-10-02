@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * map-visualization.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -15,7 +14,7 @@ export function createShowMapVisualization(deps: any) {
     // 确保移除所有旧的overlay
     $('.acu-map-overlay').remove();
 
-    let viewModel = await deps.buildMapViewModel();
+    let viewModel: any = await deps.buildMapViewModel();
     if (!viewModel) {
       deps.setIsMapOpening(false);
       if (window.toastr) window.toastr.warning('未找到地图数据');
@@ -30,7 +29,7 @@ export function createShowMapVisualization(deps: any) {
     // 热度排序辅助函数：返回指定地区按热度降序排列的地点数组
     const getHotLocationsInRegion = (region: string) => {
       const regionName = region || '其他';
-      return Array.from(viewModel.locations.values())
+      return Array.from(viewModel.locations.values() as any[])
         .filter(l => (l.region || '其他') === regionName)
         .sort((a, b) => {
           const scoreA =
@@ -125,7 +124,7 @@ export function createShowMapVisualization(deps: any) {
       return icon;
     };
 
-    const renderElementChip = element => {
+    const renderElementChip = (element: any) => {
       const name = element.name || element.type || '元素';
       const iconContext = deps.createGlobalInteractionCustomTableNameIconContext(element.tableName, name);
       const fallbackEmojiContent = element.emoji ? renderIconContent(element.emoji) : '';
@@ -143,7 +142,7 @@ export function createShowMapVisualization(deps: any) {
              `;
     };
 
-    const renderFocusArea = (model, locationName) => {
+    const renderFocusArea = (model: any, locationName: any) => {
       const location = model.locations.get(locationName);
       if (!location) {
         return '<div class="acu-map-loading acu-map-loading-wide"><div class="acu-map-spinner"></div></div>';
@@ -158,7 +157,7 @@ export function createShowMapVisualization(deps: any) {
       const leftElems = elements.slice(0, Math.ceil(elements.length / 2));
       const rightElems = elements.slice(Math.ceil(elements.length / 2));
 
-      const renderAvatarHtml = char => {
+      const renderAvatarHtml = (char: any) => {
         const displayName = deps.replaceUserPlaceholders(char.name);
         // 角色节点始终走 AvatarManager，地图人物面禁止接入自定义表名图标。
         const avatarStyle = deps.escapeHtml(
@@ -181,8 +180,8 @@ export function createShowMapVisualization(deps: any) {
 
       const leftAvatarsHtml = leftChars.length ? leftChars.map(renderAvatarHtml).join('') : '';
       const rightAvatarsHtml = rightChars.length ? rightChars.map(renderAvatarHtml).join('') : '';
-      const leftElemsHtml = leftElems.length ? leftElems.map(e => renderElementChip(e)).join('') : '';
-      const rightElemsHtml = rightElems.length ? rightElems.map(e => renderElementChip(e)).join('') : '';
+      const leftElemsHtml = leftElems.length ? leftElems.map((e: any) => renderElementChip(e)).join('') : '';
+      const rightElemsHtml = rightElems.length ? rightElems.map((e: any) => renderElementChip(e)).join('') : '';
 
       const locationIconContext = deps.createGlobalInteractionCustomTableNameIconContext(location.tableName, location.name);
       const locationEmojiHtml = location.emoji
@@ -218,7 +217,7 @@ export function createShowMapVisualization(deps: any) {
     `;
     };
 
-    const renderThumbnailLocation = (model, location, isActive) => {
+    const renderThumbnailLocation = (model: any, location: any, isActive: any) => {
       const charCount = (model.characters.get(location.name) || []).length;
       const elementCount = (model.elements.get(location.name) || []).length;
       const totalCount = charCount + elementCount;
@@ -238,11 +237,11 @@ export function createShowMapVisualization(deps: any) {
     `;
     };
 
-    const renderRegionTabs = (regions, currentRegion) => {
+    const renderRegionTabs = (regions: any, currentRegion: any) => {
       if (regions.length <= 1) return '';
       return regions
         .map(
-          r =>
+          (r: any) =>
             `<button class="acu-map-region-tab ${r === currentRegion ? 'active' : ''}" type="button" data-region="${deps.escapeHtml(
               r,
             )}" aria-pressed="${r === currentRegion ? 'true' : 'false'}">${deps.escapeHtml(r)}</button>`,
@@ -253,7 +252,7 @@ export function createShowMapVisualization(deps: any) {
     const refreshPanel = () => {
       $focusArea.html(renderFocusArea(viewModel, focusLocation));
 
-      const regionLocations = Array.from(viewModel.locations.values())
+      const regionLocations = Array.from(viewModel.locations.values() as any[])
         .filter(l => (l.region || '其他') === selectedRegion)
         .sort((a, b) => {
           // 按交互热度排序: 角色数 + 元素数（降序）
@@ -278,7 +277,7 @@ export function createShowMapVisualization(deps: any) {
       });
     };
 
-    const setFocusLocation = name => {
+    const setFocusLocation = (name: any) => {
       if (!name) return;
       focusLocation = name;
       Store.set(deps.STORAGE_KEY_MAP_FOCUS, focusLocation);
@@ -291,7 +290,7 @@ export function createShowMapVisualization(deps: any) {
 
     // [新增] 存储刷新回调，供外部删除操作调用
     overlay.data('refreshMapData', async () => {
-      const newViewModel = await deps.buildMapViewModel();
+      const newViewModel: any = await deps.buildMapViewModel();
       if (newViewModel) {
         viewModel = newViewModel;
 
@@ -305,7 +304,7 @@ export function createShowMapVisualization(deps: any) {
           let newRegion = selectedRegion;
 
           // 优先级1: 当前次要地区的第一个可用地点
-          const regionLocs = Array.from(viewModel.locations.values()).filter(
+          const regionLocs = Array.from(viewModel.locations.values() as any[]).filter(
             l => (l.region || '其他') === selectedRegion,
           );
           if (regionLocs.length > 0) {
@@ -327,7 +326,7 @@ export function createShowMapVisualization(deps: any) {
             newRegion = loc?.region || newRegion;
           } else {
             // 兜底：任意第一个地点
-            const firstLoc = Array.from(viewModel.locations.values())[0];
+            const firstLoc = Array.from(viewModel.locations.values() as any[])[0];
             if (firstLoc) {
               newFocus = firstLoc.name;
               newRegion = firstLoc.region || '其他';
@@ -350,19 +349,19 @@ export function createShowMapVisualization(deps: any) {
 
     // [修复] 直接绑定关闭按钮事件（而非事件委托，避免被其他事件干扰）
     const $closeBtn = overlay.find('.acu-map-close');
-    $closeBtn.on('click', e => {
+    $closeBtn.on('click', (e: any) => {
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
       overlay.remove();
     });
-    overlay.on('click', '.acu-map-region-tab', function () {
+    overlay.on('click', '.acu-map-region-tab', function (this: any) {
       const newRegion = $(this).data('region');
       if (newRegion === selectedRegion) return;
       selectedRegion = newRegion;
 
       // 检查当前 focusLocation 是否在新地区内
-      const regionLocations = Array.from(viewModel.locations.values()).filter(
+      const regionLocations = Array.from(viewModel.locations.values() as any[]).filter(
         l => (l.region || '其他') === selectedRegion,
       );
       const currentInNewRegion = regionLocations.find(l => l.name === focusLocation);
@@ -389,7 +388,7 @@ export function createShowMapVisualization(deps: any) {
       overlay.remove();
     });
 
-    overlay.on('click', '.acu-map-thumbnail', function () {
+    overlay.on('click', '.acu-map-thumbnail', function (this: any) {
       const locationName = $(this).data('location');
       if (locationName) setFocusLocation(locationName);
     });

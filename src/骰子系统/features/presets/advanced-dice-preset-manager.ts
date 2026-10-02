@@ -1,13 +1,13 @@
-// @ts-nocheck
 /**
  * advanced-dice-preset-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 import { Store } from '../../shared/storage/store';
+type AdvancedDicePreset = Record<string, any>;
 export function createAdvancedDicePresetManager(deps: any) {
   const AdvancedDicePresetManager = (() => {
-    let _cache = null;
+    let _cache: any = null;
     let _lastImportError = '';
 
     const getBuiltinPresetVisibilityMap = (): Record<string, boolean> => {
@@ -28,7 +28,7 @@ export function createAdvancedDicePresetManager(deps: any) {
         const stored = Store.get(deps.STORAGE_KEY_ADVANCED_PRESETS, []);
         // 自动检测并更新所有自定义预设的版本
         let needsSave = false;
-        stored.forEach(preset => {
+        stored.forEach((preset: any) => {
           const presetVersion = preset.version || '0.0.0';
           if (deps.compareVersion(presetVersion, PRESET_FORMAT_VERSION) < 0) {
             console.log(
@@ -50,13 +50,13 @@ export function createAdvancedDicePresetManager(deps: any) {
         // 填充默认值并合并
         const builtinVisibilityMap = getBuiltinPresetVisibilityMap();
         const builtinOrderMap = getBuiltinPresetOrderMap();
-        const processedBuiltin = deps.BUILTIN_ADVANCED_PRESETS.map((p, index) => ({
+        const processedBuiltin = deps.BUILTIN_ADVANCED_PRESETS.map((p: any, index: any) => ({
           ...p,
           visible: builtinVisibilityMap[p.id] ?? p.visible ?? true,
           order: builtinOrderMap[p.id] ?? p.order ?? index,
         }));
 
-        const processedCustom = stored.map(p => ({
+        const processedCustom = stored.map((p: any) => ({
           ...p,
           visible: p.visible ?? false,
           order: p.order ?? 999,
@@ -70,11 +70,11 @@ export function createAdvancedDicePresetManager(deps: any) {
       getActivePreset() {
         const activeId = Store.get(deps.STORAGE_KEY_ACTIVE_ADVANCED_PRESET, null);
         if (!activeId) return null;
-        return this.getAllPresets().find(p => p.id === activeId) || null;
+        return this.getAllPresets().find((p: any) => p.id === activeId) || null;
       },
 
       // 设置激活的预设
-      setActivePreset(id) {
+      setActivePreset(id: any) {
         try {
           const finalId = id === '' || id === undefined ? null : id;
           Store.set(deps.STORAGE_KEY_ACTIVE_ADVANCED_PRESET, finalId);
@@ -90,7 +90,7 @@ export function createAdvancedDicePresetManager(deps: any) {
         }
       },
 
-      setBuiltinPresetVisibility(id, visible) {
+      setBuiltinPresetVisibility(id: any, visible: any) {
         try {
           const map = getBuiltinPresetVisibilityMap();
           map[id] = visible;
@@ -103,9 +103,9 @@ export function createAdvancedDicePresetManager(deps: any) {
         }
       },
 
-      setPresetOrder(id, order) {
+      setPresetOrder(id: any, order: any) {
         try {
-          if (deps.BUILTIN_ADVANCED_PRESETS.some(p => p.id === id)) {
+          if (deps.BUILTIN_ADVANCED_PRESETS.some((p: any) => p.id === id)) {
             const map = getBuiltinPresetOrderMap();
             map[id] = order;
             Store.set(deps.STORAGE_KEY_BUILTIN_PRESET_ORDER, map);
@@ -120,7 +120,7 @@ export function createAdvancedDicePresetManager(deps: any) {
       },
 
       // 创建自定义预设
-      createPreset(preset) {
+      createPreset(preset: any) {
         const stored = Store.get(deps.STORAGE_KEY_ADVANCED_PRESETS, []);
         const newPreset = {
           ...preset,
@@ -138,14 +138,14 @@ export function createAdvancedDicePresetManager(deps: any) {
       },
 
       // 更新自定义预设
-      updatePreset(id, updates) {
+      updatePreset(id: any, updates: any) {
         // 禁止修改内置预设
-        if (deps.BUILTIN_ADVANCED_PRESETS.some(p => p.id === id)) {
+        if (deps.BUILTIN_ADVANCED_PRESETS.some((p: any) => p.id === id)) {
           console.error('[DICE]AdvancedDicePresetManager 不能修改内置预设:', id);
           throw new Error('不能修改内置预设');
         }
         const stored = Store.get(deps.STORAGE_KEY_ADVANCED_PRESETS, []);
-        const index = stored.findIndex(p => p.id === id);
+        const index = stored.findIndex((p: any) => p.id === id);
         if (index < 0) return false;
         stored[index] = { ...stored[index], ...updates, id }; // 保持ID不变
         Store.set(deps.STORAGE_KEY_ADVANCED_PRESETS, stored);
@@ -155,14 +155,14 @@ export function createAdvancedDicePresetManager(deps: any) {
       },
 
       // 删除自定义预设
-      deletePreset(id) {
+      deletePreset(id: any) {
         // 禁止删除内置预设
-        if (deps.BUILTIN_ADVANCED_PRESETS.some(p => p.id === id)) {
+        if (deps.BUILTIN_ADVANCED_PRESETS.some((p: any) => p.id === id)) {
           console.error('[DICE]AdvancedDicePresetManager 不能删除内置预设:', id);
           throw new Error('不能删除内置预设');
         }
         const stored = Store.get(deps.STORAGE_KEY_ADVANCED_PRESETS, []);
-        const filtered = stored.filter(p => p.id !== id);
+        const filtered = stored.filter((p: any) => p.id !== id);
         if (filtered.length === stored.length) return false;
         Store.set(deps.STORAGE_KEY_ADVANCED_PRESETS, filtered);
         _cache = null;
@@ -175,8 +175,8 @@ export function createAdvancedDicePresetManager(deps: any) {
       },
 
       // 导出预设为 JSON
-      exportPreset(id) {
-        const preset = this.getAllPresets().find(p => p.id === id);
+      exportPreset(id: any) {
+        const preset = this.getAllPresets().find((p: any) => p.id === id);
         if (!preset) return null;
         const exported = {
           ...preset,
@@ -189,7 +189,7 @@ export function createAdvancedDicePresetManager(deps: any) {
       },
 
       // 从 JSON/JSONC 导入预设
-      importPreset(jsonStr) {
+      importPreset(jsonStr: any) {
         const storedBefore = Store.get(deps.STORAGE_KEY_ADVANCED_PRESETS, []);
         const rollbackPresets = Array.isArray(storedBefore) ? [...storedBefore] : [];
         try {
@@ -247,7 +247,7 @@ export function createAdvancedDicePresetManager(deps: any) {
       supportsContest(preset: AdvancedDicePreset | string | null | undefined): boolean {
         if (!preset) return true; // 无预设时（自定义模式）默认支持
 
-        const presetObj = typeof preset === 'string' ? this.getAllPresets().find(p => p.id === preset) : preset;
+        const presetObj = typeof preset === 'string' ? this.getAllPresets().find((p: any) => p.id === preset) : preset;
         if (!presetObj) return true; // 找不到预设时默认支持
 
         // 检查 contestRule.disabled 标志

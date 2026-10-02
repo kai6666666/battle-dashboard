@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * dashboard-preset-manager-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -15,20 +14,20 @@ export function createShowDashboardPresetManager(deps: any) {
     const activeId = deps.DashboardPresetManager.getActivePresetId();
 
     const presetsHtml = presets
-      .map(preset => {
+      .map((preset: any) => {
         const isActive = preset.id === activeId;
         const isBuiltin = preset.builtin === true;
         const hasRelationshipGraph = Boolean(preset.modules[deps.DASHBOARD_RELATIONSHIP_GRAPH_MODULE_KEY]?.sources?.length);
         const moduleNames = [
-          ...deps.DASHBOARD_PRESET_MODULE_KEYS.filter(moduleKey => Boolean(preset.modules[moduleKey])),
+          ...deps.DASHBOARD_PRESET_MODULE_KEYS.filter((moduleKey: any) => Boolean(preset.modules[moduleKey])),
           ...(hasRelationshipGraph ? ['relationshipGraph'] : []),
         ];
         const moduleSummary = moduleNames.join('、') || '无';
         const keywordSummary =
-          Object.values(preset.modules)
+          Object.values(preset.modules as Record<string, any>)
             .flatMap(moduleConfig => [
               ...(moduleConfig.tableKeywords || []),
-              ...(moduleConfig.sources || []).flatMap(source => source.tableKeywords),
+              ...(moduleConfig.sources || []).flatMap((source: any) => source.tableKeywords),
             ])
             .slice(0, 5)
             .join('、') || '无';
@@ -102,14 +101,14 @@ export function createShowDashboardPresetManager(deps: any) {
       deps.popModal();
     });
 
-    overlay.on('change', '.acu-dashboard-preset-toggle', function () {
+    overlay.on('change', '.acu-dashboard-preset-toggle', function (this: any) {
       const $toggle = $(this);
       const id = String($toggle.data('id') || '');
       const isChecked = $toggle.is(':checked');
 
       if (isChecked) {
         deps.DashboardPresetManager.setActivePresetId(id);
-        overlay.find('.acu-dashboard-preset-toggle').each(function () {
+        overlay.find('.acu-dashboard-preset-toggle').each(function (this: any) {
           if (String($(this).data('id') || '') !== id) {
             $(this).prop('checked', false);
           }
@@ -119,22 +118,22 @@ export function createShowDashboardPresetManager(deps: any) {
       }
 
       deps.DashboardPresetManager.setActivePresetId(deps.DASHBOARD_DEFAULT_PRESET_ID);
-      overlay.find('.acu-dashboard-preset-toggle').each(function () {
+      overlay.find('.acu-dashboard-preset-toggle').each(function (this: any) {
         const toggleId = String($(this).data('id') || '');
         $(this).prop('checked', toggleId === deps.DASHBOARD_DEFAULT_PRESET_ID);
       });
       if (window.toastr) window.toastr.info('已切回默认仪表盘预设');
     });
 
-    overlay.on('click', '.acu-dashboard-preset-edit', function () {
+    overlay.on('click', '.acu-dashboard-preset-edit', function (this: any) {
       const id = String($(this).data('id') || '');
       overlay.remove();
       deps.showDashboardPresetEditor(id);
     });
 
-    overlay.on('click', '.acu-dashboard-preset-export', function () {
+    overlay.on('click', '.acu-dashboard-preset-export', function (this: any) {
       const id = String($(this).data('id') || '');
-      const preset = presets.find(item => item.id === id);
+      const preset = presets.find((item: any) => item.id === id);
       const json = deps.DashboardPresetManager.exportPreset(id);
       if (!json) {
         if (window.toastr) showActionableErrorToast('导出失败', { title: '仪表盘预设导出失败', suggestion: 'importExport' });
@@ -145,9 +144,9 @@ export function createShowDashboardPresetManager(deps: any) {
       if (window.toastr) window.toastr.success('已导出仪表盘预设');
     });
 
-    overlay.on('click', '.acu-dashboard-preset-copy', function () {
+    overlay.on('click', '.acu-dashboard-preset-copy', function (this: any) {
       const id = String($(this).data('id') || '');
-      const preset = presets.find(item => item.id === id);
+      const preset = presets.find((item: any) => item.id === id);
       if (!preset) return;
 
       const copy = deps.DashboardPresetManager.createPreset({
@@ -160,9 +159,9 @@ export function createShowDashboardPresetManager(deps: any) {
       showDashboardPresetManager();
     });
 
-    overlay.on('click', '.acu-dashboard-preset-delete', async function () {
+    overlay.on('click', '.acu-dashboard-preset-delete', async function (this: any) {
       const id = String($(this).data('id') || '');
-      const preset = presets.find(item => item.id === id);
+      const preset = presets.find((item: any) => item.id === id);
       if (!preset || preset.builtin) return;
 
       const confirmed = await deps.showDiceSystemConfirmDialog({

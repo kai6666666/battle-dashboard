@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * render-preset-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,6 +5,9 @@
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 import { Store } from '../../shared/storage/store';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type RenderPresetDialogueIndentRules = Record<string, any>;
+type RenderPresetRules = Record<string, any>;
+type RenderPreset = Record<string, any>;
 export function createRenderPresetManager(deps: any) {
   const RenderPresetManager = (() => {
     let _cache: RenderPreset[] | null = null;
@@ -17,7 +19,7 @@ export function createRenderPresetManager(deps: any) {
       _cache = null;
     };
 
-    const normalizeStoredPreset = (preset: unknown): RenderPreset | null => {
+    const normalizeStoredPreset = (preset: any): RenderPreset | null => {
       if (!deps.isRecordValue(preset)) return null;
       const id = typeof preset.id === 'string' ? preset.id.trim() : '';
       const name = typeof preset.name === 'string' ? preset.name.trim() : '';
@@ -57,7 +59,7 @@ export function createRenderPresetManager(deps: any) {
       if (stored.some(preset => preset.id === deps.RENDER_LEGACY_BLACKLIST_PRESET_ID)) return;
       const shouldBackfillOverview =
         !legacyList.includes('概览') &&
-        deps.LEGACY_DEFAULT_QUICK_CHECK_EXCLUDE_KEYWORDS.every(keyword => legacyList.includes(keyword));
+        deps.LEGACY_DEFAULT_QUICK_CHECK_EXCLUDE_KEYWORDS.every((keyword: any) => legacyList.includes(keyword));
       const migratedRules = deps.cloneRenderPresetRules(deps.DEFAULT_RENDER_PRESET_RULES);
       migratedRules.quickCheck.excludeKeywords = shouldBackfillOverview ? [...legacyList, '概览'] : legacyList;
       const migratedPreset: RenderPreset = {
@@ -205,12 +207,12 @@ export function createRenderPresetManager(deps: any) {
           .trim()
           .toLowerCase();
         if (!lowered) return false;
-        return this.getActivePreset().rules.invalidValues.some(item => lowered === item.toLowerCase());
+        return this.getActivePreset().rules.invalidValues.some((item: any) => lowered === item.toLowerCase());
       },
 
       isIdentityHeader(headerName: string): boolean {
         const header = String(headerName || '').toLowerCase();
-        return this.getActivePreset().rules.identityHeaderKeywords.some(keyword =>
+        return this.getActivePreset().rules.identityHeaderKeywords.some((keyword: any) =>
           header.includes(keyword.toLowerCase()),
         );
       },
@@ -219,7 +221,7 @@ export function createRenderPresetManager(deps: any) {
         const rules = this.getActivePreset().rules.relationship;
         if (!rules.enabled) return false;
         const header = String(headerName || '').toLowerCase();
-        if (rules.headerKeywords.some(keyword => header.includes(keyword.toLowerCase()))) return true;
+        if (rules.headerKeywords.some((keyword: any) => header.includes(keyword.toLowerCase()))) return true;
         return (
           rules.autoDetectMultipleParen &&
           /^[^(（;；]+[(（][^)）]+[)）](?:[;；][^(（;；]+[(（][^)）]+[)）])+$/.test(String(value || '').trim())
@@ -231,7 +233,7 @@ export function createRenderPresetManager(deps: any) {
         if (!rules.enabled) return false;
         const compareName = getQuickCheckCompareName(String(key || ''));
         if (!compareName) return false;
-        return !rules.excludeKeywords.some(keyword => compareName.includes(keyword));
+        return !rules.excludeKeywords.some((keyword: any) => compareName.includes(keyword));
       },
 
       getDialogueIndentTagFilter(): RenderPresetDialogueIndentRules {

@@ -1,25 +1,27 @@
-// @ts-nocheck
 /**
  * show-template-inspection-result-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+// [x5ah] TemplateInspectionIssueGroup unused after generic strip
+type TemplateInspectionSeverity = string;
+type TemplateInspectionResult = Record<string, any>;
 export function createShowTemplateInspectionResultModal(deps: any) {
   const showTemplateInspectionResultModal = (result: TemplateInspectionResult): void => {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
     $('.acu-template-inspection-overlay').remove();
 
-    const errorCount = result.issues.filter(issue => issue.severity === 'error').length;
-    const warningCount = result.issues.filter(issue => issue.severity === 'warning').length;
-    const infoCount = result.issues.filter(issue => issue.severity === 'info').length;
+    const errorCount = result.issues.filter((issue: any) => issue.severity === 'error').length;
+    const warningCount = result.issues.filter((issue: any) => issue.severity === 'warning').length;
+    const infoCount = result.issues.filter((issue: any) => issue.severity === 'info').length;
     const statusText =
       result.issues.length === 0
         ? '当前聊天模板满足当前模板检验预设的最低要求。'
         : `发现 ${result.issues.length} 项需要关注的模板问题。`;
     const severityRank: Record<TemplateInspectionSeverity, number> = { error: 3, warning: 2, info: 1 };
-    const groupedIssues = result.issues.reduce<TemplateInspectionIssueGroup[]>((groups, issue) => {
+    const groupedIssues = result.issues.reduce((groups: any, issue: any) => {
       const groupName = issue.groupName || '其他问题';
-      let group = groups.find(item => item.name === groupName);
+      let group = groups.find((item: any) => item.name === groupName);
       if (!group) {
         group = { name: groupName, severity: issue.severity, issues: [] };
         groups.push(group);
@@ -31,7 +33,7 @@ export function createShowTemplateInspectionResultModal(deps: any) {
       return groups;
     }, []);
 
-    groupedIssues.sort((a, b) => severityRank[b.severity] - severityRank[a.severity] || a.name.localeCompare(b.name));
+    groupedIssues.sort((a: any, b: any) => severityRank[b.severity] - severityRank[a.severity] || a.name.localeCompare(b.name));
     const isClean = groupedIssues.length === 0;
     const summarySeverity = errorCount > 0 ? 'error' : warningCount > 0 ? 'warning' : 'info';
     const summaryMeta = deps.getTemplateInspectionSeverityMeta(summarySeverity);
@@ -48,7 +50,7 @@ export function createShowTemplateInspectionResultModal(deps: any) {
       isClean
         ? ''
         : groupedIssues
-            .map((group, index) => {
+            .map((group: any, index: any) => {
               const meta = deps.getTemplateInspectionSeverityMeta(group.severity);
               return `
                 <button class="acu-template-inspection-tab ${index === 0 ? 'active' : ''}" data-group-index="${index}" style="--acu-template-inspection-color:${meta.color};">
@@ -60,16 +62,16 @@ export function createShowTemplateInspectionResultModal(deps: any) {
             .join('');
 
     const panelHtml = groupedIssues
-      .map((group, groupIndex) => {
+      .map((group: any, groupIndex: any) => {
         const issueCards = group.issues
-          .map((issue, issueIndex) => {
+          .map((issue: any, issueIndex: any) => {
             const meta = deps.getTemplateInspectionSeverityMeta(issue.severity);
-            const missingHtml = issue.missing.map(item => `<li>${deps.escapeHtml(item)}</li>`).join('');
+            const missingHtml = issue.missing.map((item: any) => `<li>${deps.escapeHtml(item)}</li>`).join('');
             const isFixable = !!issue.fixActions && issue.fixActions.length > 0;
             const resolutionHtml = isFixable
               ? `<div style="font-weight:700;color:var(--acu-text-main);margin-bottom:4px;">智能修复</div>
                  <ul style="margin:0 0 8px 18px;padding:0;color:var(--acu-text-main);">${issue.fixActions
-                   .map(action => `<li>${deps.escapeHtml(action)}</li>`)
+                   .map((action: any) => `<li>${deps.escapeHtml(action)}</li>`)
                    .join('')}</ul>`
               : `<div style="font-weight:700;color:var(--acu-text-main);margin-bottom:4px;">建议做法</div>
                  <div style="color:var(--acu-text-main);">${deps.escapeHtml(issue.suggestion)}</div>`;
@@ -186,7 +188,7 @@ export function createShowTemplateInspectionResultModal(deps: any) {
     overlay.find('#template-inspection-repair').on('click', () => {
       void deps.repairCurrentTableTemplateFromPreset(result.presetId, overlay);
     });
-    overlay.find('.acu-template-inspection-tab').on('click', function () {
+    overlay.find('.acu-template-inspection-tab').on('click', function (this: any) {
       const groupIndex = $(this).data('group-index');
       overlay
         .find('.acu-template-inspection-tab')
@@ -195,7 +197,7 @@ export function createShowTemplateInspectionResultModal(deps: any) {
       overlay.find('.acu-template-inspection-panel').hide();
       overlay.find(`.acu-template-inspection-panel[data-group-index="${groupIndex}"]`).show();
     });
-    overlay.find('.acu-template-inspection-card-header').on('click', function () {
+    overlay.find('.acu-template-inspection-card-header').on('click', function (this: any) {
       const $group = $(this).closest('.acu-template-inspection-card');
       const $body = $group.find('.acu-changes-group-body').first();
       const $icon = $(this).find('.acu-collapse-icon');

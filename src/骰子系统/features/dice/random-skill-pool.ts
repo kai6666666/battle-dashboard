@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * random-skill-pool.ts
  * Feature-Sliced 模块（数据常量）。

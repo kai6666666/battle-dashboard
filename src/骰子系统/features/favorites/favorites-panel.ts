@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * favorites-panel.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { FavoritesManager } from './favorites-manager';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+import type { FavoriteItem } from '../../shared/index-local-types';
 export function createShowFavoritesPanel(deps: any) {
   const showFavoritesPanel = async () => {
     const { $ } = deps.getCore();
@@ -40,11 +40,11 @@ export function createShowFavoritesPanel(deps: any) {
       const preview = fav.header
         .slice(0, 3)
         .map(
-          (h, i) =>
+          (h: any, i: any) =>
             `<span class="acu-fav-preview-item"><b>${deps.escapeHtml(h)}:</b> ${deps.escapeHtml(String(fav.rowData[i] || ''))}</span>`,
         )
         .join('');
-      const tagsHtml = fav.tags.map(tag => `<span class="acu-favorites-tag">${deps.escapeHtml(tag)}</span>`).join('');
+      const tagsHtml = fav.tags.map((tag: any) => `<span class="acu-favorites-tag">${deps.escapeHtml(tag)}</span>`).join('');
       const sourceInfo = fav.sourceInfo ? `来自: ${deps.escapeHtml(fav.sourceInfo.tableName)}` : '';
 
       return `
@@ -142,7 +142,7 @@ export function createShowFavoritesPanel(deps: any) {
       $overlay.remove();
     };
 
-    $overlay.on('click', e => {
+    $overlay.on('click', (e: any) => {
       if ($(e.target).hasClass('acu-favorites-overlay')) {
         closePanel();
       }
@@ -151,7 +151,7 @@ export function createShowFavoritesPanel(deps: any) {
     $panel.find('.acu-fav-close').on('click', closePanel);
 
     // 标签筛选
-    $panel.find('#acu-fav-tag-filter').on('change', async function () {
+    $panel.find('#acu-fav-tag-filter').on('change', async function (this: any) {
       const tag = $(this).val() as string;
       const filtered = tag ? await FavoritesManager.getByTag(tag) : await FavoritesManager.getAll();
       const $content = $panel.find('.acu-favorites-content');
@@ -164,14 +164,14 @@ export function createShowFavoritesPanel(deps: any) {
     });
 
     // 搜索
-    $panel.find('#acu-fav-search').on('input', async function () {
+    $panel.find('#acu-fav-search').on('input', async function (this: any) {
       const query = ($(this).val() as string).toLowerCase().trim();
       const all = await FavoritesManager.getAll();
       const filtered = query
         ? all.filter(fav => {
-            const headerMatch = fav.header.some(h => h.toLowerCase().includes(query));
-            const dataMatch = fav.rowData.some(d => String(d).toLowerCase().includes(query));
-            const tagMatch = fav.tags.some(t => t.toLowerCase().includes(query));
+            const headerMatch = fav.header.some((h: any) => h.toLowerCase().includes(query));
+            const dataMatch = fav.rowData.some((d: any) => String(d).toLowerCase().includes(query));
+            const tagMatch = fav.tags.some((t: any) => t.toLowerCase().includes(query));
             return headerMatch || dataMatch || tagMatch;
           })
         : all;
@@ -185,12 +185,12 @@ export function createShowFavoritesPanel(deps: any) {
     });
 
     // 编辑卡片
-    $panel.on('click', '.acu-fav-edit', async function () {
+    $panel.on('click', '.acu-fav-edit', async function (this: any) {
       const id = $(this).closest('.acu-favorites-card').data('id');
       const fav = await FavoritesManager.getById(id);
       if (!fav) return;
 
-      deps.showFavoriteEditModal(fav, async updated => {
+      deps.showFavoriteEditModal(fav, async (updated: any) => {
         await FavoritesManager.updateFavorite(id, updated);
         toastr.success('保存成功');
         closePanel();
@@ -199,7 +199,7 @@ export function createShowFavoritesPanel(deps: any) {
     });
 
     // 复制卡片
-    $panel.on('click', '.acu-fav-copy', async function () {
+    $panel.on('click', '.acu-fav-copy', async function (this: any) {
       const id = $(this).closest('.acu-favorites-card').data('id');
       const result = await FavoritesManager.duplicateFavorite(id);
       if (result) {
@@ -212,7 +212,7 @@ export function createShowFavoritesPanel(deps: any) {
     });
 
     // 发送到表格
-    $panel.on('click', '.acu-fav-send', async function () {
+    $panel.on('click', '.acu-fav-send', async function (this: any) {
       const id = $(this).closest('.acu-favorites-card').data('id');
       const fav = await FavoritesManager.getById(id);
       if (!fav) return;
@@ -231,7 +231,7 @@ export function createShowFavoritesPanel(deps: any) {
     });
 
     // 删除卡片
-    $panel.on('click', '.acu-fav-delete', async function () {
+    $panel.on('click', '.acu-fav-delete', async function (this: any) {
       const id = $(this).closest('.acu-favorites-card').data('id');
       const confirmed = await deps.showDiceSystemConfirmDialog({
         title: '删除收藏',
@@ -249,7 +249,7 @@ export function createShowFavoritesPanel(deps: any) {
         toastr.success('删除成功');
         $(this)
           .closest('.acu-favorites-card')
-          .fadeOut(200, function () {
+          .fadeOut(200, function (this: any) {
             $(this).remove();
           });
       } else {
@@ -265,7 +265,7 @@ export function createShowFavoritesPanel(deps: any) {
         return;
       }
 
-      deps.showNewFavoriteModal(currentTables, async (header, tableName) => {
+      deps.showNewFavoriteModal(currentTables, async (header: any, tableName: any) => {
         const emptyRowData = header.map(() => '');
         const newFav = await FavoritesManager.addFavorite('', tableName, header, emptyRowData, []);
         if (newFav) {
@@ -276,7 +276,7 @@ export function createShowFavoritesPanel(deps: any) {
           setTimeout(async () => {
             const freshFav = await FavoritesManager.getById(newFav.id);
             if (freshFav) {
-              deps.showFavoriteEditModal(freshFav, async updated => {
+              deps.showFavoriteEditModal(freshFav, async (updated: any) => {
                 await FavoritesManager.updateFavorite(newFav.id, updated);
                 toastr.success('保存成功');
                 $('.acu-favorites-overlay').remove();

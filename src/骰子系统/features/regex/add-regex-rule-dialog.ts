@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * add-regex-rule-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+import type { RegexScopeConfig, RegexScopeType } from '../../shared/index-local-types';
 export function createShowAddRegexRuleModal(deps: any) {
   const showAddRegexRuleModal = (editRuleId?: string) => {
     const { $ } = deps.getCore();
@@ -18,7 +18,7 @@ export function createShowAddRegexRuleModal(deps: any) {
     const tableNames = Object.keys(tableData || {})
       .filter(k => k.startsWith('sheet_'))
       .map(k => tableData[k]?.name || k)
-      .sort();
+      .sort(); void tableNames;
 
     const dialog = $(`
       <div class="acu-edit-overlay acu-validation-modal-overlay">
@@ -210,7 +210,7 @@ export function createShowAddRegexRuleModal(deps: any) {
     };
 
     // 取消和关闭按钮（阻止事件冒泡，防止触发设置面板的关闭事件）
-    dialog.find('#acu-regex-rule-cancel, #acu-close-regex-rule').on('click', function (e) {
+    dialog.find('#acu-regex-rule-cancel, #acu-close-regex-rule').on('click', function (e: any) {
       e.stopPropagation();
       closeDialog();
     });
@@ -219,7 +219,7 @@ export function createShowAddRegexRuleModal(deps: any) {
     deps.setupOverlayClose(dialog, 'acu-edit-overlay', closeDialog);
 
     // ESC 键关闭
-    $(document).on('keydown.regex-rule-modal', function (e) {
+    $(document).on('keydown.regex-rule-modal', function (e: any) {
       if (e.key === 'Escape' && dialog.length && dialog.is(':visible')) {
         e.preventDefault();
         closeDialog();

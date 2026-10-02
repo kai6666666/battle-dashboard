@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * execute-secondary-effects-chain.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { parseEffectValueInput } from '../../shared/effect-math';
 import { rollComplexDiceExpression } from '../../features/dice/dice-engine';
+type Effect = Record<string, any>;
+import type { AdvancedDicePreset, EffectResult, EffectReplayOperation, SecondaryEffect } from '../../shared/advanced-preset-types';
 export function createExecuteSecondaryEffectsChain(deps: any) {
   async function executeSecondaryEffectsChain(
     preset: AdvancedDicePreset,
@@ -29,7 +30,7 @@ export function createExecuteSecondaryEffectsChain(deps: any) {
     const buildFormulaContext = (): Record<string, number> => {
       const currentAttrs = deps.getFullAttributesForCharacter(context.characterName, transactionalData);
       const formulaContext: Record<string, number> = {};
-      currentAttrs.forEach(attr => {
+      currentAttrs.forEach((attr: any) => {
         if (attr && typeof attr.name === 'string' && typeof attr.value === 'number' && !isNaN(attr.value)) {
           formulaContext[attr.name] = attr.value;
         }
@@ -168,7 +169,7 @@ export function createExecuteSecondaryEffectsChain(deps: any) {
           let callbackScheduled = false;
 
           if (secEffect.callback) {
-            const callbackFn = (window as Record<string, unknown>)[secEffect.callback];
+            const callbackFn = (window as unknown as Record<string, unknown>)[secEffect.callback];
             if (typeof callbackFn === 'function') {
               const callbackPayload: Record<string, unknown> = {
                 attrValue,

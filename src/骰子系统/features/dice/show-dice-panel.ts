@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * show-dice-panel.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-import { buildEffectMetaLines, buildEffectTraceLines, computePendingEffectVariables, parseEffectValueInput } from '../../shared/effect-math';
+// [x5ah] unused import removed (effect-math)
 import { rollComplexDiceExpression } from '../../features/dice/dice-engine';
 import { createDicePanelHistory } from './panel/dice-panel-history';
 import { createDicePanelExpr } from './panel/dice-panel-expr';
@@ -16,11 +15,14 @@ import { createDicePanelEffectConfirm } from './panel/dice-panel-effect-confirm'
 import { createDicePanelApplyPreset } from './panel/dice-panel-apply-preset';
 import { createDicePanelAdvancedCheck } from './panel/dice-panel-advanced-check';
 import { createDicePanelRoll } from './panel/dice-panel-roll';
-import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type LegacyAdvancedDicePreset = Record<string, any>;
+type AdvancedDicePreset = Record<string, any>;
+type DiceRawData = Record<string, any>;
+// [x5ah] unused import removed (showActionableErrorToast)
 export function createShowDicePanel(deps: any) {
-  const showDicePanel = (options = {}) => {
+  const showDicePanel = (options: Record<string, any> = {}) => {
     const { $ } = deps.getCore();
-    const dicePanelHistory = createDicePanelHistory(deps);
+    const dicePanelHistory = createDicePanelHistory(deps); void dicePanelHistory;
     const dicePanelExpr = createDicePanelExpr(deps);
     const dicePanelEffectInputs = createDicePanelEffectInputs(deps);
     const dicePanelAttrButtons = createDicePanelAttrButtons(deps, { getPanel: () => panel, getDiceCharacterList: () => diceCharacterList, getDiceAttrList: () => diceAttrList, getFromMvu: () => fromMvu, getMvuParsedInfo: () => mvuParsedInfo, getTargetValue: () => targetValue, getCurrentAdvancedPreset: () => currentAdvancedPreset });
@@ -44,7 +46,7 @@ export function createShowDicePanel(deps: any) {
     // [新增] 构建角色和属性下拉列表
     const rawDataForList = deps.getCachedRawData() || deps.getTableData();
     const diceCharacterList = deps.getDiceQuickSelectCharacterList(rawDataForList as DiceRawData | null | undefined);
-    let diceAttrList = [];
+    let diceAttrList: any[] = [];
 
     if (rawDataForList) {
       for (const key in rawDataForList) {
@@ -54,10 +56,10 @@ export function createShowDicePanel(deps: any) {
 
         if (sheet.name?.includes('主角') && sheet.content[1]) {
           const row = sheet.content[1];
-          headers.forEach((h, idx) => {
+          headers.forEach((h: any, idx: any) => {
             if (h && h.includes('属性')) {
               const parsed = deps.parseAttributeString(row[idx] || '');
-              parsed.forEach(attr => {
+              parsed.forEach((attr: any) => {
                 if (!diceAttrList.includes(attr.name)) diceAttrList.push(attr.name);
               });
             }
@@ -74,7 +76,7 @@ export function createShowDicePanel(deps: any) {
       onResult = null,
       initiatorName = '', // [修复] 接收发起者名字
       fromMvu = false, // [新增] 是否从MVU面板调用
-      mvuPath = null, // [新增] MVU变量路径
+      // mvuPath = null, // [x5ah] unused // [新增] MVU变量路径
       mvuParsedInfo = null, // [新增] 解析后的路径信息
     } = options;
 
@@ -108,8 +110,8 @@ export function createShowDicePanel(deps: any) {
     // [新增] 预设快捷按钮区逻辑
     const quickPresetsHtml = (() => {
       const presets = deps.AdvancedDicePresetManager.getAllPresets()
-        .filter(p => p.visible !== false) // 默认显示
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
+        .filter((p: any) => p.visible !== false) // 默认显示
+        .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
       let html = `<div class="acu-dice-quick-section" id="dice-normal-presets-section" style="margin-bottom: 8px;">`;
       html += `<div class="acu-dice-section-title"><span><i class="fa-solid fa-sliders"></i> 检定规则<div id="dice-preset-quick-actions" class="acu-dice-preset-quick-actions"></div></span></div>`;
@@ -119,7 +121,7 @@ export function createShowDicePanel(deps: any) {
       // 自定义按钮（固定在最左）
       html += `<button type="button" class="acu-dice-quick-preset-btn" data-id="__custom__">自定义</button>`;
 
-      presets.forEach(p => {
+      presets.forEach((p: any) => {
         html += `<button type="button" class="acu-dice-quick-preset-btn" data-id="${deps.escapeHtml(p.id)}">${deps.escapeHtml(p.name)}</button>`;
       });
       html += `</div>`;
@@ -289,14 +291,14 @@ export function createShowDicePanel(deps: any) {
     });
 
     // 自定义模式下持久化骰子语法（仅自定义模式使用）
-    panel.find('#custom-dice-expr').on('input change', function () {
+    panel.find('#custom-dice-expr').on('input change', function (this: any) {
       if (!panel.find('#acu-dice-custom-mode-fields').is(':visible')) return;
       const customExpr = ($(this).val() || '').toString().trim();
       deps.saveDiceConfig({ customDiceExpr: customExpr });
     });
 
     // 绑定快捷预设按钮点击事件：预设管理器会动态刷新按钮，必须用委托绑定新按钮
-    panel.on('click', '#dice-normal-presets .acu-dice-quick-preset-btn', function () {
+    panel.on('click', '#dice-normal-presets .acu-dice-quick-preset-btn', function (this: any) {
       const presetId = $(this).data('id') as string;
 
       // 保存到 last preset
@@ -312,17 +314,17 @@ export function createShowDicePanel(deps: any) {
     });
 
     // [新增] 绑定“返回常规检定”按钮点击事件
-    panel.on('click', '#dice-return-normal-btn', function (e) {
+    panel.on('click', '#dice-return-normal-btn', function (e: any) {
       e.preventDefault();
       // 返回到最近一次可见预设；若无则回退到第一个可见预设
       let targetPresetId: string | null = lastVisiblePresetId;
 
       // 验证 targetPresetId 是否有效且可见
       const allPresets = deps.AdvancedDicePresetManager.getAllPresets();
-      const targetPreset = allPresets.find(p => p.id === targetPresetId);
+      const targetPreset = allPresets.find((p: any) => p.id === targetPresetId);
       if (!targetPreset || targetPreset.visible === false) {
         // 如果上次预设无效或不可见，则回退到第一个可见预设
-        const firstVisible = allPresets.find(p => p.visible !== false);
+        const firstVisible = allPresets.find((p: any) => p.visible !== false);
         targetPresetId = firstVisible ? firstVisible.id : '__custom__';
       }
 
@@ -338,7 +340,7 @@ export function createShowDicePanel(deps: any) {
       dicePanelApplyPreset.applyAdvancedPreset(targetPresetId);
     });
 
-    panel.on('click', '.acu-dice-preset-action-btn', async function (e) {
+    panel.on('click', '.acu-dice-preset-action-btn', async function (this: any, e: any) {
       e.preventDefault();
       e.stopPropagation();
       const actionId = String($(this).data('action-id') || '').trim();
@@ -381,7 +383,7 @@ export function createShowDicePanel(deps: any) {
 
     // 切换到对抗检定（标题栏图标）
     panel.find('#dice-switch-contest-top').click(function () {
-      const targetInput = panel.find('#dice-target').val().trim();
+      const targetInput = panel.find('#dice-target').val().trim(); void targetInput;
       const attrValueInput = panel.find('#dice-attr-value').val().trim();
       const currentDice = panel.find('#dice-formula').val() || '1d100';
       const initiatorNameVal = panel.find('#dice-initiator-name').val().trim();
@@ -393,7 +395,7 @@ export function createShowDicePanel(deps: any) {
         diceType: currentDice,
       });
     });
-    panel.find('#dice-history-btn').click(function (e) {
+    panel.find('#dice-history-btn').click(function (e: any) {
       e.stopPropagation();
       deps.showGlobalDiceHistoryDialog();
     });
@@ -402,13 +404,13 @@ export function createShowDicePanel(deps: any) {
       overlay.remove();
       panel.remove();
     };
-    panel.on('click', e => {
+    panel.on('click', (e: any) => {
       e.stopPropagation();
     });
     overlay.click(closePanel);
     panel.find('.acu-dice-close').click(closePanel);
     // 齿轮设置按钮点击 - 调用高级检定管理
-    panel.find('.acu-dice-config-btn').click(function (e) {
+    panel.find('.acu-dice-config-btn').click(function (e: any) {
       e.stopPropagation();
       deps.showAdvancedPresetManager({ fromDicePanel: true });
     });

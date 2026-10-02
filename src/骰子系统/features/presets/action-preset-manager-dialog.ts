@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * action-preset-manager-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -19,17 +18,17 @@ export function createShowActionPresetManager(deps: any) {
       presets.length === 0
         ? `<div class="acu-empty-state">暂无交互规则预设，点击下方按钮创建</div>`
         : presets
-            .map(preset => {
+            .map((preset: any) => {
               const isActive = preset.id === activeId;
               const isBuiltin = preset.builtin === true;
               const keywordsSummary =
                 (preset.rules || [])
-                  .flatMap(r => r.table_keywords || [])
+                  .flatMap((r: any) => r.table_keywords || [])
                   .slice(0, 3)
                   .join('、') || '无';
               const actionsSummary =
                 (preset.rules || [])
-                  .flatMap(r => (r.actions || []).map(a => a.label))
+                  .flatMap((r: any) => (r.actions || []).map((a: any) => a.label))
                   .slice(0, 4)
                   .join('、') || '无';
 
@@ -103,7 +102,7 @@ export function createShowActionPresetManager(deps: any) {
     });
 
     // Toggle切换预设激活状态（单选）
-    overlay.on('change', '.acu-action-preset-toggle', function () {
+    overlay.on('change', '.acu-action-preset-toggle', function (this: any) {
       const $toggle = $(this);
       const id = $toggle.data('id');
       const isChecked = $toggle.is(':checked');
@@ -111,7 +110,7 @@ export function createShowActionPresetManager(deps: any) {
       if (isChecked) {
         deps.ActionPresetManager.setActivePresetId(id);
         // 取消其他toggle
-        overlay.find('.acu-action-preset-toggle').each(function () {
+        overlay.find('.acu-action-preset-toggle').each(function (this: any) {
           if ($(this).data('id') !== id) {
             $(this).prop('checked', false);
           }
@@ -126,16 +125,16 @@ export function createShowActionPresetManager(deps: any) {
     });
 
     // 编辑预设
-    overlay.on('click', '.acu-action-preset-edit', function () {
+    overlay.on('click', '.acu-action-preset-edit', function (this: any) {
       const id = $(this).data('id');
       overlay.remove();
       deps.showActionPresetEditor(id);
     });
 
     // 导出预设 - 下载为JSON文件
-    overlay.on('click', '.acu-action-preset-export', function () {
+    overlay.on('click', '.acu-action-preset-export', function (this: any) {
       const id = $(this).data('id');
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
       const json = deps.ActionPresetManager.exportPreset(id);
       if (!json) {
         if (window.toastr) showActionableErrorToast('导出失败', { title: '动作预设导出失败', suggestion: 'importExport' });
@@ -147,9 +146,9 @@ export function createShowActionPresetManager(deps: any) {
     });
 
     // 复制内置预设为自定义预设
-    overlay.on('click', '.acu-action-preset-copy', function () {
+    overlay.on('click', '.acu-action-preset-copy', function (this: any) {
       const id = $(this).data('id');
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
       if (!preset) return;
 
       const copyData = {
@@ -168,9 +167,9 @@ export function createShowActionPresetManager(deps: any) {
     });
 
     // 删除预设
-    overlay.on('click', '.acu-action-preset-delete', async function () {
+    overlay.on('click', '.acu-action-preset-delete', async function (this: any) {
       const id = $(this).data('id');
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
 
       const confirmed = await deps.showDiceSystemConfirmDialog({
         title: '删除交互规则预设',

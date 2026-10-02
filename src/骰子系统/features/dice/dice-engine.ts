@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/dice/dice-engine.ts
  * 骰子表达式求值引擎（纯逻辑，无 DOM/DB 依赖）。

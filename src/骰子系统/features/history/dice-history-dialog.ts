@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * dice-history-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type ContestHistoryEntry = Record<string, any>;
+type CheckHistoryEntry = Record<string, any>;
+import type { DiceStatsScope } from '../../shared/index-local-types';
 export function createShowGlobalDiceHistoryDialog(deps: any) {
   const showGlobalDiceHistoryDialog = () => {
     $('.acu-dice-history-overlay').remove();
@@ -19,8 +21,8 @@ export function createShowGlobalDiceHistoryDialog(deps: any) {
       detailCopyTextMap.clear();
 
       const items: UnifiedItem[] = [
-        ...deps.checkHistory.map(item => ({ ...item, historyType: 'check' as const })),
-        ...deps.contestHistory.map(item => ({ ...item, historyType: 'contest' as const })),
+        ...deps.checkHistory.map((item: any) => ({ ...item, historyType: 'check' as const })),
+        ...deps.contestHistory.map((item: any) => ({ ...item, historyType: 'contest' as const })),
       ]
         .sort((a, b) => b.timestamp - a.timestamp)
         .filter(item => {
@@ -220,11 +222,11 @@ export function createShowGlobalDiceHistoryDialog(deps: any) {
     dialog.find('#acu-history-scope-filter').val(deps.getGlobalHistoryStatsScope());
 
     const refreshByEvent = () => rerender();
-    const canListen = Boolean(window.AcuDice && typeof window.AcuDice.on === 'function');
+    const canListen = Boolean((window as any).AcuDice && typeof (window as any).AcuDice.on === 'function');
     if (canListen) {
-      window.AcuDice.on('check', refreshByEvent);
-      window.AcuDice.on('contest', refreshByEvent);
-      window.AcuDice.on('effect_run', refreshByEvent);
+      (window as any).AcuDice.on('check', refreshByEvent);
+      (window as any).AcuDice.on('contest', refreshByEvent);
+      (window as any).AcuDice.on('effect_run', refreshByEvent);
     }
 
     void renderHistoryStats();
@@ -298,9 +300,9 @@ export function createShowGlobalDiceHistoryDialog(deps: any) {
 
     const closeDialog = () => {
       if (canListen) {
-        window.AcuDice.off('check', refreshByEvent);
-        window.AcuDice.off('contest', refreshByEvent);
-        window.AcuDice.off('effect_run', refreshByEvent);
+        (window as any).AcuDice.off('check', refreshByEvent);
+        (window as any).AcuDice.off('contest', refreshByEvent);
+        (window as any).AcuDice.off('effect_run', refreshByEvent);
       }
       dialog.remove();
     };

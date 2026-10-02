@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * regex-transformation-engine.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
  */
 
 
+import type { RegexFlags, RegexExecutionMode, RegexPreviewResult, RegexTransformResult, RegexTransformationRule } from '../../shared/index-local-types';
 export function createRegexTransformationEngine(deps: any) {
   const RegexTransformationEngine = {
     // 正则表达式缓存
@@ -107,7 +107,7 @@ export function createRegexTransformationEngine(deps: any) {
             newValue = value.replace(regex, '');
             break;
           case 'validate':
-            const isValid = regex.test(value);
+            const isValid = regex.test(value); void isValid;
             newValue = value;
             break;
           default:
@@ -408,7 +408,7 @@ export function createRegexTransformationEngine(deps: any) {
       // 过滤执行模式
       let applicableRules = rules;
       if (executeMode) {
-        applicableRules = rules.filter(r => r.executeMode === executeMode || r.executeMode === 'auto');
+        applicableRules = rules.filter((r: any) => r.executeMode === executeMode || r.executeMode === 'auto');
       }
 
       if (applicableRules.length === 0) {
@@ -455,11 +455,11 @@ export function createRegexTransformationEngine(deps: any) {
     // 预览批量转换结果
     previewBatchTransform(
       tableData: { name: string; headers: string[]; rows: string[][] },
-      executeMode?: RegexExecutionMode,
+      _executeMode?: RegexExecutionMode,
     ): RegexPreviewResult[] {
       const tableName = tableData.name;
       const rules = deps.getRegexTransformationManager().getApplicableRules(tableName, null).filter(
-        r => r.scope.type === 'global' || r.scope.tableNames?.includes(tableName),
+        (r: any) => r.scope.type === 'global' || r.scope.tableNames?.includes(tableName),
       );
 
       const results: RegexPreviewResult[] = [];

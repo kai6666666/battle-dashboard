@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * regex-preset-manager.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
@@ -7,12 +6,13 @@
 import { Store } from '../../shared/storage/store';
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 
+import type { RegexPreset, RegexTransformationRule } from '../../shared/index-local-types';
 export function createRegexPresetManager(deps: any) {
   const RegexPresetManager = {
-    _cache: null,
+    _cache: null as any,
 
     // 版本比较（复用全局 deps.compareVersion）
-    _compareVersion(v1, v2) {
+    _compareVersion(v1: any, v2: any) {
       return deps.compareVersion(v1, v2);
     },
 
@@ -27,7 +27,7 @@ export function createRegexPresetManager(deps: any) {
           name: '默认预设',
           description: '系统默认的表格正则预设',
           version: PRESET_FORMAT_VERSION,
-          rules: deps.BUILTIN_REGEX_RULES.map(r => ({ ...r, builtin: true })),
+          rules: deps.BUILTIN_REGEX_RULES.map((r: any) => ({ ...r, builtin: true })),
           createdAt: Date.now(),
           updatedAt: Date.now(),
         };
@@ -38,7 +38,7 @@ export function createRegexPresetManager(deps: any) {
 
       // 自动检测并更新版本
       let needsSave = false;
-      stored.forEach(preset => {
+      stored.forEach((preset: any) => {
         if (Array.isArray(preset.rules)) {
           const filteredRules = deps.filterDeprecatedBuiltinRegexRules(preset.rules);
           if (filteredRules.length !== preset.rules.length) {
@@ -55,17 +55,17 @@ export function createRegexPresetManager(deps: any) {
 
           if (preset.id === 'regex_default') {
             // 默认预设：强制替换内置规则，只保留用户自定义规则和开关状态
-            const customRules = (preset.rules || []).filter(r => !r.builtin);
+            const customRules = (preset.rules || []).filter((r: any) => !r.builtin);
             // 创建现有内置规则的开关状态映射
             const existingBuiltinMap = new Map();
             (preset.rules || [])
-              .filter(r => r.builtin)
-              .forEach(r => {
+              .filter((r: any) => r.builtin)
+              .forEach((r: any) => {
                 existingBuiltinMap.set(r.id, { enabled: r.enabled });
               });
             // 替换内置规则，保留用户的开关设置
             preset.rules = [
-              ...deps.BUILTIN_REGEX_RULES.map(r => {
+              ...deps.BUILTIN_REGEX_RULES.map((r: any) => {
                 const existing = existingBuiltinMap.get(r.id);
                 return {
                   ...r,
@@ -100,22 +100,22 @@ export function createRegexPresetManager(deps: any) {
     },
 
     // 智能合并内置规则（用于非默认预设）
-    _mergeBuiltinRules(preset) {
-      const customRules = (preset.rules || []).filter(r => !r.builtin);
-      const builtinRuleIds = new Set(deps.BUILTIN_REGEX_RULES.map(r => r.id));
+    _mergeBuiltinRules(preset: any) {
+      const customRules = (preset.rules || []).filter((r: any) => !r.builtin);
+      const builtinRuleIds = new Set(deps.BUILTIN_REGEX_RULES.map((r: any) => r.id));
 
       // 创建现有内置规则映射
       const existingBuiltinMap = new Map();
       (preset.rules || [])
-        .filter(r => r.builtin)
-        .forEach(r => {
+        .filter((r: any) => r.builtin)
+        .forEach((r: any) => {
           existingBuiltinMap.set(r.id, r);
         });
 
-      const mergedRules = [];
+      const mergedRules: any[] = [];
 
       // 处理内置规则：新增的用新版本，已有的保留用户修改
-      deps.BUILTIN_REGEX_RULES.forEach(newRule => {
+      deps.BUILTIN_REGEX_RULES.forEach((newRule: any) => {
         const existing = existingBuiltinMap.get(newRule.id);
         if (existing) {
           // 保留用户的启用状态，但更新规则定义
@@ -130,7 +130,7 @@ export function createRegexPresetManager(deps: any) {
       });
 
       // 添加用户自定义规则（排除与内置规则ID冲突的）
-      customRules.forEach(rule => {
+      customRules.forEach((rule: any) => {
         if (!builtinRuleIds.has(rule.id)) {
           mergedRules.push({ ...rule, builtin: false });
         }
@@ -143,7 +143,7 @@ export function createRegexPresetManager(deps: any) {
     getActivePreset() {
       const activeId = Store.get(deps.STORAGE_KEY_REGEX_ACTIVE_PRESET, 'regex_default');
       const presets = this.getAllPresets();
-      const preset = presets.find(p => p.id === activeId) || presets[0];
+      const preset = presets.find((p: any) => p.id === activeId) || presets[0];
 
       // 确保规则存储与当前激活预设同步
       // 检查预设中的内置规则是否已存在于规则存储中，如果缺失则合并
@@ -155,8 +155,8 @@ export function createRegexPresetManager(deps: any) {
       }
       if (preset && preset.rules && preset.rules.length > 0) {
         // 找出预设中标记为 builtin 但存储中缺失的规则
-        const storedRuleIds = new Set(activeStoredRules.map(r => r.id));
-        const missingBuiltinRules = preset.rules.filter(r => r.builtin && !storedRuleIds.has(r.id));
+        const storedRuleIds = new Set(activeStoredRules.map((r: any) => r.id));
+        const missingBuiltinRules = preset.rules.filter((r: any) => r.builtin && !storedRuleIds.has(r.id));
 
         if (missingBuiltinRules.length > 0) {
           // 将缺失的内置规则添加到存储的规则列表开头
@@ -171,9 +171,9 @@ export function createRegexPresetManager(deps: any) {
     },
 
     // 设置激活预设
-    setActivePreset(presetId) {
+    setActivePreset(presetId: any) {
       const presets = this.getAllPresets();
-      const preset = presets.find(p => p.id === presetId);
+      const preset = presets.find((p: any) => p.id === presetId);
       if (!preset) {
         console.error('[DICE]RegexPresetManager: 预设不存在', presetId);
         return false;
@@ -191,16 +191,16 @@ export function createRegexPresetManager(deps: any) {
     },
 
     // 创建新预设
-    createPreset(name, sourcePresetId) {
+    createPreset(name: any, sourcePresetId: any) {
       const presets = this.getAllPresets();
 
       // 验证名称不重复
-      if (presets.some(p => p.name === name)) {
+      if (presets.some((p: any) => p.name === name)) {
         console.error('[DICE]RegexPresetManager: 预设名称已存在', name);
         return false;
       }
 
-      const sourcePreset = sourcePresetId ? presets.find(p => p.id === sourcePresetId) : this.getActivePreset();
+      const sourcePreset = sourcePresetId ? presets.find((p: any) => p.id === sourcePresetId) : this.getActivePreset();
 
       const newPreset: RegexPreset = {
         id: `regex_preset_${Date.now()}`,
@@ -218,9 +218,9 @@ export function createRegexPresetManager(deps: any) {
     },
 
     // 更新预设规则
-    updatePresetRules(presetId, rules) {
+    updatePresetRules(presetId: any, rules: any) {
       const presets = this.getAllPresets();
-      const index = presets.findIndex(p => p.id === presetId);
+      const index = presets.findIndex((p: any) => p.id === presetId);
       if (index === -1) return false;
 
       presets[index].rules = JSON.parse(JSON.stringify(deps.filterDeprecatedBuiltinRegexRules(rules)));
@@ -237,7 +237,7 @@ export function createRegexPresetManager(deps: any) {
     },
 
     // 删除预设
-    deletePreset(presetId) {
+    deletePreset(presetId: any) {
       const presets = this.getAllPresets();
 
       // 不允许删除最后一个预设
@@ -246,7 +246,7 @@ export function createRegexPresetManager(deps: any) {
         return false;
       }
 
-      const index = presets.findIndex(p => p.id === presetId);
+      const index = presets.findIndex((p: any) => p.id === presetId);
       if (index === -1) return false;
 
       presets.splice(index, 1);
@@ -261,8 +261,8 @@ export function createRegexPresetManager(deps: any) {
     },
 
     // 导出预设为JSON
-    exportPreset(presetId) {
-      const preset = this.getAllPresets().find(p => p.id === presetId);
+    exportPreset(presetId: any) {
+      const preset = this.getAllPresets().find((p: any) => p.id === presetId);
       if (!preset) return null;
 
       // 如果是当前激活预设，从实际存储读取最新规则
@@ -281,7 +281,7 @@ export function createRegexPresetManager(deps: any) {
     },
 
     // 从 JSON/JSONC 导入预设
-    importPreset(jsonString) {
+    importPreset(jsonString: any) {
       try {
         const data = deps.parseJsoncRecord(jsonString, '正则预设');
 
@@ -299,7 +299,7 @@ export function createRegexPresetManager(deps: any) {
           name: data.name,
           description: typeof data.description === 'string' ? data.description : '',
           version: typeof data.version === 'string' && data.version.trim() ? data.version : PRESET_FORMAT_VERSION,
-          rules: deps.filterDeprecatedBuiltinRegexRules(data.rules as RegexTransformationRule[]).map(rule => ({
+          rules: deps.filterDeprecatedBuiltinRegexRules(data.rules as RegexTransformationRule[]).map((rule: any) => ({
             ...rule,
             id: deps.getRegexTransformationManager()._generateId(),
           })),
@@ -317,7 +317,7 @@ export function createRegexPresetManager(deps: any) {
     },
 
     // 保存到存储
-    _save(presets) {
+    _save(presets: any) {
       Store.set(deps.STORAGE_KEY_REGEX_PRESETS, presets);
       this._cache = presets;
     },

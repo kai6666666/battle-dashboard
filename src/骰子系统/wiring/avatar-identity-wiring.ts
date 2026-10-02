@@ -552,7 +552,7 @@ export function createAvatarIdentityWiring(deps: any) {
     getAvatarScale: name => AvatarManager.getScale(name),
     getAvatarImageColor: name => AvatarManager.getImageColor(name),
     getLocalAvatarNames: () => LocalAvatarDB.getAllNames() as Promise<string[]>,
-    getTagFilter: () => RenderPresetManager.getDialogueIndentTagFilter(),
+getTagFilter: () => RenderPresetManager.getDialogueIndentTagFilter() as any,
     isCharacterTable,
     findNameColumnIndex,
     getCharacterNameCandidates,

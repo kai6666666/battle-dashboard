@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * update-template-for-active-preset.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -50,15 +49,15 @@ export function createUpdateTemplateForActivePreset(deps: any) {
 
     // 基础属性范围：取所有 baseAttributes.range 的 min/max
     if (preset.baseAttributes && preset.baseAttributes.length > 0) {
-      const baseRanges = preset.baseAttributes.map(attr => attr.range);
-      baseRangeMin = Math.min(...baseRanges.map(r => r[0]));
-      baseRangeMax = Math.max(...baseRanges.map(r => r[1]));
+      const baseRanges = preset.baseAttributes.map((attr: any) => attr.range);
+      baseRangeMin = Math.min(...baseRanges.map((r: any) => r[0]));
+      baseRangeMax = Math.max(...baseRanges.map((r: any) => r[1]));
     }
     // 特有属性范围：取所有 specialAttributes.range 的 min/max
     if (preset.specialAttributes && preset.specialAttributes.length > 0) {
-      const specialRanges = preset.specialAttributes.map(attr => attr.range);
-      specialRangeMin = Math.min(...specialRanges.map(r => r[0]));
-      specialRangeMax = Math.max(...specialRanges.map(r => r[1]));
+      const specialRanges = preset.specialAttributes.map((attr: any) => attr.range);
+      specialRangeMin = Math.min(...specialRanges.map((r: any) => r[0]));
+      specialRangeMax = Math.max(...specialRanges.map((r: any) => r[1]));
     }
 
     // 4. 获取生成的属性数据
@@ -190,7 +189,7 @@ ${attributeScaleStr}`;
     const attributeRuleSheets = Object.entries(template).filter((entry): entry is [string, TemplateSheetDebug] => {
       const [, sheet] = entry;
       if (!isTemplateSheetWithNote(sheet)) return false;
-      return sheet.sourceData?.note?.includes('<属性规则>') === true;
+      return (sheet.sourceData?.note as string | undefined)?.includes('<属性规则>') === true;
     });
     console.info(`${debugPrefix} 可同步表扫描`, {
       totalSheets: templateKeys.length,

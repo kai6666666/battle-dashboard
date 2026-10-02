@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * attribute-preset-editor-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+import type { AttributePresetAttributeDef, AttributeQuickSelectConfig, NormalizedAttributeQuickSelectConfig } from '../../shared/advanced-preset-types';
 export function createShowAttributePresetEditor(deps: any) {
   const showAttributePresetEditor = (presetId = null) => {
     const { $ } = deps.getCore();
@@ -13,7 +13,7 @@ export function createShowAttributePresetEditor(deps: any) {
 
     const config = deps.getConfig();
     const isEdit = !!presetId;
-    const existingPreset = isEdit ? deps.AttributePresetManager.getAllPresets().find(p => p.id === presetId) : null;
+    const existingPreset = isEdit ? deps.AttributePresetManager.getAllPresets().find((p: any) => p.id === presetId) : null;
 
     const buildAttributePresetAgentPrompt = (): string => deps.attributePresetAgentPromptTemplate;
     const buildAttributePresetAgentPromptFilename = (presetName: string): string => {
@@ -170,9 +170,9 @@ export function createShowAttributePresetEditor(deps: any) {
       deps.validateJsoncEditorConfig({
         text: String($jsonTextarea.val() || ''),
         parse: parseAttributePresetEditorConfig,
-        successMessage: parsed =>
+        successMessage: (parsed: any) =>
           `配置有效：${name}，基础属性 ${parsed.baseAttributes.length} 项，特殊属性 ${parsed.specialAttributes.length} 项`,
-        errorMessage: error => '验证失败：' + deps.getJsonLikeErrorMessage(error),
+        errorMessage: (error: any) => '验证失败：' + deps.getJsonLikeErrorMessage(error),
         logLabel: '[DICE]ACU 属性预设验证失败:',
       });
     });

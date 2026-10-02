@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * evaluate-condition.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { RollResult } from '../../shared/types';
 export function createEvaluateCondition(deps: any) {
-  const evaluateCondition = (formula, context = {}) => {
+  const evaluateCondition = (formula: any, context: Record<string, any> = {}) => {
     if (!formula || typeof formula !== 'string') return { success: true, value: 0 };
 
     type ConditionFunctionArg = number | string;
@@ -125,7 +125,7 @@ export function createEvaluateCondition(deps: any) {
       }
 
       // 4. Shunting-yard 算法
-      const ops = {
+      const ops: Record<string, any> = {
         '||': { prec: 1, assoc: 'L' },
         '&&': { prec: 2, assoc: 'L' },
         '==': { prec: 3, assoc: 'L' },
@@ -158,9 +158,9 @@ export function createEvaluateCondition(deps: any) {
           if (operatorStack.length === 0) return { success: false, error: '括号不匹配' };
           operatorStack.pop(); // 弹出 '('
         } else {
-          const o1 = token.value;
+          const o1 = token.value as any;
           while (operatorStack.length > 0) {
-            const o2 = operatorStack[operatorStack.length - 1].value;
+            const o2 = operatorStack[operatorStack.length - 1].value as any;
             if (o2 === '(') break;
             if (ops[o2].prec > ops[o1].prec || (ops[o2].prec === ops[o1].prec && ops[o1].assoc === 'L')) {
               outputQueue.push(operatorStack.pop());
@@ -174,13 +174,13 @@ export function createEvaluateCondition(deps: any) {
 
       while (operatorStack.length > 0) {
         const op = operatorStack.pop();
-        if (op.value === '(') return { success: false, error: '括号不匹配' };
+        if (op!.value === '(') return { success: false, error: '括号不匹配' };
         outputQueue.push(op);
       }
 
       // 5. 栈求值
-      const evalStack = [];
-      for (const token of outputQueue) {
+      const evalStack: any[] = [];
+      for (const token of outputQueue as any[]) {
         if (token.type === 'NUMBER') {
           evalStack.push(token.value);
         } else {
@@ -414,13 +414,13 @@ export function createEvaluateCondition(deps: any) {
       const roll = context.$roll as RollResult;
       formula = formula.replace(/\$roll\.total/g, String(roll.total));
       // 预处理 $roll.hasTag('tagName') 调用，在变量替换前完成
-      formula = formula.replace(/\$roll\.hasTag\s*\(\s*['"]([^'"]+)['"]\s*\)/gi, (_match, tag) => {
+      formula = formula.replace(/\$roll\.hasTag\s*\(\s*['"]([^'"]+)['"]\s*\)/gi, (_match: any, tag: any) => {
         return (roll.tags ?? []).includes(tag) ? '1' : '0';
       });
     }
 
     const varPattern = /\$[a-zA-Z_]\w*/g;
-    let expr = formula.trim().replace(varPattern, match => {
+    let expr = formula.trim().replace(varPattern, (match: any) => {
       const val = context[match];
       return typeof val === 'number' && !isNaN(val) ? String(val) : '0';
     });

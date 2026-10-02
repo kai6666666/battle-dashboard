@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * preset-manager.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
@@ -9,7 +8,7 @@ import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 
 export function createPresetManager(deps: any) {
   const PresetManager = {
-    _cache: null,
+    _cache: null as any,
 
     // 获取所有预设（自动检测并更新版本）
     getAllPresets() {
@@ -20,7 +19,7 @@ export function createPresetManager(deps: any) {
       }
 
       let needsSave = false;
-      stored.forEach(preset => {
+      stored.forEach((preset: any) => {
         if (!preset.version || this._compareVersion(preset.version, PRESET_FORMAT_VERSION) < 0) {
           console.log(
             `[DICE]PresetManager 检测到预设 "${preset.name}" 版本较旧 (${preset.version || '无版本'})，自动更新`,
@@ -28,18 +27,18 @@ export function createPresetManager(deps: any) {
 
           if (preset.id === 'default') {
             // 默认预设：强制替换内置规则，只保留用户自定义规则和开关状态
-            const customRules = preset.rules.filter(r => !r.builtin);
+            const customRules = preset.rules.filter((r: any) => !r.builtin);
             // 创建现有内置规则的开关状态映射
             const existingBuiltinMap = new Map();
             preset.rules
-              .filter(r => r.builtin)
-              .forEach(r => {
+              .filter((r: any) => r.builtin)
+              .forEach((r: any) => {
                 const key = r.id || r.targetTable + '_' + r.ruleType;
                 existingBuiltinMap.set(key, { enabled: r.enabled, intercept: r.intercept });
               });
             // 替换内置规则，保留用户的开关设置
             preset.rules = [
-              ...deps.BUILTIN_VALIDATION_RULES.map(r => {
+              ...deps.BUILTIN_VALIDATION_RULES.map((r: any) => {
                 const key = r.id || r.targetTable + '_' + r.ruleType;
                 const existing = existingBuiltinMap.get(key);
                 return {
@@ -77,12 +76,12 @@ export function createPresetManager(deps: any) {
     getActivePreset() {
       const presets = this.getAllPresets();
       const activeId = Store.get(deps.STORAGE_KEY_ACTIVE_PRESET, 'default');
-      return presets.find(p => p.id === activeId) || presets[0];
+      return presets.find((p: any) => p.id === activeId) || presets[0];
     },
 
     // 设置激活预设
-    setActivePreset(id) {
-      if (!this.getAllPresets().find(p => p.id === id)) return false;
+    setActivePreset(id: any) {
+      if (!this.getAllPresets().find((p: any) => p.id === id)) return false;
       Store.set(deps.STORAGE_KEY_ACTIVE_PRESET, id);
       deps.getValidationRuleManager().clearCache();
       console.log('[DICE]PresetManager 切换预设:', id);
@@ -90,7 +89,7 @@ export function createPresetManager(deps: any) {
     },
 
     // 创建新预设
-    createPreset(name) {
+    createPreset(name: any) {
       const presets = this.getAllPresets();
       const newPreset = {
         id: 'preset_' + Date.now(),
@@ -106,8 +105,8 @@ export function createPresetManager(deps: any) {
     },
 
     // 复制预设
-    duplicatePreset(id) {
-      const source = this.getAllPresets().find(p => p.id === id);
+    duplicatePreset(id: any) {
+      const source = this.getAllPresets().find((p: any) => p.id === id);
       if (!source) return null;
       const presets = this.getAllPresets();
       const newPreset = {
@@ -125,11 +124,11 @@ export function createPresetManager(deps: any) {
     },
 
     // 删除预设（只保护 id='default' 的默认预设）
-    deletePreset(id) {
+    deletePreset(id: any) {
       const presets = this.getAllPresets();
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
       if (!preset || preset.id === 'default') return false; // 只保护默认预设
-      const filtered = presets.filter(p => p.id !== id);
+      const filtered = presets.filter((p: any) => p.id !== id);
       this._save(filtered);
       if (Store.get(deps.STORAGE_KEY_ACTIVE_PRESET) === id) {
         Store.set(deps.STORAGE_KEY_ACTIVE_PRESET, 'default');
@@ -140,9 +139,9 @@ export function createPresetManager(deps: any) {
     },
 
     // 更新预设规则
-    updatePresetRules(id, rules) {
+    updatePresetRules(id: any, rules: any) {
       const presets = this.getAllPresets();
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
       if (!preset) return false;
       preset.rules = rules;
       this._save(presets);
@@ -151,8 +150,8 @@ export function createPresetManager(deps: any) {
     },
 
     // 导出预设
-    exportPreset(id) {
-      const preset = this.getAllPresets().find(p => p.id === id);
+    exportPreset(id: any) {
+      const preset = this.getAllPresets().find((p: any) => p.id === id);
       if (!preset) return null;
       const json = JSON.stringify(
         {
@@ -167,35 +166,35 @@ export function createPresetManager(deps: any) {
     },
 
     // 比较版本号（使用全局函数）
-    _compareVersion(v1, v2) {
+    _compareVersion(v1: any, v2: any) {
       return deps.compareVersion(v1, v2);
     },
 
     // 合并预设与默认值（智能合并：保留用户自定义，添加新规则，更新默认值）
-    mergePresetWithDefaults(presetId) {
+    mergePresetWithDefaults(presetId: any) {
       const presets = this.getAllPresets();
-      const preset = presets.find(p => p.id === presetId);
+      const preset = presets.find((p: any) => p.id === presetId);
       if (!preset) return false;
 
       // 分离内置规则和用户自定义规则
-      const customRules = preset.rules.filter(r => !r.builtin);
-      const builtinRuleIds = new Set(deps.BUILTIN_VALIDATION_RULES.map(r => r.id || r.targetTable + '_' + r.ruleType));
+      const customRules = preset.rules.filter((r: any) => !r.builtin);
+      const builtinRuleIds = new Set(deps.BUILTIN_VALIDATION_RULES.map((r: any) => r.id || r.targetTable + '_' + r.ruleType));
 
       // 创建内置规则映射（用于检测用户是否修改过）
       const builtinRuleMap = new Map();
-      deps.BUILTIN_VALIDATION_RULES.forEach(r => {
+      deps.BUILTIN_VALIDATION_RULES.forEach((r: any) => {
         const key = r.id || r.targetTable + '_' + r.ruleType;
         builtinRuleMap.set(key, r);
       });
 
       // 合并规则：保留用户自定义，添加新规则，更新未修改的默认值
-      const mergedRules = [];
+      const mergedRules: any[] = [];
       const processedCustomIds = new Set();
 
       // 1. 添加所有内置规则（如果用户未修改，使用新版本；如果修改过，保留用户版本）
-      deps.BUILTIN_VALIDATION_RULES.forEach(newRule => {
+      deps.BUILTIN_VALIDATION_RULES.forEach((newRule: any) => {
         const key = newRule.id || newRule.targetTable + '_' + newRule.ruleType;
-        const existingRule = preset.rules.find(r => (r.id || r.targetTable + '_' + r.ruleType) === key && r.builtin);
+        const existingRule = preset.rules.find((r: any) => (r.id || r.targetTable + '_' + r.ruleType) === key && r.builtin);
         if (existingRule) {
           // 检查用户是否修改过（简单比较：如果规则内容完全相同，认为未修改）
           const isModified = JSON.stringify(existingRule) !== JSON.stringify(newRule);
@@ -214,7 +213,7 @@ export function createPresetManager(deps: any) {
       });
 
       // 2. 添加用户自定义规则（不属于内置规则的）
-      customRules.forEach(rule => {
+      customRules.forEach((rule: any) => {
         const key = rule.id || rule.targetTable + '_' + rule.ruleType;
         if (!builtinRuleIds.has(key)) {
           mergedRules.push({ ...rule, builtin: false });
@@ -230,7 +229,7 @@ export function createPresetManager(deps: any) {
     },
 
     // 导入预设
-    importPreset(json, autoMerge = false) {
+    importPreset(json: any, autoMerge = false) {
       try {
         const data = deps.parseJsoncRecord(json, '验证规则预设');
         if (data.format !== 'acu_preset_v1' || !deps.isRecordValue(data.preset)) return null;
@@ -285,7 +284,7 @@ export function createPresetManager(deps: any) {
         id: 'default',
         name: '默认预设',
         builtin: true,
-        rules: deps.BUILTIN_VALIDATION_RULES.map(r => ({ ...r })),
+        rules: deps.BUILTIN_VALIDATION_RULES.map((r: any) => ({ ...r })),
         version: PRESET_FORMAT_VERSION,
         createdAt: new Date().toISOString(),
       };
@@ -293,7 +292,7 @@ export function createPresetManager(deps: any) {
       // 迁移旧版自定义规则
       const oldCustom = Store.get(deps.STORAGE_KEY_VALIDATION_RULES, []);
       if (oldCustom.length > 0) {
-        defaultPreset.rules.push(...oldCustom.map(r => ({ ...r, builtin: false })));
+        defaultPreset.rules.push(...oldCustom.map((r: any) => ({ ...r, builtin: false })));
         console.log('[DICE]PresetManager 迁移旧规则:', oldCustom.length, '条');
       }
 
@@ -305,11 +304,11 @@ export function createPresetManager(deps: any) {
     // 恢复默认预设的规则
     resetDefaultPreset() {
       const presets = this.getAllPresets();
-      const defaultPreset = presets.find(p => p.id === 'default');
+      const defaultPreset = presets.find((p: any) => p.id === 'default');
       if (defaultPreset) {
         // 保留自定义规则（非内置规则）
-        const customRules = defaultPreset.rules.filter(r => !r.builtin);
-        defaultPreset.rules = [...deps.BUILTIN_VALIDATION_RULES.map(r => ({ ...r })), ...customRules];
+        const customRules = defaultPreset.rules.filter((r: any) => !r.builtin);
+        defaultPreset.rules = [...deps.BUILTIN_VALIDATION_RULES.map((r: any) => ({ ...r })), ...customRules];
         defaultPreset.version = PRESET_FORMAT_VERSION;
         this._save(presets);
         deps.getValidationRuleManager().clearCache();
@@ -319,23 +318,23 @@ export function createPresetManager(deps: any) {
     },
 
     // 智能合并内置规则（用于非默认预设）
-    _mergeBuiltinRules(preset) {
-      const customRules = preset.rules.filter(r => !r.builtin);
-      const builtinRuleIds = new Set(deps.BUILTIN_VALIDATION_RULES.map(r => r.id || r.targetTable + '_' + r.ruleType));
+    _mergeBuiltinRules(preset: any) {
+      const customRules = preset.rules.filter((r: any) => !r.builtin);
+      const builtinRuleIds = new Set(deps.BUILTIN_VALIDATION_RULES.map((r: any) => r.id || r.targetTable + '_' + r.ruleType));
 
       // 创建现有内置规则映射
       const existingBuiltinMap = new Map();
       preset.rules
-        .filter(r => r.builtin)
-        .forEach(r => {
+        .filter((r: any) => r.builtin)
+        .forEach((r: any) => {
           const key = r.id || r.targetTable + '_' + r.ruleType;
           existingBuiltinMap.set(key, r);
         });
 
-      const mergedRules = [];
+      const mergedRules: any[] = [];
 
       // 处理内置规则：新增的用新版本，已有的保留用户修改
-      deps.BUILTIN_VALIDATION_RULES.forEach(newRule => {
+      deps.BUILTIN_VALIDATION_RULES.forEach((newRule: any) => {
         const key = newRule.id || newRule.targetTable + '_' + newRule.ruleType;
         const existing = existingBuiltinMap.get(key);
         if (existing) {
@@ -353,7 +352,7 @@ export function createPresetManager(deps: any) {
       });
 
       // 添加用户自定义规则（排除与内置规则ID冲突的）
-      customRules.forEach(rule => {
+      customRules.forEach((rule: any) => {
         const key = rule.id || rule.targetTable + '_' + rule.ruleType;
         if (!builtinRuleIds.has(key)) {
           mergedRules.push({ ...rule, builtin: false });
@@ -363,7 +362,7 @@ export function createPresetManager(deps: any) {
       preset.rules = mergedRules;
     },
 
-    _save(presets) {
+    _save(presets: any) {
       Store.set(deps.STORAGE_KEY_PRESETS, presets);
       this._cache = presets;
     },

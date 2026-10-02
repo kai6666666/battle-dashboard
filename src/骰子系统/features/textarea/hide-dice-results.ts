@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * hide-dice-results.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = HTMLTextAreaElement & Record<string, any>;
 export function createHideDiceResultsInUserMessages(deps: any) {
   const hideDiceResultsInUserMessages = () => {
     try {
@@ -74,7 +74,7 @@ export function createHideDiceResultsInUserMessages(deps: any) {
               const getMessageElement = (messageId: number | string) => {
                 if (typeof retrieveDisplayedMessage === 'function') {
                   try {
-                    const $el = retrieveDisplayedMessage(messageId);
+                    const $el = retrieveDisplayedMessage(messageId as number);
                     if ($el && $el.length) return $el;
                   } catch (e) {
                     // fallback to DOM selector
@@ -193,7 +193,7 @@ export function createHideDiceResultsInUserMessages(deps: any) {
               const getMessageElement = (messageId: number | string) => {
                 if (typeof retrieveDisplayedMessage === 'function') {
                   try {
-                    const $el = retrieveDisplayedMessage(messageId);
+                    const $el = retrieveDisplayedMessage(messageId as number);
                     if ($el && $el.length) return $el;
                   } catch (e) {
                     // fallback to DOM selector

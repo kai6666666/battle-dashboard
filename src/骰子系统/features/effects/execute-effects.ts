@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * execute-effects.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { parseEffectValueInput } from '../../shared/effect-math';
+import type { EffectResult, EffectReplayOperation, PendingEffectContext, ComputedEffect } from '../../shared/advanced-preset-types';
 export function createExecuteEffects(deps: any) {
   async function executeEffects(pendingCtx: PendingEffectContext): Promise<EffectResult[]> {
     const results: EffectResult[] = [];
@@ -18,7 +18,7 @@ export function createExecuteEffects(deps: any) {
     const modifiedSheetKeys = new Set<string>();
     const overrideMap = new Map<string, ComputedEffect>();
     if (pendingCtx.effectOverrides && pendingCtx.effectOverrides.length > 0) {
-      pendingCtx.effectOverrides.forEach(item => {
+      pendingCtx.effectOverrides.forEach((item: any) => {
         overrideMap.set(item.effectId, item);
       });
     }

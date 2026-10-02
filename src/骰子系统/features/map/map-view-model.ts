@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * map-view-model.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -40,10 +39,10 @@ export function createBuildMapViewModel(deps: any) {
 
     if (!locationResult?.data) return null;
 
-    const findColumnIndex = (headers, keywords, fallbackIndex = null) => {
+    const findColumnIndex = (headers: any, keywords: any, fallbackIndex: any = null) => {
       for (let i = 0; i < headers.length; i++) {
         const h = String(headers[i] || '').toLowerCase();
-        if (keywords.some(keyword => h.includes(keyword.toLowerCase()))) return i;
+        if (keywords.some((keyword: any) => h.includes(keyword.toLowerCase()))) return i;
       }
       return fallbackIndex ?? -1;
     };
@@ -62,7 +61,7 @@ export function createBuildMapViewModel(deps: any) {
 
     // 先收集所有地点名，用于批量emoji分配（去重）
     const allLocationNames: string[] = [];
-    locationRows.forEach(row => {
+    locationRows.forEach((row: any) => {
       const name = String(row[locationNameIdx] || '')
         .trim()
         .replace(/[\u200B-\u200D\uFEFF]/g, '');
@@ -70,7 +69,7 @@ export function createBuildMapViewModel(deps: any) {
     });
     const emojiMap = deps.resolveBatchLocationEmojis(allLocationNames);
 
-    locationRows.forEach((row, idx) => {
+    locationRows.forEach((row: any, idx: any) => {
       const name = String(row[locationNameIdx] || '')
         .trim()
         .replace(/[\u200B-\u200D\uFEFF]/g, '');
@@ -93,7 +92,7 @@ export function createBuildMapViewModel(deps: any) {
     });
 
     const elements = new Map();
-    const addElement = (locationName, element) => {
+    const addElement = (locationName: any, element: any) => {
       if (!elements.has(locationName)) {
         elements.set(locationName, []);
       }
@@ -110,7 +109,7 @@ export function createBuildMapViewModel(deps: any) {
       const elementStatusIdx = findColumnIndex(elementHeaders, ['状态', '交互状态'], null);
       const elementInteractIdx = findColumnIndex(elementHeaders, ['交互选项', '交互', '互动', '可交互'], null);
 
-      elementRows.forEach((row, idx) => {
+      elementRows.forEach((row: any, idx: any) => {
         const name = String(row[elementNameIdx] || '').trim();
         if (!name) return;
         const locationName = String(row[elementLocationIdx] || '').trim();
@@ -146,7 +145,7 @@ export function createBuildMapViewModel(deps: any) {
       return deps.resolveUserGraphName(deps.NameAliasRegistry.resolve(rawName));
     };
 
-    const addCharacter = async character => {
+    const addCharacter = async (character: any) => {
       const avatarLookupName = resolveMapAvatarLookupName(character.name) || character.name;
       const avatarUrl = await deps.AvatarManager.getAsync(avatarLookupName);
       const full = {
@@ -234,7 +233,7 @@ export function createBuildMapViewModel(deps: any) {
       allRegions.push('其他');
     }
 
-    const getHotLocationsInRegion = region => {
+    const getHotLocationsInRegion = (region: any) => {
       const regionName = region || '其他';
       return Array.from(locations.values())
         .filter(l => (l.region || '其他') === regionName)

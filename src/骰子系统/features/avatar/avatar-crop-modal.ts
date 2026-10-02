@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * avatar-crop-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,7 +5,7 @@
 import { LocalAvatarDB } from '../../entities/local-avatar-db';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowAvatarCropModal(deps: any) {
-  const showAvatarCropModal = (imageSource, characterName, onSave) => {
+  const showAvatarCropModal = (imageSource: any, characterName: any, onSave: any) => {
     const { $ } = deps.getCore();
     $('.acu-crop-modal-overlay').remove();
 
@@ -76,9 +75,9 @@ export function createShowAvatarCropModal(deps: any) {
       startY = 0;
     let startOffsetX = 0,
       startOffsetY = 0;
-    let activePointerId = null;
+    let activePointerId: any = null;
 
-    imageEl.addEventListener('pointerdown', e => {
+    imageEl.addEventListener('pointerdown', (e: any) => {
       // 忽略多点触控的额外手指
       if (activePointerId !== null) return;
 
@@ -96,7 +95,7 @@ export function createShowAvatarCropModal(deps: any) {
       imageEl.style.cursor = 'grabbing';
     });
 
-    imageEl.addEventListener('pointermove', e => {
+    imageEl.addEventListener('pointermove', (e: any) => {
       if (!isDragging || e.pointerId !== activePointerId) return;
 
       e.preventDefault();
@@ -112,7 +111,7 @@ export function createShowAvatarCropModal(deps: any) {
       updateImageStyle();
     });
 
-    imageEl.addEventListener('pointerup', e => {
+    imageEl.addEventListener('pointerup', (e: any) => {
       if (e.pointerId !== activePointerId) return;
 
       isDragging = false;
@@ -121,7 +120,7 @@ export function createShowAvatarCropModal(deps: any) {
       imageEl.style.cursor = 'grab';
     });
 
-    imageEl.addEventListener('pointercancel', e => {
+    imageEl.addEventListener('pointercancel', (e: any) => {
       if (e.pointerId !== activePointerId) return;
 
       isDragging = false;
@@ -133,7 +132,7 @@ export function createShowAvatarCropModal(deps: any) {
     // 滚轮缩放
     containerEl.addEventListener(
       'wheel',
-      e => {
+      (e: any) => {
         e.preventDefault();
         e.stopPropagation();
         const delta = e.deltaY > 0 ? -10 : 10;
@@ -149,7 +148,7 @@ export function createShowAvatarCropModal(deps: any) {
 
     containerEl.addEventListener(
       'touchstart',
-      e => {
+      (e: any) => {
         if (e.touches.length === 2) {
           e.preventDefault();
           lastPinchDist = Math.hypot(
@@ -164,7 +163,7 @@ export function createShowAvatarCropModal(deps: any) {
 
     containerEl.addEventListener(
       'touchmove',
-      e => {
+      (e: any) => {
         if (e.touches.length === 2) {
           e.preventDefault();
           const newDist = Math.hypot(
@@ -181,7 +180,7 @@ export function createShowAvatarCropModal(deps: any) {
       { passive: false },
     );
 
-    containerEl.addEventListener('touchend', e => {
+    containerEl.addEventListener('touchend', (e: any) => {
       if (e.touches.length < 2) {
         lastPinchDist = 0;
         pinchStartScale = scale;
@@ -189,14 +188,14 @@ export function createShowAvatarCropModal(deps: any) {
     });
 
     // === 按钮事件 ===
-    $modal.on('keydown', '.acu-crop-reupload', function (e: JQuery.KeyDownEvent) {
+    $modal.on('keydown', '.acu-crop-reupload', function (this: any, e: JQuery.KeyDownEvent) {
       if (e.key !== 'Enter' && e.key !== ' ') return;
       e.preventDefault();
       $(this).find('.acu-crop-file-input').trigger('click');
     });
 
     // 重新上传
-    $modal.find('.acu-crop-file-input').on('change', async function (e) {
+    $modal.find('.acu-crop-file-input').on('change', async function (this: any, e: any) {
       const file = e.target.files[0];
       if (!file) return;
 
