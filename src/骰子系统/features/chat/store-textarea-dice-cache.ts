@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * store-textarea-dice-cache.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = any;
+
 export function createStoreTextareaDiceCache(deps: any) {
   const storeTextareaDiceCache = (textarea: AcuDiceTextareaElement, realText: string, latestDiceText?: string) => {
     const metaBlocks = deps.extractMetaCheckResultBlocks(realText);

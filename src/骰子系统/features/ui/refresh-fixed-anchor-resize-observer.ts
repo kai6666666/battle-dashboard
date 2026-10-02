@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * refresh-fixed-anchor-resize-observer.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -9,11 +8,11 @@ export function createRefreshFixedAnchorResizeObserver(deps: any) {
     deps.clearFixedAnchorResizeObserver();
     if (!deps.getFixedWrapperBoundsRefreshHandler()) return;
 
-    const ResizeObserverCtor = targetWindow.ResizeObserver || window.ResizeObserver;
+    const ResizeObserverCtor = (targetWindow as any).ResizeObserver || (window as any).ResizeObserver;
     if (!ResizeObserverCtor) return;
 
     deps.setFixedAnchorResizeObserver(new ResizeObserverCtor(() => deps.getFixedWrapperBoundsRefreshHandler()?.()));
-    deps.getViewportBottomAnchorElements(targetDocument).forEach(el => deps.getFixedAnchorResizeObserver()?.observe(el));
+    deps.getViewportBottomAnchorElements(targetDocument).forEach((el: any) => deps.getFixedAnchorResizeObserver()?.observe(el));
 
     const wrapper =
       targetDocument.querySelector<HTMLElement>(`${DICE_ROOT_SELECTOR}.acu-mode-fixed`) ||

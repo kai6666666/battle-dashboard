@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * global-interaction-non-name-header-keywords.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGlobalInteractionNonNameHeaderKeywords(deps: any) {
+export function createGlobalInteractionNonNameHeaderKeywords(_deps: any) {
   const GLOBAL_INTERACTION_NON_NAME_HEADER_KEYWORDS = [
     '类型',
     '定位',

@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * normalize-custom-table-name-icon-pack-entry-metadata.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createNormalizeCustomTableNameIconPackEntryMetadata(deps: any) {
+import type { CustomTableNameIconPackEntryMetadata } from '../../shared/index-local-types';
+export function createNormalizeCustomTableNameIconPackEntryMetadata(_deps: any) {
   const normalizeCustomTableNameIconPackEntryMetadata = (value: unknown): CustomTableNameIconPackEntryMetadata => {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
       return {

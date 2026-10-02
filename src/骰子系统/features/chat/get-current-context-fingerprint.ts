@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * get-current-context-fingerprint.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetCurrentContextFingerprint(deps: any) {
+export function createGetCurrentContextFingerprint(_deps: any) {
   const getCurrentContextFingerprint = () => {
     try {
       // 方式1: 酒馆标准 API

@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * get-inventory-metadata-root.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type InventoryMetadataRoot = Record<string, any>;
+
 export function createGetInventoryMetadataRoot(deps: any) {
-  const getInventoryMetadataRoot = (rawData, createIfMissing = false): InventoryMetadataRoot => {
+  const getInventoryMetadataRoot = (rawData: any, createIfMissing = false): InventoryMetadataRoot => {
     const store = deps.getInventoryMetadataStore();
     const contextKey = deps.getInventoryMetadataContextKey();
     const storedRoot = store[contextKey];

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * build-crud-required-header-set.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -9,7 +8,7 @@ export function createBuildCrudRequiredHeaderSet(deps: any) {
     const headers = new Set<string>();
     if (!ddl) return headers;
 
-    ddl.split(/\r?\n/).forEach(line => {
+    ddl.split(/\r?\n/).forEach((line: any) => {
       const parsed = deps.parseCrudColumnDefinitionLine(line);
       if (!parsed) return;
       const { columnName, definition, comment } = parsed;

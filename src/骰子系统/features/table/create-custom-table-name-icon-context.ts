@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * create-custom-table-name-icon-context.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCreateCustomTableNameIconContext(deps: any) {
+import type { CustomTableNameIconContext } from '../../shared/index-local-types';
+export function createCreateCustomTableNameIconContext(_deps: any) {
   const createCustomTableNameIconContext = (
     moduleId:
       | 'table-name'

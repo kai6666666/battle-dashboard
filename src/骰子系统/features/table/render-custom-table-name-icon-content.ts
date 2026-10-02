@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * render-custom-table-name-icon-content.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { CustomTableNameIconImageDB } from '../../shared/storage/custom-table-name-icon-image-db';
+import type { CustomTableNameIconContext } from '../../shared/index-local-types';
 export function createRenderCustomTableNameIconContent(deps: any) {
   const renderCustomTableNameIconContent = (
     fallbackContent: string,

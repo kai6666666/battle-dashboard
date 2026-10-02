@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * create-dice-profile-pre-apply-snapshot.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceProfileRecord = { id: string; [key: string]: any };
+
 export function createCreateDiceProfilePreApplySnapshot(deps: any) {
   const createDiceProfilePreApplySnapshot = async (sourceProfile?: DiceProfileRecord | null): Promise<DiceProfileRecord> => {
     const now = new Date().toISOString();
@@ -17,9 +18,9 @@ export function createCreateDiceProfilePreApplySnapshot(deps: any) {
     });
     const records = await deps.getDiceProfileRecords();
     const snapshots = records
-      .filter(record => record.source?.type === 'snapshot')
-      .sort((left, right) => String(right.updatedAt || '').localeCompare(String(left.updatedAt || '')));
-    await Promise.all(snapshots.slice(deps.DICE_PROFILE_PRE_APPLY_SNAPSHOT_LIMIT).map(record => deps.deleteDiceProfileRecord(record.id)));
+      .filter((record: any) => record.source?.type === 'snapshot')
+      .sort((left: any, right: any) => String(right.updatedAt || '').localeCompare(String(left.updatedAt || '')));
+    await Promise.all(snapshots.slice(deps.DICE_PROFILE_PRE_APPLY_SNAPSHOT_LIMIT).map((record: any) => deps.deleteDiceProfileRecord(record.id)));
     return snapshot;
   };
   return createDiceProfilePreApplySnapshot;

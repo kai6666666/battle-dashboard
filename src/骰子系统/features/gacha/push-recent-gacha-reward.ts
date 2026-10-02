@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * push-recent-gacha-reward.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,7 +5,7 @@
 import { GACHA_RECENT_REWARD_LIMIT } from '../../entities/gacha-items';
 import type { GachaState, GachaDrawOutcome, GachaRecentRewardRecord } from './gacha-types';
 import type { GachaPoolTag } from '../../entities/gacha-items';
-export function createPushRecentGachaReward(deps: any) {
+export function createPushRecentGachaReward(_deps: any) {
   const pushRecentGachaReward = (state: GachaState, outcome: GachaDrawOutcome, poolTag: GachaPoolTag) => {
     const record: GachaRecentRewardRecord = {
       itemId: outcome.item.id,

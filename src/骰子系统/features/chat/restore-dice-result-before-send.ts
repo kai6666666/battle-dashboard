@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * restore-dice-result-before-send.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = any;
+
 export function createRestoreDiceResultBeforeSend(deps: any) {
   const restoreDiceResultBeforeSend = () => {
     const { $ } = deps.getCore();

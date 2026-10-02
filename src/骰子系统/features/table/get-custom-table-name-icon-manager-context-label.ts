@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * get-custom-table-name-icon-manager-context-label.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { CustomTableNameIconContext } from '../../shared/index-local-types';
 export function createGetCustomTableNameIconManagerContextLabel(deps: any) {
   const getCustomTableNameIconManagerContextLabel = (context: CustomTableNameIconContext): string => {
     const seenLabels = new Set<string>();

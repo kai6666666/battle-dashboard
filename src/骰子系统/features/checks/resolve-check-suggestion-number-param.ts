@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * resolve-check-suggestion-number-param.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CheckSuggestionParamValue = string | number | boolean;
+
 export function createResolveCheckSuggestionNumberParam(deps: any) {
   const resolveCheckSuggestionNumberParam = (
     value: CheckSuggestionParamValue | undefined,
