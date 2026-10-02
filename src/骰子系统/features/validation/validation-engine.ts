@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * validation-engine.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
@@ -43,7 +42,7 @@ export function createValidationEngine(deps: any) {
     },
 
     // 格式验证（正则表达式）
-    validateFormat(value, pattern) {
+    validateFormat(value: any, pattern: any) {
       if (value === null || value === undefined || value === '') return true; // 空值不验证
       try {
         const regex = new RegExp(pattern);
@@ -55,14 +54,14 @@ export function createValidationEngine(deps: any) {
     },
 
     // 枚举验证
-    validateEnum(value, allowedValues) {
+    validateEnum(value: any, allowedValues: any) {
       if (value === null || value === undefined || value === '') return true; // 空值不验证
       if (!Array.isArray(allowedValues) || allowedValues.length === 0) return true;
       return allowedValues.includes(String(value));
     },
 
     // 数值范围验证
-    validateNumeric(value, min, max) {
+    validateNumeric(value: any, min: any, max: any) {
       if (value === null || value === undefined || value === '') return true; // 空值不验证
 
       // 提取数值（支持 "50/100" 或 "力量:80" 等格式）
@@ -96,7 +95,7 @@ export function createValidationEngine(deps: any) {
     },
 
     // 关联验证（检查值是否存在于另一表的某列，支持多列 OR 检查）
-    validateRelation(value, rawData, refTable, refColumn) {
+    validateRelation(value: any, rawData: any, refTable: any, refColumn: any) {
       if (value === null || value === undefined || value === '') return true; // 空值不验证
       if (!rawData || !refTable || !refColumn) return true;
 
@@ -135,12 +134,12 @@ export function createValidationEngine(deps: any) {
     },
 
     // 必填验证
-    validateRequired(value) {
+    validateRequired(value: any) {
       return value !== null && value !== undefined && String(value).trim() !== '';
     },
 
     // 键值对验证
-    validateKeyValue(value, ruleConfig) {
+    validateKeyValue(value: any, ruleConfig: any) {
       if (value === null || value === undefined || value === '') return true; // 空值不验证
 
       const valueType = ruleConfig?.valueType || 'text';
@@ -194,20 +193,20 @@ export function createValidationEngine(deps: any) {
     },
 
     // 表级只读验证（比较新旧数据）
-    validateTableReadonly(oldContent, newContent) {
+    validateTableReadonly(oldContent: any, newContent: any) {
       if (!oldContent || !newContent) return true;
       return JSON.stringify(oldContent) === JSON.stringify(newContent);
     },
 
     // 行数限制验证
-    validateRowLimit(rowCount, min, max) {
+    validateRowLimit(rowCount: any, min: any, max: any) {
       if (min !== undefined && min !== null && rowCount < min) return false;
       if (max !== undefined && max !== null && rowCount > max) return false;
       return true;
     },
 
     // 序列递增验证（检查字段值是否严格递增）
-    validateSequence(sheet, columnName, config) {
+    validateSequence(sheet: any, columnName: any, config: any) {
       if (!sheet || !sheet.content || sheet.content.length < 2) return true; // 空表或只有表头，通过验证
       if (!columnName || !config) return true;
 
@@ -271,14 +270,14 @@ export function createValidationEngine(deps: any) {
     },
 
     // 检查拦截规则（用于更新拦截，检查所有启用了 intercept 的规则）
-    checkTableRules(snapshot, newData, rules) {
-      const violations = [];
+    checkTableRules(snapshot: any, newData: any, rules: any) {
+      const violations: any[] = [];
       if (!snapshot || !newData || !rules) return violations;
 
       for (const rule of rules) {
         // 只检查启用了拦截的规则
         if (!rule.enabled || !rule.intercept) continue;
-        const typeInfo = RULE_TYPE_INFO[rule.ruleType];
+        const typeInfo = (RULE_TYPE_INFO as Record<string, any>)[rule.ruleType];
         if (!typeInfo) continue;
 
         // 查找目标表
@@ -380,7 +379,7 @@ export function createValidationEngine(deps: any) {
     },
 
     // 验证单个值
-    validateValue(value, rule, rawData) {
+    validateValue(value: any, rule: any, rawData: any) {
       switch (rule.ruleType) {
         case 'format':
           return this.validateFormat(value, rule.config?.pattern);
@@ -400,7 +399,7 @@ export function createValidationEngine(deps: any) {
     },
 
     // 验证单行数据
-    validateRow(row, headers, tableName, rowIndex, rules, rawData) {
+    validateRow(row: any, headers: any, tableName: any, rowIndex: any, rules: any, rawData: any) {
       const errors = [];
       // 获取第一列的值（通常是名称列，优先使用第二列，否则使用第一列）
       const rowTitle = row[1] || row[0] || `行 ${rowIndex + 1}`;
@@ -438,7 +437,7 @@ export function createValidationEngine(deps: any) {
     },
 
     // 验证整个数据集
-    validateAllData(rawData) {
+    validateAllData(rawData: any) {
       if (!rawData) return [];
 
       const rules = deps.getValidationRuleManager().getEnabledRules();
@@ -453,13 +452,13 @@ export function createValidationEngine(deps: any) {
 
         const tableName = sheet.name;
         const headers = sheet.content[0];
-        const tableRules = rules.filter(r => r.targetTable === tableName);
+        const tableRules = rules.filter((r: any) => r.targetTable === tableName);
 
         if (tableRules.length === 0) continue;
 
         // 检查表级规则（如行数限制、序列递增）—— 即使表格为空也要检查
         for (const rule of tableRules) {
-          const typeInfo = RULE_TYPE_INFO[rule.ruleType];
+          const typeInfo = (RULE_TYPE_INFO as Record<string, any>)[rule.ruleType];
           if (typeInfo?.scope === 'table') {
             if (rule.ruleType === 'rowLimit') {
               const rowCount = sheet.content.length - 1;
@@ -505,7 +504,7 @@ export function createValidationEngine(deps: any) {
         }
 
         // 验证每一行（字段级规则）
-        const fieldRules = tableRules.filter(r => RULE_TYPE_INFO[r.ruleType]?.scope !== 'table');
+        const fieldRules = tableRules.filter((r: any) => (RULE_TYPE_INFO as Record<string, any>)[r.ruleType]?.scope !== 'table');
         for (let i = 1; i < sheet.content.length; i++) {
           const row = sheet.content[i];
           const rowErrors = this.validateRow(row, headers, tableName, i - 1, fieldRules, rawData);
@@ -517,7 +516,7 @@ export function createValidationEngine(deps: any) {
     },
 
     // 验证特定表的数据
-    validateTable(rawData, tableName) {
+    validateTable(rawData: any, tableName: any) {
       if (!rawData) return [];
 
       const rules = deps.getValidationRuleManager().getRulesByTable(tableName);
@@ -549,8 +548,8 @@ export function createValidationEngine(deps: any) {
     },
 
     // 按表名分组验证结果
-    groupErrorsByTable(errors) {
-      const grouped = {};
+    groupErrorsByTable(errors: any) {
+      const grouped: Record<string, any[]> = {};
       for (const error of errors) {
         if (!grouped[error.tableName]) {
           grouped[error.tableName] = [];
@@ -561,7 +560,7 @@ export function createValidationEngine(deps: any) {
     },
 
     // 获取验证错误数量
-    getErrorCount(rawData) {
+    getErrorCount(rawData: any) {
       return this.validateAllData(rawData).length;
     },
   };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * add-validation-rule-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -193,7 +192,7 @@ export function createShowAddValidationRuleModal(deps: any) {
     $('body').append(dialog);
 
     // 统一设置select的颜色（当选中空值时显示为灰色）
-    const updateSelectColor = $select => {
+    const updateSelectColor = ($select: any) => {
       const val = $select.val();
       if (!val || val === '') {
         $select.css('color', 'var(--acu-text-sub)');
@@ -205,15 +204,15 @@ export function createShowAddValidationRuleModal(deps: any) {
     };
 
     // 初始化所有select的颜色
-    dialog.find('select').each(function () {
+    dialog.find('select').each(function (this: any) {
       updateSelectColor($(this));
-      $(this).on('change', function () {
+      $(this).on('change', function (this: any) {
         updateSelectColor($(this));
       });
     });
 
     // 表格选择变化时更新列选项和配对表选项
-    dialog.find('#rule-table').on('change', function () {
+    dialog.find('#rule-table').on('change', function (this: any) {
       const tableName = $(this).val();
       const $colSelect = dialog.find('#rule-column');
       const $pairedTableSelect = dialog.find('#cfg-sequence-paired-table');
@@ -244,8 +243,8 @@ export function createShowAddValidationRuleModal(deps: any) {
 
       const headers = tables[tableName].headers || [];
       const options = headers
-        .filter((h, i) => i > 0 && h) // 跳过索引列
-        .map(h => `<option value="${deps.escapeHtml(h)}">${deps.escapeHtml(h)}</option>`)
+        .filter((h: any, i: any) => i > 0 && h) // 跳过索引列
+        .map((h: any) => `<option value="${deps.escapeHtml(h)}">${deps.escapeHtml(h)}</option>`)
         .join('');
 
       $colSelect.html('<option value="">请选择...</option>' + options).prop('disabled', false);
@@ -253,7 +252,7 @@ export function createShowAddValidationRuleModal(deps: any) {
     });
 
     // 关联表格选择变化时更新关联列选项
-    dialog.find('#cfg-ref-table').on('change', function () {
+    dialog.find('#cfg-ref-table').on('change', function (this: any) {
       const refTableName = $(this).val();
       const $refColSelect = dialog.find('#cfg-ref-column');
       updateSelectColor($(this));
@@ -266,8 +265,8 @@ export function createShowAddValidationRuleModal(deps: any) {
 
       const headers = tables[refTableName].headers || [];
       const options = headers
-        .filter((h, i) => i > 0 && h) // 跳过索引列
-        .map(h => `<option value="${deps.escapeHtml(h)}">${deps.escapeHtml(h)}</option>`)
+        .filter((h: any, i: any) => i > 0 && h) // 跳过索引列
+        .map((h: any) => `<option value="${deps.escapeHtml(h)}">${deps.escapeHtml(h)}</option>`)
         .join('');
 
       $refColSelect.html(options).prop('disabled', false);
@@ -275,9 +274,9 @@ export function createShowAddValidationRuleModal(deps: any) {
     });
 
     // 规则类型变化时切换配置区域和目标列显示
-    dialog.find('#rule-type').on('change', function () {
+    dialog.find('#rule-type').on('change', function (this: any) {
       const type = $(this).val();
-      const typeInfo = RULE_TYPE_INFO[type];
+      const typeInfo = (RULE_TYPE_INFO as Record<string, any>)[type];
       const isTableRule = typeInfo?.scope === 'table';
       updateSelectColor($(this));
 
@@ -299,7 +298,7 @@ export function createShowAddValidationRuleModal(deps: any) {
     });
 
     // 键值对类型变化时显示/隐藏数值范围输入框
-    dialog.find('#cfg-keyvalue-type').on('change', function () {
+    dialog.find('#cfg-keyvalue-type').on('change', function (this: any) {
       const valueType = $(this).val();
       if (valueType === 'numeric') {
         dialog.find('#row-keyvalue-range').show();
@@ -310,7 +309,7 @@ export function createShowAddValidationRuleModal(deps: any) {
 
     // 关闭
     const closeDialog = () => dialog.remove();
-    dialog.on('click', '#dlg-rule-close, #dlg-rule-cancel', function (e) {
+    dialog.on('click', '#dlg-rule-close, #dlg-rule-cancel', function (e: any) {
       e.stopPropagation(); // 阻止事件冒泡到设置面板
       closeDialog();
     });
@@ -325,7 +324,7 @@ export function createShowAddValidationRuleModal(deps: any) {
       const targetColumn = dialog.find('#rule-column').val();
       const ruleType = dialog.find('#rule-type').val();
       const errorMessage = dialog.find('#rule-error-msg').val()?.trim();
-      const typeInfo = RULE_TYPE_INFO[ruleType];
+      const typeInfo = (RULE_TYPE_INFO as Record<string, any>)[ruleType];
       const isTableRule = typeInfo?.scope === 'table';
 
       // 验证必填项
@@ -344,7 +343,7 @@ export function createShowAddValidationRuleModal(deps: any) {
       }
 
       // 构建配置
-      const ruleConfig = {};
+      const ruleConfig: Record<string, any> = {};
       if (ruleType === 'tableReadonly') {
         // 无需配置
       } else if (ruleType === 'rowLimit') {
@@ -376,8 +375,8 @@ export function createShowAddValidationRuleModal(deps: any) {
         }
         ruleConfig.values = valuesStr
           .split(',')
-          .map(v => v.trim())
-          .filter(v => v);
+          .map((v: any) => v.trim())
+          .filter((v: any) => v);
       } else if (ruleType === 'numeric') {
         const min = dialog.find('#cfg-min').val();
         const max = dialog.find('#cfg-max').val();
@@ -467,7 +466,7 @@ export function createShowAddValidationRuleModal(deps: any) {
           // 编辑模式：更新现有规则项
           const $existingItem = $rulesList.find(`.acu-validation-rule-item[data-rule-id="${deps.escapeHtml(editRuleId)}"]`);
           if ($existingItem.length) {
-            const hasIntercept = ruleData.intercept;
+            const hasIntercept = ruleData.intercept; void hasIntercept;
             const isEnabled = ruleData.enabled;
             $existingItem.find('.acu-rule-name').text(name);
             $existingItem

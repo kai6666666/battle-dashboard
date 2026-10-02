@@ -1,25 +1,13 @@
 [
-  "src/骰子系统/app/init.ts",
-  "src/骰子系统/entities/avatar-manager.ts",
-  "src/骰子系统/entities/local-avatar-db.ts",
-  "src/骰子系统/entities/name-alias.ts",
   "src/骰子系统/features/avatar/show-avatar-manager.ts",
-  "src/骰子系统/features/changes/bind-changes-events.ts",
   "src/骰子系统/features/dice/show-contest-panel.ts",
   "src/骰子系统/features/events/bind-events.ts",
   "src/骰子系统/features/gacha/gacha-item-editor-dialog.ts",
-  "src/骰子系统/features/gacha/gacha-settings-dialog.ts",
   "src/骰子系统/features/interactions/bind-global-interaction-events.ts",
   "src/骰子系统/features/mvu/mvu-module.ts",
   "src/骰子系统/features/presets/builtin-advanced-presets.ts",
   "src/骰子系统/features/render/render-interface-impl.ts",
   "src/骰子系统/features/settings/show-settings-modal.ts",
-  "src/骰子系统/features/table/custom-icon-manager-dialog.ts",
   "src/骰子系统/features/table/show-cell-menu.ts",
-  "src/骰子系统/features/table/show-relationship-graph.ts",
-  "src/骰子系统/features/validation/add-validation-rule-dialog.ts",
-  "src/骰子系统/features/validation/smart-fix-dialog.ts",
-  "src/骰子系统/features/validation/table-rule-fix-dialog.ts",
-  "src/骰子系统/features/validation/validation-engine.ts",
-  "src/骰子系统/index.ts"
+  "src/骰子系统/features/table/show-relationship-graph.ts"
 ]

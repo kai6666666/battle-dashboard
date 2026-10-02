@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * entities/avatar-manager.ts
  * Feature-Sliced: entities 层 - 头像管理域（工厂版）。
@@ -6,9 +5,10 @@
  */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AvatarImageColorSource = string;
 export function createAvatarManager(deps: any) {
   const AvatarManager = {
-    _cache: null,
+    _cache: null as any,
 
     load() {
       if (!this._cache) {
@@ -51,7 +51,7 @@ export function createAvatarManager(deps: any) {
     },
 
     // 同步获取（仅 URL 和 ST 头像，不含本地图片）
-    get(name) {
+    get(name: any) {
       const lookupNames = deps.getAvatarLookupNames(name);
       const avatarMap = this.load();
       for (const lookupName of lookupNames) {
@@ -60,7 +60,7 @@ export function createAvatarManager(deps: any) {
       }
 
       for (const key in this._cache) {
-        if (this._cache[key].aliases && lookupNames.some(lookupName => this._cache[key].aliases.includes(lookupName))) {
+        if (this._cache[key].aliases && lookupNames.some((lookupName: any) => this._cache[key].aliases.includes(lookupName))) {
           if (this._cache[key].url) return this._cache[key].url;
         }
       }
@@ -69,7 +69,7 @@ export function createAvatarManager(deps: any) {
     },
 
     // 异步获取（优先级：本地图片 > URL > ST头像）
-    async getAsync(name) {
+    async getAsync(name: any) {
       if (!name) return null;
       const lookupNames = new Set(deps.getAvatarLookupNames(name));
       [...lookupNames].forEach(lookupName => {
@@ -88,7 +88,7 @@ export function createAvatarManager(deps: any) {
     },
 
     // 检查是否有本地图片
-    async hasLocalAvatar(name) {
+    async hasLocalAvatar(name: any) {
       if (!name) return false;
       const lookupNames = new Set(deps.getAvatarLookupNames(name));
       [...lookupNames].forEach(lookupName => {
@@ -103,43 +103,43 @@ export function createAvatarManager(deps: any) {
     },
 
     // 保存本地图片
-    async saveLocalAvatar(name, blob) {
+    async saveLocalAvatar(name: any, blob: any) {
       return await deps.localAvatarSave(name, blob);
     },
 
     // 删除本地图片
-    async deleteLocalAvatar(name) {
+    async deleteLocalAvatar(name: any) {
       return await deps.localAvatarDelete(name);
     },
 
-    getOffsetX(name) {
+    getOffsetX(name: any) {
       const data = this._resolveByAlias(name);
       return data ? (data.offsetX ?? 50) : 50;
     },
 
-    getOffsetY(name) {
+    getOffsetY(name: any) {
       const data = this._resolveByAlias(name);
       return data ? (data.offsetY ?? 50) : 50;
     },
 
-    getScale(name) {
+    getScale(name: any) {
       const data = this._resolveByAlias(name);
       return data ? (data.scale ?? 150) : 150;
     },
 
-    getImageColor(name) {
+    getImageColor(name: any) {
       const data = this._resolveByAlias(name);
       const color = deps.normalizeAvatarHexColor(data?.imageColor);
       if (color) return color;
       return deps.getAvatarFallbackColor(this.getPrimaryName(name));
     },
 
-    getImageColorSource(name) {
+    getImageColorSource(name: any) {
       const data = this._resolveByAlias(name);
       return deps.normalizeAvatarHexColor(data?.imageColor) ? data?.imageColorSource || 'auto' : 'fallback';
     },
 
-    setImageColor(name, color, source: AvatarImageColorSource = 'manual') {
+    setImageColor(name: any, color: any, source: AvatarImageColorSource = 'manual') {
       if (!name) return false;
       const normalized = deps.normalizeAvatarHexColor(color);
       if (!normalized) return false;
@@ -159,7 +159,7 @@ export function createAvatarManager(deps: any) {
       return true;
     },
 
-    clearImageColor(name) {
+    clearImageColor(name: any) {
       const data = this._resolveByAlias(name);
       if (!data) return;
       delete data.imageColor;
@@ -169,7 +169,7 @@ export function createAvatarManager(deps: any) {
     },
 
     // 根据名字或别名找到主记录
-    _resolveByAlias(name) {
+    _resolveByAlias(name: any) {
       const lookupNames = deps.getAvatarLookupNames(name);
       const avatarMap = this.load();
       for (const lookupName of lookupNames) {
@@ -177,7 +177,7 @@ export function createAvatarManager(deps: any) {
         if (data) return data;
       }
       for (const key in this._cache) {
-        if (this._cache[key].aliases && lookupNames.some(lookupName => this._cache[key].aliases.includes(lookupName))) {
+        if (this._cache[key].aliases && lookupNames.some((lookupName: any) => this._cache[key].aliases.includes(lookupName))) {
           return this._cache[key];
         }
       }
@@ -185,21 +185,21 @@ export function createAvatarManager(deps: any) {
     },
 
     // 获取主名称（如果传入的是别名，返回主名称）
-    getPrimaryName(name) {
+    getPrimaryName(name: any) {
       const lookupNames = deps.getAvatarLookupNames(name);
       const avatarMap = this.load();
       for (const lookupName of lookupNames) {
         if (avatarMap[lookupName]) return lookupName;
       }
       for (const key in this._cache) {
-        if (this._cache[key].aliases && lookupNames.some(lookupName => this._cache[key].aliases.includes(lookupName))) {
+        if (this._cache[key].aliases && lookupNames.some((lookupName: any) => this._cache[key].aliases.includes(lookupName))) {
           return key;
         }
       }
       return name;
     },
 
-    set(name, url, offsetX = 50, offsetY = 50, scale = 150, aliases = []) {
+    set(name: any, url: any, offsetX = 50, offsetY = 50, scale = 150, aliases = []) {
       const existing = this.load()[name];
       const createdAt = existing ? (existing.createdAt ?? 0) : Date.now();
       const existingImageColor = deps.normalizeAvatarHexColor(existing?.imageColor);
@@ -218,7 +218,7 @@ export function createAvatarManager(deps: any) {
       this.save();
     },
 
-    setPosition(name, offsetX, offsetY) {
+    setPosition(name: any, offsetX: any, offsetY: any) {
       const data = this.load()[name];
       if (data) {
         data.offsetX = offsetX;
@@ -227,7 +227,7 @@ export function createAvatarManager(deps: any) {
       }
     },
 
-    setScale(name, scale) {
+    setScale(name: any, scale: any) {
       const data = this.load()[name];
       if (data) {
         data.scale = scale;
@@ -235,7 +235,7 @@ export function createAvatarManager(deps: any) {
       }
     },
 
-    setAliases(name, aliases) {
+    setAliases(name: any, aliases: any) {
       const data = this.load()[name];
       if (data) {
         data.aliases = aliases;
@@ -243,7 +243,7 @@ export function createAvatarManager(deps: any) {
       }
     },
 
-    remove(name) {
+    remove(name: any) {
       delete this.load()[name];
       this.save();
     },
@@ -262,7 +262,7 @@ export function createAvatarManager(deps: any) {
     },
 
     // 导入数据，返回统计信息
-    importData(jsonData, overwriteConflicts = true) {
+    importData(jsonData: any, overwriteConflicts = true) {
       if (!jsonData || !jsonData.avatars) {
         throw new Error('无效的配置文件格式');
       }
@@ -324,13 +324,13 @@ export function createAvatarManager(deps: any) {
     },
 
     // 分析导入文件，返回冲突信息
-    analyzeImport(jsonData) {
+    analyzeImport(jsonData: any) {
       if (!jsonData || !jsonData.avatars) {
         return { valid: false, error: '无效的配置文件格式' };
       }
 
       const current = this.load();
-      const result = { valid: true, total: 0, newItems: [], conflicts: [] };
+      const result: Record<string, any> = { valid: true, total: 0, newItems: [], conflicts: [] };
 
       for (const name in jsonData.avatars) {
         const importedUrl = deps.normalizeStorableImageUrl(jsonData.avatars[name].url);

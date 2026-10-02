@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * entities/local-avatar-db.ts
  * Feature-Sliced: entities 层 - 本地头像 IndexedDB 存储（单例对象，无外部依赖）。
@@ -8,11 +7,11 @@
     DB_NAME: 'acu_local_avatars',
     STORE_NAME: 'avatars',
     DB_VERSION: 1,
-    _db: null,
+    _db: null as any,
     _urlCache: new Map(), // 缓存 ObjectURL 避免重复创建
 
     // 初始化数据库
-    async init() {
+    async init(): Promise<any> {
       if (this._db) return this._db;
 
       return new Promise((resolve, reject) => {
@@ -29,7 +28,7 @@
         };
 
         request.onupgradeneeded = event => {
-          const db = event.target.result;
+          const db = (event.target as any).result;
           if (!db.objectStoreNames.contains(this.STORE_NAME)) {
             // 主键为角色名
             db.createObjectStore(this.STORE_NAME, { keyPath: 'name' });
@@ -39,7 +38,7 @@
     },
 
     // 保存图片（自动去重：相同 name 会覆盖）
-    async save(name, blob) {
+    async save(name: any, blob: any) {
       if (!name || !blob) return false;
 
       try {
@@ -76,7 +75,7 @@
     },
 
     // 获取图片 URL（返回 ObjectURL）
-    async get(name) {
+    async get(name: any) {
       if (!name) return null;
 
       // 先查缓存
@@ -111,7 +110,7 @@
     },
 
     // 检查是否存在本地图片
-    async has(name) {
+    async has(name: any) {
       if (!name) return false;
 
       try {
@@ -130,7 +129,7 @@
     },
 
     // 删除图片
-    async delete(name) {
+    async delete(name: any) {
       if (!name) return false;
 
       try {
@@ -183,7 +182,7 @@
 
           request.onsuccess = () => {
             const items = request.result || [];
-            const totalSize = items.reduce((sum, item) => sum + (item.size || 0), 0);
+            const totalSize = items.reduce((sum: any, item: any) => sum + (item.size || 0), 0);
             resolve({
               count: items.length,
               totalSize: totalSize,

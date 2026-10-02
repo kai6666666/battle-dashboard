@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * gacha-settings-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GACHA_ALL_POOL_TAG, GACHA_CUSTOM_ONLY_POOL_TAG, normalizeGachaPoolId } from './gacha-helpers';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+import type { GachaPoolTag } from '../../entities/gacha-items';
+import type { GachaSettingsItemFilterState, GachaSettingsItemSourceFilter, GachaSettingsItemStatusFilter, GachaSettingsItemSortMode, GachaSettingsFilterField } from './gacha-types';
 export function createShowGachaSettingsDialog(deps: any) {
   const showGachaSettingsDialog = async () => {
     const { $ } = deps.getCore();
@@ -99,7 +100,7 @@ export function createShowGachaSettingsDialog(deps: any) {
       return text === 'source' || text === 'status' || text === 'sort' ? text : null;
     };
     const closeSettingsFilterMenus = (except?: HTMLElement) => {
-      overlay.find('.acu-gacha-settings-filter-menu.is-open').each(function () {
+      overlay.find('.acu-gacha-settings-filter-menu.is-open').each(function (this: any) {
         if (except && this === except) return;
         this.classList.remove('is-open');
         $(this).find('.acu-gacha-settings-filter-trigger').attr('aria-expanded', 'false');
@@ -200,13 +201,13 @@ export function createShowGachaSettingsDialog(deps: any) {
           if (window.toastr) window.toastr.info('筛选或排序时暂不允许拖拽排序，请恢复默认条件后再调整顺序');
           return false;
         },
-        getItemId: item => {
+        getItemId: (item: any) => {
           const id = item.dataset.itemId;
           return id ? String(id) : null;
         },
-        onOrderChange: newOrderIds => {
+        onOrderChange: (newOrderIds: any) => {
           void deps.runInSaveQueue(async () => {
-            newOrderIds.forEach((id, index) => deps.setGachaItemOrder(id, (index + 1) * 10));
+            newOrderIds.forEach((id: any, index: any) => deps.setGachaItemOrder(id, (index + 1) * 10));
           })
             .then(() => {
               const currentPoolId = normalizeGachaPoolId(overlay.find('.acu-gacha-settings-items-section').data('pool-id'));
@@ -214,7 +215,7 @@ export function createShowGachaSettingsDialog(deps: any) {
               deps.refreshGachaVisualization(rawData);
               deps.refreshGachaShardShop();
             })
-            .catch(error => {
+            .catch((error: any) => {
               if (window.toastr) showActionableErrorToast(`物品排序保存失败: ${deps.getJsonLikeErrorMessage(error)}`, { suggestion: 'importExport' });
             });
         },
@@ -222,7 +223,7 @@ export function createShowGachaSettingsDialog(deps: any) {
     };
     const refreshSettingsPoolViewer = (poolId: GachaPoolTag) => {
       const normalizedPoolId = normalizeGachaPoolId(poolId);
-      const safePoolId = deps.getVisibleGachaPoolConfigDefinitions(rawData).some(pool => pool.id === normalizedPoolId)
+      const safePoolId = deps.getVisibleGachaPoolConfigDefinitions(rawData).some((pool: any) => pool.id === normalizedPoolId)
         ? normalizedPoolId
         : GACHA_ALL_POOL_TAG;
       deps.saveStoredGachaSettingsPoolTag(safePoolId);
@@ -249,7 +250,7 @@ export function createShowGachaSettingsDialog(deps: any) {
         const poolId = normalizeGachaPoolId(name);
         if (!poolId) return;
         await deps.runInSaveQueue(async () => {
-          if (deps.getConfiguredGachaPoolDefinitions().some(pool => pool.id === poolId)) {
+          if (deps.getConfiguredGachaPoolDefinitions().some((pool: any) => pool.id === poolId)) {
             if (window.toastr) window.toastr.warning('这个卡池已经存在');
             return;
           }
@@ -262,30 +263,30 @@ export function createShowGachaSettingsDialog(deps: any) {
       });
     });
 
-    overlay.on('click', '.acu-gacha-settings-pool-tab', function () {
+    overlay.on('click', '.acu-gacha-settings-pool-tab', function (this: any) {
       const poolId = normalizeGachaPoolId($(this).data('pool-id'));
       if (!poolId) return;
       refreshSettingsPoolViewer(poolId);
     });
 
-    overlay.on('change', '.acu-gacha-pool-all-check', function () {
+    overlay.on('change', '.acu-gacha-pool-all-check', function (this: any) {
       const poolId = normalizeGachaPoolId($(this).closest('.acu-gacha-settings-pool-item').data('pool-id'));
       void deps.runInSaveQueue(async () => {
-        const pool = deps.getConfiguredGachaPoolDefinitions().find(candidate => candidate.id === poolId);
+        const pool = deps.getConfiguredGachaPoolDefinitions().find((candidate: any) => candidate.id === poolId);
         if (!pool || pool.id === GACHA_ALL_POOL_TAG) return;
         const enabled = pool.includeInAll !== true;
         deps.updateGachaPoolConfig(poolId, { includeInAll: enabled, visibleInTabs: enabled });
       })
         .then(() => showGachaSettingsDialog())
-        .catch(error => {
+        .catch((error: any) => {
           if (window.toastr) showActionableErrorToast(`卡池设置保存失败: ${deps.getJsonLikeErrorMessage(error)}`, { suggestion: 'importExport' });
         });
     });
 
-    overlay.on('click', '.acu-gacha-pool-rename', function () {
+    overlay.on('click', '.acu-gacha-pool-rename', function (this: any) {
       void (async () => {
         const poolId = normalizeGachaPoolId($(this).closest('.acu-gacha-settings-pool-item').data('pool-id'));
-        const pool = deps.getConfiguredGachaPoolDefinitions().find(candidate => candidate.id === poolId);
+        const pool = deps.getConfiguredGachaPoolDefinitions().find((candidate: any) => candidate.id === poolId);
         if (!pool || pool.id === GACHA_ALL_POOL_TAG) return;
         const name = await deps.showGachaPoolNameDialog({
           title: '重命名卡池',
@@ -295,7 +296,7 @@ export function createShowGachaSettingsDialog(deps: any) {
         });
         if (name === null) return;
         await deps.runInSaveQueue(async () => {
-          const latestPool = deps.getConfiguredGachaPoolDefinitions().find(candidate => candidate.id === poolId);
+          const latestPool = deps.getConfiguredGachaPoolDefinitions().find((candidate: any) => candidate.id === poolId);
           if (!latestPool || latestPool.id === GACHA_ALL_POOL_TAG) return;
           deps.updateGachaPoolConfig(poolId, { name });
         });
@@ -305,18 +306,18 @@ export function createShowGachaSettingsDialog(deps: any) {
       });
     });
 
-    overlay.on('click', '.acu-gacha-pool-export', function () {
+    overlay.on('click', '.acu-gacha-pool-export', function (this: any) {
       const poolId = normalizeGachaPoolId($(this).closest('.acu-gacha-settings-pool-item').data('pool-id'));
       if (!poolId) return;
       void deps.downloadGachaCatalogJson(poolId);
     });
 
-    overlay.on('click', '.acu-gacha-pool-delete', function (event) {
+    overlay.on('click', '.acu-gacha-pool-delete', function (this: any, event: any) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
       const poolId = normalizeGachaPoolId($(this).closest('.acu-gacha-settings-pool-item').data('pool-id'));
-      const pool = deps.getConfiguredGachaPoolDefinitions().find(candidate => candidate.id === poolId);
+      const pool = deps.getConfiguredGachaPoolDefinitions().find((candidate: any) => candidate.id === poolId);
       if (!pool || !deps.canDeleteGachaPoolDefinition(pool)) return;
       void (async () => {
         const confirmed = await deps.showGachaConfirmDialog({
@@ -340,7 +341,7 @@ export function createShowGachaSettingsDialog(deps: any) {
       });
     });
 
-    overlay.on('click', '.acu-gacha-settings-filter-trigger', function (event) {
+    overlay.on('click', '.acu-gacha-settings-filter-trigger', function (this: any, event: any) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
@@ -352,7 +353,7 @@ export function createShowGachaSettingsDialog(deps: any) {
       $(this).attr('aria-expanded', nextOpen ? 'true' : 'false');
     });
 
-    overlay.on('click', '.acu-gacha-settings-filter-option', function (event) {
+    overlay.on('click', '.acu-gacha-settings-filter-option', function (this: any, event: any) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
@@ -366,7 +367,7 @@ export function createShowGachaSettingsDialog(deps: any) {
       applySettingsItemFilters();
     });
 
-    overlay.on('click', function (event) {
+    overlay.on('click', function (event: any) {
       const target = event.target;
       if (target instanceof Element && target.closest('.acu-gacha-settings-filter-menu')) return;
       closeSettingsFilterMenus();
@@ -384,7 +385,7 @@ export function createShowGachaSettingsDialog(deps: any) {
       },
     );
 
-    overlay.on('keydown', '.acu-gacha-settings-item-search', function (event) {
+    overlay.on('keydown', '.acu-gacha-settings-item-search', function (this: any, event: any) {
       const key = event.originalEvent?.key || '';
       if (key !== 'Escape') return;
       $(this).val('');
@@ -405,12 +406,12 @@ export function createShowGachaSettingsDialog(deps: any) {
       if (itemId) deps.showGachaPickupItemDetail(itemId);
     };
 
-    overlay.on('click', '.acu-gacha-settings-item', function (event) {
+    overlay.on('click', '.acu-gacha-settings-item', function (this: any, event: any) {
       if (shouldIgnoreGachaSettingsItemRowClick(event.target)) return;
       showSettingsItemDetailFromRow(this);
     });
 
-    overlay.on('keydown', '.acu-gacha-settings-item', function (event) {
+    overlay.on('keydown', '.acu-gacha-settings-item', function (this: any, event: any) {
       const key = event.originalEvent?.key || '';
       if (key !== 'Enter' && key !== ' ') return;
       if (shouldIgnoreGachaSettingsItemRowClick(event.target)) return;
@@ -418,7 +419,7 @@ export function createShowGachaSettingsDialog(deps: any) {
       showSettingsItemDetailFromRow(this);
     });
 
-    overlay.on('change', '.acu-gacha-item-enabled-check', function (event) {
+    overlay.on('change', '.acu-gacha-item-enabled-check', function (this: any, event: any) {
       event.preventDefault();
       event.stopPropagation();
       const itemId = String($(this).closest('.acu-gacha-settings-item').data('item-id') || '').trim();
@@ -433,13 +434,13 @@ export function createShowGachaSettingsDialog(deps: any) {
           deps.refreshGachaVisualization(rawData);
           deps.refreshGachaShardShop();
         })
-        .catch(error => {
+        .catch((error: any) => {
           if (window.toastr) showActionableErrorToast(`物品启用状态保存失败: ${deps.getJsonLikeErrorMessage(error)}`, { suggestion: 'importExport' });
           refreshSettingsPoolViewer(currentPoolId || GACHA_ALL_POOL_TAG);
         });
     });
 
-    overlay.on('click', '.acu-gacha-item-toggle-menu', function (event) {
+    overlay.on('click', '.acu-gacha-item-toggle-menu', function (this: any, event: any) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
@@ -448,7 +449,7 @@ export function createShowGachaSettingsDialog(deps: any) {
       if (!itemId) return;
       const currentPoolId = normalizeGachaPoolId($(this).closest('.acu-gacha-settings-items-section').data('pool-id'));
       void deps.runInSaveQueue(async () => {
-        const latestItem = deps.getAllGachaItemDefinitions(rawData).find(candidate => candidate.id === itemId);
+        const latestItem = deps.getAllGachaItemDefinitions(rawData).find((candidate: any) => candidate.id === itemId);
         const storedItem = deps.getStoredGachaItemSettings().items[itemId];
         let currentEnabled = String($row.attr('data-enabled') || '') === 'true';
         if (latestItem) currentEnabled = deps.isGachaItemEnabled(latestItem);
@@ -461,13 +462,13 @@ export function createShowGachaSettingsDialog(deps: any) {
           deps.refreshGachaVisualization(rawData);
           deps.refreshGachaShardShop();
         })
-        .catch(error => {
+        .catch((error: any) => {
           if (window.toastr) showActionableErrorToast(`物品启用状态保存失败: ${deps.getJsonLikeErrorMessage(error)}`, { suggestion: 'importExport' });
           refreshSettingsPoolViewer(currentPoolId || GACHA_ALL_POOL_TAG);
         });
     });
 
-    overlay.on('click', '.acu-gacha-item-new', function (event) {
+    overlay.on('click', '.acu-gacha-item-new', function (this: any, event: any) {
       event.preventDefault();
       event.stopPropagation();
       const $itemSection = $(this).closest('.acu-gacha-settings-items-section').length
@@ -479,7 +480,7 @@ export function createShowGachaSettingsDialog(deps: any) {
       void deps.showGachaItemEditorDialog(null, initialPoolId);
     });
 
-    overlay.on('click', '.acu-gacha-item-edit', function (event) {
+    overlay.on('click', '.acu-gacha-item-edit', function (this: any, event: any) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
@@ -487,13 +488,13 @@ export function createShowGachaSettingsDialog(deps: any) {
       if (itemId) void deps.showGachaItemEditorDialog(itemId);
     });
 
-    overlay.on('click', '.acu-gacha-item-delete', function (event) {
+    overlay.on('click', '.acu-gacha-item-delete', function (this: any, event: any) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
       const itemId = String($(this).closest('.acu-gacha-settings-item').data('item-id') || '').trim();
       if (!itemId) return;
-      const item = deps.getCustomGachaItemDefinitions(rawData).find(candidate => candidate.id === itemId);
+      const item = deps.getCustomGachaItemDefinitions(rawData).find((candidate: any) => candidate.id === itemId);
       if (!item) return;
       void (async () => {
         const confirmed = await deps.showGachaConfirmDialog({
@@ -512,7 +513,7 @@ export function createShowGachaSettingsDialog(deps: any) {
           const localStorageSnapshot = deps.collectGachaLocalStorageSnapshot([deps.STORAGE_KEY_GACHA_ITEM_SETTINGS]);
           const latestCustomItems = deps.getCustomGachaItemDefinitions(rawData);
           const latestOriginalItems = deps.cloneGachaCatalogItems(latestCustomItems);
-          const latestNextItems = latestCustomItems.filter(candidate => candidate.id !== itemId);
+          const latestNextItems = latestCustomItems.filter((candidate: any) => candidate.id !== itemId);
           if (latestNextItems.length === latestCustomItems.length) throw new Error('这个自定义物品已被删除');
           const savedCatalog = await deps.saveStoredGachaCatalog(latestNextItems);
           if (!savedCatalog) throw new Error('自定义物品删除失败');
@@ -554,20 +555,20 @@ export function createShowGachaSettingsDialog(deps: any) {
       itemSelector: '.acu-gacha-settings-pool-item',
       handleSelector: '.acu-gacha-pool-handle',
       cancelSelector: 'button, input, textarea, select',
-      getItemId: item => {
+      getItemId: (item: any) => {
         const id = $(item).data('pool-id');
         if (typeof id === 'string') return id;
         if (id !== undefined && id !== null) return String(id);
         return null;
       },
-      onOrderChange: newOrderIds => {
+      onOrderChange: (newOrderIds: any) => {
         void deps.runInSaveQueue(async () => {
           newOrderIds
-            .filter(id => id !== GACHA_ALL_POOL_TAG)
-            .forEach((id, index) => deps.setGachaPoolOrder(id, (index + 1) * 10));
+            .filter((id: any) => id !== GACHA_ALL_POOL_TAG)
+            .forEach((id: any, index: any) => deps.setGachaPoolOrder(id, (index + 1) * 10));
         })
           .then(() => showGachaSettingsDialog())
-          .catch(error => {
+          .catch((error: any) => {
             if (window.toastr) showActionableErrorToast(`卡池排序保存失败: ${deps.getJsonLikeErrorMessage(error)}`, { suggestion: 'importExport' });
           });
       },
