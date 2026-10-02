@@ -1,15 +1,17 @@
-// @ts-nocheck
 /**
  * inspect-table-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { getTemplateInspectionSheets } from '../../features/table/table-template-requirements';
+type TemplateInspectionResult = Record<string, any>;
+type TemplateInspectionIssue = Record<string, any>;
+
 export function createInspectTableTemplate(deps: any) {
   const inspectTableTemplate = (template: unknown): TemplateInspectionResult => {
     const sheets = getTemplateInspectionSheets(template);
     const issues: TemplateInspectionIssue[] = [];
 
-    deps.TEMPLATE_TABLE_REQUIREMENTS.forEach(requirement => {
+    deps.TEMPLATE_TABLE_REQUIREMENTS.forEach((requirement: any) => {
       const sheet = deps.findTemplateRequirementSheet(sheets, requirement);
       if (!sheet) {
         issues.push({
@@ -24,11 +26,11 @@ export function createInspectTableTemplate(deps: any) {
       }
 
       const missingColumns = (requirement.requiredColumns || [])
-        .filter(column => !sheet.headers.some(header => deps.templateTextIncludesAny(header, column.matches)))
-        .map(column => `${sheet.name}.${column.label}`);
+        .filter((column: any) => !sheet.headers.some((header: any) => deps.templateTextIncludesAny(header, column.matches)))
+        .map((column: any) => `${sheet.name}.${column.label}`);
       const missingTags = (requirement.requiredNoteTags || [])
-        .filter(tag => !sheet.note.includes(`<${tag}>`) || !sheet.note.includes(`</${tag}>`))
-        .map(tag => `${sheet.name}.note 缺少 <${tag}>...</${tag}>`);
+        .filter((tag: any) => !sheet.note.includes(`<${tag}>`) || !sheet.note.includes(`</${tag}>`))
+        .map((tag: any) => `${sheet.name}.note 缺少 <${tag}>...</${tag}>`);
       const missing = [...missingColumns, ...missingTags];
       if (missing.length > 0) {
         issues.push({

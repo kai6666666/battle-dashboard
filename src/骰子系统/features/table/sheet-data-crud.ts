@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * sheet-data-crud.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createApplySheetDataViaCrud(deps: any) {
-  const applySheetDataViaCrud = async (api, sheetKey: string, desiredSheet, latestSheet) => {
+  const applySheetDataViaCrud = async (api: any, sheetKey: string, desiredSheet: any, latestSheet: any) => {
     if (!desiredSheet?.name || !Array.isArray(desiredSheet?.content)) {
       throw new Error(`修改表不存在或格式非法：${sheetKey}`);
     }
@@ -27,13 +26,13 @@ export function createApplySheetDataViaCrud(deps: any) {
       deps.assertAppendOnlyRows(oldRows, desiredRows);
     }
 
-    let workingRows = oldRows.map(row => [...row]);
+    let workingRows = oldRows.map((row: any) => [...row]);
     if (desiredRows.length < oldRows.length) {
       const deleteIndices = deps.findDeletionIndicesForCrud(oldRows, desiredRows);
       if (!deleteIndices) {
         throw new Error(`表 "${tableName}" 的行删除无法安全定位，已取消快捷保存。`);
       }
-      for (const rowIndex of deleteIndices.sort((left, right) => right - left)) {
+      for (const rowIndex of deleteIndices.sort((left: any, right: any) => right - left)) {
         const result = await api.deleteRow({ tableName: crudTableName, rowIndex: rowIndex + 1, skipNotify: true });
         if (result === false) throw new Error(`删除 "${tableName}" 第 ${rowIndex + 1} 行失败`);
         workingRows.splice(rowIndex, 1);

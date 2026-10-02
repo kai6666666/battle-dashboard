@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * relocate-db-payload-to-anchor.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

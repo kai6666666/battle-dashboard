@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-tag-input-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -63,7 +62,7 @@ export function createShowTagInputModal(deps: any) {
       };
 
       // 点击遮罩关闭
-      $overlay.on('click', e => {
+      $overlay.on('click', (e: any) => {
         if ($(e.target).hasClass('acu-fav-tag-overlay')) closeModal(null);
       });
 

@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-new-table-template-requirement-preset-jsonc-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildNewTableTemplateRequirementPresetJsoncTemplate(deps: any) {
+export function createBuildNewTableTemplateRequirementPresetJsoncTemplate(_deps: any) {
   const buildNewTableTemplateRequirementPresetJsoncTemplate = (): string => {
     return `{
   // name：预设名称，必填。

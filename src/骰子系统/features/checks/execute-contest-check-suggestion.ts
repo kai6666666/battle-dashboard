@@ -1,11 +1,12 @@
-// @ts-nocheck
 /**
  * execute-contest-check-suggestion.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { rollComplexDiceExpression } from '../dice/dice-engine';
+type CheckSuggestionParsedCommand = Record<string, any>;
+
 export function createExecuteContestCheckSuggestion(deps: any) {
-  const executeContestCheckSuggestion = (command: Extract<CheckSuggestionParsedCommand, { kind: 'contest' }>) => {
+  const executeContestCheckSuggestion = (command: CheckSuggestionParsedCommand) => {
     deps.refreshNameAliasesForCheckSuggestion();
     const leftName = deps.resolveCheckSuggestionCharacterName(command.leftName);
     const rightName = deps.resolveCheckSuggestionCharacterName(command.rightName);
@@ -49,7 +50,7 @@ export function createExecuteContestCheckSuggestion(deps: any) {
     const metaContent = `元叙事：${leftDisplayName}以【${command.leftAttribute}】对抗${rightDisplayName}的【${command.rightAttribute}】，${command.diceType}=${leftRoll}/${rightRoll}，目标=${leftTarget}/${rightTarget}，结果：${message}。`;
     deps.smartInsertToTextarea(deps.buildCheckSuggestionMetaBlock(metaContent), 'dice');
 
-    const contestResult: AcuDice.ContestResult = {
+    const contestResult: Record<string, any> = {
       left: {
         name: leftName,
         attribute: command.leftAttribute,

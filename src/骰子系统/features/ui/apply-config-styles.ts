@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * apply-config-styles.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,9 +5,9 @@
 import { DICE_ROOT_SELECTOR } from '../../shared/constants';
 import { injectDatabaseStyles } from '../../database-ui-override';
 export function createApplyConfigStyles(deps: any) {
-  const applyConfigStyles = config => {
+  const applyConfigStyles = (config: any) => {
     const targetDocument = deps.getTavernHostDocument();
-    const fontVal = deps.FONTS.find(f => f.id === config.fontFamily)?.val || deps.FONTS[0].val;
+    const fontVal = deps.FONTS.find((f: any) => f.id === config.fontFamily)?.val || deps.FONTS[0].val;
 
     // [优化] 只有字体 ID 变化时才重写 Style 标签，避免闪烁
     const styleTag = targetDocument.getElementById('acu-dynamic-font');
@@ -65,9 +64,9 @@ export function createApplyConfigStyles(deps: any) {
       '--acu-grid-cols': config.gridColumns,
     };
 
-    deps.collectHostAndLocalNodes<HTMLElement>(`${DICE_ROOT_SELECTOR}, .acu-embedded-options-container`).forEach(node => {
+    deps.collectHostAndLocalNodes(`${DICE_ROOT_SELECTOR}, .acu-embedded-options-container`).forEach((node: any) => {
       Array.from(node.classList)
-        .filter(className => className.startsWith('acu-theme-'))
+        .filter((className: any) => className.startsWith('acu-theme-'))
         .forEach(className => node.classList.remove(className));
       node.classList.add(`acu-theme-${config.theme}`);
       if (node.classList.contains('acu-wrapper')) {
@@ -79,7 +78,7 @@ export function createApplyConfigStyles(deps: any) {
     });
 
     // 数据库UI主题同步（native/未知主题内部自动清除）
-    injectDatabaseStyles(config.theme, deps.FONTS.find(f => f.id === config.fontFamily)?.val);
+    injectDatabaseStyles(config.theme, deps.FONTS.find((f: any) => f.id === config.fontFamily)?.val);
 
     return fontVal;
   };

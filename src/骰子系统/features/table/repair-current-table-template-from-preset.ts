@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * repair-current-table-template-from-preset.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -35,10 +34,10 @@ export function createRepairCurrentTableTemplateFromPreset(deps: any) {
         return;
       }
 
-      const actionPreview = plan.actions.slice(0, 12).map(action => `• ${action}`);
+      const actionPreview = plan.actions.slice(0, 12).map((action: any) => `• ${action}`);
       const hiddenActionCount = Math.max(0, plan.actions.length - actionPreview.length);
       if (hiddenActionCount > 0) actionPreview.push(`• 还有 ${hiddenActionCount} 项追加动作`);
-      const manualPreview = plan.manualIssues.slice(0, 6).map(issue => `• ${issue}`);
+      const manualPreview = plan.manualIssues.slice(0, 6).map((issue: any) => `• ${issue}`);
       const detailParts = [
         '将只修复当前聊天模板，不会修改全局模板，也不会直接写入运行时表格数据。',
         '',

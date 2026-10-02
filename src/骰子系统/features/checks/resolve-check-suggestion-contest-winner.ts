@@ -1,14 +1,17 @@
-// @ts-nocheck
 /**
  * resolve-check-suggestion-contest-winner.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+type CheckSuggestionPresetSideResult = Record<string, any>;
+type CheckSuggestionParsedCommand = Record<string, any>;
+
 export function createResolveCheckSuggestionContestWinner(deps: any) {
   const resolveCheckSuggestionContestWinner = (
     preset: AdvancedDicePreset,
     left: CheckSuggestionPresetSideResult,
     right: CheckSuggestionPresetSideResult,
-    command: Extract<CheckSuggestionParsedCommand, { kind: 'contest' }>,
+    command: CheckSuggestionParsedCommand,
   ): 'initiator' | 'opponent' | 'tie' => {
     const contestRule = preset.contestRule;
     let winner: 'initiator' | 'opponent' | 'tie' = 'tie';

@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * merge-dice-config-backup-preset-array.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupPresetMergeResult = Record<string, any>;
+
 export function createMergeDiceConfigBackupPresetArray(deps: any) {
   const mergeDiceConfigBackupPresetArray = (
     current: unknown,
@@ -13,7 +14,7 @@ export function createMergeDiceConfigBackupPresetArray(deps: any) {
     const builtinPresetIds = new Set(deps.getDiceConfigBackupBuiltinPresetIds(key));
     const result: DiceConfigBackupPresetMergeResult = {
       value: Array.isArray(current)
-        ? deps.cloneDiceConfigBackupValue(current).filter(item => {
+        ? deps.cloneDiceConfigBackupValue(current).filter((item: any) => {
             if (!deps.isDiceConfigBackupRecord(item)) return true;
             const id = deps.getDiceConfigBackupPresetRecordId(item);
             return !id || !builtinPresetIds.has(id);
@@ -33,7 +34,7 @@ export function createMergeDiceConfigBackupPresetArray(deps: any) {
 
     const indexById = new Map<string, number>();
     const indexByName = new Map<string, number>();
-    result.value.forEach((item, index) => {
+    result.value.forEach((item: any, index: any) => {
       if (!deps.isDiceConfigBackupRecord(item)) return;
       const id = deps.getDiceConfigBackupPresetRecordId(item);
       const name = deps.getDiceConfigBackupPresetRecordName(item);

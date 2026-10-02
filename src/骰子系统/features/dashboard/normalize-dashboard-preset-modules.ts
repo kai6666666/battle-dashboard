@@ -1,8 +1,11 @@
-// @ts-nocheck
 /**
  * normalize-dashboard-preset-modules.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DashboardPresetModules = Record<string, any>;
+type DashboardPresetModuleConfig = Record<string, any>;
+type DashboardPresetColumnConfig = Record<string, any>;
+
 export function createNormalizeDashboardPresetModules(deps: any) {
   const normalizeDashboardPresetModules = (rawModules: unknown): DashboardPresetModules => {
     if (!deps.isRecordValue(rawModules)) {
@@ -10,7 +13,7 @@ export function createNormalizeDashboardPresetModules(deps: any) {
     }
 
     const modules: DashboardPresetModules = {};
-    Object.entries(rawModules).forEach(([moduleKey, rawModule]) => {
+    Object.entries(rawModules as Record<string, any>).forEach(([moduleKey, rawModule]) => {
       if (moduleKey === deps.DASHBOARD_RELATIONSHIP_GRAPH_MODULE_KEY) {
         if (!deps.isRecordValue(rawModule)) {
           throw new Error('模块 relationshipGraph 必须是对象');
@@ -49,7 +52,7 @@ export function createNormalizeDashboardPresetModules(deps: any) {
           const keywordsSource = Array.isArray(rawColumn)
             ? rawColumn
             : deps.isRecordValue(rawColumn)
-              ? rawColumn.keywords
+              ? (rawColumn as Record<string, any>).keywords
               : null;
           columns[columnKey] = {
             keywords: deps.normalizeDashboardKeywordArray(keywordsSource, `模块 ${moduleKey}.columns.${columnKey}.keywords`),
