@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * resolve-dashboard-custom-table-name-icon-context-info.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { DashboardCustomTableNameIconContextInfo } from '../../shared/index-local-types';
+
 export function createResolveDashboardCustomTableNameIconContextInfo(deps: any) {
   const resolveDashboardCustomTableNameIconContextInfo = (
     tableName: string,

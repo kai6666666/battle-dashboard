@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * normalize-floating-collapse-position.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createNormalizeFloatingCollapsePosition(deps: any) {
+interface FloatingCollapsePosition { left: number; top: number; }
+
+export function createNormalizeFloatingCollapsePosition(_deps: any) {
   const normalizeFloatingCollapsePosition = (value: unknown): FloatingCollapsePosition | null => {
     if (!value || typeof value !== 'object') return null;
     const raw = value as { left?: unknown; top?: unknown };
