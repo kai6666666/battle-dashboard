@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * has-db-payload.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DbChatMessage = Record<string, any>;
+
 export function createHasDbPayload(deps: any) {
   const hasDbPayload = (msg: DbChatMessage): boolean => {
     if (deps.hasSheetKeys(msg.TavernDB_ACU_IndependentData)) return true;

@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * get-crud-changed-columns.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetCrudChangedColumns(deps: any) {
-  const getCrudChangedColumns = (headers, currentRow, nextRow): Set<number> => {
+export function createGetCrudChangedColumns(_deps: any) {
+  const getCrudChangedColumns = (headers: any, currentRow: any, nextRow: any): Set<number> => {
     const changedColumns = new Set<number>();
     if (!Array.isArray(headers)) return changedColumns;
     headers.forEach((header, colIndex) => {

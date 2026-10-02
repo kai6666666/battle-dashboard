@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * viewport-bottom-refresh-events.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createViewportBottomRefreshEvents(deps: any) {
+export function createViewportBottomRefreshEvents(_deps: any) {
   const VIEWPORT_BOTTOM_REFRESH_EVENTS = [
     'input',
     'change',

@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * get-emoji-candidates.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { LOCATION_EMOJI_MAP } from '../../shared/emoji-maps';
-export function createGetEmojiCandidates(deps: any) {
+export function createGetEmojiCandidates(_deps: any) {
   const getEmojiCandidates = (name: string): string[] => {
     if (!name) return [];
     const lowerName = name.toLowerCase();

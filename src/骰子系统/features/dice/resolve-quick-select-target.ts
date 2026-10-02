@@ -1,8 +1,12 @@
-// @ts-nocheck
 /**
  * resolve-quick-select-target.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CharacterAttributeSource = Record<string, any>;
+type QuickSelectCheckPresetConfig = Record<string, any>;
+type AttributeQuickSelectTarget = string;
+type AttributePresetConfig = Record<string, any>;
+
 export function createResolveQuickSelectTarget(deps: any) {
   const resolveQuickSelectTarget = (
     attrName: string,

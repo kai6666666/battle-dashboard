@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * clear-textarea-dice-cache.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = any;
+
 export function createClearTextareaDiceCache(deps: any) {
   const clearTextareaDiceCache = (textarea: AcuDiceTextareaElement) => {
     try {

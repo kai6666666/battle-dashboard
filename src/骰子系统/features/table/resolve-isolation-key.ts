@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * resolve-isolation-key.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createResolveIsolationKey(deps: any) {
+type DbChatMessage = Record<string, any>;
+
+export function createResolveIsolationKey(_deps: any) {
   const resolveIsolationKey = (msg: DbChatMessage, isolated: Record<string, unknown> | null): string | null => {
     if (typeof msg?.TavernDB_ACU_Identity === 'string') {
       const identity = msg.TavernDB_ACU_Identity;

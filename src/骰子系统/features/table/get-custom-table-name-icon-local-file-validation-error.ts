@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * get-custom-table-name-icon-local-file-validation-error.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { CustomTableNameIconInvalidSourceReason } from '../../shared/index-local-types';
 export function createGetCustomTableNameIconLocalFileValidationError(deps: any) {
   function getCustomTableNameIconLocalFileValidationError(
     file: File | null,
