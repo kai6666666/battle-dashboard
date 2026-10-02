@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-dice-system-input-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -113,13 +112,13 @@ export function createShowDiceSystemInputDialog(deps: any) {
       deps.setupOverlayClose(overlay, 'acu-system-input-overlay', () => finish(null));
       overlay.on('click', '.acu-system-input-cancel', () => finish(null));
       overlay.on('click', '.acu-system-input-ok', confirm);
-      overlay.on('keydown', '.acu-system-input-control', event => {
+      overlay.on('keydown', '.acu-system-input-control', (event: any) => {
         if (!options.multiline && event.key === 'Enter') {
           event.preventDefault();
           confirm();
         }
       });
-      overlay.on('keydown', event => {
+      overlay.on('keydown', (event: any) => {
         if (event.key === 'Escape') finish(null);
       });
       window.setTimeout(() => {

@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * import-confirm-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowImportConfirmDialog(deps: any) {
-  const showImportConfirmDialog = (jsonData, analysis, onComplete) => {
+  const showImportConfirmDialog = (jsonData: any, analysis: any, onComplete: any) => {
     const { $ } = deps.getCore();
     $('.acu-import-confirm-overlay').remove();
 
@@ -14,7 +13,7 @@ export function createShowImportConfirmDialog(deps: any) {
     const hasConflicts = analysis.conflicts.length > 0;
     const conflictListHtml =
       analysis.conflicts.length > 0
-        ? `<div style="max-height:80px;overflow-y:auto;background:rgba(0,0,0,0.1);border-radius:4px;padding:6px 8px;margin-top:6px;font-size:11px;color:var(--acu-text-sub);">${analysis.conflicts.map(n => deps.escapeHtml(n)).join(', ')}</div>`
+        ? `<div style="max-height:80px;overflow-y:auto;background:rgba(0,0,0,0.1);border-radius:4px;padding:6px 8px;margin-top:6px;font-size:11px;color:var(--acu-text-sub);">${analysis.conflicts.map((n: any) => deps.escapeHtml(n)).join(', ')}</div>`
         : '';
 
     const dialogHtml = `
@@ -106,7 +105,7 @@ export function createShowImportConfirmDialog(deps: any) {
     $dialog.find('.acu-import-confirm-btn').click(function () {
       const overwrite = $dialog.find('input[name="conflict-mode"]:checked').val() !== 'skip';
       try {
-        const stats = deps.AvatarManager.importData(jsonData, overwrite);
+        deps.AvatarManager.importData(jsonData, overwrite);
         closeDialog();
         onComplete && onComplete();
       } catch (err) {

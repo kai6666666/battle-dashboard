@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * viewport-wrapper-bounds.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -16,7 +15,7 @@ export function createUpdateViewportWrapperBounds(deps: any) {
     const targetWindow = deps.getTavernHostWindow();
     const targetDocument = deps.getTavernHostDocument();
     const wrapper =
-      targetDocument.querySelector<HTMLElement>(`${DICE_ROOT_SELECTOR}.acu-mode-viewport`) ||
+      targetDocument.querySelector(`${DICE_ROOT_SELECTOR}.acu-mode-viewport`) ||
       document.querySelector<HTMLElement>(`${DICE_ROOT_SELECTOR}.acu-mode-viewport`);
     if (!wrapper) return;
 
@@ -36,14 +35,14 @@ export function createUpdateViewportWrapperBounds(deps: any) {
     wrapper.style.setProperty('box-sizing', 'border-box', 'important');
     wrapper.style.setProperty('z-index', '1000', 'important');
 
-    const navContainer = wrapper.querySelector<HTMLElement>('.acu-nav-container');
+    const navContainer = wrapper.querySelector('.acu-nav-container');
     if (navContainer) {
       navContainer.style.setProperty('visibility', 'visible', 'important');
       navContainer.style.setProperty('opacity', '1', 'important');
       navContainer.style.setProperty('pointer-events', 'auto', 'important');
     }
 
-    const expandTrigger = wrapper.querySelector<HTMLElement>('.acu-expand-trigger');
+    const expandTrigger = wrapper.querySelector('.acu-expand-trigger');
     if (expandTrigger) {
       expandTrigger.style.setProperty('display', 'flex', 'important');
       expandTrigger.style.setProperty('visibility', 'visible', 'important');

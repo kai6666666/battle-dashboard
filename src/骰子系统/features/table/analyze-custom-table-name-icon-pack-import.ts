@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * analyze-custom-table-name-icon-pack-import.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { CustomTableNameIconPackImportAnalysis, CustomTableNameIconEntry } from '../../shared/index-local-types';
 export function createAnalyzeCustomTableNameIconPackImport(deps: any) {
   const analyzeCustomTableNameIconPackImport = (value: unknown): CustomTableNameIconPackImportAnalysis => {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -17,7 +17,7 @@ export function createAnalyzeCustomTableNameIconPackImport(deps: any) {
     }
 
     const now = Date.now();
-    const existingEntries = deps.CustomTableNameIconStoreManager.getAll().reduce<Record<string, CustomTableNameIconEntry>>(
+    const existingEntries = (deps.CustomTableNameIconStoreManager.getAll() as CustomTableNameIconEntry[]).reduce<Record<string, CustomTableNameIconEntry>>(
       (result, entry) => {
         result[deps.getCustomTableNameIconContextKey(entry)] = entry;
         return result;

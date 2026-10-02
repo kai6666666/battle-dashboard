@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * render-check-suggestion-table-content.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createRenderCheckSuggestionTableContent(deps: any) {
-  const renderCheckSuggestionTableContent = (tableData, tableName, reverseBtnHtml, isReversed) => {
+  const renderCheckSuggestionTableContent = (tableData: any, tableName: any, reverseBtnHtml: any, isReversed: any) => {
     const config = deps.getConfig();
     const searchTerm = String(deps.getTableSearchStates()[tableName] || '')
       .toLowerCase()
@@ -12,7 +11,7 @@ export function createRenderCheckSuggestionTableContent(deps: any) {
     let suggestionItems = deps.getCheckSuggestionItemsFromTable(tableData);
 
     if (searchTerm) {
-      suggestionItems = suggestionItems.filter(item => {
+      suggestionItems = suggestionItems.filter((item: any) => {
         const displayText = item.displayText.toLowerCase();
         const commandText = item.commandText.toLowerCase();
         return displayText.includes(searchTerm) || commandText.includes(searchTerm);
@@ -39,7 +38,7 @@ export function createRenderCheckSuggestionTableContent(deps: any) {
     const suggestionRowsHtml =
       rowsToRender.length > 0
         ? rowsToRender
-            .map((item, idx) => {
+            .map((item: any, idx: any) => {
               const displayIndex = item.rowId || String(startIdx + idx + 1);
               return `
                 <button class="acu-check-suggestion-btn acu-option-table-row" data-display="${deps.safeEncodeURIComponent(item.displayText)}" data-command="${deps.safeEncodeURIComponent(item.commandText)}" data-check-row="${item.rowIndex}">

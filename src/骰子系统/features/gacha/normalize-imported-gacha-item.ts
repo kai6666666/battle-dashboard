@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * normalize-imported-gacha-item.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-import { GACHA_RARITY_ORDER, GACHA_REWARD_TARGETS, GACHA_UNIQUE_RARITY } from '../../entities/gacha-items';
+import { GACHA_RARITY_ORDER, GACHA_REWARD_TARGETS, GACHA_UNIQUE_RARITY, type GachaPoolTag, type GachaRarity, type GachaRewardTarget } from '../../entities/gacha-items';
+import type { NormalizedGachaCatalogItem } from './gacha-types';
 export function createNormalizeImportedGachaItem(deps: any) {
   const normalizeImportedGachaItem = (
     rawItem: unknown,

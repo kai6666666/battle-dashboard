@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * update-template-for-active-check-preset.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -65,7 +64,7 @@ export function createUpdateTemplateForActiveCheckPreset(deps: any) {
     const checkRuleSheets = Object.entries(template).filter((entry): entry is [string, TemplateSheetDebug] => {
       const [, sheet] = entry;
       if (!isTemplateSheetWithNote(sheet)) return false;
-      return sheet.sourceData?.note?.includes('<检定规则>') === true;
+      return (sheet.sourceData?.note as string | undefined)?.includes('<检定规则>') === true;
     });
     console.info(`${debugPrefix} 可同步表扫描`, {
       totalSheets: Object.keys(template).length,

@@ -175,7 +175,7 @@ export function createAvatarIdentityWiring(deps: any) {
     }
 
     const rawRules = 'rules' in parsed ? parsed.rules : parsed;
-    const rules = normalizeRenderPresetRules(rawRules);
+    const rules = normalizeRenderPresetRules(rawRules) as unknown as RenderPresetRules;
     const name = typeof parsed.name === 'string' && parsed.name.trim() ? parsed.name.trim() : '导入的渲染预设';
     const description = typeof parsed.description === 'string' ? parsed.description.trim() : '';
     return { name, description, rules };

@@ -1,18 +1,17 @@
-// @ts-nocheck
 /**
  * render-shard-shop-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GACHA_RARITY_ORDER } from '../../entities/gacha-items';
 export function createRenderGachaShardShopHtml(deps: any) {
-  const renderGachaShardShopHtml = rawData => {
+  const renderGachaShardShopHtml = (rawData: any) => {
     const config = deps.getConfig();
     const horizontalScrollbarClass = config.showHorizontalScrollbar === true ? 'acu-show-horizontal-scrollbar' : '';
     const state = deps.getGachaState(rawData, true) || deps.createDefaultGachaState();
     const activePoolTag = deps.getGachaActivePoolTag(state);
     const activeRarity = deps.getStoredGachaShardShopRarity();
     const poolTabsHtml = deps.getVisibleGachaPoolConfigDefinitions(rawData)
-      .map(pool => {
+      .map((pool: any) => {
         const isActive = activePoolTag === pool.id;
         return `
           <button
@@ -47,12 +46,12 @@ export function createRenderGachaShardShopHtml(deps: any) {
       `;
     }).join('');
     const items = deps.getGachaPoolDefinitions(activePoolTag, rawData)
-      .filter(item => item.quality === activeRarity)
+      .filter((item: any) => item.quality === activeRarity)
       .sort(deps.compareGachaItemDefinitionsForDisplay);
     const itemCardsHtml =
       items.length > 0
         ? items
-            .map(item => {
+            .map((item: any) => {
               const owned = deps.isGachaItemOwned(rawData, item);
               const balance = Math.max(0, Math.floor(Number(state.wallet.shards[item.quality] || 0)));
               const canAfford = balance >= deps.GACHA_SHARD_EXCHANGE_COST;

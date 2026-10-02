@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * infer-equipment-table-type.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type EquipmentTableType = string;
+import type { GachaItemDefinition } from '../../entities/gacha-items';
 export function createInferEquipmentTableTypeForGachaItem(deps: any) {
   const inferEquipmentTableTypeForGachaItem = (
     item: Pick<GachaItemDefinition, 'id' | 'name' | 'type' | 'description'>,

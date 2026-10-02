@@ -1,15 +1,14 @@
-// @ts-nocheck
 /**
  * show-card-edit-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createShowCardEditModal(deps: any) {
   const showCardEditModal = (
-    row,
-    headers,
-    tableName,
-    rowIndex,
-    tableKey,
+    row: any,
+    headers: any,
+    tableName: any,
+    rowIndex: any,
+    tableKey: any,
     options?: { overlayClass?: string; onSaved?: () => void },
   ) => {
     const { $ } = deps.getCore();
@@ -23,7 +22,7 @@ export function createShowCardEditModal(deps: any) {
     }
 
     const inputsHtml = displayRow
-      .map((cell, idx) => {
+      .map((cell: any, idx: any) => {
         if (idx === 0) return ''; // 跳过索引列
         const headerName = headers[idx] || `列 ${idx}`;
         const val = cell || '';
@@ -53,7 +52,7 @@ export function createShowCardEditModal(deps: any) {
     $('body').append(dialog);
 
     // --- [修复] 自动高度调节逻辑 ---
-    const adjustHeight = el => {
+    const adjustHeight = (el: any) => {
       // 关键修复：使用 auto 而不是 0px，防止布局塌陷并正确获取 shrinking 时的 scrollHeight
       el.style.height = 'auto';
       const contentHeight = el.scrollHeight + 2;
@@ -64,13 +63,13 @@ export function createShowCardEditModal(deps: any) {
 
     // 1. 初始化时：使用 requestAnimationFrame 确保在 DOM 渲染后执行
     requestAnimationFrame(() => {
-      dialog.find('textarea').each(function () {
+      dialog.find('textarea').each(function (this: any) {
         adjustHeight(this);
       });
     });
 
     // 2. 输入时：实时调整
-    dialog.find('textarea').on('input', function () {
+    dialog.find('textarea').on('input', function (this: any) {
       adjustHeight(this);
     });
     // -----------------------------
@@ -89,7 +88,7 @@ export function createShowCardEditModal(deps: any) {
         }
         const nextRow = [...currentRow];
         let hasChanges = false;
-        dialog.find('textarea').each(function () {
+        dialog.find('textarea').each(function (this: any) {
           const colIdx = parseInt($(this).data('col'));
           const newVal = $(this).val();
           if (String(nextRow[colIdx]) !== String(newVal)) {
@@ -121,7 +120,7 @@ export function createShowCardEditModal(deps: any) {
     // 点击遮罩层关闭
     deps.setupOverlayClose(dialog, 'acu-edit-overlay', closeDialog);
     // 点击关闭按钮（双重保险）
-    dialog.on('click', function (e) {
+    dialog.on('click', function (e: any) {
       if ($(e.target).closest('#dlg-close-x, #dlg-close, .acu-close-btn').length) {
         closeDialog();
       }

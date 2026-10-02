@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * render-option-table-content.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createRenderOptionTableContent(deps: any) {
-  const renderOptionTableContent = (tableData, tableName, reverseBtnHtml, isReversed) => {
+  const renderOptionTableContent = (tableData: any, tableName: any, reverseBtnHtml: any, isReversed: any) => {
     const config = deps.getConfig();
     const searchTerm = String(deps.getTableSearchStates()[tableName] || '')
       .toLowerCase()
@@ -12,7 +11,7 @@ export function createRenderOptionTableContent(deps: any) {
     let optionItems = deps.getOptionItemsFromTable(tableData);
 
     if (searchTerm) {
-      optionItems = optionItems.filter(item => {
+      optionItems = optionItems.filter((item: any) => {
         const text = item.text.toLowerCase();
         const header = item.header.toLowerCase();
         return text.includes(searchTerm) || header.includes(searchTerm);
@@ -39,7 +38,7 @@ export function createRenderOptionTableContent(deps: any) {
     const optionRowsHtml =
       rowsToRender.length > 0
         ? rowsToRender
-            .map((item, idx) => {
+            .map((item: any, idx: any) => {
               const displayIndex = startIdx + idx + 1;
               return `
                 <button class="acu-opt-btn acu-option-table-row" data-val="${deps.safeEncodeURIComponent(item.text)}" data-option-row="${item.rowIndex}" data-option-col="${item.colIndex}">

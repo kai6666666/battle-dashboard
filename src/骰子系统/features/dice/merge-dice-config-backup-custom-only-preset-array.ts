@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * merge-dice-config-backup-custom-only-preset-array.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { normalizeTableTemplateRequirementPreset } from '../../features/table/table-template-requirements';
+type DiceConfigBackupPresetMergeResult = Record<string, any>;
 export function createMergeDiceConfigBackupCustomOnlyPresetArray(deps: any) {
   const mergeDiceConfigBackupCustomOnlyPresetArray = (
     current: unknown,

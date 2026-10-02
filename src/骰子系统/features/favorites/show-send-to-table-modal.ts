@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * show-send-to-table-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { FavoritesManager } from '../../features/favorites/favorites-manager';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type TableCompatibility = Record<string, any>;
+import type { FavoriteItem } from '../../shared/index-local-types';
 export function createShowSendToTableModal(deps: any) {
   const showSendToTableModal = (
     fav: FavoriteItem,
@@ -78,14 +79,14 @@ export function createShowSendToTableModal(deps: any) {
 
     const closeModal = () => $overlay.remove();
 
-    $overlay.on('click', e => {
+    $overlay.on('click', (e: any) => {
       if ($(e.target).hasClass('acu-fav-send-overlay')) closeModal();
     });
 
     $modal.find('.acu-fav-send-close, .acu-fav-send-cancel').on('click', closeModal);
 
     // 点击选项发送
-    $modal.on('click', '.acu-fav-send-option', async function () {
+    $modal.on('click', '.acu-fav-send-option', async function (this: any) {
       const uid = $(this).data('uid') as string;
       const mode = $(this).data('mode') as string;
       const table = currentTables[uid];
@@ -103,7 +104,7 @@ export function createShowSendToTableModal(deps: any) {
         console.log('[DICE]FavoritesManager 发送成功，已写入数据库');
       } catch (err) {
         console.error('[DICE]FavoritesManager 写入数据库失败:', err);
-        showActionableErrorToast('写入数据库失败: ' + (err.message || err), {
+        showActionableErrorToast('写入数据库失败: ' + ((err as any).message || err), {
           title: '写入收藏失败',
           suggestion: 'save',
           developerHint: true,
@@ -113,7 +114,7 @@ export function createShowSendToTableModal(deps: any) {
 
       // 提示未匹配列
       if (mode === 'loose') {
-        const unmatchedCount = fav.header.filter(h => !targetHeader.includes(h)).length;
+        const unmatchedCount = fav.header.filter((h: any) => !targetHeader.includes(h)).length;
         if (unmatchedCount > 0) {
           toastr.info(`${unmatchedCount}列未匹配，已填充空值`);
         }

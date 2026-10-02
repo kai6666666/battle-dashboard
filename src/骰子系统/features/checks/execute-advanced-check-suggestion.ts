@@ -1,11 +1,11 @@
-// @ts-nocheck
 /**
  * execute-advanced-check-suggestion.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { computePendingEffectVariables } from '../../shared/effect-math';
+type CheckSuggestionParsedCommand = Record<string, any>;
 export function createExecuteAdvancedCheckSuggestion(deps: any) {
-  const executeAdvancedCheckSuggestion = (command: Extract<CheckSuggestionParsedCommand, { kind: 'check' }>) => {
+  const executeAdvancedCheckSuggestion = (command: CheckSuggestionParsedCommand) => {
     deps.refreshNameAliasesForCheckSuggestion();
     const presetId = command.rawParams.preset || null;
     const preset = deps.getCheckSuggestionPresetById(presetId);
@@ -68,7 +68,7 @@ export function createExecuteAdvancedCheckSuggestion(deps: any) {
     deps.smartInsertToTextarea(diceResultText, 'dice');
 
     const isSuccess = deps.isCheckSuggestionOutcomeSuccess(side.outcome);
-    const checkResult: AcuDice.CheckResult = {
+    const checkResult: Record<string, any> = {
       success: isSuccess,
       total: side.rollTotal,
       target: side.dc || side.attrValue,

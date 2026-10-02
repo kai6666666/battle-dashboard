@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * render-gacha-panel-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { FORTUNE_CURRENCY_NAME, GACHA_DRAW_COST_SINGLE, GACHA_DRAW_COST_TEN, GACHA_LEGEND_PITY_THRESHOLD, GACHA_RARE_PITY_THRESHOLD } from '../../entities/gacha-items';
 export function createRenderGachaPanelHtml(deps: any) {
-  const renderGachaPanelHtml = rawData => {
+  const renderGachaPanelHtml = (rawData: any) => {
     const config = deps.getConfig();
     const horizontalScrollbarClass = config.showHorizontalScrollbar === true ? 'acu-show-horizontal-scrollbar' : '';
     const state = deps.getGachaState(rawData, true) || deps.createDefaultGachaState();
@@ -20,7 +19,7 @@ export function createRenderGachaPanelHtml(deps: any) {
         ? state.recentRewards
             .slice(0, 6)
             .map(
-              reward => `
+              (reward: any) => `
                 <button class="acu-gacha-recent-detail-btn" type="button" data-item-id="${deps.escapeHtml(reward.itemId)}" data-item-name="${deps.escapeHtml(reward.name)}" data-item-quality="${deps.escapeHtml(reward.quality)}" title="${deps.escapeHtml(`查看 ${reward.name}`)}">
                   <span class="acu-gacha-recent-reward-text">${deps.escapeHtml(deps.formatGachaRecentRewardText(reward))}</span>
                   <span class="acu-gacha-recent-quality">${deps.escapeHtml(reward.quality)}</span>
@@ -33,7 +32,7 @@ export function createRenderGachaPanelHtml(deps: any) {
     const poolDefinitions = deps.getVisibleGachaPoolConfigDefinitions(rawData);
 
     const poolButtonsHtml = poolDefinitions
-      .map(pool => {
+      .map((pool: any) => {
         const isActive = activePoolTag === pool.id;
         return `
         <button

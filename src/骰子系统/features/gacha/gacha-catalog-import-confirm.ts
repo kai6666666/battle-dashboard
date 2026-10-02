@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * gacha-catalog-import-confirm.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+import type { GachaCatalogImportAnalysis, GachaCatalogImportMode } from './gacha-types';
 export function createShowGachaCatalogImportConfirm(deps: any) {
   const showGachaCatalogImportConfirm = (jsonString: string, analysis: GachaCatalogImportAnalysis) => {
     const { $ } = deps.getCore();
@@ -19,7 +19,7 @@ export function createShowGachaCatalogImportConfirm(deps: any) {
       analysis.errors.length > 0
         ? `<div class="acu-import-warning-message">${analysis.errors
             .slice(0, 6)
-            .map(error => `<div>${deps.escapeHtml(error)}</div>`)
+            .map((error: any) => `<div>${deps.escapeHtml(error)}</div>`)
             .join('')}${analysis.errors.length > 6 ? '<div>还有更多无效项已跳过…</div>' : ''}</div>`
         : '';
     const dialogHtml = `
@@ -109,7 +109,7 @@ export function createShowGachaCatalogImportConfirm(deps: any) {
           const title = stats.warnings.length > 0 ? '骰子商店导入完成，有部分跳过' : '骰子商店导入完成';
           window.toastr.success(deps.formatGachaCatalogImportStatsText(stats), title);
         }
-      }).catch(error => {
+      }).catch((error: any) => {
         console.error('[DICE][GACHA]导入自定义物品失败:', error);
         if (window.toastr) {
           showActionableErrorToast(`导入失败: ${deps.getJsonLikeErrorMessage(error)}`, { suggestion: 'importExport' });

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * execute-table-interaction-action.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -100,7 +99,7 @@ export function createExecuteTableInteractionAction(deps: any) {
       };
 
       overlay.find('#acu-msg-send').click(sendMessage);
-      overlay.find('#acu-msg-input').on('keydown', function (ev) {
+      overlay.find('#acu-msg-input').on('keydown', function (ev: any) {
         if (ev.key === 'Enter') {
           ev.preventDefault();
           sendMessage();

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-manual-update-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -100,7 +99,7 @@ export function createShowManualUpdateDialog(deps: any) {
     });
 
     // 点击遮罩关闭
-    $dialog.on('click', e => {
+    $dialog.on('click', (e: any) => {
       if (e.target === overlayEl) {
         $dialog.remove();
       }

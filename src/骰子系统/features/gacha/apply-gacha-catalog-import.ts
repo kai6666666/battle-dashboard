@@ -1,12 +1,12 @@
-// @ts-nocheck
 /**
  * apply-gacha-catalog-import.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-import { GACHA_ITEM_DEFINITIONS } from '../../entities/gacha-items';
+import { GACHA_ITEM_DEFINITIONS, type GachaItemDefinition } from '../../entities/gacha-items';
+import type { GachaCatalogImportAnalysis, GachaCatalogImportMode, GachaCatalogImportStats } from './gacha-types';
 export function createApplyGachaCatalogImport(deps: any) {
   const applyGachaCatalogImport = async (
-    rawData,
+    rawData: any,
     analysis: GachaCatalogImportAnalysis,
     mode: GachaCatalogImportMode,
   ): Promise<GachaCatalogImportStats> => {
@@ -19,12 +19,12 @@ export function createApplyGachaCatalogImport(deps: any) {
     ]);
     const customIndexById = new Map(customItems.map((item, index) => [item.id, index]));
     const builtInIds = new Set(GACHA_ITEM_DEFINITIONS.map(item => item.id));
-    const existingIds = new Set(deps.getAllGachaItemDefinitions(rawData).map(item => item.id));
+    const existingIds = new Set(deps.getAllGachaItemDefinitions(rawData).map((item: any) => item.id));
     const importedItemSettings: Array<{ id: string; enabled: boolean; order?: number }> = [];
     const stats: GachaCatalogImportStats = { added: 0, updated: 0, renamed: 0, skipped: analysis.skipped, warnings: [] };
     const importTimestamp = Date.now();
 
-    analysis.items.forEach(item => {
+    analysis.items.forEach((item: any) => {
       const isBuiltInConflict = builtInIds.has(item.id);
       const customIndex = customIndexById.get(item.id);
       const hasConflict = isBuiltInConflict || customIndex !== undefined;

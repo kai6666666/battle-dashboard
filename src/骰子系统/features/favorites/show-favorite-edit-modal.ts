@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * show-favorite-edit-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { FavoriteItem } from '../../shared/index-local-types';
 export function createShowFavoriteEditModal(deps: any) {
   const showFavoriteEditModal = (fav: FavoriteItem, onSave: (updated: Partial<FavoriteItem>) => void) => {
     const { $ } = deps.getCore();
@@ -57,14 +57,14 @@ export function createShowFavoriteEditModal(deps: any) {
 
     const closeModal = () => $overlay.remove();
 
-    $overlay.on('click', e => {
+    $overlay.on('click', (e: any) => {
       if ($(e.target).hasClass('acu-fav-edit-overlay')) closeModal();
     });
 
     $modal.find('.acu-fav-edit-close, .acu-fav-edit-cancel').on('click', closeModal);
 
     // 删除列
-    $modal.on('click', '.acu-fav-edit-remove', function () {
+    $modal.on('click', '.acu-fav-edit-remove', function (this: any) {
       $(this).closest('.acu-fav-edit-row').remove();
     });
 
@@ -86,7 +86,7 @@ export function createShowFavoriteEditModal(deps: any) {
       const newHeader: string[] = [];
       const newRowData: (string | number)[] = [];
 
-      $modal.find('.acu-fav-edit-row').each(function () {
+      $modal.find('.acu-fav-edit-row').each(function (this: any) {
         const h = $(this).find('.acu-fav-edit-header').val() as string;
         const v = $(this).find('.acu-fav-edit-value').val() as string;
         if (h.trim()) {

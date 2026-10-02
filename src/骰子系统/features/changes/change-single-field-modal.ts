@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * change-single-field-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createShowChangeSingleFieldModal(deps: any) {
-  const showChangeSingleFieldModal = (value, headerName, tableName, rowIndex, colIndex, tableKey) => {
+  const showChangeSingleFieldModal = (value: any, headerName: any, tableName: any, rowIndex: any, colIndex: any, tableKey: any) => {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/console/console-capture-manager.ts
  * Feature-Sliced: batch extract (FSD batch A1).
@@ -6,10 +5,10 @@
 
 
 export const ConsoleCaptureManager = {
-    logs: [],
+    logs: [] as any[],
     maxLogs: 1000,
     filters: { log: true, info: true, warn: true, error: true },
-    originalMethods: {},
+    originalMethods: {} as Record<string, any>,
     isIntercepted: false,
     enabled: false, // 默认关闭，需要手动开启或错误时自动开启
 
@@ -46,9 +45,9 @@ export const ConsoleCaptureManager = {
       this.isIntercepted = true;
 
       ['log', 'info', 'warn', 'error'].forEach(type => {
-        this.originalMethods[type] = console[type];
+        this.originalMethods[type] = (console as unknown as Record<string, any>)[type];
         const self = this;
-        console[type] = function (...args) {
+        (console as unknown as Record<string, any>)[type] = function (...args: any[]) {
           // 调用原方法
           self.originalMethods[type].apply(console, args);
           // 记录日志（仅在启用时）
@@ -59,7 +58,7 @@ export const ConsoleCaptureManager = {
       });
     },
 
-    capture(type, args) {
+    capture(type: any, args: any) {
       if (!this.enabled) return; // 仅在启用时捕获
       try {
         const timestamp = new Date();
@@ -67,7 +66,7 @@ export const ConsoleCaptureManager = {
 
         // 将参数转换为字符串
         const content = args
-          .map(arg => {
+          .map((arg: any) => {
             if (typeof arg === 'object') {
               try {
                 return JSON.stringify(arg, null, 2);
@@ -111,10 +110,10 @@ export const ConsoleCaptureManager = {
     },
 
     getFilteredLogs() {
-      return this.logs.filter(log => this.filters[log.type]);
+      return this.logs.filter((log: any) => (this.filters as Record<string, boolean>)[log.type]);
     },
 
-    setFilters(filters) {
+    setFilters(filters: any) {
       this.filters = { ...this.filters, ...filters };
     },
   };
