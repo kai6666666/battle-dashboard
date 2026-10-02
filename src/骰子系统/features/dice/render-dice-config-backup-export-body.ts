@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * render-dice-config-backup-export-body.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -16,7 +15,7 @@ export function createRenderDiceConfigBackupExportBody(deps: any) {
         </div>
       </div>
       <div class="acu-config-backup-module-list">
-        ${deps.renderDiceConfigBackupModuleRows(deps.getDICE_CONFIG_BACKUP_MODULES().map(module => module.id))}
+        ${deps.renderDiceConfigBackupModuleRows(deps.getDICE_CONFIG_BACKUP_MODULES().map((module: any) => module.id))}
       </div>
     </div>`;
   return renderDiceConfigBackupExportBody;

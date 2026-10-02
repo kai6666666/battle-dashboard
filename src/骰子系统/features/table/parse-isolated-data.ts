@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * parse-isolated-data.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createParseIsolatedData(deps: any) {
+export function createParseIsolatedData(_deps: any) {
   const parseIsolatedData = (value: unknown): Record<string, unknown> | null => {
     if (!value) return null;
     if (typeof value === 'string') {

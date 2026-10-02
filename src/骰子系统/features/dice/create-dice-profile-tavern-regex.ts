@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * create-dice-profile-tavern-regex.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceProfileRecord = { id: string; [key: string]: any };
+
 export function createCreateDiceProfileTavernRegex(deps: any) {
   const createDiceProfileTavernRegex = (profile: DiceProfileRecord): Record<string, unknown> => ({
     id: deps.createDiceProfileRegexId(),

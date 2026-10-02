@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * create-regex-rule-signature.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCreateRegexRuleSignature(deps: any) {
+type RegexTransformationRule = Record<string, any>;
+
+export function createCreateRegexRuleSignature(_deps: any) {
   const createRegexRuleSignature = (rules: readonly RegexTransformationRule[]): string =>
     JSON.stringify(
       rules.map(rule => ({

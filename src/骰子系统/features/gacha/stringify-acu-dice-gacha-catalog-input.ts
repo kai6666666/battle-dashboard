@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * stringify-acu-dice-gacha-catalog-input.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GACHA_CATALOG_EXPORT_KIND, GACHA_CATALOG_VERSION } from '../../entities/gacha-items';
-export function createStringifyAcuDiceGachaCatalogInput(deps: any) {
+export function createStringifyAcuDiceGachaCatalogInput(_deps: any) {
   const stringifyAcuDiceGachaCatalogInput = (input: unknown): string => {
     if (typeof input === 'string') return input;
     if (Array.isArray(input)) {

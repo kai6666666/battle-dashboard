@@ -1,8 +1,11 @@
-// @ts-nocheck
 /**
  * get-attribute-preset-mapped-target.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AttributePresetConfig = Record<string, any>;
+type CharacterAttributeSource = string;
+type AttributeQuickSelectTarget = string;
+
 export function createGetAttributePresetMappedTarget(deps: any) {
   const getAttributePresetMappedTarget = (
     preset: AttributePresetConfig | null | undefined,

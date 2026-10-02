@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * normalize-avatar-hex-color.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createNormalizeAvatarHexColor(deps: any) {
+export function createNormalizeAvatarHexColor(_deps: any) {
   const normalizeAvatarHexColor = (value: unknown): string | null => {
     const raw = String(value ?? '').trim();
     const hex = raw.startsWith('#') ? raw.slice(1) : raw;

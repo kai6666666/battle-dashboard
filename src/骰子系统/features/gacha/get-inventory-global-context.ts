@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * get-inventory-global-context.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DASHBOARD_TABLE_CONFIG } from '../dashboard/dashboard-table-config';
 export function createGetInventoryGlobalContext(deps: any) {
-  const getInventoryGlobalContext = rawData => {
+  const getInventoryGlobalContext = (rawData: any) => {
     const tables = deps.processJsonData(rawData || {});
     const globalResult = deps.getDashboardDataParser().findTable(tables, 'global');
     const headers = globalResult?.data?.headers || [];

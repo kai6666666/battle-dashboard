@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * find-gacha-column-by-keywords.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createFindGachaColumnByKeywords(deps: any) {
+export function createFindGachaColumnByKeywords(_deps: any) {
   const findGachaColumnByKeywords = (headers: unknown[], keywords: readonly string[], fallbackIndex = -1): number => {
     const normalizedHeaders = headers.map(header => String(header || '').trim().toLowerCase());
     const normalizedKeywords = keywords.map(keyword => String(keyword || '').trim().toLowerCase()).filter(Boolean);

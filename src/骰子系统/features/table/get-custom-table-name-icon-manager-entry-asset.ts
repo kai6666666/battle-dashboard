@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-custom-table-name-icon-manager-entry-asset.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { CustomTableNameIconImageDB } from '../../shared/storage/custom-table-name-icon-image-db';
+type CustomTableNameIconEntry = Record<string, any>;
+
 export function createGetCustomTableNameIconManagerEntryAsset(deps: any) {
   const getCustomTableNameIconManagerEntryAsset = async (
     entry: CustomTableNameIconEntry | null,
