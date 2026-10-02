@@ -1,13 +1,12 @@
-// @ts-nocheck
 /**
  * build-gacha-table-result-from-sheet.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createBuildGachaTableResultFromSheet(deps: any) {
-  const buildGachaTableResultFromSheet = (entry: { key: string; sheet: any }, config) => {
+  const buildGachaTableResultFromSheet = (entry: { key: string; sheet: any }, config: any) => {
     const sheet = entry.sheet || {};
     const content = Array.isArray(sheet.content) ? sheet.content : [];
-    const rows = content.slice(1).map((row, rowIndex) => {
+    const rows = content.slice(1).map((row: any, rowIndex: any) => {
       if (row && typeof row === 'object') {
         Object.defineProperty(row, deps.GACHA_CATALOG_RAW_ROW_INDEX_PROP, {
           value: rowIndex,

@@ -1,17 +1,16 @@
-// @ts-nocheck
 /**
  * process-json-data.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createProcessJsonData(deps: any) {
-  const processJsonData = json => {
-    const tables = {};
+  const processJsonData = (json: any) => {
+    const tables: Record<string, any> = {};
     if (!json || typeof json !== 'object') return tables;
     for (const sheetId in json) {
       if (json[sheetId]?.name) {
         const sheet = json[sheetId];
         const rows = sheet.content
-          ? sheet.content.slice(1).map((row, rowIndex) => {
+          ? sheet.content.slice(1).map((row: any, rowIndex: any) => {
               if (row && typeof row === 'object') {
                 Object.defineProperty(row, deps.GACHA_CATALOG_RAW_ROW_INDEX_PROP, {
                   value: rowIndex,

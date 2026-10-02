@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * get-user-avatar-url.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetUserAvatarUrl(deps: any) {
+export function createGetUserAvatarUrl(_deps: any) {
   const getUserAvatarUrl = () => {
     try {
       // 方法1: 从页面 DOM 中查找用户头像元素

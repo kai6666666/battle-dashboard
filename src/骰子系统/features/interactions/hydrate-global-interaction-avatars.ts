@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * hydrate-global-interaction-avatars.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -12,7 +11,7 @@ export function createHydrateGlobalInteractionAvatars(deps: any) {
       if (!rowTitle) return;
       const lookupNames = deps.getGlobalInteractionAvatarLookupNames(rowTitle);
 
-      void Promise.all(lookupNames.map(name => deps.AvatarManager.getAsync(name).then(avatarUrl => ({ name, avatarUrl }))))
+      void Promise.all(lookupNames.map((name: any) => deps.AvatarManager.getAsync(name).then((avatarUrl: any) => ({ name, avatarUrl }))))
         .then(avatarUrl => {
           const matched = avatarUrl.find(item => Boolean(item.avatarUrl));
           if (!matched?.avatarUrl) return;

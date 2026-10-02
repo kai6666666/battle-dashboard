@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * find-diff-snapshot-entry.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiffSheet = { content?: unknown[]; [key: string]: any };
+
 export function createFindDiffSnapshotEntry(deps: any) {
   const findDiffSnapshotEntry = (
     snapshot: unknown,

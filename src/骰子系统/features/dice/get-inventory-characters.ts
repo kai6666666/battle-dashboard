@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-inventory-characters.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,8 +6,8 @@ import { DASHBOARD_TABLE_CONFIG } from '../../features/dashboard/dashboard-table
 import { getDisplayName } from '../../entities/name-alias';
 import { isNpcTableName } from '../../shared/constants';
 export function createGetInventoryCharacters(deps: any) {
-  const getInventoryCharacters = rawData => {
-    const result = [];
+  const getInventoryCharacters = (rawData: any) => {
+    const result: any[] = [];
     if (!rawData) return result;
     for (const sheetId in rawData) {
       const sheet = rawData[sheetId];
@@ -17,7 +16,7 @@ export function createGetInventoryCharacters(deps: any) {
       const npcConfig = deps.getDashboardModuleConfig('npc') || DASHBOARD_TABLE_CONFIG.npc;
       const nameIdx = deps.DashboardDataParser.findColumnIndex(headers, 'name', npcConfig);
       const inSceneIdx = deps.DashboardDataParser.findColumnIndex(headers, 'inScene', npcConfig);
-      sheet.content.slice(1).forEach((row, rowIndex) => {
+      sheet.content.slice(1).forEach((row: any, rowIndex: any) => {
         const rawName = String(row[nameIdx] ?? '').trim();
         if (!rawName) return;
         const displayName = deps.replaceUserPlaceholders(getDisplayName(rawName)).trim() || rawName;

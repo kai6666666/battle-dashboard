@@ -1,13 +1,14 @@
-// @ts-nocheck
 /**
  * restore-dice-config-backup-table-template-rollback-snapshot.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupTableTemplateRollbackSnapshot = Record<string, any>;
+
 export function createRestoreDiceConfigBackupTableTemplateRollbackSnapshot(deps: any) {
   const restoreDiceConfigBackupTableTemplateRollbackSnapshot = async (snapshot: unknown): Promise<string[]> => {
     const warnings: string[] = [];
     const template =
-      deps.isDiceConfigBackupRecord(snapshot) && 'template' in snapshot
+      deps.isDiceConfigBackupRecord(snapshot) && 'template' in (snapshot as any)
         ? (snapshot as DiceConfigBackupTableTemplateRollbackSnapshot).template
         : snapshot;
     if (!deps.isDiceConfigBackupRecord(template)) {

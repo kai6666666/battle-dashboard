@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * restore-dice-config-backup-table-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupApplyStats = Record<string, any>;
+
 export function createRestoreDiceConfigBackupTableTemplate(deps: any) {
   const restoreDiceConfigBackupTableTemplate = async (
     templateValue: unknown,

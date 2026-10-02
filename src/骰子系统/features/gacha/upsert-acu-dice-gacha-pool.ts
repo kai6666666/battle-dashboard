@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * upsert-acu-dice-gacha-pool.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -15,7 +14,7 @@ export function createUpsertAcuDiceGachaPool(deps: any) {
     }
 
     const pools = deps.getConfiguredGachaPoolDefinitions();
-    const index = pools.findIndex(pool => pool.id === normalizedPool.id);
+    const index = pools.findIndex((pool: any) => pool.id === normalizedPool.id);
     const existing = index >= 0 ? pools[index] : null;
     const nextPool = {
       ...(existing || deps.buildDefaultGachaPoolDefinition(normalizedPool.id, normalizedPool)),

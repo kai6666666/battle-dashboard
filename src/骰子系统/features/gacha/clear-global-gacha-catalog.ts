@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * clear-global-gacha-catalog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -11,7 +10,7 @@ export function createClearGlobalGachaCatalog(deps: any) {
       await deps.ensureGachaCatalogLoaded(rawData);
       const originalItems = deps.cloneGachaCatalogItems(deps.getCustomGachaItemDefinitions(rawData));
       const localStorageSnapshot = deps.collectGachaLocalStorageSnapshot([STORAGE_KEY_GACHA_ITEM_SETTINGS]);
-      const customIds = deps.getCustomGachaItemDefinitions(rawData).map(item => item.id);
+      const customIds = deps.getCustomGachaItemDefinitions(rawData).map((item: any) => item.id);
       const count = customIds.length;
       const savedCatalog = await deps.saveStoredGachaCatalog([]);
       if (!savedCatalog) throw new Error('自定义物品清空失败');

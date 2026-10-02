@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/api/ready.ts
  * Feature-Sliced: 对外 API 的就绪（onReady）机制。

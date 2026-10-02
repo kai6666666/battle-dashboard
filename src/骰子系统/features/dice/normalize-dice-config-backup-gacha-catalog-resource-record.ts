@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * normalize-dice-config-backup-gacha-catalog-resource-record.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,7 +6,7 @@ import { GACHA_CATALOG_VERSION } from '../../entities/gacha-items';
 import type { GachaCatalogRecord } from '../../features/gacha/gacha-types';
 export function createNormalizeDiceConfigBackupGachaCatalogResourceRecord(deps: any) {
   const normalizeDiceConfigBackupGachaCatalogResourceRecord = (
-    rawRecord: unknown,
+    rawRecord: any,
     warnings: string[],
     rawData?: unknown,
   ): GachaCatalogRecord | null => {

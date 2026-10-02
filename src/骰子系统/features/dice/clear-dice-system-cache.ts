@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * clear-dice-system-cache.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createClearDiceSystemCache(deps: any) {
+export function createClearDiceSystemCache(_deps: any) {
   const clearDiceSystemCache = async (): Promise<void> => {
     if (!('caches' in window)) {
       console.log('[DICE] Cache API 不可用，直接刷新');

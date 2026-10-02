@@ -1,8 +1,11 @@
-// @ts-nocheck
 /**
  * validate-advanced-preset-agent-tests.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+type AdvancedPresetAgentTestCase = Record<string, any>;
+type AdvancedPresetValidationIssue = Record<string, any>;
+
 export function createValidateAdvancedPresetAgentTests(deps: any) {
   const validateAdvancedPresetAgentTests = (
     preset: AdvancedDicePreset,

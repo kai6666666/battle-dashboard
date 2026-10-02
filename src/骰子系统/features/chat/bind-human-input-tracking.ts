@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * bind-human-input-tracking.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = any;
+
 export function createBindHumanInputTracking(deps: any) {
   const bindHumanInputTracking = () => {
     const textarea = document.getElementById('send_textarea') as AcuDiceTextareaElement | null;

@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * normalize-custom-table-name-icon-entry.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CustomTableNameIconEntry = Record<string, any>;
+
 export function createNormalizeCustomTableNameIconEntry(deps: any) {
   const normalizeCustomTableNameIconEntry = (value: unknown): CustomTableNameIconEntry | null => {
     const context = deps.normalizeCustomTableNameIconContext(value);

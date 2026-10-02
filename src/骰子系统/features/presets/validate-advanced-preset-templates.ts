@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * validate-advanced-preset-templates.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+type AdvancedPresetValidationIssue = Record<string, any>;
+
 export function createValidateAdvancedPresetTemplates(deps: any) {
   const validateAdvancedPresetTemplates = (
     preset: AdvancedDicePreset,

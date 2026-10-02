@@ -1,18 +1,21 @@
-// @ts-nocheck
 /**
  * clone-dashboard-preset-modules.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCloneDashboardPresetModules(deps: any) {
+type DashboardPresetModules = Record<string, any>;
+type DashboardPresetColumnConfig = Record<string, any>;
+type DashboardPresetFilterConfig = Record<string, any>;
+
+export function createCloneDashboardPresetModules(_deps: any) {
   const cloneDashboardPresetModules = (modules: DashboardPresetModules): DashboardPresetModules => {
     const cloned: DashboardPresetModules = {};
-    Object.entries(modules).forEach(([moduleKey, moduleConfig]) => {
+    Object.entries(modules).forEach(([moduleKey, moduleConfig]: any) => {
       const columns: Record<string, DashboardPresetColumnConfig> = {};
-      Object.entries(moduleConfig.columns || {}).forEach(([columnKey, columnConfig]) => {
+      Object.entries(moduleConfig.columns || {}).forEach(([columnKey, columnConfig]: any) => {
         columns[columnKey] = { keywords: [...columnConfig.keywords] };
       });
       const filters: Record<string, DashboardPresetFilterConfig> = {};
-      Object.entries(moduleConfig.filters || {}).forEach(([filterKey, filterConfig]) => {
+      Object.entries(moduleConfig.filters || {}).forEach(([filterKey, filterConfig]: any) => {
         filters[filterKey] = {
           ...(filterConfig.column ? { column: filterConfig.column } : {}),
           ...(filterConfig.includes ? { includes: [...filterConfig.includes] } : {}),
@@ -20,7 +23,7 @@ export function createCloneDashboardPresetModules(deps: any) {
           ...(filterConfig.excludes ? { excludes: [...filterConfig.excludes] } : {}),
         };
       });
-      const sources = (moduleConfig.sources || []).map(source => ({
+      const sources = (moduleConfig.sources || []).map((source: any) => ({
         mode: source.mode,
         tableKeywords: [...source.tableKeywords],
         nameColumn: [...source.nameColumn],
