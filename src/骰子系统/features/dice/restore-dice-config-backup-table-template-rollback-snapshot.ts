@@ -21,7 +21,13 @@ export function createRestoreDiceConfigBackupTableTemplateRollbackSnapshot(deps:
       return warnings;
     }
     try {
-      const result = await Promise.resolve(api.importTemplateFromData(deps.cloneDiceConfigBackupValue(template), { scope: 'chat' }));
+      // x9h③：显式锁定冲突策略 keep-current（不静默覆盖运行时数据）；dataMode 仍由数据库按上下文自动推导。
+      const result = await Promise.resolve(
+        api.importTemplateFromData(deps.cloneDiceConfigBackupValue(template), {
+          scope: 'chat',
+          conflictPolicy: 'keep-current',
+        }),
+      );
       if (deps.isDiceConfigBackupRecord(result) && result.success === false) {
         const message = typeof result.message === 'string' ? result.message : '未知错误';
         warnings.push(`当前数据库表格模板: 回滚失败：${message}`);

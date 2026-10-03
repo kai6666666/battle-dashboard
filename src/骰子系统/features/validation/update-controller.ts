@@ -8,11 +8,27 @@
 export function createUpdateController(deps: any) {
   const UpdateController = {
     _lastValidationCount: 0,
+    _lastPersistedFalseNoticeAt: 0,
     _lastMeta: null,
     handleUpdate: (meta?: any) => {
       try {
         if (meta && meta.persisted === false) {
           console.info('[DICE]ACU 收到未落盘更新通知（persisted=false），数据仅运行时生效');
+          // x9h④：轻量 UI 提醒（60s 节流，避免批量写入场景反复打扰）
+          const noticeNow = Date.now();
+          if (noticeNow - (UpdateController._lastPersistedFalseNoticeAt || 0) > 60000) {
+            UpdateController._lastPersistedFalseNoticeAt = noticeNow;
+            try {
+              if (window.toastr && typeof window.toastr.info === 'function') {
+                window.toastr.info('本次数据更新未写入聊天存档（仅内存），重开聊天后可能丢失。', '数据未落盘', {
+                  timeOut: 6000,
+                  positionClass: 'toast-bottom-right',
+                });
+              }
+            } catch (noticeError) {
+              console.warn('[DICE]ACU 未落盘提示弹出失败（已忽略）:', noticeError);
+            }
+          }
         }
         UpdateController._lastMeta = meta || null;
         // === 更新拦截逻辑（检查启用了 intercept 的规则） ===

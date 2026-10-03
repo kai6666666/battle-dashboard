@@ -5,12 +5,13 @@
 export function createReadRuntimeTableData(_deps: any) {
   const readRuntimeTableData = (api: unknown): unknown => {
     const record = api as Record<string, unknown> | null | undefined;
-    if (typeof record?.getCurrentData === 'function') {
-      return (record.getCurrentData as () => unknown).call(api);
-    }
-    // 数据库本体当前公开面仍把只读快照暴露在 exportTableAsJson；写入保存必须走下方 CRUD。
+    // x9h①：优先走文档化只读入口 exportTableAsJson（返回运行时活引用，可安全用于就地补丁）；
+    // getCurrentData 为旧版数据库兼容入口，仅作兜底。
     if (typeof record?.exportTableAsJson === 'function') {
       return (record.exportTableAsJson as () => unknown).call(api);
+    }
+    if (typeof record?.getCurrentData === 'function') {
+      return (record.getCurrentData as () => unknown).call(api);
     }
     return null;
   };

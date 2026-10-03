@@ -11,6 +11,26 @@ export function createApplyExistingRowCellPatchesViaCrud(deps: any) {
       Array.from(changedColumns as number[]).filter(index => index > 0 && Boolean(input.headers[index])),
     );
     if (writableColumns.size === 0) return writableColumns;
+    // x9h②：写前锁预检（与数据库 S2-2 拒绝语义一致）：行锁/列锁/单元格锁命中时先行给出可读原因。
+    if (typeof deps.checkSheetWriteLocks === 'function') {
+      const lockViolation = deps.checkSheetWriteLocks({
+        api: input.api,
+        sheetKey: input.sheetKey || '',
+        tableName: input.tableName,
+        content: (input.sheet as any)?.content,
+        operations: [
+          {
+            kind: 'update',
+            rowIndex: input.rowIndex,
+            rowId: Array.isArray(input.currentRow) ? input.currentRow[0] : undefined,
+            colIndexes: Array.from(writableColumns),
+          },
+        ],
+      });
+      if (lockViolation) {
+        throw new Error(`保存已取消：${lockViolation}请先在数据库界面解锁后重试。`);
+      }
+    }
 
     const columnAliasMap = input.columnAliasMap || deps.buildCrudColumnAliasMap(input.sheet);
     deps.assertCrudRequiredColumnsRepresented(input.tableName, input.headers, input.sheet);

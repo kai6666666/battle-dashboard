@@ -14,6 +14,7 @@ import { createApplyRuntimeDataViaCrud } from '../features/table/apply-runtime-d
 import { createAsDiffRecord } from '../features/table/as-diff-record';
 import { createAssertAppendOnlyRows } from '../features/table/assert-append-only-rows';
 import { createAssertCrudInsertRequiredCells } from '../features/table/assert-crud-insert-required-cells';
+import { createCheckSheetWriteLocks } from '../features/table/check-sheet-write-locks';
 import { createConsumeCrudWriteOptions } from '../features/table/consume-crud-write-options';
 import { createCountRuntimeDataChanges } from '../features/table/count-runtime-data-changes';
 import { createCreateDiffRowMatcher } from '../features/table/create-diff-row-matcher';
@@ -466,6 +467,8 @@ export function createRuntimeSaveWiring(deps: any) {
   };
 
 
+  // x9h②：CRUD 写前锁预检（与数据库 S2-2 身份锁拒绝语义保持一致）
+  const checkSheetWriteLocks = createCheckSheetWriteLocks({});
   const applyExistingRowCellPatchesViaCrud = createApplyExistingRowCellPatchesViaCrud({
     applyJsonCellFallbackForCrud: (...a: any[]) => applyJsonCellFallbackForCrud(...a),
     assertCrudEnumConstraints: (...a: any[]) => assertCrudEnumConstraints(...a),
@@ -475,6 +478,7 @@ export function createRuntimeSaveWiring(deps: any) {
     assertCrudRequiredColumnsRepresented: (...a: any[]) => assertCrudRequiredColumnsRepresented(...a),
     buildCrudColumnAliasMap: (...a: any[]) => buildCrudColumnAliasMap(...a),
     buildRowDataForCrud: (...a: any[]) => buildRowDataForCrud(...a),
+    checkSheetWriteLocks: (...a: any[]) => checkSheetWriteLocks(...a),
     consumeCrudWriteOptions: (...a: any[]) => consumeCrudWriteOptions(...a),
     getCrudCellValueForWrite: (...a: any[]) => getCrudCellValueForWrite(...a),
     getCrudChangedColumns: (...a: any[]) => getCrudChangedColumns(...a),
@@ -504,6 +508,7 @@ export function createRuntimeSaveWiring(deps: any) {
     assertCrudRequiredColumnsRepresented: (...a: any[]) => assertCrudRequiredColumnsRepresented(...a),
     buildCrudColumnAliasMap: (...a: any[]) => buildCrudColumnAliasMap(...a),
     buildRowDataForCrud: (...a: any[]) => buildRowDataForCrud(...a),
+    checkSheetWriteLocks: (...a: any[]) => checkSheetWriteLocks(...a),
     findDeletionIndicesForCrud: (...a: any[]) => findDeletionIndicesForCrud(...a),
     getCrudChangedColumns: (...a: any[]) => getCrudChangedColumns(...a),
     getCrudTableIdentifier: (...a: any[]) => getCrudTableIdentifier(...a),
@@ -648,6 +653,7 @@ export function createRuntimeSaveWiring(deps: any) {
     cloneRuntimeDataValue: (...a: any[]) => cloneRuntimeDataValue(...a),
     findRuntimeSheetEntryForMutation: (...a: any[]) => findRuntimeSheetEntryForMutation(...a),
     getCrudTableIdentifier: (...a: any[]) => getCrudTableIdentifier(...a),
+    checkSheetWriteLocks: (...a: any[]) => checkSheetWriteLocks(...a),
     resolveRuntimeMutationSource: (...a: any[]) => resolveRuntimeMutationSource(...a),
     runInSaveQueue: (...a: any[]) => runInSaveQueue(...a),
     updateRuntimeDataCacheAfterCrud: (...a: any[]) => updateRuntimeDataCacheAfterCrud(...a),

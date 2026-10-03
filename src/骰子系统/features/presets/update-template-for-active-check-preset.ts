@@ -104,9 +104,12 @@ export function createUpdateTemplateForActiveCheckPreset(deps: any) {
 
     console.info(`${debugPrefix} 模板修改汇总`, { modified, presetId: preset.id });
     if (modified && typeof dbApi.importTemplateFromData === 'function') {
-      console.info(`${debugPrefix} 准备保存模板`, { presetId: preset.id, scope: 'chat' });
+      console.info(`${debugPrefix} 准备保存模板`, { presetId: preset.id, scope: 'chat', conflictPolicy: 'keep-current' });
+      // x9h③：显式锁定冲突策略 keep-current（不静默覆盖运行时数据）；dataMode 仍由数据库按
+      // 上下文自动推导（模板无数据→seed；运行时有数据→不静默覆盖），避免显式 merge 因缺少
+      // UNIQUE/主键业务键而 fail-closed、显式 seed 改变空运行时的一次性初始化语义。
       dbApi
-        .importTemplateFromData(template, { scope: 'chat' })
+        .importTemplateFromData(template, { scope: 'chat', conflictPolicy: 'keep-current' })
         .then((result: TemplateImportResultDebug) => {
           console.info(`${debugPrefix} importTemplateFromData 返回`, {
             presetId: preset.id,
