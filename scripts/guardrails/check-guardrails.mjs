@@ -79,6 +79,42 @@ for (const [bp, cfg] of Object.entries(bundleBaseline.files || {})) {
   if (size > limit) errors.push('[bundle体积] 超预算：' + bp + '（' + size + ' B > ' + cfg.size + ' + ' + cfg.tolerance + '）');
   bundleReport.push(bp + ': ' + size + ' B / 预算 ' + limit + ' B');
 }
+// ④-1 JS 转义损坏扫描（x9g）：模板字符串中的单反斜杠 + 4 位十六进制（CSS 转义形态）
+// 会被 JS 求值为控制字符（如 \f -> U+000C），在压缩为单行后触发 CSS bad-string 并吞掉后续全部规则。
+const CSS_ESCAPE = /\\+[0-9a-fA-F]{4}/g;
+for (const f of files) {
+  const content = fs.readFileSync(f, 'utf8');
+  let m;
+  while ((m = CSS_ESCAPE.exec(content))) {
+    const seq = m[0];
+    let run = 0;
+    for (let k = 0; k < seq.length; k += 1) {
+      if (seq[k] === '\\') run += 1;
+      else break;
+    }
+    if (run % 2 === 1) {
+      const line = content.slice(0, m.index).split('\n').length;
+      errors.push(
+        `[转义损坏] ${rel(f)}:${line} —— 单反斜杠转义 ${JSON.stringify(seq.slice(0, 24))}（应写成双反斜杠）`,
+      );
+    }
+  }
+}
+
+// ④-2 构建产物控制字符扫描（x9g）：stable.js 不得含 \t\n\r 之外的 C0 控制字符
+for (const [bp] of Object.entries(bundleBaseline.files || {})) {
+  const abs = path.join(ROOT, bp);
+  if (!fs.existsSync(abs)) continue;
+  const text = fs.readFileSync(abs, 'latin1');
+  const bad = [];
+  for (let i = 0; i < text.length; i += 1) {
+    const c = text.charCodeAt(i);
+    // 仅针对 CSS bad-string 致命字符：NUL 与 FF（其余 C0 如应用层有意使用的 U+0001 分隔符不视为问题）
+    if (c === 0 || c === 12) bad.push(i);
+  }
+  if (bad.length) errors.push(`[产物控制字符] ${bp} 含 ${bad.length} 个 CSS 致命控制字符（首个 @${bad[0]}）`);
+}
+
 console.log(`[guardrails] 扫描 TS 文件：${files.length}`);
 console.log(`[guardrails] >100KB 文件：${files.filter(f => fs.statSync(f).size > LARGE_LIMIT).length} / 冻结名单 ${Object.keys(largeBaseline).length}`);
 console.log(`[guardrails] @ts-nocheck 文件：${nocheckNow.length} / 冻结名单 ${nocheckBaseline.size}`);
