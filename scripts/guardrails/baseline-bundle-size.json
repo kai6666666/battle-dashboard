@@ -1,11 +1,11 @@
 {
   "files": {
     "dist/骰子系统/stable.js": {
-      "size": 2722618,
+      "size": 2722922,
       "tolerance": 16384
     },
     "dist/骰子系统/stable.js.map": {
-      "size": 6870196,
+      "size": 6871004,
       "tolerance": 65536
     }
   }
