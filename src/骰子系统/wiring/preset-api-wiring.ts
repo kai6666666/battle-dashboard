@@ -44,8 +44,6 @@ import { createSortableListFactory } from '../shared/ui/sortable-list';
 import type { CheckHistoryExtension } from '../shared/advanced-preset-types';
 import type { DiceStatsScope } from '../shared/index-local-types';
 
-// x4-o 占位：AcuDice 命名空间在 index.ts 中为悬空引用（@ts-nocheck 世界）；此处保持迁移等价，待类型债治理时统一。
-declare namespace AcuDice { type CheckResult = any; type ContestResult = any; }
 
 
 export function createPresetApiWiring(deps: any) {
@@ -382,7 +380,7 @@ export function createPresetApiWiring(deps: any) {
     settleGachaFortuneForDiceEvent: (...a: any[]) => settleGachaFortuneForDiceEvent(...a),
     getDiceHistoryStatsDB: () => DiceHistoryStatsDB,
   });
-  type CheckHistoryEntry = AcuDice.CheckResult & CheckHistoryExtension & { timestamp: number };
+  type CheckHistoryEntry = AcuDice.CheckResultDraft & CheckHistoryExtension & { timestamp: number };
   type ContestHistoryEntry = AcuDice.ContestResult & { timestamp: number; detailId?: string; detailLines?: string[] };
   type AcuDiceSharedHistoryStore = {
     checkHistory: CheckHistoryEntry[];

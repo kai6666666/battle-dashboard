@@ -525,7 +525,7 @@ export function createDicePanelAdvancedCheck(deps: any, ctx: any) {
       deps.smartInsertToTextarea(diceResultText, 'dice');
 
       // 构建检定结果对象
-      const checkResult: AcuDice.CheckResult = {
+      const checkResult: AcuDice.CheckResultDraft = {
         success: isSuccess,
         total: rollTotal,
         target: dc,

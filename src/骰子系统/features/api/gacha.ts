@@ -39,7 +39,7 @@ export function createAcuDiceGachaApi(deps: {
   showShardShop: (...a: any[]) => any;
   showSettings: (...a: any[]) => any;
 }) {
-  const api = {
+  const api: AcuDice.GachaAPI = {
     costs: {
       singleDraw: deps.costs.singleDraw,
       tenDraw: deps.costs.tenDraw,

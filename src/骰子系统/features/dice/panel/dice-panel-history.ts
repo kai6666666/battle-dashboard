@@ -3,6 +3,10 @@
  * dice-panel-history.ts
  * 从 show-dice-panel.ts 拆出：检定/对战历史的过滤、统计、详情与清理。
  */
+import type { DiceStatsScope } from '../../../shared/index-local-types';
+
+type CheckHistoryEntry = Record<string, any>;
+
 export function createDicePanelHistory(deps: any) {
   const { $ } = deps.getCore();
     const expandedTraceRunIds = new Set<string>();
@@ -18,8 +22,8 @@ export function createDicePanelHistory(deps: any) {
           });
 
       const mergedItems: HistoryItem[] = [
-        ...deps.getCheckHistory().map(item => ({ ...item, historyType: 'check' as const })),
-        ...deps.getContestHistory().map(item => ({ ...item, historyType: 'contest' as const })),
+        ...deps.getCheckHistory().map((item: any) => ({ ...item, historyType: 'check' as const })),
+        ...deps.getContestHistory().map((item: any) => ({ ...item, historyType: 'contest' as const })),
       ]
         .sort((a, b) => b.timestamp - a.timestamp)
         .filter(item => {

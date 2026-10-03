@@ -1463,7 +1463,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
   const { acuDiceGachaApi } = createGachaApiWiring({ analyzeGachaCatalogImport, applyGachaCatalogImport, assertSaveStoredGachaStateSnapshot, buildDefaultGachaPoolDefinition, canDeleteGachaPoolDefinition, closeGachaVisualization, compareGachaItemDefinitionsForDisplay, createDefaultGachaState, deleteGachaItemSetting, deleteGachaPoolConfig, emitEvent, ensureGachaCatalogLoaded, exportGachaCatalogJson, formatGachaCatalogImportStatsText, getActiveGachaPoolTags, getAllGachaItemDefinitions, getAllGachaPoolConfigDefinitions, getConfiguredGachaPoolDefinitions, getCustomGachaItemDefinitions, getGachaActivePoolTag, getGachaCatalogImportFailureMessage, getGachaFortuneProgressView, getGachaState, getRuntimeGachaRawData, getVisibleGachaPoolConfigDefinitions, isBuiltinGachaPoolId, isGachaItemEnabled, normalizeGachaPoolDefinition, performGachaDraw, recordGachaFortuneGain, refreshGachaShardShop, refreshGachaVisualization, runInSaveQueue, saveGachaPoolSettings, saveStoredGachaCatalog, serializeGachaCatalogItemForExport, showDiceSystemConfirmDialog, showGachaSettingsDialog, showGachaShardShop, showGachaVisualization, touchGachaActivity, updateGachaPoolTag });
   // [x4-ag] 抽卡正则动作装配已迁出：见 ./wiring/gacha-regex-actions-wiring.ts
   const { bindAcuDiceGachaRegexActions } = createGachaRegexActionsWiring({ acuDiceGachaApi, getCore, getRuntimeErrorMessage, rootWindow });
-  (AcuDiceAPI as Record<string, unknown>).gacha = acuDiceGachaApi;
+  Object.assign(AcuDiceAPI, { gacha: acuDiceGachaApi });
   // 使用 Object.defineProperty 防止意外覆盖；在 gacha 子 API 完成后再通知 ready。
   defineAcuDiceOnWindow(window);
   if (rootWindow !== window) {
