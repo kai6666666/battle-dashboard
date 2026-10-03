@@ -1,13 +1,1 @@
-[
-  "src/骰子系统/features/avatar/show-avatar-manager.ts",
-  "src/骰子系统/features/dice/show-contest-panel.ts",
-  "src/骰子系统/features/events/bind-events.ts",
-  "src/骰子系统/features/gacha/gacha-item-editor-dialog.ts",
-  "src/骰子系统/features/interactions/bind-global-interaction-events.ts",
-  "src/骰子系统/features/mvu/mvu-module.ts",
-  "src/骰子系统/features/presets/builtin-advanced-presets.ts",
-  "src/骰子系统/features/render/render-interface-impl.ts",
-  "src/骰子系统/features/settings/show-settings-modal.ts",
-  "src/骰子系统/features/table/show-cell-menu.ts",
-  "src/骰子系统/features/table/show-relationship-graph.ts"
-]
+[]

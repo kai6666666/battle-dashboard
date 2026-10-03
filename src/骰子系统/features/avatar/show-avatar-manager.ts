@@ -1,10 +1,12 @@
-// @ts-nocheck
 /**
  * show-avatar-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { LocalAvatarDB } from '../../entities/local-avatar-db';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type AvatarManagerViewMode = string;
+type AvatarManagerOptions = Record<string, any>;
+type AvatarManagerNode = Record<string, any>;
 export function createShowAvatarManager(deps: any) {
   const showAvatarManager = (
     nodeArr: AvatarManagerNode[],
@@ -165,7 +167,7 @@ export function createShowAvatarManager(deps: any) {
           const query = searchQuery.toLowerCase();
           otherNodes = otherNodes.filter(n => {
             const nameMatch = n.name.toLowerCase().includes(query);
-            const aliasMatch = (allAvatarData[n.name]?.aliases || []).some(alias =>
+            const aliasMatch = (allAvatarData[n.name]?.aliases || []).some((alias: any) =>
               alias.toLowerCase().includes(query),
             );
             return nameMatch || aliasMatch;
@@ -257,7 +259,7 @@ export function createShowAvatarManager(deps: any) {
             sourceLabel = '<span class="acu-avatar-source acu-source-url">URL</span>';
           }
 
-          const aliases = (data.aliases || []).join(', ');
+          const aliases = (data.aliases || []).join(', '); void aliases;
           const hasAvatar = !!displayUrl;
 
           // 默认策略：仅在首次加载时，如果没有头像URL，自动展开方便编辑
@@ -299,7 +301,7 @@ export function createShowAvatarManager(deps: any) {
                                 <div class="acu-input-group">
                                     <label class="acu-input-group-label">别名</label>
                                     <div class="acu-alias-tags-container">
-                                        ${(data.aliases || []).map(a => `<span class="acu-alias-tag" data-alias="${deps.escapeHtml(a)}">${deps.escapeHtml(a)} <i class="fa-solid fa-xmark"></i></span>`).join('')}
+                                        ${(data.aliases || []).map((a: any) => `<span class="acu-alias-tag" data-alias="${deps.escapeHtml(a)}">${deps.escapeHtml(a)} <i class="fa-solid fa-xmark"></i></span>`).join('')}
                                         <input type="text" class="acu-alias-input" placeholder="输入别名，逗号分隔..." />
                                     </div>
                                 </div>
@@ -337,7 +339,7 @@ export function createShowAvatarManager(deps: any) {
             sourceLabel = '<span class="acu-avatar-source acu-source-url">URL</span>';
           }
 
-          const aliases = (data.aliases || []).join(', ');
+          const aliases = (data.aliases || []).join(', '); void aliases;
           const hasAvatar = !!displayUrl;
 
           // 默认策略：仅在首次加载时，如果没有头像URL，自动展开方便编辑
@@ -379,7 +381,7 @@ export function createShowAvatarManager(deps: any) {
                                 <div class="acu-input-group">
                                     <label class="acu-input-group-label">别名</label>
                                     <div class="acu-alias-tags-container">
-                                        ${(data.aliases || []).map(a => `<span class="acu-alias-tag" data-alias="${deps.escapeHtml(a)}">${deps.escapeHtml(a)} <i class="fa-solid fa-xmark"></i></span>`).join('')}
+                                        ${(data.aliases || []).map((a: any) => `<span class="acu-alias-tag" data-alias="${deps.escapeHtml(a)}">${deps.escapeHtml(a)} <i class="fa-solid fa-xmark"></i></span>`).join('')}
                                         <input type="text" class="acu-alias-input" placeholder="输入别名，逗号分隔..." />
                                     </div>
                                 </div>
@@ -402,8 +404,8 @@ export function createShowAvatarManager(deps: any) {
         return listHtml;
       };
 
-      const applyAvatarPreviewStyles = $root => {
-        $root.find('.acu-avatar-preview').each(function () {
+      const applyAvatarPreviewStyles = ($root: any) => {
+        $root.find('.acu-avatar-preview').each(function (this: any) {
           const $preview = $(this);
           const url = $preview.attr('data-avatar-url');
           if (!url) return;
@@ -446,7 +448,7 @@ export function createShowAvatarManager(deps: any) {
           .addClass('active');
       };
 
-      const syncAvatarColorControls = ($item, name: string) => {
+      const syncAvatarColorControls = ($item: any, name: string) => {
         const $container = $item.find('.acu-avatar-color-container');
         if (!$container.length) return;
         const data = deps.AvatarManager.getAll()[name] || {};
@@ -460,12 +462,12 @@ export function createShowAvatarManager(deps: any) {
         syncAvatarColorPickerState($container, color);
       };
 
-      const markAvatarColorManualPending = ($container, color: string) => {
+      const markAvatarColorManualPending = ($container: any, color: string) => {
         $container.attr('data-pending-source', 'manual');
         syncAvatarColorPickerState($container, color);
       };
 
-      const applyAvatarColorInputOnSave = ($item, name: string): boolean => {
+      const applyAvatarColorInputOnSave = ($item: any, name: string): boolean => {
         const $container = $item.find('.acu-avatar-color-container');
         if (!$container.length) return true;
         const rawColor = String($container.find('.acu-avatar-color-hex').val() || '').trim();
@@ -551,7 +553,7 @@ export function createShowAvatarManager(deps: any) {
       });
 
       // 刷新单个条目的显示
-      const refreshItem = async name => {
+      const refreshItem = async (name: any) => {
         const $item = $manager.find(`.acu-avatar-item[data-name="${name}"]`);
         if (!$item.length) return;
 
@@ -624,7 +626,7 @@ export function createShowAvatarManager(deps: any) {
 
       const bindAvatarEvents = () => {
         // 视图切换(toggle图标)
-        $manager.on('click', '.acu-view-toggle', async function () {
+        $manager.on('click', '.acu-view-toggle', async function (this: any) {
           const $btn = $(this);
           const isChat = $btn.attr('data-view') === 'chat';
           const newView = isChat ? 'global' : 'chat';
@@ -651,14 +653,14 @@ export function createShowAvatarManager(deps: any) {
           await refreshList();
         }, 300);
 
-        $manager.on('input', '.acu-avatar-search', function () {
+        $manager.on('input', '.acu-avatar-search', function (this: any) {
           searchQuery = $(this).val().trim();
           const $clear = $manager.find('.acu-search-clear');
           $clear.prop('hidden', !searchQuery);
           debouncedSearch();
         });
 
-        $manager.on('click', '.acu-search-clear', async function () {
+        $manager.on('click', '.acu-search-clear', async function (this: any) {
           searchQuery = '';
           $manager.find('.acu-avatar-search').val('');
           $(this).prop('hidden', true);
@@ -673,7 +675,7 @@ export function createShowAvatarManager(deps: any) {
             .attr('aria-expanded', 'false');
         };
 
-        $manager.on('click', '.acu-sort-trigger', function (e) {
+        $manager.on('click', '.acu-sort-trigger', function (this: any, e: any) {
           e.preventDefault();
           e.stopPropagation();
           const $menu = $(this).closest('.acu-sort-menu');
@@ -685,7 +687,7 @@ export function createShowAvatarManager(deps: any) {
           }
         });
 
-        $manager.on('click', '.acu-sort-option', async function (e) {
+        $manager.on('click', '.acu-sort-option', async function (this: any, e: any) {
           e.preventDefault();
           e.stopPropagation();
           const value = String($(this).attr('data-sort') || '');
@@ -700,14 +702,14 @@ export function createShowAvatarManager(deps: any) {
           await refreshList();
         });
 
-        $manager.on('click', function (e) {
+        $manager.on('click', function (e: any) {
           if (!$(e.target).closest('.acu-sort-menu').length) {
             closeAvatarSortMenu();
           }
         });
 
         // 排序方向(toggle图标)
-        $manager.on('click', '.acu-sort-order', async function () {
+        $manager.on('click', '.acu-sort-order', async function (this: any) {
           const $btn = $(this);
           const isAsc = $btn.attr('data-dir') === 'asc';
           const newDir = isAsc ? 'desc' : 'asc';
@@ -726,7 +728,7 @@ export function createShowAvatarManager(deps: any) {
         });
 
         // 点击头像预览
-        $manager.on('click', '.acu-avatar-preview', async function (e) {
+        $manager.on('click', '.acu-avatar-preview', async function (this: any, e: any) {
           e.stopPropagation();
           const $item = $(this).closest('.acu-avatar-item');
           const name = $item.data('name');
@@ -734,7 +736,7 @@ export function createShowAvatarManager(deps: any) {
 
           if (displayUrl) {
             // 有图片 → 打开裁剪弹窗
-            deps.showAvatarCropModal(displayUrl, name, async result => {
+            deps.showAvatarCropModal(displayUrl, name, async (result: any) => {
               const data = deps.AvatarManager.getAll()[name] || {};
               deps.AvatarManager.set(name, data.url || '', result.offsetX, result.offsetY, result.scale, data.aliases || []);
               await deps.refreshAutoImageColorForAvatar(name, result.imageSource || displayUrl, result);
@@ -748,14 +750,14 @@ export function createShowAvatarManager(deps: any) {
           }
         });
 
-        $manager.on('keydown', '.acu-avatar-preview', function (e: JQuery.KeyDownEvent) {
+        $manager.on('keydown', '.acu-avatar-preview', function (this: any, e: JQuery.KeyDownEvent) {
           if (e.key !== 'Enter' && e.key !== ' ') return;
           e.preventDefault();
           $(this).trigger('click');
         });
 
         // 展开/折叠切换
-        $manager.on('click', '.acu-btn-edit', function (e) {
+        $manager.on('click', '.acu-btn-edit', function (this: any, e: any) {
           e.stopPropagation();
           const $item = $(this).closest('.acu-avatar-item');
           const name = $item.data('name');
@@ -775,7 +777,7 @@ export function createShowAvatarManager(deps: any) {
         });
 
         // 别名标签输入逻辑
-        $manager.on('keydown', '.acu-alias-input', function (e) {
+        $manager.on('keydown', '.acu-alias-input', function (this: any, e: any) {
           if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
             const val = $(this).val().trim();
@@ -783,7 +785,7 @@ export function createShowAvatarManager(deps: any) {
               const $container = $(this).closest('.acu-alias-tags-container');
               // 检查重复
               let exists = false;
-              $container.find('.acu-alias-tag').each(function () {
+              $container.find('.acu-alias-tag').each(function (this: any) {
                 if ($(this).data('alias') === val) exists = true;
               });
 
@@ -800,18 +802,18 @@ export function createShowAvatarManager(deps: any) {
         });
 
         // 逗号输入处理 (用于中文逗号)
-        $manager.on('input', '.acu-alias-input', function (e) {
+        $manager.on('input', '.acu-alias-input', function (this: any, _e: any) {
           const val = $(this).val();
           if (val.includes(',') || val.includes('，')) {
             const parts = val.split(/[,，]/);
             const lastPart = parts.pop(); // 保留最后一部分在输入框
             const $container = $(this).closest('.acu-alias-tags-container');
 
-            parts.forEach(part => {
+            parts.forEach((part: any) => {
               const cleanPart = part.trim();
               if (cleanPart) {
                 let exists = false;
-                $container.find('.acu-alias-tag').each(function () {
+                $container.find('.acu-alias-tag').each(function (this: any) {
                   if ($(this).data('alias') === cleanPart) exists = true;
                 });
                 if (!exists) {
@@ -825,7 +827,7 @@ export function createShowAvatarManager(deps: any) {
         });
 
         // 粘贴处理
-        $manager.on('paste', '.acu-alias-input', function (e) {
+        $manager.on('paste', '.acu-alias-input', function (this: any, e: any) {
           e.preventDefault();
           const clipboardData = (e.originalEvent || e).clipboardData;
           const pastedData = clipboardData.getData('text');
@@ -834,11 +836,11 @@ export function createShowAvatarManager(deps: any) {
           const parts = pastedData.split(/[,，\n]/);
           const $container = $(this).closest('.acu-alias-tags-container');
 
-          parts.forEach(part => {
+          parts.forEach((part: any) => {
             const cleanPart = part.trim();
             if (cleanPart) {
               let exists = false;
-              $container.find('.acu-alias-tag').each(function () {
+              $container.find('.acu-alias-tag').each(function (this: any) {
                 if ($(this).data('alias') === cleanPart) exists = true;
               });
               if (!exists) {
@@ -850,12 +852,12 @@ export function createShowAvatarManager(deps: any) {
         });
 
         // 删除标签
-        $manager.on('click', '.acu-alias-tag i', function () {
+        $manager.on('click', '.acu-alias-tag i', function (this: any) {
           $(this).parent().remove();
         });
 
         // 点击容器聚焦输入框
-        $manager.on('click', '.acu-alias-tags-container', function (e) {
+        $manager.on('click', '.acu-alias-tags-container', function (this: any, e: any) {
           if (e.target === this) {
             $(this).find('.acu-alias-input').focus();
           }
@@ -895,7 +897,7 @@ export function createShowAvatarManager(deps: any) {
           $popover.css({ left: `${left}px`, top: `${top}px` });
         };
 
-        $manager.on('click', '.acu-avatar-color-swatch-btn', function (e) {
+        $manager.on('click', '.acu-avatar-color-swatch-btn', function (this: any, e: any) {
           e.preventDefault();
           e.stopPropagation();
           const $container = $(this).closest('.acu-avatar-color-container');
@@ -907,30 +909,30 @@ export function createShowAvatarManager(deps: any) {
           if (shouldOpen) positionAvatarColorPopover($(this), $popover);
         });
 
-        $manager.on('click', '.acu-avatar-color-popover', function (e) {
+        $manager.on('click', '.acu-avatar-color-popover', function (e: any) {
           e.stopPropagation();
         });
 
-        $manager.on('click', '.acu-avatar-color-close-btn', function (e) {
+        $manager.on('click', '.acu-avatar-color-close-btn', function (e: any) {
           e.preventDefault();
           e.stopPropagation();
           closeAvatarColorPopovers();
         });
 
-        $manager.on('click', function (e) {
+        $manager.on('click', function (e: any) {
           if (!$(e.target).closest('.acu-avatar-color-container').length) {
             closeAvatarColorPopovers();
           }
         });
 
-        $manager.on('click', '.acu-avatar-color-option', function (e) {
+        $manager.on('click', '.acu-avatar-color-option', function (this: any, e: any) {
           e.preventDefault();
           const color = deps.normalizeAvatarHexColor($(this).attr('data-color'));
           if (!color) return;
           markAvatarColorManualPending($(this).closest('.acu-avatar-color-container'), color);
         });
 
-        $manager.on('input', '.acu-avatar-color-slider', function () {
+        $manager.on('input', '.acu-avatar-color-slider', function (this: any) {
           const $container = $(this).closest('.acu-avatar-color-container');
           const hue = deps.clampAvatarNumber($container.find('.acu-avatar-color-hue-slider').val(), 0, 360, 0);
           const saturation = deps.clampAvatarNumber(
@@ -943,7 +945,7 @@ export function createShowAvatarManager(deps: any) {
           markAvatarColorManualPending($container, deps.hslToAvatarHex(hue, saturation / 100, lightness / 100));
         });
 
-        $manager.on('input', '.acu-avatar-color-hex', function () {
+        $manager.on('input', '.acu-avatar-color-hex', function (this: any) {
           const $input = $(this);
           const color = deps.normalizeAvatarHexColor($input.val());
           if (!color) {
@@ -953,7 +955,7 @@ export function createShowAvatarManager(deps: any) {
           markAvatarColorManualPending($input.closest('.acu-avatar-color-container'), color);
         });
 
-        $manager.on('blur', '.acu-avatar-color-hex', function () {
+        $manager.on('blur', '.acu-avatar-color-hex', function (this: any) {
           const $input = $(this);
           const color = deps.normalizeAvatarHexColor($input.val());
           if (color) {
@@ -964,7 +966,7 @@ export function createShowAvatarManager(deps: any) {
           syncAvatarColorControls($item, $item.data('name'));
         });
 
-        $manager.on('click', '.acu-avatar-color-generate-btn', async function (e) {
+        $manager.on('click', '.acu-avatar-color-generate-btn', async function (this: any, e: any) {
           e.preventDefault();
           e.stopPropagation();
           const $btn = $(this);
@@ -988,14 +990,14 @@ export function createShowAvatarManager(deps: any) {
           }
         });
 
-        $manager.on('keydown', '.acu-avatar-upload-trigger', function (e: JQuery.KeyDownEvent) {
+        $manager.on('keydown', '.acu-avatar-upload-trigger', function (this: any, e: JQuery.KeyDownEvent) {
           if (e.key !== 'Enter' && e.key !== ' ') return;
           e.preventDefault();
           $(this).find('.acu-avatar-file-input').trigger('click');
         });
 
         // 本地文件上传
-        $manager.on('change', '.acu-avatar-file-input', async function (e) {
+        $manager.on('change', '.acu-avatar-file-input', async function (this: any, e: any) {
           const file = e.target.files[0];
           if (!file) return;
 
@@ -1019,7 +1021,7 @@ export function createShowAvatarManager(deps: any) {
               await refreshItem(name);
 
               // 自动弹出裁剪弹窗
-              deps.showAvatarCropModal(newUrl, name, async result => {
+              deps.showAvatarCropModal(newUrl, name, async (result: any) => {
                 const data = deps.AvatarManager.getAll()[name] || {};
                 deps.AvatarManager.set(
                   name,
@@ -1045,7 +1047,7 @@ export function createShowAvatarManager(deps: any) {
         });
 
         // "主角"自动合并开关
-        $manager.on('click', '.acu-protagonist-toggle', function () {
+        $manager.on('click', '.acu-protagonist-toggle', function (this: any) {
           const $btn = $(this);
           const diceCfg = deps.getDiceConfig();
           const newValue = diceCfg.autoMergeProtagonist === false ? true : false;
@@ -1059,7 +1061,7 @@ export function createShowAvatarManager(deps: any) {
         });
 
         // 保存URL → 弹出裁剪
-        $manager.on('click', '.acu-avatar-save-btn', async function () {
+        $manager.on('click', '.acu-avatar-save-btn', async function (this: any) {
           const $item = $(this).closest('.acu-avatar-item');
           const name = $item.data('name');
           const url = $item.find('.acu-avatar-url').val().trim();
@@ -1070,8 +1072,8 @@ export function createShowAvatarManager(deps: any) {
           }
 
           // 从标签收集别名
-          const aliases = [];
-          $item.find('.acu-alias-tag').each(function () {
+          const aliases: any[] = [];
+          $item.find('.acu-alias-tag').each(function (this: any) {
             aliases.push($(this).data('alias'));
           });
           // 也检查输入框里有没有残留的内容
@@ -1090,7 +1092,7 @@ export function createShowAvatarManager(deps: any) {
           const hasLocal = $item.attr('data-has-local') === 'true';
           if (url && !hasLocal) {
             await refreshItem(name);
-            deps.showAvatarCropModal(url, name, async result => {
+            deps.showAvatarCropModal(url, name, async (result: any) => {
               deps.AvatarManager.set(name, url, result.offsetX, result.offsetY, result.scale, aliases);
               if (!applyAvatarColorInputOnSave($item, name)) return;
               await deps.refreshAutoImageColorForAvatar(name, result.imageSource || url, result);
@@ -1107,7 +1109,7 @@ export function createShowAvatarManager(deps: any) {
         });
 
         // 清空当前角色的头像、别名和颜色设置
-        $manager.on('click', '.acu-avatar-reset-settings-btn', async function () {
+        $manager.on('click', '.acu-avatar-reset-settings-btn', async function (this: any) {
           const $item = $(this).closest('.acu-avatar-item');
           const name = $item.data('name') as string;
 
@@ -1149,14 +1151,14 @@ export function createShowAvatarManager(deps: any) {
           $manager.find('#acu-avatar-file-input').click();
         });
 
-        $manager.on('change', '#acu-avatar-file-input', function (e) {
+        $manager.on('change', '#acu-avatar-file-input', function (this: any, e: any) {
           const file = e.target.files[0];
           if (!file) return;
 
           const reader = new FileReader();
-          reader.onload = function (evt) {
+          reader.onload = function (this: any, evt) {
             try {
-              const jsonData = JSON.parse(evt.target.result);
+              const jsonData = JSON.parse((evt.target as any).result as string);
               const analysis = deps.AvatarManager.analyzeImport(jsonData);
 
               if (!analysis.valid) {

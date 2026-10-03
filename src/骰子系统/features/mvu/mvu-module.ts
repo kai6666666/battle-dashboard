@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * mvu-module.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -10,7 +9,7 @@ export function createMvuModule(deps: any) {
     'use strict';
 
     // [新增] MVU 路径解析函数 - 用于投骰快捷选择（移到模块内部避免影响执行顺序）
-    function parseMvuPathForDice(path, value) {
+    function parseMvuPathForDice(path: any, _value: any) {
       try {
         if (!path || typeof path !== 'string') {
           return { initiator: null, attrName: null, candidates: [] };
@@ -75,7 +74,7 @@ export function createMvuModule(deps: any) {
 
     // ===== 私有变量 =====
     const MODULE_ID = '__mvu__';
-    let cachedEraData = null; // 缓存 ERA 数据
+    let cachedEraData: any = null; // 缓存 ERA 数据
     let cachedEraDataChatId: string | null = null;
 
     function getCurrentChatIdSafe(): string | null {
@@ -98,7 +97,7 @@ export function createMvuModule(deps: any) {
     }
 
     function isLwbChatContext(): boolean {
-      const lwbGuard = globalThis.LWB_Guard || window.LWB_Guard || window.parent?.LWB_Guard;
+      const lwbGuard = (globalThis as any).LWB_Guard || (window as any).LWB_Guard || (window.parent as any)?.LWB_Guard;
       if (typeof lwbGuard !== 'object' || lwbGuard === null) return false;
 
       const ST = window.SillyTavern || window.parent?.SillyTavern;
@@ -106,8 +105,8 @@ export function createMvuModule(deps: any) {
       if (typeof chatMetadata !== 'object' || chatMetadata === null) return false;
 
       // 关键修复：如果 ERA 框架存在且有 ERA 数据，优先使用 ERA 而非 LWB
-      const eventEmit = window.eventEmit || window.parent?.eventEmit;
-      const eventOn = window.eventOn || window.parent?.eventOn;
+      const eventEmit = (window as any).eventEmit || (window.parent as any)?.eventEmit;
+      const eventOn = (window as any).eventOn || (window.parent as any)?.eventOn;
       if (typeof eventEmit === 'function' && typeof eventOn === 'function') {
         const variablesUnknown = (chatMetadata as { variables?: unknown }).variables;
         if (typeof variablesUnknown === 'object' && variablesUnknown !== null) {
@@ -122,10 +121,10 @@ export function createMvuModule(deps: any) {
       // 关键修复：如果 MVU 框架存在，优先使用 MVU 而非 LWB
       // MVU 数据存储在消息楼层变量中，不在 chatMetadata.variables 中
       // 因此即使 chatMetadata 有 LWB_* 残留键，也应该优先使用 MVU
-      if (typeof window.Mvu !== 'undefined' && typeof window.Mvu.getMvuData === 'function') {
+      if (typeof (window as any).Mvu !== 'undefined' && typeof (window as any).Mvu.getMvuData === 'function') {
         // MVU 框架可用，尝试检查是否有 MVU 数据
         try {
-          const mvuData = window.Mvu.getMvuData({ type: 'message', message_id: 'latest' });
+          const mvuData = (window as any).Mvu.getMvuData({ type: 'message', message_id: 'latest' });
           // 如果能成功获取 MVU 数据（即使 stat_data 为空），说明这是 MVU 卡
           if (mvuData !== null && mvuData !== undefined) {
             return false;
@@ -188,8 +187,8 @@ export function createMvuModule(deps: any) {
       }
 
       // 检测 ERA：框架存在 且 当前聊天有 ERA 特征数据
-      const eventEmit = window.eventEmit || window.parent?.eventEmit;
-      const eventOn = window.eventOn || window.parent?.eventOn;
+      const eventEmit = (window as any).eventEmit || (window.parent as any)?.eventEmit;
+      const eventOn = (window as any).eventOn || (window.parent as any)?.eventOn;
       const eraFrameworkExists = typeof eventEmit === 'function' && typeof eventOn === 'function';
 
       if (eraFrameworkExists && hasEraDataInCurrentChat()) {
@@ -198,7 +197,7 @@ export function createMvuModule(deps: any) {
       }
 
       // 其次检测 MVU
-      if (typeof window.Mvu !== 'undefined' && typeof window.Mvu.getMvuData === 'function') {
+      if (typeof (window as any).Mvu !== 'undefined' && typeof (window as any).Mvu.getMvuData === 'function') {
         console.log('[DICE]MvuModule 智能检测到 MVU 框架');
         return 'mvu';
       }
@@ -224,8 +223,8 @@ export function createMvuModule(deps: any) {
       }
 
       // 2. 检测 ERA：框架存在 且 当前聊天有 ERA 特征数据
-      const eventEmit = window.eventEmit || window.parent?.eventEmit;
-      const eventOn = window.eventOn || window.parent?.eventOn;
+      const eventEmit = (window as any).eventEmit || (window.parent as any)?.eventEmit;
+      const eventOn = (window as any).eventOn || (window.parent as any)?.eventOn;
       const eraFrameworkExists = typeof eventEmit === 'function' && typeof eventOn === 'function';
 
       if (eraFrameworkExists && hasEraDataInCurrentChat()) {
@@ -236,12 +235,12 @@ export function createMvuModule(deps: any) {
             new Promise((_, reject) => setTimeout(() => reject(new Error('ERA timeout')), 2000)),
           ]);
 
-          if (eraData && eraData.stat_data) {
+          if (eraData && (eraData as any).stat_data) {
             console.log('[DICE]检测到 ERA 框架且数据可用');
             return { mode: 'era', data: eraData };
           }
         } catch (e) {
-          console.warn('[DICE]ERA 框架存在但数据不可用:', e.message);
+          console.warn('[DICE]ERA 框架存在但数据不可用:', (e as any).message);
         }
       }
 
@@ -249,8 +248,8 @@ export function createMvuModule(deps: any) {
       try {
         await waitGlobalInitialized('Mvu');
 
-        if (typeof window.Mvu !== 'undefined' && typeof window.Mvu.getMvuData === 'function') {
-          const mvuData = window.Mvu.getMvuData({ type: 'message', message_id: 'latest' });
+        if (typeof (window as any).Mvu !== 'undefined' && typeof (window as any).Mvu.getMvuData === 'function') {
+          const mvuData = (window as any).Mvu.getMvuData({ type: 'message', message_id: 'latest' });
 
           if (mvuData && mvuData.stat_data) {
             console.log('[DICE]检测到 MVU 框架且数据可用');
@@ -343,11 +342,11 @@ export function createMvuModule(deps: any) {
         }, 5000);
 
         // 尝试获取 eventEmit 和 eventOn（支持 iframe 环境）
-        const eventEmit = window.eventEmit || window.parent?.eventEmit;
-        const eventOn = window.eventOn || window.parent?.eventOn;
-        const eventOff = window.eventOff || window.parent?.eventOff;
+        const eventEmit = (window as any).eventEmit || (window.parent as any)?.eventEmit;
+        const eventOn = (window as any).eventOn || (window.parent as any)?.eventOn;
+        const eventOff = (window as any).eventOff || (window.parent as any)?.eventOff;
 
-        const onResult = detail => {
+        const onResult = (detail: any) => {
           clearTimeout(timeoutId);
           // 移除事件监听（如果 eventOff 不可用，则忽略）
           if (typeof eventOff === 'function') {
@@ -416,7 +415,7 @@ export function createMvuModule(deps: any) {
     }
 
     // ERA 变量设置函数
-    async function setEraValue(path, newValue) {
+    async function setEraValue(path: any, newValue: any) {
       return new Promise(resolve => {
         const timeoutId = setTimeout(() => {
           console.warn('[DICE]MvuModule ERA写入超时');
@@ -424,11 +423,11 @@ export function createMvuModule(deps: any) {
         }, 5000);
 
         // 尝试获取 eventEmit 和 eventOn（支持 iframe 环境）
-        const eventEmit = window.eventEmit || window.parent?.eventEmit;
-        const eventOn = window.eventOn || window.parent?.eventOn;
-        const eventOff = window.eventOff || window.parent?.eventOff;
+        const eventEmit = (window as any).eventEmit || (window.parent as any)?.eventEmit;
+        const eventOn = (window as any).eventOn || (window.parent as any)?.eventOn;
+        const eventOff = (window as any).eventOff || (window.parent as any)?.eventOff;
 
-        const onWriteDone = detail => {
+        const onWriteDone = (_detail: any) => {
           clearTimeout(timeoutId);
           if (typeof eventOff === 'function') {
             eventOff('era:writeDone', onWriteDone);
@@ -470,7 +469,7 @@ export function createMvuModule(deps: any) {
     const STYLES = MVU_STYLES;
 
     // ===== 工具函数 =====
-    function escapeHtml(s) {
+    function escapeHtml(s: any) {
       return String(s ?? '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -484,8 +483,8 @@ export function createMvuModule(deps: any) {
 
       if (mode === 'era') {
         // ERA 模式：检查 eventEmit 和 eventOn 是否可用（支持 iframe 环境）
-        const eventEmit = window.eventEmit || window.parent?.eventEmit;
-        const eventOn = window.eventOn || window.parent?.eventOn;
+        const eventEmit = (window as any).eventEmit || (window.parent as any)?.eventEmit;
+        const eventOn = (window as any).eventOn || (window.parent as any)?.eventOn;
         const emitAvailable = typeof eventEmit === 'function';
         const onAvailable = typeof eventOn === 'function';
         return emitAvailable && onAvailable;
@@ -495,7 +494,7 @@ export function createMvuModule(deps: any) {
         return ST?.chatMetadata !== undefined;
       } else {
         // MVU 模式：检查 MVU 框架是否加载
-        const mvuAvailable = typeof window.Mvu !== 'undefined' && typeof window.Mvu.getMvuData === 'function';
+        const mvuAvailable = typeof (window as any).Mvu !== 'undefined' && typeof (window as any).Mvu.getMvuData === 'function';
         return mvuAvailable;
       }
     }
@@ -521,8 +520,8 @@ export function createMvuModule(deps: any) {
 
       // 尝试同步获取 MVU（可能失败）
       try {
-        if (typeof window.Mvu !== 'undefined' && typeof window.Mvu.getMvuData === 'function') {
-          const allVars = window.Mvu.getMvuData({ type: 'message', message_id: 'latest' });
+        if (typeof (window as any).Mvu !== 'undefined' && typeof (window as any).Mvu.getMvuData === 'function') {
+          const allVars = (window as any).Mvu.getMvuData({ type: 'message', message_id: 'latest' });
 
           if (allVars && allVars.stat_data) {
             const data = {
@@ -549,7 +548,7 @@ export function createMvuModule(deps: any) {
     async function getMvuDataWithRetry(maxRetries = 3, retryDelay = 500) {
       try {
         // [修复] 首先检查 MVU API 是否已经可用，避免不必要的等待
-        if (typeof window.Mvu === 'undefined' || typeof window.Mvu.getMvuData !== 'function') {
+        if (typeof (window as any).Mvu === 'undefined' || typeof (window as any).Mvu.getMvuData !== 'function') {
           // 只有在 MVU 未初始化时才等待，使用较短的超时时间
           try {
             await Promise.race([
@@ -557,18 +556,18 @@ export function createMvuModule(deps: any) {
               new Promise((_, reject) => setTimeout(() => reject(new Error('等待 MVU 初始化超时')), 3000)),
             ]);
           } catch (e) {
-            console.warn('[DICE]等待 MVU 初始化失败，尝试直接获取:', e.message);
+            console.warn('[DICE]等待 MVU 初始化失败，尝试直接获取:', (e as any).message);
             // 继续尝试，可能 MVU 已经部分可用
           }
         }
 
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
           try {
-            if (typeof window.Mvu === 'undefined' || typeof window.Mvu.getMvuData !== 'function') {
+            if (typeof (window as any).Mvu === 'undefined' || typeof (window as any).Mvu.getMvuData !== 'function') {
               throw new Error('MVU API 不可用');
             }
 
-            const allVars = window.Mvu.getMvuData({ type: 'message', message_id: 'latest' });
+            const allVars = (window as any).Mvu.getMvuData({ type: 'message', message_id: 'latest' });
 
             if (allVars && allVars.stat_data) {
               const data = {
@@ -622,7 +621,7 @@ export function createMvuModule(deps: any) {
           for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
               const data = await getEraData();
-              if (data && data.stat_data) {
+              if (data && (data as any).stat_data) {
                 cachedEraData = data;
                 cachedEraDataChatId = getCurrentChatIdSafe();
                 return data;
@@ -656,7 +655,7 @@ export function createMvuModule(deps: any) {
     }
 
     // 判断是否是 ValueWithDescription 格式 [值, "描述"]
-    function isVWD(value) {
+    function isVWD(value: any) {
       return (
         Array.isArray(value) &&
         value.length === 2 &&
@@ -666,7 +665,7 @@ export function createMvuModule(deps: any) {
     }
 
     // 判断是否是简单数组（元素都是原始值）
-    function isSimpleArray(value) {
+    function isSimpleArray(value: any) {
       if (!Array.isArray(value)) return false;
       return value.every(
         item => typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean' || item === null,
@@ -674,7 +673,7 @@ export function createMvuModule(deps: any) {
     }
 
     // 获取变化指示器
-    function getChangeIndicator(path, deltaData) {
+    function getChangeIndicator(path: any, deltaData: any) {
       if (!deltaData || !path) return '';
 
       const parts = path.split('.');
@@ -701,7 +700,7 @@ export function createMvuModule(deps: any) {
     }
 
     // 统计对象/数组的子项数量
-    function countChildren(value) {
+    function countChildren(value: any) {
       if (Array.isArray(value)) {
         if (isVWD(value)) return 0;
         return value.length;
@@ -716,7 +715,7 @@ export function createMvuModule(deps: any) {
 
     // 智能提取数值部分的显示值
     // 处理三种情况：纯数值、数值+描述、数值+范围+描述
-    function extractNumericDisplayValue(value, isArray = false) {
+    function extractNumericDisplayValue(value: any, isArray = false) {
       // 处理 null/undefined
       if (value === null || value === undefined) {
         return '';
@@ -727,7 +726,7 @@ export function createMvuModule(deps: any) {
         if (isVWD(value)) {
           return String(value[0]);
         } else if (isSimpleArray(value)) {
-          return value.map(v => String(v ?? '')).join(', ');
+          return value.map((v: any) => String(v ?? '')).join(', ');
         } else {
           // 复杂数组，返回原始表示
           return String(value);
@@ -781,7 +780,7 @@ export function createMvuModule(deps: any) {
 
     // 从显示值中提取第一个数值（用于投骰）
     // 例如："85" -> 85, "85,[0,100]" -> 85, "0,[-20, 120]" -> 0
-    function extractFirstNumericValue(displayValue) {
+    function extractFirstNumericValue(displayValue: any) {
       if (!displayValue) return 0;
       const str = String(displayValue).trim();
 
@@ -796,7 +795,7 @@ export function createMvuModule(deps: any) {
     }
 
     // 渲染单个键值对行
-    function renderRow(key, value, path, deltaData) {
+    function renderRow(key: any, value: any, path: any, deltaData: any) {
       const changeIndicator = getChangeIndicator(path, deltaData);
       const changedClass = changeIndicator ? 'mvu-changed' : '';
 
@@ -806,7 +805,7 @@ export function createMvuModule(deps: any) {
       if (isVWD(value)) {
         displayValue = String(value[0]);
       } else if (isSimpleArray(value)) {
-        displayValue = value.map(v => String(v ?? '')).join(', ');
+        displayValue = value.map((v: any) => String(v ?? '')).join(', ');
         valueClass += ' mvu-array-value';
       } else {
         // 使用智能提取函数，只显示数值部分
@@ -859,7 +858,7 @@ export function createMvuModule(deps: any) {
     }
 
     // 渲染卡片（递归）
-    function renderCard(key, value, path, deltaData, depth, defaultExpanded, isHorizontal) {
+    function renderCard(key: any, value: any, path: any, deltaData: any, depth: any, defaultExpanded: any, isHorizontal: any) {
       const childCount = countChildren(value);
       const collapsedClass = defaultExpanded ? '' : 'collapsed';
 
@@ -922,7 +921,7 @@ export function createMvuModule(deps: any) {
         } else if (value && typeof value === 'object' && !isVWD(value)) {
           // 对象：检查每个嵌套键值
           const entries = Object.entries(value).filter(([k]) => !k.startsWith('$'));
-          for (const [childKey, childValue] of entries) {
+          for (const [_childKey, childValue] of entries) {
             if (childValue && typeof childValue === 'object' && !isVWD(childValue) && !isSimpleArray(childValue)) {
               const childChildCount = countChildren(childValue);
               if (childChildCount >= 2) nestedCardsNeedWidth = true;
@@ -961,7 +960,7 @@ export function createMvuModule(deps: any) {
     }
 
     // [新增] 渲染数值过滤模式
-    function renderNumericMode(mvuData) {
+    function renderNumericMode(mvuData: any) {
       if (!mvuData || !mvuData.stat_data) {
         return '<div class="mvu-empty"><i class="fa-solid fa-inbox"></i><p>当前没有变量数据</p></div>';
       }
@@ -978,10 +977,10 @@ export function createMvuModule(deps: any) {
       }
 
       // 收集所有数值项
-      const numericItems = [];
+      const numericItems: any[] = [];
 
       // 递归遍历收集数值项
-      function collectNumericItems(obj, path, levelNames) {
+      function collectNumericItems(obj: any, path: any, levelNames: any) {
         if (!obj || typeof obj !== 'object') return;
 
         if (Array.isArray(obj)) {
@@ -1055,7 +1054,7 @@ export function createMvuModule(deps: any) {
       // [新增] 黑名单过滤：检查路径中的所有层级
       const filteredNumericItems = numericItems.filter(item => {
         // 获取所有非数组索引的层级名称
-        const nonArrayLevels = item.levelNames.filter(level => level && !level.startsWith('['));
+        const nonArrayLevels = item.levelNames.filter((level: any) => level && !level.startsWith('['));
         // 检查路径中的任意层级是否在黑名单中
         // 只要有一个层级匹配黑名单，就过滤掉整个项
         for (const levelKey of nonArrayLevels) {
@@ -1080,7 +1079,7 @@ export function createMvuModule(deps: any) {
             ? item.levelNames.slice(0, -1) // 排除最后一个
             : [];
 
-        hierarchyLevels.forEach(level => {
+        hierarchyLevels.forEach((level: any) => {
           if (level && !level.startsWith('[')) {
             // 排除数组索引
             allLevelNames.add(level);
@@ -1096,7 +1095,7 @@ export function createMvuModule(deps: any) {
         // 生成层级按钮内容
         let levelButtonsHtml = '';
         levelNamesArray.forEach(levelName => {
-          const isVisible = visibleLevels[levelName] !== false; // 默认显示
+          const isVisible = (visibleLevels as any)[levelName as string] !== false; // 默认显示
           const activeClass = isVisible ? 'active' : '';
           levelButtonsHtml += `<button type="button" class="mvu-level-toggle acu-mvu-level-toggle ${activeClass}" data-level="${escapeHtml(levelName)}" data-visible="${isVisible}" aria-pressed="${isVisible ? 'true' : 'false'}" aria-label="${isVisible ? '隐藏' : '显示'}层级: ${escapeHtml(levelName)}" title="${isVisible ? '隐藏' : '显示'}层级: ${escapeHtml(levelName)}"><span>${escapeHtml(levelName)}</span></button>`;
         });
@@ -1119,10 +1118,10 @@ export function createMvuModule(deps: any) {
       let itemsHtml = '';
       filteredNumericItems.forEach(item => {
         // 计算非数组层级（用于 data-levels 属性）
-        const nonArrayLevels = item.levelNames.filter(level => !level.startsWith('['));
+        const nonArrayLevels = item.levelNames.filter((level: any) => !level.startsWith('['));
 
         // 根据层级显示偏好过滤显示的层级名称
-        const visibleLevels = item.levelNames.filter(level => {
+        const visibleLevels = item.levelNames.filter((level: any) => {
           if (level.startsWith('[')) return false; // 排除数组索引
           try {
             const saved = localStorage.getItem('acu_mvu_numeric_mode_visible_levels');
@@ -1144,7 +1143,7 @@ export function createMvuModule(deps: any) {
         // 注意：这里使用 nonArrayLevels 的前 N-1 个层级（排除最下层）
         const hierarchyLevels = nonArrayLevels.length > 1 ? nonArrayLevels.slice(0, -1) : [];
 
-        const allLevelsVisible = hierarchyLevels.every(level => {
+        const allLevelsVisible = hierarchyLevels.every((level: any) => {
           try {
             const saved = localStorage.getItem('acu_mvu_numeric_mode_visible_levels');
             if (saved) {
@@ -1214,15 +1213,15 @@ export function createMvuModule(deps: any) {
           timestamp: new Date().toISOString(),
           era: {
             available: false,
-            eventEmit: typeof (window.eventEmit || window.parent?.eventEmit) === 'function',
-            eventOn: typeof (window.eventOn || window.parent?.eventOn) === 'function',
+            eventEmit: typeof ((window as any).eventEmit || (window.parent as any)?.eventEmit) === 'function',
+            eventOn: typeof ((window as any).eventOn || (window.parent as any)?.eventOn) === 'function',
             dataAvailable: false,
             error: null,
           },
           mvu: {
             available: false,
-            apiExists: typeof window.Mvu !== 'undefined',
-            getDataExists: typeof window.Mvu?.getMvuData === 'function',
+            apiExists: typeof (window as any).Mvu !== 'undefined',
+            getDataExists: typeof (window as any).Mvu?.getMvuData === 'function',
             dataAvailable: false,
             error: null,
           },
@@ -1241,9 +1240,9 @@ export function createMvuModule(deps: any) {
               new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000)),
             ]);
             result.era.available = true;
-            result.era.dataAvailable = !!(eraData && eraData.stat_data);
+            result.era.dataAvailable = !!(eraData && (eraData as any).stat_data);
           } catch (e) {
-            result.era.error = e.message;
+            result.era.error = (e as any).message;
           }
         }
 
@@ -1255,11 +1254,11 @@ export function createMvuModule(deps: any) {
               waitGlobalInitialized('Mvu'),
               new Promise((_, reject) => setTimeout(() => reject(new Error('等待超时')), 2000)),
             ]);
-            const mvuData = window.Mvu.getMvuData({ type: 'message', message_id: 'latest' });
+            const mvuData = (window as any).Mvu.getMvuData({ type: 'message', message_id: 'latest' });
             result.mvu.available = true;
             result.mvu.dataAvailable = !!(mvuData && mvuData.stat_data);
           } catch (e) {
-            result.mvu.error = e.message;
+            result.mvu.error = (e as any).message;
           }
         }
 
@@ -1287,7 +1286,7 @@ export function createMvuModule(deps: any) {
         targetDoc.head.appendChild(styleEl);
       },
 
-      renderNavButton: function (isActive) {
+      renderNavButton: function (isActive: any) {
         // 总是显示按钮，不检查 isAvailable()，让用户可以随时尝试查看变量
         const activeClass = isActive ? 'active' : '';
         return `<button class="acu-nav-btn acu-mvu-btn $${activeClass}" id="acu-btn-mvu" data-table="$${MODULE_ID}" style="order:-1;">
@@ -1421,7 +1420,7 @@ export function createMvuModule(deps: any) {
         let cardsHtml = '';
         for (const key of topKeys) {
           const value = mvuData.stat_data[key];
-          const childCount = countChildren(value);
+          const childCount = countChildren(value); void childCount;
 
           if (value && typeof value === 'object' && !isVWD(value) && !isSimpleArray(value)) {
             // 对象/复杂数组 → 卡片（顶层默认展开）
@@ -1467,7 +1466,7 @@ export function createMvuModule(deps: any) {
                 `;
       },
 
-      bindEvents: function ($container) {
+      bindEvents: function ($container: any) {
         // 使用主页面的 jQuery
         const $ = window.parent?.jQuery || window.jQuery;
         if (!$ || !$container || !$container.length) {
@@ -1486,7 +1485,7 @@ export function createMvuModule(deps: any) {
         $panel.off('.mvu');
 
         // 卡片折叠/展开（改进版，添加平滑动画）
-        $panel.on('click.mvu', '.mvu-card-header', function (e) {
+        $panel.on('click.mvu', '.mvu-card-header', function (this: any, e: any) {
           e.stopPropagation();
           const $card = $(this).closest('.mvu-card');
           const $body = $card.find('> .mvu-card-body').first();
@@ -1498,12 +1497,12 @@ export function createMvuModule(deps: any) {
             // 展开：先用 hide() 确保元素隐藏，移除 collapsed 类后再播放动画
             $body.hide();
             $card.removeClass('collapsed');
-            $body.addClass('animating').slideDown(180, function () {
+            $body.addClass('animating').slideDown(180, function (this: any) {
               $(this).removeClass('animating');
             });
           } else {
             // 收起
-            $body.addClass('animating').slideUp(180, function () {
+            $body.addClass('animating').slideUp(180, function (this: any) {
               $card.addClass('collapsed');
               $(this).removeClass('animating');
             });
@@ -1511,13 +1510,13 @@ export function createMvuModule(deps: any) {
         });
 
         // 刷新按钮
-        $panel.on('click.mvu', '.mvu-btn-refresh', function (e) {
+        $panel.on('click.mvu', '.mvu-btn-refresh', function (e: any) {
           e.stopPropagation();
           MvuModule.refresh($panel);
         });
 
         // [新增] 数值模式切换按钮
-        $panel.on('click.mvu', '.mvu-btn-numeric-mode', function (e) {
+        $panel.on('click.mvu', '.mvu-btn-numeric-mode', function (this: any, e: any) {
           e.stopPropagation();
           try {
             const isCurrentlyNumeric = $(this).hasClass('active');
@@ -1541,7 +1540,7 @@ export function createMvuModule(deps: any) {
         });
 
         // [新增] 层级控制折叠/展开
-        $panel.on('click.mvu', '.mvu-level-controls-header', function (e) {
+        $panel.on('click.mvu', '.mvu-level-controls-header', function (this: any, e: any) {
           e.stopPropagation();
           const $header = $(this);
           const $collapsible = $header.closest('.mvu-level-controls-collapsible');
@@ -1551,7 +1550,7 @@ export function createMvuModule(deps: any) {
         });
 
         // [新增] 层级显示 toggle
-        $panel.on('click.mvu', '.mvu-level-toggle', function (e) {
+        $panel.on('click.mvu', '.mvu-level-toggle', function (this: any, e: any) {
           e.stopPropagation();
           const $button = $(this);
           const levelName = $button.data('level');
@@ -1561,7 +1560,7 @@ export function createMvuModule(deps: any) {
           try {
             const saved = localStorage.getItem('acu_mvu_numeric_mode_visible_levels');
             const visibleLevels = saved ? JSON.parse(saved) : {};
-            visibleLevels[levelName] = isVisible;
+            (visibleLevels as any)[levelName] = isVisible;
             localStorage.setItem('acu_mvu_numeric_mode_visible_levels', JSON.stringify(visibleLevels));
 
             // 更新按钮样式和状态
@@ -1592,13 +1591,13 @@ export function createMvuModule(deps: any) {
             }
 
             // 【修复 3】局部更新路径显示，而不是全量重渲染
-            $('.mvu-numeric-item').each(function () {
+            $('.mvu-numeric-item').each(function (this: any) {
               const $item = $(this);
               try {
                 const levels = JSON.parse($item.attr('data-levels') || '[]');
                 if (levels.includes(levelName)) {
                   // 重新计算路径显示
-                  const visibleLevels = levels.filter(level => {
+                  const visibleLevels = levels.filter((level: any) => {
                     const saved = localStorage.getItem('acu_mvu_numeric_mode_visible_levels');
                     const prefs = saved ? JSON.parse(saved) : {};
                     return prefs[level] !== false;
@@ -1622,7 +1621,7 @@ export function createMvuModule(deps: any) {
         });
 
         // 点击值编辑
-        $panel.on('click.mvu', '.mvu-value', function (e) {
+        $panel.on('click.mvu', '.mvu-value', function (this: any, e: any) {
           e.stopPropagation();
           const $value = $(this);
           const path = $value.data('path');
@@ -1635,7 +1634,7 @@ export function createMvuModule(deps: any) {
             .replace(/\s*\$\s*$/, '')
             .trim(); // 移除末尾的 $
 
-          MvuModule.showEditDialog(path, currentValue, async function (newValue) {
+          MvuModule.showEditDialog(path, currentValue, async function (newValue: any) {
             if (newValue !== null && newValue !== currentValue) {
               const success = await MvuModule.setValue(path, newValue);
               const toastr = window.parent?.toastr || window.toastr;
@@ -1654,7 +1653,7 @@ export function createMvuModule(deps: any) {
         });
 
         // [新增] 点击骰子图标快捷投骰
-        $panel.on('click.mvu', '.mvu-dice-icon', function (e) {
+        $panel.on('click.mvu', '.mvu-dice-icon', function (this: any, e: any) {
           e.stopPropagation();
           e.preventDefault();
           const $icon = $(this);
@@ -1669,7 +1668,7 @@ export function createMvuModule(deps: any) {
           }
 
           // 检查 MVU 框架是否可用
-          if (typeof window.Mvu === 'undefined' || typeof window.Mvu.getMvuData !== 'function') {
+          if (typeof (window as any).Mvu === 'undefined' || typeof (window as any).Mvu.getMvuData !== 'function') {
             console.warn('[DICE]MvuModule MVU 框架未加载，降级为普通投骰');
             // 降级为普通投骰，不解析路径
             if (typeof deps.showDicePanel === 'function') {
@@ -1720,7 +1719,7 @@ export function createMvuModule(deps: any) {
           let isHorizontalSwipe = false;
 
           // 在 #acu-data-area 上处理，但检查是否是 MVU 面板
-          $doc.on('touchstart.mvuSwipeFix', '#acu-data-area', function (e) {
+          $doc.on('touchstart.mvuSwipeFix', '#acu-data-area', function (e: any) {
             const $target = $(e.target);
             const isInMvuPanel = $target.closest('.acu-mvu-panel').length > 0;
 
@@ -1734,7 +1733,7 @@ export function createMvuModule(deps: any) {
             }
           });
 
-          $doc.on('touchmove.mvuSwipeFix', '#acu-data-area', function (e) {
+          $doc.on('touchmove.mvuSwipeFix', '#acu-data-area', function (e: any) {
             const $target = $(e.target);
             const isInMvuPanel = $target.closest('.acu-mvu-panel').length > 0;
 
@@ -1763,7 +1762,7 @@ export function createMvuModule(deps: any) {
             }
           });
 
-          $doc.on('touchend.mvuSwipeFix', '#acu-data-area', function (e) {
+          $doc.on('touchend.mvuSwipeFix', '#acu-data-area', function (e: any) {
             const $target = $(e.target);
             const isInMvuPanel = $target.closest('.acu-mvu-panel').length > 0;
 
@@ -1786,7 +1785,7 @@ export function createMvuModule(deps: any) {
           });
 
           // 尝试在捕获阶段也监听
-          const captureHandlerTouchStart = function (e) {
+          const captureHandlerTouchStart = function (e: any) {
             const $target = $(e.target);
             const isInMvuPanel = $target.closest('.acu-mvu-panel').length > 0;
             if (isInMvuPanel && e.touches && e.touches.length === 1) {
@@ -1794,7 +1793,7 @@ export function createMvuModule(deps: any) {
               touchStartY = e.touches[0].clientY;
             }
           };
-          const captureHandlerTouchMove = function (e) {
+          const captureHandlerTouchMove = function (e: any) {
             const $target = $(e.target);
             const isInMvuPanel = $target.closest('.acu-mvu-panel').length > 0;
             if (isInMvuPanel && e.touches && e.touches.length === 1 && touchStartX && touchStartY) {
@@ -1811,7 +1810,7 @@ export function createMvuModule(deps: any) {
               }
             }
           };
-          const captureHandlerTouchEnd = function (e) {
+          const captureHandlerTouchEnd = function (e: any) {
             const $target = $(e.target);
             const isInMvuPanel = $target.closest('.acu-mvu-panel').length > 0;
             if (isInMvuPanel && isHorizontalSwipe) {
@@ -1827,7 +1826,7 @@ export function createMvuModule(deps: any) {
         })();
 
         // 关闭按钮
-        $panel.on('click.mvu', '.acu-close-btn', function (e) {
+        $panel.on('click.mvu', '.acu-close-btn', function (e: any) {
           e.stopPropagation();
           const $input = $panel.find('.acu-search-input');
 
@@ -1847,7 +1846,7 @@ export function createMvuModule(deps: any) {
         });
 
         // 高度拖拽
-        $panel.on('pointerdown.mvu', '.acu-height-drag-handle', function (e) {
+        $panel.on('pointerdown.mvu', '.acu-height-drag-handle', function (this: any, e: any) {
           if (e.button !== 0) return;
           e.preventDefault();
           e.stopPropagation();
@@ -1859,11 +1858,11 @@ export function createMvuModule(deps: any) {
           const startY = e.clientY;
           const tableName = $(handle).data('table');
 
-          handle.onpointermove = function (moveE) {
+          handle.onpointermove = function (moveE: any) {
             const dy = moveE.clientY - startY;
             requestedHeight = deps.setPanelRequestedHeight($panel, startHeight - dy) || requestedHeight;
           };
-          handle.onpointerup = function (upE) {
+          handle.onpointerup = function (upE: any) {
             $(handle).add($(handle).closest('.acu-height-control')).removeClass('active');
             handle.releasePointerCapture(upE.pointerId);
             handle.onpointermove = null;
@@ -1875,7 +1874,7 @@ export function createMvuModule(deps: any) {
         });
 
         // 双击重置高度
-        $panel.on('dblclick.mvu', '.acu-height-drag-handle', function (e) {
+        $panel.on('dblclick.mvu', '.acu-height-drag-handle', function (this: any, e: any) {
           e.preventDefault();
           e.stopPropagation();
           const tableName = $(this).data('table');
@@ -1885,7 +1884,7 @@ export function createMvuModule(deps: any) {
         });
 
         // 双击头部任意位置也可重置高度
-        $panel.on('dblclick.mvu', '.acu-panel-header', function (e) {
+        $panel.on('dblclick.mvu', '.acu-panel-header', function (e: any) {
           if ($(e.target).closest('.acu-search-input, .acu-close-btn, .mvu-header-btn').length) return;
           e.preventDefault();
           e.stopPropagation();
@@ -1896,7 +1895,7 @@ export function createMvuModule(deps: any) {
         });
       },
 
-      showEditDialog: function (path, currentValue, onSave) {
+      showEditDialog: function (path: any, currentValue: any, onSave: any) {
         // 使用主页面的 jQuery 和 document
         const $ = window.parent?.jQuery || window.jQuery;
         const targetDoc = window.parent?.document || document;
@@ -1936,7 +1935,7 @@ export function createMvuModule(deps: any) {
         setTimeout(() => $input.focus().select(), 50);
 
         // 取消按钮
-        $overlay.on('click', '.mvu-btn-cancel', function (e) {
+        $overlay.on('click', '.mvu-btn-cancel', function (e: any) {
           e.preventDefault();
           e.stopPropagation();
           $overlay.remove();
@@ -1944,7 +1943,7 @@ export function createMvuModule(deps: any) {
         });
 
         // 保存按钮
-        $overlay.on('click', '.mvu-btn-save', function (e) {
+        $overlay.on('click', '.mvu-btn-save', function (e: any) {
           e.preventDefault();
           e.stopPropagation();
           const newValue = $input.val();
@@ -1959,7 +1958,7 @@ export function createMvuModule(deps: any) {
         });
 
         // 键盘快捷键
-        $input.on('keydown', function (e) {
+        $input.on('keydown', function (e: any) {
           if (e.key === 'Escape') {
             e.preventDefault();
             $overlay.remove();
@@ -2032,7 +2031,7 @@ export function createMvuModule(deps: any) {
         }
       },
 
-      setValue: async function (path, newValue) {
+      setValue: async function (path: any, newValue: any) {
         if (!isAvailable()) return false;
 
         const mode = detectMode();
@@ -2052,19 +2051,19 @@ export function createMvuModule(deps: any) {
             this.setLwbValue(path, parsedValue);
             return true;
           } else {
-            const mvuData = window.Mvu.getMvuData({ type: 'message', message_id: 'latest' });
+            const mvuData = (window as any).Mvu.getMvuData({ type: 'message', message_id: 'latest' });
             if (!mvuData) {
               console.error('[DICE]MvuModule 无法获取 MVU 数据');
               return false;
             }
 
-            const success = await window.Mvu.setMvuVariable(mvuData, path, parsedValue, {
+            const success = await (window as any).Mvu.setMvuVariable(mvuData, path, parsedValue, {
               reason: '手动编辑',
               is_recursive: false,
             });
 
             if (success) {
-              await window.Mvu.replaceMvuData(mvuData, { type: 'message', message_id: 'latest' });
+              await (window as any).Mvu.replaceMvuData(mvuData, { type: 'message', message_id: 'latest' });
             } else {
               console.warn('[DICE]MvuModule setMvuVariable 返回 false');
             }
@@ -2077,7 +2076,7 @@ export function createMvuModule(deps: any) {
         }
       },
 
-      isModuleTab: function (tableName) {
+      isModuleTab: function (tableName: any) {
         return tableName === MODULE_ID;
       },
 
@@ -2093,7 +2092,7 @@ export function createMvuModule(deps: any) {
         return detectMode();
       },
 
-      refresh: function ($container) {
+      refresh: function ($container: any) {
         // 清除缓存，强制重新获取数据
         this.clearCache();
 
@@ -2111,7 +2110,7 @@ export function createMvuModule(deps: any) {
         // 使用重试机制获取最新变量数据（增加重试次数和延迟，让用户可以反复尝试）
         // 最多重试 10 次，每次延迟 1 秒，总共最多等待 10 秒
         this.getDataWithRetry(10, 1000)
-          .then(mvuData => {
+          .then(_mvuData => {
             // 移除加载动画
             if ($refreshBtn.length) {
               $refreshBtn.find('i').removeClass('fa-spin');

@@ -1,13 +1,16 @@
-// @ts-nocheck
 /**
  * show-contest-panel.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { rollComplexDiceExpression } from '../../features/dice/dice-engine';
+type DiceRawData = Record<string, any>;
+type CharacterAttributeSource = string;
+type LegacyAdvancedDicePreset = Record<string, any>;
+import type { AdvancedDicePreset, OutcomeLevel } from '../../shared/advanced-preset-types';
 import { createApplyContestAdvancedPreset } from './contest/apply-advanced-preset';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowContestPanel(deps: any) {
-  const showContestPanel = (options = {}) => {
+  const showContestPanel = (options: Record<string, any> = {}) => {
     const { $ } = deps.getCore();
     $('.acu-dice-panel, .acu-dice-overlay, .acu-contest-panel, .acu-contest-overlay').remove();
 
@@ -34,17 +37,17 @@ export function createShowContestPanel(deps: any) {
     // [新增] 构建角色下拉列表（主角真名 + 重要角色表）
     const characterList = deps.getDiceQuickSelectCharacterList(rawData as DiceRawData | null | undefined);
     // [新增] 构建属性下拉列表
-    let contestAttrList = [];
+    let contestAttrList: any[] = [];
     playerAttrs = deps.getFullAttributesForCharacter(passedInitiatorName || '<user>');
-    playerAttrs.forEach(attr => {
+    playerAttrs.forEach((attr: any) => {
       if (!contestAttrList.includes(attr.name)) contestAttrList.push(attr.name);
     });
     opponentAttrs = opponentName ? deps.getFullAttributesForCharacter(opponentName) : [];
-    opponentAttrs.forEach(attr => {
+    opponentAttrs.forEach((attr: any) => {
       if (!contestAttrList.includes(attr.name)) contestAttrList.push(attr.name);
     });
 
-    const buildAttrButtons = (attrs, targetType) => {
+    const buildAttrButtons = (attrs: any, targetType: any) => {
       let html = '';
       // 现有属性按钮
       for (let i = 0; i < attrs.length; i++) {
@@ -77,9 +80,9 @@ export function createShowContestPanel(deps: any) {
 
     // [修复] 获取当前活跃预设，用于正确同步按钮状态
     const contestAvailablePresets = deps.AdvancedDicePresetManager.getAllPresets()
-      .filter(p => p.visible !== false)
-      .filter(p => deps.AdvancedDicePresetManager.supportsContest(p))
-      .sort((a, b) => (a.order || 0) - (b.order || 0));
+      .filter((p: any) => p.visible !== false)
+      .filter((p: any) => deps.AdvancedDicePresetManager.supportsContest(p))
+      .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
     const currentActivePreset = deps.AdvancedDicePresetManager.getActivePreset();
     const activePresetId =
       currentActivePreset && deps.AdvancedDicePresetManager.supportsContest(currentActivePreset)
@@ -109,7 +112,7 @@ export function createShowContestPanel(deps: any) {
       '<button type="button" class="acu-dice-quick-preset-btn" data-dice="custom" style="order: -999;">自定义</button>' +
       contestAvailablePresets
         .map(
-          p =>
+          (p: any) =>
             '<button type="button" class="acu-dice-quick-preset-btn' +
             // [修复] 使用activePresetId而不是diceExpression来判断active状态
             (p.id === activePresetId ? ' active' : '') +
@@ -212,11 +215,11 @@ export function createShowContestPanel(deps: any) {
     deps.bindTutorialButtonsIn(panel);
 
     // [新增] 构建角色快捷按钮 - 复用普通检定的样式规格
-    const buildCharBtns = targetType => {
+    const buildCharBtns = (targetType: any) => {
       const containerId = targetType === 'init' ? '#contest-init-char-buttons' : '#contest-opp-char-buttons';
       const $container = panel.find(containerId);
       let html = '';
-      characterList.forEach(name => {
+      characterList.forEach((name: any) => {
         const resolvedName = deps.resolveCanonicalCharacterName(String(name));
         const displayName = deps.replaceUserPlaceholders(String(resolvedName));
         const shortName = displayName.length > 4 ? displayName.substring(0, 4) + '..' : displayName;
@@ -232,7 +235,7 @@ export function createShowContestPanel(deps: any) {
           '</button>';
       });
       $container.html(html);
-      $container.find('.acu-dice-char-btn').click(function (e) {
+      $container.find('.acu-dice-char-btn').click(function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
         const charName = $(this).data('char');
@@ -246,7 +249,7 @@ export function createShowContestPanel(deps: any) {
     };
 
     // [新增] 重建属性快捷按钮
-    const rebuildAttrBtns = (attrs, targetType) => {
+    const rebuildAttrBtns = (attrs: any, targetType: any) => {
       const containerId = targetType === 'init' ? '#init-attr-buttons' : '#opp-attr-buttons';
       const $container = panel.find(containerId);
 
@@ -257,7 +260,7 @@ export function createShowContestPanel(deps: any) {
 
       // 现有属性按钮
       if (attrs.length > 0) {
-        attrs.forEach(attr => {
+        attrs.forEach((attr: any) => {
           html +=
             '<button type="button" class="acu-contest-attr-btn" data-val="' +
             attr.value +
@@ -290,7 +293,7 @@ export function createShowContestPanel(deps: any) {
       $container.html(html);
 
       // 绑定属性按钮点击事件
-      $container.find('.acu-contest-attr-btn').click(function () {
+      $container.find('.acu-contest-attr-btn').click(function (this: any) {
         const val = $(this).attr('data-val');
         const aname = $(this).attr('data-aname');
         const source = String($(this).attr('data-source') || 'generic') as CharacterAttributeSource;
@@ -310,7 +313,7 @@ export function createShowContestPanel(deps: any) {
       });
 
       // 绑定生成属性按钮点击事件
-      $container.find('.acu-contest-gen-attr-btn').click(async function (e) {
+      $container.find('.acu-contest-gen-attr-btn').click(async function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -375,7 +378,7 @@ export function createShowContestPanel(deps: any) {
       });
 
       // 绑定清空属性按钮点击事件
-      $container.find('.acu-contest-clear-attr-btn').click(async function (e) {
+      $container.find('.acu-contest-clear-attr-btn').click(async function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -436,7 +439,7 @@ export function createShowContestPanel(deps: any) {
     buildCharBtns('init');
     buildCharBtns('opp');
     // [新增] 发起方随机技能按钮
-    panel.find('#contest-init-random-skill').click(function (e) {
+    panel.find('#contest-init-random-skill').click(function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       const skillPool = deps.getRandomSkillPool();
@@ -445,7 +448,7 @@ export function createShowContestPanel(deps: any) {
     });
 
     // [新增] 对抗方随机技能按钮
-    panel.find('#contest-opp-random-skill').click(function (e) {
+    panel.find('#contest-opp-random-skill').click(function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       const skillPool = deps.getRandomSkillPool();
@@ -488,7 +491,7 @@ export function createShowContestPanel(deps: any) {
 
     const applyContestAdvancedPreset = createApplyContestAdvancedPreset({
       deps, $, panel,
-      setCurrentContestAdvancedPreset: (value) => { currentContestAdvancedPreset = value; },
+      setCurrentContestAdvancedPreset: (value: any) => { currentContestAdvancedPreset = value; },
     });
 
     // [统一UI] 初始化时根据活跃预设高亮对应按钮并应用配置
@@ -529,7 +532,7 @@ export function createShowContestPanel(deps: any) {
     }
 
     // 发起方角色变化时更新属性
-    panel.find('#contest-init-display').on('change.acuattr input.acuattr', function () {
+    panel.find('#contest-init-display').on('change.acuattr input.acuattr', function (this: any) {
       const charName = $(this).val().trim() || '<user>';
       const newAttrList = deps.getAttributesForCharacter(charName);
       deps.initCustomDropdown(panel.find('#contest-init-name'), newAttrList.length > 0 ? newAttrList : contestAttrList);
@@ -538,7 +541,7 @@ export function createShowContestPanel(deps: any) {
     });
 
     // 对抗方角色变化时更新属性
-    panel.find('#contest-opponent-display').on('change.acuattr input.acuattr', function () {
+    panel.find('#contest-opponent-display').on('change.acuattr input.acuattr', function (this: any) {
       const charName = $(this).val().trim();
       const newAttrList = deps.getAttributesForCharacter(charName);
       deps.initCustomDropdown(panel.find('#contest-opp-name'), newAttrList.length > 0 ? newAttrList : contestAttrList);
@@ -547,7 +550,7 @@ export function createShowContestPanel(deps: any) {
     });
 
     // 发起方属性名变化时自动填入属性值
-    panel.find('#contest-init-name').on('change.acuval', function () {
+    panel.find('#contest-init-name').on('change.acuval', function (this: any) {
       const charName = panel.find('#contest-init-display').val().trim() || '<user>';
       const attrName = $(this).val().trim();
       const attrEntry = deps.getAttributeEntryForCharacter(charName, attrName);
@@ -558,7 +561,7 @@ export function createShowContestPanel(deps: any) {
     });
 
     // 对抗方属性名变化时自动填入属性值
-    panel.find('#contest-opp-name').on('change.acuval', function () {
+    panel.find('#contest-opp-name').on('change.acuval', function (this: any) {
       const charName = panel.find('#contest-opponent-display').val().trim();
       const attrName = $(this).val().trim();
       const attrEntry = deps.getAttributeEntryForCharacter(charName, attrName);
@@ -569,7 +572,7 @@ export function createShowContestPanel(deps: any) {
     });
 
     // 骰子预设切换
-    panel.find('.acu-dice-quick-preset-btn').click(function () {
+    panel.find('.acu-dice-quick-preset-btn').click(function (this: any) {
       const newDice = $(this).data('dice');
       // 自定义按钮有单独处理，这里跳过
       if (newDice === 'custom') return;
@@ -577,7 +580,7 @@ export function createShowContestPanel(deps: any) {
       // [新增] 检查预设是否支持对抗检定
       const presetId = $(this).data('preset-id') as string | undefined;
       if (presetId && !deps.AdvancedDicePresetManager.supportsContest(presetId)) {
-        const preset = deps.AdvancedDicePresetManager.getAllPresets().find(p => p.id === presetId);
+        const preset = deps.AdvancedDicePresetManager.getAllPresets().find((p: any) => p.id === presetId);
         toastr.warning(`${preset?.name || presetId} 规则不支持对抗检定`);
         return; // 不切换预设，保持当前状态
       }
@@ -608,7 +611,7 @@ export function createShowContestPanel(deps: any) {
     });
 
     // 自定义骰子按钮点击事件
-    panel.find('.acu-dice-quick-preset-btn[data-dice="custom"]').click(function () {
+    panel.find('.acu-dice-quick-preset-btn[data-dice="custom"]').click(function (this: any) {
       // 立即高亮自定义按钮，取消其他按钮高亮
       panel.find('.acu-dice-quick-preset-btn').removeClass('active');
       $(this).addClass('active');
@@ -629,7 +632,7 @@ export function createShowContestPanel(deps: any) {
     });
 
     // 掷骰函数 - 使用 rollComplexDiceExpression 支持复合表达式
-    const rollDice = function (formula) {
+    const rollDice = function (formula: any) { void rollDice;
       const rollResult = rollComplexDiceExpression(formula);
       const total = rollResult.total;
       if (Number.isNaN(total)) return { total: 0, rolls: [], sides: 100 };
@@ -878,7 +881,7 @@ export function createShowContestPanel(deps: any) {
       `);
 
       // 绑定重投按钮
-      $btn.off('click', '.dice-retry-btn').on('click', '.dice-retry-btn', function (e) {
+      $btn.off('click', '.dice-retry-btn').on('click', '.dice-retry-btn', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         performCustomContestRoll();
@@ -886,7 +889,7 @@ export function createShowContestPanel(deps: any) {
 
       const winnerSide: 'left' | 'right' | 'tie' =
         winner === 'initiator' ? 'left' : winner === 'opponent' ? 'right' : 'tie';
-      const customContestResult: AcuDice.ContestResult = {
+      const customContestResult: Record<string, any> = {
         left: {
           name: initName,
           attribute: initAttrName,
@@ -979,7 +982,7 @@ export function createShowContestPanel(deps: any) {
       var initName = deps.resolveCanonicalCharacterName(initNameRaw);
       var initAttrName = (panel.find('#contest-init-name').val() || '').toString().trim() || '自由检定';
       // 辅助函数：根据骰子公式计算最大值的一半
-      var getHalfMax = function (formulaStr) {
+      var getHalfMax = function (formulaStr: any) {
         var m = formulaStr.match(/(\d+)d(\d+)/i);
         if (m) return Math.round((parseInt(m[1], 10) * parseInt(m[2], 10)) / 2);
         return 50;
@@ -1081,7 +1084,7 @@ export function createShowContestPanel(deps: any) {
 
       const allPresets = deps.AdvancedDicePresetManager.getAllPresets();
       const fallbackPresetId = /d100/i.test(formula) ? 'coc7_check' : 'dnd5e_check';
-      const fallbackPreset = allPresets.find(p => p.id === fallbackPresetId);
+      const fallbackPreset = allPresets.find((p: any) => p.id === fallbackPresetId);
       const preset =
         activePreset &&
         'outcomes' in activePreset &&
@@ -1129,10 +1132,10 @@ export function createShowContestPanel(deps: any) {
         }
 
         const $customFields = panel.find(`.acu-dice-custom-field-contest[data-party="${party}"]`);
-        $customFields.each(function () {
+        $customFields.each(function (this: any) {
           const $el = $(this);
           const id = $el.data('id');
-          const fieldConfig = preset.customFields.find(f => f.id === id);
+          const fieldConfig = preset.customFields.find((f: any) => f.id === id);
           if (!fieldConfig) return;
 
           let val: string | number | boolean;
@@ -1177,7 +1180,7 @@ export function createShowContestPanel(deps: any) {
           ...customValues,
         };
 
-        preset.derivedVars.forEach(spec => {
+        preset.derivedVars.forEach((spec: any) => {
           const id = spec?.id?.trim();
           if (!id) return;
           const varName = id.startsWith('$') ? id : `$${id}`;
@@ -1218,13 +1221,13 @@ export function createShowContestPanel(deps: any) {
         const replacePatchTemplate = (template: string): string => {
           const varPattern = /\$[a-zA-Z_]\w*/g;
           return template.replace(varPattern, match => {
-            const value = patchContext[match];
+            const value = (patchContext as Record<string, any>)[match];
             return typeof value === 'number' && Number.isFinite(value) ? String(value) : '0';
           });
         };
 
         let diceExpression = baseFormula;
-        preset.dicePatches.forEach(patch => {
+        preset.dicePatches.forEach((patch: any) => {
           if (!patch) return;
           if (patch.when) {
             const conditionResult = deps.evaluateCondition(patch.when, patchContext);
@@ -1448,7 +1451,7 @@ export function createShowContestPanel(deps: any) {
       $resultDisplay.show();
 
       // 绑定整行点击事件进行重投
-      $resultDisplay.off('click').on('click', function (e) {
+      $resultDisplay.off('click').on('click', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         performContestRoll();
@@ -1468,7 +1471,7 @@ export function createShowContestPanel(deps: any) {
       // 先处理 $roll.hasTag() 方法调用
       let initConditionExpr = initDisplayExpr.replace(
         /\$roll\.hasTag\s*\(\s*['"]([^'"]+)['"]\s*\)/gi,
-        (_match, tag) => {
+        (_match: any, tag: any) => {
           return (initResult.tags ?? []).includes(tag) ? '成立' : '不成立';
         },
       );
@@ -1480,7 +1483,7 @@ export function createShowContestPanel(deps: any) {
         .replace(/\$attr/g, String(initValue))
         .replace(/\$dc/g, String(initTarget))
         .replace(/\$mod/g, String(initMod));
-      let oppConditionExpr = oppDisplayExpr.replace(/\$roll\.hasTag\s*\(\s*['"]([^'"]+)['"]\s*\)/gi, (_match, tag) => {
+      let oppConditionExpr = oppDisplayExpr.replace(/\$roll\.hasTag\s*\(\s*['"]([^'"]+)['"]\s*\)/gi, (_match: any, tag: any) => {
         return (oppResult.tags ?? []).includes(tag) ? '成立' : '不成立';
       });
       oppConditionExpr = oppConditionExpr
@@ -1617,7 +1620,7 @@ export function createShowContestPanel(deps: any) {
         if (outcome.priority === 50) return 0;
         return -1;
       };
-      const contestResult: AcuDice.ContestResult = {
+      const contestResult: Record<string, any> = {
         left: {
           name: initName,
           attribute: initAttrName,
@@ -1683,13 +1686,13 @@ export function createShowContestPanel(deps: any) {
         initiatorName: initiatorNameVal,
       });
     });
-    panel.find('#contest-history-btn').click(function (e) {
+    panel.find('#contest-history-btn').click(function (e: any) {
       e.stopPropagation();
       deps.showGlobalDiceHistoryDialog();
     });
     // 齿轮设置按钮点击 - 调用统一设置面板
     // 对抗检定根据当前骰子类型判断规则：1d20 -> DND, 其他 -> COC
-    panel.find('.acu-contest-config-btn').click(function (e) {
+    panel.find('.acu-contest-config-btn').click(function (e: any) {
       e.stopPropagation();
       // [废弃] 旧的规则设置弹窗调用已替换为高级检定管理
       // const currentDice = panel.find('#contest-dice-type').val() || '1d100';
@@ -1701,7 +1704,7 @@ export function createShowContestPanel(deps: any) {
       overlay.remove();
       panel.remove();
     };
-    panel.on('click', function (e) {
+    panel.on('click', function (e: any) {
       e.stopPropagation();
     });
     overlay.click(closePanel);

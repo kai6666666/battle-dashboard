@@ -1,11 +1,16 @@
-// @ts-nocheck
 /**
  * show-relationship-graph.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { RELATION_ICON_MAP } from '../../shared/emoji-maps';
-import { findNameColumnIndex, getRowDisplayName, isCharacterTable } from '../../entities/name-alias';
+import { findNameColumnIndex, isCharacterTable } from '../../entities/name-alias';
 import { buildRelationGraphModel } from './relationship-graph/build-relation-graph-model';
+type RelationGraphLayoutPosition = Record<string, any>;
+type RelationGraphLayoutLoadResult = any;
+type RelationGraphLayoutCache = Record<string, any>;
+type RelationGraphNode = Record<string, any>;
+type RelationshipGraphRenderOptions = Record<string, any>;
+type RelationGraphTableInput = Record<string, any>;
 export function createShowRelationshipGraph(deps: any) {
   const showRelationshipGraph = (npcTable: RelationGraphTableInput, options: RelationshipGraphRenderOptions = {}) => {
     console.info('[DICE]开始抓取人物关系表数据...');
@@ -14,11 +19,11 @@ export function createShowRelationshipGraph(deps: any) {
 
     const config = deps.getConfig();
 
-    const headers = (npcTable.headers || []).map(header => String(header || ''));
+    const headers = (npcTable.headers || []).map((header: any) => String(header || ''));
     const rows = npcTable.rows || [];
 
     const nameIdx = findNameColumnIndex(headers);
-    const relationIdx = headers.findIndex(h => h && h.includes('人际关系'));
+    const relationIdx = headers.findIndex((h: any) => h && h.includes('人际关系'));
     const npcTableKey = npcTable.key || '';
 
     console.info(`[DICE]人物关系表查找: 表格"${npcTableKey || '未知'}"，共${rows.length}行数据`);
@@ -32,7 +37,7 @@ export function createShowRelationshipGraph(deps: any) {
     const rgModel = buildRelationGraphModel({ deps, headers, rows, nameIdx, relationIdx, options, npcTableKey });
     const nodes = rgModel.nodes;
     const edges = rgModel.edges;
-    const rawData = rgModel.rawData;
+    const rawData = rgModel.rawData; void rawData;
     const resolvedPlayerName = rgModel.resolvedPlayerName;
     const nodeArr = Array.from(nodes.values());
     console.info(`[DICE]人物关系表数据抓取完成，共${nodeArr.length}个节点，${edges.length}条边`);
@@ -512,14 +517,14 @@ export function createShowRelationshipGraph(deps: any) {
       if (!nodeAvatarRequests.has(nodeName)) {
         nodeAvatarRequests.add(nodeName);
         void deps.AvatarManager.getAsync(nodeName)
-          .then(avatar => {
+          .then((avatar: any) => {
             const nextAvatar = avatar || '';
             const previousAvatar = nodeAvatarCache.get(nodeName) || '';
             nodeAvatarCache.set(nodeName, nextAvatar);
             nodeAvatarRequests.delete(nodeName);
             if (nextAvatar !== previousAvatar) requestGraphRender();
           })
-          .catch(error => {
+          .catch((error: any) => {
             nodeAvatarRequests.delete(nodeName);
             console.warn('[DICE]关系图 头像加载失败:', nodeName, error);
           });
@@ -557,9 +562,9 @@ export function createShowRelationshipGraph(deps: any) {
 
         // 判断箭头类型
         const hasFromSource =
-          edge.labelsFromSource && edge.labelsFromSource.length > 0 && edge.labelsFromSource.some(l => l);
+          edge.labelsFromSource && edge.labelsFromSource.length > 0 && edge.labelsFromSource.some((l: any) => l);
         const hasFromTarget =
-          edge.labelsFromTarget && edge.labelsFromTarget.length > 0 && edge.labelsFromTarget.some(l => l);
+          edge.labelsFromTarget && edge.labelsFromTarget.length > 0 && edge.labelsFromTarget.some((l: any) => l);
 
         // 缩短线条，避免箭头与节点重叠（增加额外间距）
         const sourceRadius = source.radius || 28;
@@ -571,8 +576,8 @@ export function createShowRelationshipGraph(deps: any) {
         const y2 = target.y - ny * (targetRadius + arrowGap);
 
         // 智能去重：跨方向移除重复标签
-        let srcLabels = (edge.labelsFromSource || []).filter(l => l);
-        let tgtLabels = (edge.labelsFromTarget || []).filter(l => l);
+        let srcLabels = (edge.labelsFromSource || []).filter((l: any) => l);
+        let tgtLabels = (edge.labelsFromTarget || []).filter((l: any) => l);
 
         // 找出两边都有的标签（共同标签）
         const srcSet = new Set(srcLabels);
@@ -580,8 +585,8 @@ export function createShowRelationshipGraph(deps: any) {
         const commonLabels = [...srcSet].filter(l => tgtSet.has(l));
 
         // 从两边移除共同标签，它们将显示在中间
-        const srcUnique = srcLabels.filter(l => !commonLabels.includes(l));
-        const tgtUnique = tgtLabels.filter(l => !commonLabels.includes(l));
+        const srcUnique = srcLabels.filter((l: any) => !commonLabels.includes(l));
+        const tgtUnique = tgtLabels.filter((l: any) => !commonLabels.includes(l));
 
         // 设置箭头标记
         let markerStart = '';
@@ -638,7 +643,7 @@ export function createShowRelationshipGraph(deps: any) {
             const lx = midX + px * offsetDir * offsetDist;
             const ly = midY + py * offsetDir * offsetDist;
             // [修复] 添加图标支持
-            const content = addRelationIconInline(lbl);
+            const content = addRelationIconInline(lbl as string);
             if (content.includes('<i ')) {
               // 使用foreignObject渲染HTML内容
               edgesHtml += `<foreignObject x="${lx - 50}" y="${ly - 10}" width="100" height="20" style="overflow:visible;">
@@ -708,12 +713,12 @@ export function createShowRelationshipGraph(deps: any) {
 
           // 1. 共同标签（显示在正中间，垂直于连线一上一下）
           if (commonLabels.length > 0) {
-            commonLabels.slice(0, 1).forEach((lbl, i) => {
+            commonLabels.slice(0, 1).forEach((lbl, _i) => {
               if (!lbl) return;
               // 单个共同标签放在线的上方
               const lx = midX + px * 8;
               const ly = midY + py * 8 - 3;
-              edgesHtml += createLabelHtml(lbl, lx, ly, edgeIdx, 5);
+              edgesHtml += createLabelHtml(lbl as string, lx, ly, edgeIdx, 5);
             });
           }
 
@@ -724,13 +729,13 @@ export function createShowRelationshipGraph(deps: any) {
             const labelBaseX = midX - nx * safeOffset;
             const labelBaseY = midY - ny * safeOffset;
 
-            labelsToShow.slice(0, 2).forEach((lbl, i) => {
+            labelsToShow.slice(0, 2).forEach((lbl: any, i: any) => {
               if (!lbl) return;
               // 垂直于连线方向排列：第一个在线上方，第二个在线下方
               const perpOffset = (i === 0 ? 1 : -1) * 10;
               const lx = labelBaseX + px * perpOffset;
               const ly = labelBaseY + py * perpOffset;
-              edgesHtml += createLabelHtml(lbl, lx, ly, edgeIdx, 5);
+              edgesHtml += createLabelHtml(lbl as string, lx, ly, edgeIdx, 5);
             });
           }
 
@@ -741,13 +746,13 @@ export function createShowRelationshipGraph(deps: any) {
             const labelBaseX = midX + nx * safeOffset;
             const labelBaseY = midY + ny * safeOffset;
 
-            labelsToShow.slice(0, 2).forEach((lbl, i) => {
+            labelsToShow.slice(0, 2).forEach((lbl: any, i: any) => {
               if (!lbl) return;
               // 垂直于连线方向排列
               const perpOffset = (i === 0 ? -1 : 1) * 10;
               const lx = labelBaseX + px * perpOffset;
               const ly = labelBaseY + py * perpOffset;
-              edgesHtml += createLabelHtml(lbl, lx, ly, edgeIdx, 5);
+              edgesHtml += createLabelHtml(lbl as string, lx, ly, edgeIdx, 5);
             });
           }
         }
@@ -759,7 +764,7 @@ export function createShowRelationshipGraph(deps: any) {
       for (const node of filteredNodes) {
         // 拖动时使用缓存头像，避免线和文字先重绘、头像等待异步读取后才跟上
         const nodeAvatar = getCachedNodeAvatar(node.name);
-        const isPlayer = node.isPlayer;
+        const isPlayer = node.isPlayer; void isPlayer;
 
         // 在场标记：右下角小圆点（随节点大小缩放，Discord风格）
         const indicatorRadius = node.radius * 0.22;
@@ -815,7 +820,7 @@ export function createShowRelationshipGraph(deps: any) {
       $svg.addClass('highlighting');
 
       // 高亮当前节点
-      $nodesGroup.find('.acu-graph-node').each(function () {
+      $nodesGroup.find('.acu-graph-node').each(function (this: any) {
         if ($(this).data('name') === nodeName) {
           $(this).addClass('highlighted');
         }
@@ -833,7 +838,7 @@ export function createShowRelationshipGraph(deps: any) {
       });
 
       // 高亮相连的节点
-      $nodesGroup.find('.acu-graph-node').each(function () {
+      $nodesGroup.find('.acu-graph-node').each(function (this: any) {
         if (connectedNodes.has($(this).data('name'))) {
           $(this).addClass('highlighted');
         }
@@ -847,7 +852,7 @@ export function createShowRelationshipGraph(deps: any) {
         }
       });
 
-      $edgesGroup.find('.acu-graph-edge').each(function () {
+      $edgesGroup.find('.acu-graph-edge').each(function (this: any) {
         const edgeIdx = parseInt($(this).attr('data-edge-idx'), 10);
         if (connectedEdgeIndices.has(edgeIdx)) {
           $(this).addClass('highlighted');
@@ -860,14 +865,14 @@ export function createShowRelationshipGraph(deps: any) {
         }
       });
 
-      $edgesGroup.find('.acu-graph-edge-label').each(function () {
+      $edgesGroup.find('.acu-graph-edge-label').each(function (this: any) {
         const edgeIdx = parseInt($(this).attr('data-edge-idx'), 10);
         if (connectedEdgeIndices.has(edgeIdx)) {
           $(this).addClass('acu-graph-label-highlighted');
         }
       });
 
-      $edgesGroup.find('.acu-graph-edge-label-html').each(function () {
+      $edgesGroup.find('.acu-graph-edge-label-html').each(function (this: any) {
         const edgeIdx = parseInt($(this).attr('data-edge-idx'), 10);
         if (connectedEdgeIndices.has(edgeIdx)) {
           $(this).addClass('acu-graph-label-highlighted');
@@ -880,7 +885,7 @@ export function createShowRelationshipGraph(deps: any) {
       $nodesGroup.find('.highlighted').removeClass('highlighted');
       $edgesGroup.find('.highlighted').removeClass('highlighted');
       $edgesGroup.find('.acu-graph-label-highlighted').removeClass('acu-graph-label-highlighted');
-      $edgesGroup.find('.acu-graph-edge').each(function () {
+      $edgesGroup.find('.acu-graph-edge').each(function (this: any) {
         if ($(this).attr('marker-end')) {
           $(this).attr('marker-end', 'url(#arrowhead-end)');
         }
@@ -896,14 +901,14 @@ export function createShowRelationshipGraph(deps: any) {
     const isTouchDevice = !hasFinePointer;
 
     // 全局状态
-    let currentHighlightedNode = null; // 当前高亮的节点名
-    let longPressTimer = null;
+    let currentHighlightedNode: any = null; void currentHighlightedNode; // 当前高亮的节点名
+    let longPressTimer: any = null; void longPressTimer;
 
     if (isTouchDevice) {
       // ========== 移动端逻辑 ==========
-      let currentHighlightedNode = null;
+      let currentHighlightedNode: any = null; void currentHighlightedNode;
 
-      $nodesGroup.on('pointerdown', '.acu-graph-node', function (e) {
+      $nodesGroup.on('pointerdown', '.acu-graph-node', function (this: any, e: any) {
         if (moveModeEnabled) return;
         const $node = $(this);
         const nodeName = $node.data('name');
@@ -933,7 +938,7 @@ export function createShowRelationshipGraph(deps: any) {
           }
         }, 300);
 
-        const onMove = moveE => {
+        const onMove = (moveE: any) => {
           const dx = Math.abs(moveE.clientX - startX);
           const dy = Math.abs(moveE.clientY - startY);
           if (dx > 8 || dy > 8) {
@@ -976,7 +981,7 @@ export function createShowRelationshipGraph(deps: any) {
                   if (!table?.content || !isCharacterTable(String(table.name || ''))) continue;
                   const headers = table.content[0] || [];
                   const nameIdx = headers.findIndex(
-                    h => h && (h.includes('姓名') || h.includes('名称') || h.includes('名字')),
+                    (h: any) => h && (h.includes('姓名') || h.includes('名称') || h.includes('名字')),
                   );
                   if (nameIdx < 0) continue;
                   for (let i = 1; i < table.content.length; i++) {
@@ -1016,7 +1021,7 @@ export function createShowRelationshipGraph(deps: any) {
       });
 
       // 点击画布空白处清除高亮
-      $wrapper.on('pointerup.mobileclear', function (e) {
+      $wrapper.on('pointerup.mobileclear', function (e: any) {
         if (moveModeEnabled) return;
         if (currentHighlightedNode && !$(e.target).closest('.acu-graph-node').length) {
           clearHighlight();
@@ -1026,7 +1031,7 @@ export function createShowRelationshipGraph(deps: any) {
     } else {
       // ========== PC端逻辑 ==========
 
-      $nodesGroup.on('pointerenter.pchover', '.acu-graph-node', function () {
+      $nodesGroup.on('pointerenter.pchover', '.acu-graph-node', function (this: any) {
         if (moveModeEnabled) return;
         const nodeName = $(this).data('name');
         if (nodeName) {
@@ -1040,7 +1045,7 @@ export function createShowRelationshipGraph(deps: any) {
       });
 
       // PC端点击显示详情
-      $nodesGroup.on('click.pcclick', '.acu-graph-node', function (e) {
+      $nodesGroup.on('click.pcclick', '.acu-graph-node', function (this: any, e: any) {
         if (moveModeEnabled) {
           e.preventDefault();
           e.stopPropagation();
@@ -1063,7 +1068,7 @@ export function createShowRelationshipGraph(deps: any) {
               if (!table?.content || !isCharacterTable(String(table.name || ''))) continue;
               const headers = table.content[0] || [];
               const nameIdx = headers.findIndex(
-                h => h && (h.includes('姓名') || h.includes('名称') || h.includes('名字')),
+                (h: any) => h && (h.includes('姓名') || h.includes('名称') || h.includes('名字')),
               );
               if (nameIdx < 0) continue;
               for (let i = 1; i < table.content.length; i++) {
@@ -1162,7 +1167,7 @@ export function createShowRelationshipGraph(deps: any) {
     };
 
     // Pointer Down - 开始拖拽
-    wrapperEl.onpointerdown = function (e) {
+    wrapperEl.onpointerdown = function (e: any) {
       if (e.button !== 0) return;
       const $targetNode = $(e.target).closest('.acu-graph-node');
       if ($targetNode.length) {
@@ -1187,7 +1192,7 @@ export function createShowRelationshipGraph(deps: any) {
     };
 
     // Pointer Move - 拖拽中
-    wrapperEl.onpointermove = function (e) {
+    wrapperEl.onpointermove = function (e: any) {
       if (isNodeDragging && e.pointerId === activePointerId && draggingNodeName) {
         const node = nodes.get(draggingNodeName);
         if (!node) return;
@@ -1211,7 +1216,7 @@ export function createShowRelationshipGraph(deps: any) {
     };
 
     // Pointer Up - 结束拖拽
-    wrapperEl.onpointerup = function (e) {
+    wrapperEl.onpointerup = function (e: any) {
       if (isNodeDragging) {
         finishNodeDrag(e.pointerId, true);
         return;
@@ -1226,7 +1231,7 @@ export function createShowRelationshipGraph(deps: any) {
     };
 
     // Pointer Cancel - 取消
-    wrapperEl.onpointercancel = function (e) {
+    wrapperEl.onpointercancel = function (e: any) {
       if (isNodeDragging) {
         finishNodeDrag(e.pointerId, true);
         return;
@@ -1240,7 +1245,7 @@ export function createShowRelationshipGraph(deps: any) {
     };
 
     // 滚轮缩放
-    wrapperEl.onwheel = function (e) {
+    wrapperEl.onwheel = function (e: any) {
       e.preventDefault();
       const delta = e.deltaY > 0 ? -0.15 : 0.15;
       zoomTo(scale + delta);
@@ -1249,7 +1254,7 @@ export function createShowRelationshipGraph(deps: any) {
     // 移动端双指缩放
     wrapperEl.addEventListener(
       'touchstart',
-      function (e) {
+      function (e: any) {
         if (e.touches.length === 2) {
           e.preventDefault();
           isPanning = false;
@@ -1264,7 +1269,7 @@ export function createShowRelationshipGraph(deps: any) {
 
     wrapperEl.addEventListener(
       'touchmove',
-      function (e) {
+      function (e: any) {
         if (e.touches.length === 2) {
           e.preventDefault();
           const newDist = Math.hypot(
@@ -1280,7 +1285,7 @@ export function createShowRelationshipGraph(deps: any) {
       { passive: false },
     );
 
-    wrapperEl.addEventListener('touchend', function (e) {
+    wrapperEl.addEventListener('touchend', function (e: any) {
       if (e.touches.length < 2) lastPinchDist = 0;
     });
 
@@ -1304,7 +1309,7 @@ export function createShowRelationshipGraph(deps: any) {
     const $sliderSizeDisplay = overlay.find('#slider-size-display');
     const $sliderContainer = overlay.find('.acu-node-size-slider-container');
     const $nodeSizeDisplayTrigger = overlay.find('#node-size-display-trigger');
-    const $legend = overlay.find('.acu-graph-legend');
+    const $legend = overlay.find('.acu-graph-legend'); void $legend;
 
     let sliderVisible = false;
     let sliderHideTimer: ReturnType<typeof setTimeout> | null = null;
@@ -1366,7 +1371,7 @@ export function createShowRelationshipGraph(deps: any) {
     };
 
     // 点击"节点"文字切换滑条显示/隐藏（使用事件委托确保可靠触发）
-    overlay.on('click', '#node-size-display-trigger, #node-size-display-trigger *', function (e) {
+    overlay.on('click', '#node-size-display-trigger, #node-size-display-trigger *', function (e: any) {
       e.stopPropagation();
       if (sliderVisible) {
         hideSlider();
@@ -1376,7 +1381,7 @@ export function createShowRelationshipGraph(deps: any) {
     });
 
     // 滑条操作时重置自动隐藏定时器
-    $nodeSizeSlider.on('input mousedown touchstart', function (e) {
+    $nodeSizeSlider.on('input mousedown touchstart', function (e: any) {
       e.stopPropagation();
       if (sliderVisible) {
         resetSliderHideTimer();
@@ -1384,12 +1389,12 @@ export function createShowRelationshipGraph(deps: any) {
     });
 
     // 滑条容器内操作时阻止事件冒泡
-    $sliderContainer.on('pointerdown mousedown touchstart', function (e) {
+    $sliderContainer.on('pointerdown mousedown touchstart', function (e: any) {
       e.stopPropagation();
     });
 
     // 点击滑条外部区域时隐藏滑条
-    $(document).on('click.slider-hide', function (e) {
+    $(document).on('click.slider-hide', function (e: any) {
       if (
         sliderVisible &&
         !$sliderContainer.is(e.target) &&
@@ -1401,7 +1406,7 @@ export function createShowRelationshipGraph(deps: any) {
       }
     });
 
-    $nodeSizeSlider.on('input', function () {
+    $nodeSizeSlider.on('input', function (this: any) {
       nodeSizeMultiplier = parseFloat($(this).val());
       $sliderSizeDisplay.text(Math.round(nodeSizeMultiplier * 100) + '%');
       updateNodeSizeDisplay();
@@ -1432,21 +1437,21 @@ export function createShowRelationshipGraph(deps: any) {
     // 初始化按钮样式
     updateFilterToggleStyles();
 
-    $filterInSceneBtn.click(function (e) {
+    $filterInSceneBtn.click(function (e: any) {
       e.stopPropagation();
       filterInScene = !filterInScene;
       updateFilterToggleStyles();
       render();
     });
 
-    $filterDirectOnlyBtn.click(function (e) {
+    $filterDirectOnlyBtn.click(function (e: any) {
       e.stopPropagation();
       filterDirectOnly = !filterDirectOnly;
       updateFilterToggleStyles();
       render();
     });
 
-    $moveModeBtn.on('click', function (e) {
+    $moveModeBtn.on('click', function (e: any) {
       e.stopPropagation();
       moveModeEnabled = !moveModeEnabled;
       clearHighlight();
@@ -1468,14 +1473,14 @@ export function createShowRelationshipGraph(deps: any) {
     };
 
     // 点击触发器 toggle 菜单
-    $centerTrigger.on('click', function (e) {
+    $centerTrigger.on('click', function (e: any) {
       e.stopPropagation();
       $centerDropdown.toggleClass('open');
       syncCenterDropdownState();
     });
 
     // 点击选项
-    $centerMenu.on('click', '.acu-center-option', function (e) {
+    $centerMenu.on('click', '.acu-center-option', function (this: any, e: any) {
       e.stopPropagation();
       const newCenter = $(this).data('value') as string;
       $centerDropdown.removeClass('open');

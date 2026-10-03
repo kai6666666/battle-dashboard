@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-settings-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,6 +7,7 @@ import { buildSettingsDialogHtml } from './build-settings-dialog-html';
 import { RULE_TYPE_INFO } from '../../shared/defaults-config';
 import { Store } from '../../shared/storage/store';
 import { normalizeDialogueIndentStrategy } from '../../features/dialogue-indent-renderer';
+type AvatarManagerNode = Record<string, any>;
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowSettingsModal(deps: any) {
   const showSettingsModal = () => {
@@ -26,7 +26,7 @@ export function createShowSettingsModal(deps: any) {
     // 分组折叠状态（从存储读取，默认第一组展开）
     const expandedGroups = Store.get('acu_settings_expanded', ['appearance']);
 
-    const isGroupExpanded = groupId => expandedGroups.includes(groupId);
+    const isGroupExpanded = (groupId: any) => expandedGroups.includes(groupId);
     // 生成导航盘管理列表HTML（包含特殊按钮：仪表盘、投骰、审核、MVU变量）
     const SPECIAL_BUTTONS_CONFIG = [
       { key: '__dashboard__', name: '仪表盘', icon: 'fa-chart-line' },
@@ -61,7 +61,7 @@ export function createShowSettingsModal(deps: any) {
     ];
 
     const tableManagerHtml = (() => {
-      const savedOrder = deps.getSavedTableOrder() || [];
+      const savedOrder = deps.getSavedTableOrder() || []; void savedOrder;
       const hiddenList = deps.getHiddenTables();
 
       // 构建所有可管理项：特殊按钮 + 真实表格
@@ -80,9 +80,9 @@ export function createShowSettingsModal(deps: any) {
 
       // 应用保存的排序（与导航条/审核面板共用同一稳定排序工具）
       const sortedKeys = deps.getStableTableSort(allItems.map(item => item.key));
-      const stableOrderMap = new Map(sortedKeys.map((k, i) => [k, i]));
+      const stableOrderMap = new Map(sortedKeys.map((k: any, i: any) => [k, i]));
       const orderedItems = [...allItems].sort(
-        (a, b) => (stableOrderMap.get(a.key) ?? 9999) - (stableOrderMap.get(b.key) ?? 9999),
+        (a, b) => ((stableOrderMap.get(a.key) as any) ?? 9999) - ((stableOrderMap.get(b.key) as any) ?? 9999),
       );
       deps.ensureCanonicalTableOrder(orderedItems.map(item => item.key));
       return orderedItems
@@ -116,7 +116,7 @@ export function createShowSettingsModal(deps: any) {
         })
         .join('');
     })();
-    const chevron = groupId => (isGroupExpanded(groupId) ? 'fa-chevron-down' : 'fa-chevron-right');
+    const chevron = (groupId: any) => (isGroupExpanded(groupId) ? 'fa-chevron-down' : 'fa-chevron-right');
     const renderSettingSegmented = (
       id: string,
       label: string,
@@ -139,7 +139,7 @@ export function createShowSettingsModal(deps: any) {
     dialog.find('.acu-settings-manager-overlay').appendTo(dialog);
 
     // === 分组折叠交互（带动画） ===
-    dialog.find('.acu-settings-group-title').on('click', function () {
+    dialog.find('.acu-settings-group-title').on('click', function (this: any) {
       const $group = $(this).closest('.acu-settings-group');
       const $body = $group.find('.acu-settings-group-body');
 
@@ -158,20 +158,20 @@ export function createShowSettingsModal(deps: any) {
 
         $body.addClass('acu-animating').show();
         const targetHeight = $body.prop('scrollHeight');
-        $body.css('height', 0).animate({ height: targetHeight }, 180, function () {
+        $body.css('height', 0).animate({ height: targetHeight }, 180, function (this: any) {
           $(this).css('height', '').removeClass('acu-animating');
         });
       } else {
         // 收起
         $group.addClass('collapsed');
         $chevron.removeClass('fa-chevron-down').addClass('fa-chevron-right');
-        expanded = expanded.filter(id => id !== groupId);
+        expanded = expanded.filter((id: any) => id !== groupId);
 
         const currentHeight = $body.outerHeight();
         $body
           .addClass('acu-animating')
           .css('height', currentHeight)
-          .animate({ height: 0 }, 180, function () {
+          .animate({ height: 0 }, 180, function (this: any) {
             $(this).hide().css('height', '').removeClass('acu-animating');
           });
       }
@@ -181,24 +181,24 @@ export function createShowSettingsModal(deps: any) {
 
     // === 设置项事件绑定 ===
     // 主题
-    dialog.find('#cfg-theme').on('change', function () {
+    dialog.find('#cfg-theme').on('change', function (this: any) {
       const newTheme = $(this).val();
       deps.saveConfig({ theme: newTheme });
-      dialog.removeClass(deps.THEMES.map(t => `acu-theme-${t.id}`).join(' ')).addClass(`acu-theme-${newTheme}`);
+      dialog.removeClass(deps.THEMES.map((t: any) => `acu-theme-${t.id}`).join(' ')).addClass(`acu-theme-${newTheme}`);
       dialog
         .find('.acu-edit-dialog')
-        .removeClass(deps.THEMES.map(t => `acu-theme-${t.id}`).join(' '))
+        .removeClass(deps.THEMES.map((t: any) => `acu-theme-${t.id}`).join(' '))
         .addClass(`acu-theme-${newTheme}`);
       deps.scheduleDialogueIndentRender();
     });
 
     // 字体
-    dialog.find('#cfg-font-family').on('change', function () {
+    dialog.find('#cfg-font-family').on('change', function (this: any) {
       deps.saveConfig({ fontFamily: $(this).val() });
     });
 
     // 管理检定预设按钮
-    dialog.find('#cfg-advanced-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-advanced-preset-manage').on('click', function (e: any) {
       e.stopPropagation();
       dialog.remove();
       deps.setIsSettingsOpen(false);
@@ -206,7 +206,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理属性预设按钮
-    dialog.find('#cfg-attribute-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-attribute-preset-manage').on('click', function (e: any) {
       e.stopPropagation();
       dialog.remove();
       deps.setIsSettingsOpen(false);
@@ -214,7 +214,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理交互规则预设按钮
-    dialog.find('#cfg-action-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-action-preset-manage').on('click', function (e: any) {
       e.stopPropagation();
       dialog.remove();
       deps.setIsSettingsOpen(false);
@@ -222,7 +222,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理仪表盘预设按钮
-    dialog.find('#cfg-dashboard-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-dashboard-preset-manage').on('click', function (e: any) {
       e.stopPropagation();
       dialog.remove();
       deps.setIsSettingsOpen(false);
@@ -230,20 +230,20 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 检验当前聊天表格模板
-    dialog.find('#cfg-template-inspection').on('click', function (e) {
+    dialog.find('#cfg-template-inspection').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       deps.showTemplateInspectionModal();
     });
 
-    dialog.find('#cfg-custom-table-name-icon-manage').on('click', function (e) {
+    dialog.find('#cfg-custom-table-name-icon-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       deps.showCustomTableNameIconManager();
     });
 
     // 管理渲染预设按钮
-    dialog.find('#cfg-render-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-render-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       dialog.remove();
@@ -252,7 +252,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理模板检验预设按钮
-    dialog.find('#cfg-table-template-requirement-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-table-template-requirement-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       dialog.remove();
@@ -261,7 +261,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理角色头像预设按钮
-    dialog.find('#cfg-avatar-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-avatar-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       let nodeArr: AvatarManagerNode[] = [];
@@ -288,35 +288,35 @@ export function createShowSettingsModal(deps: any) {
       $manager.prop('hidden', true).attr('aria-hidden', 'true');
     };
 
-    dialog.find('#cfg-validation-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-validation-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       openSettingsManagerDialog('#validation-preset-manager-dialog');
     });
 
-    dialog.find('#cfg-regex-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-regex-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       openSettingsManagerDialog('#regex-preset-manager-dialog');
     });
 
-    dialog.find('#cfg-navigation-manage').on('click', function (e) {
+    dialog.find('#cfg-navigation-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       openSettingsManagerDialog('#navigation-manager-dialog');
     });
 
-    dialog.on('click', '.acu-settings-manager-close, .acu-settings-manager-backdrop', function (e) {
+    dialog.on('click', '.acu-settings-manager-close, .acu-settings-manager-backdrop', function (this: any, e: any) {
       e.preventDefault();
       e.stopPropagation();
       closeSettingsManagerDialog($(this).closest('.acu-settings-manager-overlay') as JQuery<HTMLElement>);
     });
 
-    dialog.on('click', '.acu-settings-manager-dialog', function (e) {
+    dialog.on('click', '.acu-settings-manager-dialog', function (e: any) {
       e.stopPropagation();
     });
 
-    dialog.on('keydown', function (e) {
+    dialog.on('keydown', function (e: any) {
       if (e.key !== 'Escape') return;
       const $visibleManager = dialog.find('.acu-settings-manager-overlay:not([hidden])').last();
       if (!$visibleManager.length) return;
@@ -325,7 +325,7 @@ export function createShowSettingsModal(deps: any) {
       closeSettingsManagerDialog($visibleManager as JQuery<HTMLElement>);
     });
 
-    dialog.on('click', '.acu-setting-segmented-option', function (e) {
+    dialog.on('click', '.acu-setting-segmented-option', function (this: any, e: any) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -419,7 +419,7 @@ export function createShowSettingsModal(deps: any) {
       }
     });
     // === 导航盘管理：点击切换显示/隐藏 ===
-    dialog.find('.acu-table-item-check').on('click', function (e) {
+    dialog.find('.acu-table-item-check').on('click', function (this: any, e: any) {
       e.stopPropagation();
       const $item = $(this).closest('.acu-table-manager-item');
       const tableName = $item.data('table-name');
@@ -428,7 +428,7 @@ export function createShowSettingsModal(deps: any) {
 
       if (hiddenList.includes(tableName)) {
         // 显示
-        hiddenList = hiddenList.filter(n => n !== tableName);
+        hiddenList = hiddenList.filter((n: any) => n !== tableName);
         $item.removeClass('hidden-table');
         $icon.removeClass('fa-eye-slash').addClass('fa-eye');
       } else {
@@ -449,19 +449,19 @@ export function createShowSettingsModal(deps: any) {
       itemSelector: '.acu-table-manager-item',
       handleSelector: '.acu-table-item-handle',
       cancelSelector: '.acu-table-item-check',
-      getItemId: item => {
+      getItemId: (item: any) => {
         const tableName = $(item).data('table-name');
         if (typeof tableName === 'string') return tableName;
         if (tableName !== undefined && tableName !== null) return String(tableName);
         return null;
       },
-      onOrderChange: newOrder => {
+      onOrderChange: (newOrder: any) => {
         deps.saveTableOrder(newOrder);
       },
     });
 
     // === Stepper 步进器事件 ===
-    dialog.find('.acu-stepper').each(function () {
+    dialog.find('.acu-stepper').each(function (this: any) {
       const $stepper = $(this);
       const id = $stepper.data('id');
       const min = parseInt($stepper.data('min'));
@@ -469,7 +469,7 @@ export function createShowSettingsModal(deps: any) {
       const step = parseInt($stepper.data('step'));
       const $value = $stepper.find('.acu-stepper-value');
 
-      const updateValue = newVal => {
+      const updateValue = (newVal: any) => {
         newVal = Math.max(min, Math.min(max, newVal));
         const unit = id === 'cfg-per-page' ? '' : 'px';
         $value.text(newVal + unit);
@@ -512,7 +512,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 验证规则：切换启用/禁用（使用事件委托支持动态元素）===
-    dialog.on('click', '.acu-rule-toggle', function (e) {
+    dialog.on('click', '.acu-rule-toggle', function (this: any, e: any) {
       e.stopPropagation();
       const $toggle = $(this);
       const $item = $toggle.closest('.acu-validation-rule-item');
@@ -536,7 +536,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 验证规则：编辑规则 ===
-    dialog.on('click', '#validation-rules-list .acu-rule-edit', function (e) {
+    dialog.on('click', '#validation-rules-list .acu-rule-edit', function (this: any, e: any) {
       e.stopPropagation();
       const ruleId = $(this).data('rule-id');
       const rule = deps.ValidationRuleManager.getRule(ruleId);
@@ -547,7 +547,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 验证规则：删除规则（使用事件委托）===
-    dialog.on('click', '#validation-rules-list .acu-rule-delete', async function (e) {
+    dialog.on('click', '#validation-rules-list .acu-rule-delete', async function (this: any, e: any) {
       e.stopPropagation();
       const ruleId = $(this).data('rule-id');
       const $item = $(this).closest('.acu-validation-rule-item');
@@ -564,7 +564,7 @@ export function createShowSettingsModal(deps: any) {
       });
       if (confirmed) {
         if (deps.ValidationRuleManager.removeCustomRule(ruleId)) {
-          $item.fadeOut(200, function () {
+          $item.fadeOut(200, function (this: any) {
             $(this).remove();
           });
         }
@@ -572,7 +572,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 验证规则：切换拦截状态（使用事件委托）===
-    dialog.on('click', '.acu-rule-intercept', function (e) {
+    dialog.on('click', '.acu-rule-intercept', function (this: any, e: any) {
       e.stopPropagation();
       const $btn = $(this);
       const ruleId = $btn.data('rule-id');
@@ -592,8 +592,8 @@ export function createShowSettingsModal(deps: any) {
       deps.ValidationRuleManager.clearCache();
       const rules = deps.ValidationRuleManager.getAllRules();
       let html = '';
-      rules.forEach(rule => {
-        const typeInfo = RULE_TYPE_INFO[rule.ruleType] || { name: rule.ruleType, icon: 'fa-question' };
+      rules.forEach((rule: any) => {
+        const typeInfo = (RULE_TYPE_INFO as Record<string, any>)[rule.ruleType] || { name: rule.ruleType, icon: 'fa-question' };
         const isTableRule = typeInfo.scope === 'table';
         const hasIntercept = rule.intercept;
         html += `
@@ -617,7 +617,7 @@ export function createShowSettingsModal(deps: any) {
     };
 
     // 切换预设
-    dialog.find('#preset-select').on('change', function () {
+    dialog.find('#preset-select').on('change', function (this: any) {
       if (deps.PresetManager.setActivePreset($(this).val())) {
         refreshPresetUI();
       }
@@ -729,13 +729,13 @@ export function createShowSettingsModal(deps: any) {
             return;
           }
 
-          const parsedPreset = deps.isRecordValue(parsedData.preset) ? parsedData.preset : null;
+          const parsedPreset = (deps.isRecordValue(parsedData.preset) ? parsedData.preset : null) as Record<string, any> | null;
           const importingName =
             typeof parsedPreset?.name === 'string' && parsedPreset.name.trim()
               ? parsedPreset.name.trim()
               : '导入的预设';
           const existingPresets = deps.PresetManager.getAllPresets();
-          const existingNames = existingPresets.map(p => p.name);
+          const existingNames = existingPresets.map((p: any) => p.name);
           const hasConflict = existingNames.includes(importingName);
 
           // 执行导入的函数
@@ -751,7 +751,7 @@ export function createShowSettingsModal(deps: any) {
 
             // 如果是覆盖模式且存在同名预设，先删除旧预设
             if (overwrite && hasConflict) {
-              const existingPreset = existingPresets.find(p => p.name === importingName);
+              const existingPreset = existingPresets.find((p: any) => p.name === importingName);
               if (existingPreset && existingPreset.id !== 'default') {
                 deps.PresetManager.deletePreset(existingPreset.id);
                 dialog.find(`#preset-select option[value="${existingPreset.id}"]`).remove();
@@ -799,7 +799,7 @@ export function createShowSettingsModal(deps: any) {
               onOverwrite: () => {
                 void doImport(true);
               },
-              onRename: newName => {
+              onRename: (newName: any) => {
                 void doImport(false, newName);
               },
               onCancel: () => {},
@@ -838,12 +838,12 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 表格正则规则:切换启用/禁用 ===
-    dialog.on('click', '#regex-rules-list .acu-rule-toggle', function () {
+    dialog.on('click', '#regex-rules-list .acu-rule-toggle', function (this: any) {
       const $item = $(this).closest('.acu-validation-rule-item');
       const ruleId = $item.data('rule-id');
-      const currentState = deps.RegexTransformationManager.getAllRules().find(r => r.id === ruleId)?.enabled;
+      const currentState = deps.RegexTransformationManager.getAllRules().find((r: any) => r.id === ruleId)?.enabled;
       const newState = !currentState;
-      const rule = deps.RegexTransformationManager.getRule(ruleId);
+      const rule = deps.RegexTransformationManager.getRule(ruleId); void rule;
 
       deps.RegexTransformationManager.toggleRuleEnabled(ruleId, newState);
 
@@ -856,10 +856,10 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 表格正则规则：编辑规则 ===
-    dialog.on('click', '#regex-rules-list .acu-rule-edit', function () {
+    dialog.on('click', '#regex-rules-list .acu-rule-edit', function (this: any) {
       const $item = $(this).closest('.acu-validation-rule-item');
       const ruleId = $item.data('rule-id');
-      const rule = deps.RegexTransformationManager.getRule(ruleId);
+      const rule = deps.RegexTransformationManager.getRule(ruleId); void rule;
       if (!rule) return;
 
       // 打开编辑弹窗
@@ -867,10 +867,10 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 表格正则规则:删除规则 ===
-    dialog.on('click', '#regex-rules-list .acu-rule-delete', async function () {
+    dialog.on('click', '#regex-rules-list .acu-rule-delete', async function (this: any) {
       const $item = $(this).closest('.acu-validation-rule-item');
       const ruleId = $item.data('rule-id');
-      const rule = deps.RegexTransformationManager.getRule(ruleId);
+      const rule = deps.RegexTransformationManager.getRule(ruleId); void rule;
       if (!rule) return;
 
       const confirmed = await deps.showDiceSystemConfirmDialog({
@@ -889,7 +889,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 表格正则预设:切换预设 ===
-    dialog.find('#regex-preset-select').on('change', function () {
+    dialog.find('#regex-preset-select').on('change', function (this: any) {
       const presetId = $(this).val();
       deps.RegexPresetManager.setActivePreset(String(presetId));
 
@@ -1016,7 +1016,7 @@ export function createShowSettingsModal(deps: any) {
           const importingName =
             typeof parsedData.name === 'string' && parsedData.name.trim() ? parsedData.name.trim() : '导入的预设';
           const existingPresets = deps.RegexPresetManager.getAllPresets();
-          const existingNames = existingPresets.map(p => p.name);
+          const existingNames = existingPresets.map((p: any) => p.name);
           const hasConflict = existingNames.includes(importingName);
 
           // 执行导入的函数
@@ -1032,7 +1032,7 @@ export function createShowSettingsModal(deps: any) {
 
             // 如果是覆盖模式且存在同名预设，先删除旧预设
             if (overwrite && hasConflict) {
-              const existingPreset = existingPresets.find(p => p.name === importingName);
+              const existingPreset = existingPresets.find((p: any) => p.name === importingName);
               if (existingPreset) {
                 // 检查是否不是最后一个预设
                 if (existingPresets.length > 1) {
@@ -1067,7 +1067,7 @@ export function createShowSettingsModal(deps: any) {
               presetType: '表格正则',
               existingNames,
               onOverwrite: () => doImport(true),
-              onRename: newName => doImport(false, newName),
+              onRename: (newName: any) => doImport(false, newName),
               onCancel: () => {},
             });
           } else {
@@ -1095,11 +1095,11 @@ export function createShowSettingsModal(deps: any) {
 
       // 重置默认预设的规则为内置规则
       const presets = deps.RegexPresetManager.getAllPresets();
-      let defaultPreset = presets.find(p => p.id === 'regex_default');
+      let defaultPreset = presets.find((p: any) => p.id === 'regex_default');
 
       if (defaultPreset) {
         // 用内置规则覆盖默认预设
-        defaultPreset.rules = JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map(r => ({ ...r, builtin: true }))));
+        defaultPreset.rules = JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map((r: any) => ({ ...r, builtin: true }))));
         defaultPreset.version = PRESET_FORMAT_VERSION;
         defaultPreset.updatedAt = Date.now();
       } else {
@@ -1109,7 +1109,7 @@ export function createShowSettingsModal(deps: any) {
           name: '默认预设',
           description: '系统默认的表格正则预设',
           version: PRESET_FORMAT_VERSION,
-          rules: JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map(r => ({ ...r, builtin: true })))),
+          rules: JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map((r: any) => ({ ...r, builtin: true })))),
           createdAt: Date.now(),
           updatedAt: Date.now(),
         };
@@ -1123,14 +1123,14 @@ export function createShowSettingsModal(deps: any) {
       // 强制用内置规则覆盖规则存储
       Store.set(
         deps.STORAGE_KEY_REGEX_RULES,
-        JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map(r => ({ ...r, builtin: true })))),
+        JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map((r: any) => ({ ...r, builtin: true })))),
       );
       deps.RegexTransformationManager.clearCache();
 
       // 刷新UI - 重新渲染下拉框选项
       const $presetSelect = dialog.find('#regex-preset-select');
       $presetSelect.empty();
-      deps.RegexPresetManager.getAllPresets().forEach(p => {
+      deps.RegexPresetManager.getAllPresets().forEach((p: any) => {
         const versionSuffix = p.id === 'regex_default' ? ` v${PRESET_FORMAT_VERSION}` : '';
         $presetSelect.append(`<option value="${deps.escapeHtml(p.id)}">${deps.escapeHtml(p.name)}${versionSuffix}</option>`);
       });
@@ -1170,7 +1170,7 @@ export function createShowSettingsModal(deps: any) {
           const tavernRegexList: TavernRegex[] = Array.isArray(parsed) ? parsed : [parsed];
 
           // 验证格式：必须有 scriptName 和 findRegex
-          if (!tavernRegexList.every(r => r.scriptName && r.findRegex)) {
+          if (!tavernRegexList.every(r => (r as any).scriptName && (r as any).findRegex)) {
             showActionableErrorToast('不是有效的酒馆正则格式（需要 scriptName 和 findRegex 字段）', {
               suggestion: '请确认导入文件是 SillyTavern 正则导出 JSON，并包含 scriptName 与 findRegex 字段。',
             });
@@ -1178,7 +1178,7 @@ export function createShowSettingsModal(deps: any) {
           }
 
           const existingRules = deps.RegexTransformationManager.getAllRules();
-          const existingNames = existingRules.map(r => r.name);
+          const existingNames = existingRules.map((r: any) => r.name);
 
           let importedCount = 0;
           let skippedCount = 0;
@@ -1208,14 +1208,14 @@ export function createShowSettingsModal(deps: any) {
                 existingNames,
                 onOverwrite: () => {
                   // 删除旧规则
-                  const oldRule = deps.RegexTransformationManager.getAllRules().find(r => r.name === convertedRule.name);
+                  const oldRule = deps.RegexTransformationManager.getAllRules().find((r: any) => r.name === convertedRule.name);
                   if (oldRule) deps.RegexTransformationManager.removeRule(oldRule.id);
                   deps.RegexTransformationManager.addCustomRule(convertedRule);
                   existingNames.push(convertedRule.name);
                   importedCount++;
                   processNext(index + 1);
                 },
-                onRename: newName => {
+                onRename: (newName: any) => {
                   convertedRule.name = newName;
                   convertedRule.id = `tavern_import_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                   deps.RegexTransformationManager.addCustomRule(convertedRule);
@@ -1252,7 +1252,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === Debug控制台 ===
-    dialog.find('#btn-open-debug-console').on('click', function (e) {
+    dialog.find('#btn-open-debug-console').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       dialog.remove();
@@ -1261,14 +1261,14 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 配置方案与备份 ===
-    dialog.find('#cfg-config-backup-restore').on('click', function (e) {
+    dialog.find('#cfg-config-backup-restore').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       deps.showDiceConfigBackupDialog();
     });
 
     // === 清空本地缓存 ===
-    dialog.find('#cfg-clear-local-cache').on('click', function (e) {
+    dialog.find('#cfg-clear-local-cache').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -1302,7 +1302,7 @@ export function createShowSettingsModal(deps: any) {
     dialog.on('click', '#dlg-close-x, .acu-settings-header .acu-close-btn', closeDialog);
 
     // 手动更新按钮点击事件
-    dialog.on('click', '#acu-manual-update-btn', function (e) {
+    dialog.on('click', '#acu-manual-update-btn', function (e: any) {
       e.stopPropagation();
       deps.showManualUpdateDialog();
     });
