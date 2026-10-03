@@ -8,6 +8,8 @@ type CharacterAttributeSource = string;
 type LegacyAdvancedDicePreset = Record<string, any>;
 import type { AdvancedDicePreset, OutcomeLevel } from '../../shared/advanced-preset-types';
 import { createApplyContestAdvancedPreset } from './contest/apply-advanced-preset';
+import { buildContestPanelHtml } from './contest/build-contest-panel-html';
+import { createResolveContest } from './contest/resolve-contest';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowContestPanel(deps: any) {
   const showContestPanel = (options: Record<string, any> = {}) => {
@@ -90,124 +92,21 @@ export function createShowContestPanel(deps: any) {
         : null;
 
     const overlay = $('<div class="acu-contest-overlay"></div>');
-    const panelHtml =
-      '<div class="acu-contest-panel acu-theme-' +
-      config.theme +
-      '">' +
-      '<div class="acu-dice-panel-header">' +
-      '<div class="acu-dice-panel-title"><i class="fa-solid fa-people-arrows"></i> 对抗检定</div>' +
-      '<div class="acu-dice-panel-actions">' +
-      deps.getTutorialButtonHtml('contestDice', '查看对抗检定教程') +
-      '<button type="button" id="contest-switch-normal" class="acu-dice-panel-action-btn" aria-label="切换到普通检定" title="切换到普通检定"><i class="fa-solid fa-dice-d20"></i></button>' +
-      '<button type="button" id="contest-history-btn" class="acu-dice-panel-action-btn" aria-label="检定历史" title="检定历史"><i class="fa-solid fa-history"></i></button>' +
-      '<button type="button" class="acu-contest-config-btn acu-dice-panel-action-btn" aria-label="掷骰规则设置" title="掷骰规则设置"><i class="fa-solid fa-cog"></i></button>' +
-      '<button type="button" class="acu-contest-close acu-dice-panel-action-btn" aria-label="关闭对抗检定面板" title="关闭"><i class="fa-solid fa-times"></i></button>' +
-      '</div>' +
-      '</div>' +
-      '<div class="acu-dice-panel-body">' +
-      '<div id="contest-dice-presets-section">' +
-      // [修复] 添加"检定规则"标题，与普通检定一致
-      '<div class="acu-dice-section-title"><span><i class="fa-solid fa-sliders"></i> 检定规则</span></div>' +
-      '<div class="acu-dice-presets">' +
-      '<button type="button" class="acu-dice-quick-preset-btn" data-dice="custom" style="order: -999;">自定义</button>' +
-      contestAvailablePresets
-        .map(
-          (p: any) =>
-            '<button type="button" class="acu-dice-quick-preset-btn' +
-            // [修复] 使用activePresetId而不是diceExpression来判断active状态
-            (p.id === activePresetId ? ' active' : '') +
-            '" data-dice="' +
-            deps.escapeHtml(p.diceExpression || '1d100') +
-            '" data-criteria="' +
-            deps.escapeHtml(p.successCriteria || 'lte') +
-            '" data-preset-id="' +
-            deps.escapeHtml(p.id) +
-            '">' +
-            deps.escapeHtml(p.name) +
-            '</button>',
-        )
-        .join('') +
-      '</div>' +
-      '</div>' +
-      '<input type="hidden" id="contest-dice-type" value="' +
-      diceType +
-      '">' +
-      '<div class="acu-dice-section-title" id="contest-init-char-buttons-section"><span><i class="fa-solid fa-user"></i> 发起方</span><div id="contest-init-char-buttons" class="acu-dice-quick-inline"></div></div>' +
-      '<div id="contest-init-params-section">' +
-      '<div id="contest-init-primary-row" class="acu-dice-form-row cols-2">' +
-      '<div><div class="acu-dice-form-label">名字</div><input type="text" class="acu-dice-input" id="contest-init-display" value="' +
-      deps.escapeHtml(passedInitiatorName) +
-      '" placeholder="<user>"></div>' +
-      '<div><div class="acu-dice-form-label"><span class="contest-attr-name-text">属性名</span><button type="button" class="acu-random-skill-btn" id="contest-init-random-skill" title="随机技能"><i class="fa-solid fa-dice"></i></button></div><input type="text" class="acu-dice-input" id="contest-init-name" value="" placeholder="自由检定"></div>' +
-      '</div>' +
-      // [调整] 发起方骰子语法 (自定义模式时显示，半宽)
-      '<div id="contest-init-dice-syntax-row" class="acu-dice-form-row cols-2" style="display: none;">' +
-      '<div><div class="acu-dice-form-label">骰子语法</div><input type="text" id="contest-custom-dice-init" class="acu-dice-input" value="" placeholder="留空=1d100, 1d20+5..."></div>' +
-      '<div></div>' +
-      '</div>' +
-      '<div id="contest-init-values-row" class="acu-dice-form-row cols-3">' +
-      '<div id="contest-init-attr-wrapper"><div class="acu-dice-form-label" id="contest-init-attr-label">属性值</div><input type="text" class="acu-dice-input" id="contest-init-value" value="' +
-      (passedInitiatorValue !== undefined ? passedInitiatorValue : '') +
-      '" placeholder="留空=50%最大值"></div>' +
-      '<div id="contest-init-skill-mod-wrapper" style="display:none;"><div class="acu-dice-form-label" id="contest-init-skill-mod-label">技能加值</div><input type="text" class="acu-dice-input" id="contest-init-skill-mod" placeholder="留空=0"></div>' +
-      '<div id="contest-init-mod-wrapper"><div class="acu-dice-form-label" id="contest-init-mod-label">修正值</div><input type="text" class="acu-dice-input" id="contest-init-mod" placeholder="留空=0"></div>' +
-      '<div id="contest-init-target-wrapper"><div class="acu-dice-form-label" id="contest-init-target-label">目标值</div><input type="text" class="acu-dice-input" id="contest-init-target" value="" placeholder="自动"></div>' +
-      '</div>' +
-      '</div>' +
-      '<div id="contest-init-custom-fields"></div>' +
-      '<div id="init-attr-buttons" class="acu-dice-quick-compact">' +
-      buildAttrButtons(playerAttrs, 'init') +
-      '</div>' +
-      '<div class="acu-dice-section-title" id="contest-opp-char-buttons-section"><span><i class="fa-solid fa-user"></i> 对抗方</span><div id="contest-opp-char-buttons" class="acu-dice-quick-inline"></div></div>' +
-      '<div id="contest-opp-params-section">' +
-      '<div id="contest-opp-primary-row" class="acu-dice-form-row cols-2">' +
-      '<div><div class="acu-dice-form-label">名字</div><input type="text" class="acu-dice-input" id="contest-opponent-display" value="' +
-      deps.escapeHtml(opponentName) +
-      '" placeholder="对手"></div>' +
-      '<div><div class="acu-dice-form-label"><span class="contest-attr-name-text">属性名</span><button type="button" class="acu-random-skill-btn" id="contest-opp-random-skill" title="随机技能"><i class="fa-solid fa-dice"></i></button></div><input type="text" class="acu-dice-input" id="contest-opp-name" value="" placeholder="同发起方"></div>' +
-      '</div>' +
-      // [调整] 对抗方骰子语法 (自定义模式时显示，半宽)
-      '<div id="contest-opp-dice-syntax-row" class="acu-dice-form-row cols-2" style="display: none;">' +
-      '<div><div class="acu-dice-form-label">骰子语法</div><input type="text" id="contest-custom-dice-opp" class="acu-dice-input" value="" placeholder="留空=同发起方"></div>' +
-      '<div></div>' +
-      '</div>' +
-      '<div id="contest-opp-values-row" class="acu-dice-form-row cols-3">' +
-      '<div id="contest-opp-attr-wrapper"><div class="acu-dice-form-label" id="contest-opp-attr-label">属性值</div><input type="text" class="acu-dice-input" id="contest-opp-value" value="' +
-      (passedOpponentValue !== undefined ? passedOpponentValue : '') +
-      '" placeholder="留空=50%最大值"></div>' +
-      '<div id="contest-opp-skill-mod-wrapper" style="display:none;"><div class="acu-dice-form-label" id="contest-opp-skill-mod-label">技能加值</div><input type="text" class="acu-dice-input" id="contest-opp-skill-mod" placeholder="留空=0"></div>' +
-      '<div id="contest-opp-mod-wrapper"><div class="acu-dice-form-label" id="contest-opp-mod-label">修正值</div><input type="text" class="acu-dice-input" id="contest-opp-mod" placeholder="留空=0"></div>' +
-      '<div id="contest-opp-target-wrapper"><div class="acu-dice-form-label" id="contest-opp-target-label">目标值</div><input type="text" class="acu-dice-input" id="contest-opp-target" value="" placeholder="自动"></div>' +
-      '</div>' +
-      '</div>' +
-      '<div id="contest-opp-custom-fields"></div>' +
-      '<div id="opp-attr-buttons" class="acu-dice-quick-compact">' +
-      buildAttrButtons(opponentAttrs, 'opp') +
-      '</div>' +
-      // [新增] 判定规则 (自定义模式时显示，只占一半宽度)
-      '<div id="contest-custom-judge-row" class="acu-dice-form-row cols-2" style="display: none; margin-top: 8px;">' +
-      '<div><div class="acu-dice-form-label">判定规则</div><select id="contest-custom-judge-rule" class="acu-dice-select">' +
-      '<option value="higher">值大者胜</option>' +
-      '<option value="lower">值小者胜</option>' +
-      '<option value="rank">成功等级比较</option>' +
-      '<option value="none">仅显示结果</option>' +
-      '</select></div>' +
-      '<div><div class="acu-dice-form-label">平手规则</div><select id="contest-custom-tie-rule" class="acu-dice-select">' +
-      '<option value="initiator_lose">发起者失败</option>' +
-      '<option value="tie" selected>平手</option>' +
-      '<option value="initiator_win">发起者胜利</option>' +
-      '</select></div>' +
-      '</div>' +
-      '<div id="contest-result-display" class="acu-contest-result-display">' +
-      '<div class="acu-contest-result-inner">' +
-      '<div id="contest-result-init" class="acu-contest-result-side"></div>' +
-      '<span class="acu-contest-vs">VS</span>' +
-      '<div id="contest-result-opp" class="acu-contest-result-side right"></div>' +
-      '</div>' +
-      '</div>' +
-      '<button type="button" id="contest-roll-btn" class="acu-dice-roll-btn"><i class="fa-solid fa-dice"></i> 开始对抗！</button>' +
-      '</div>' +
-      '</div>';
+    const panelHtml = buildContestPanelHtml({
+      config,
+      escapeHtml: (text: any) => deps.escapeHtml(text),
+      tutorialButtonHtml: deps.getTutorialButtonHtml('contestDice', '查看对抗检定教程'),
+      presets: contestAvailablePresets,
+      activePresetId,
+      diceType,
+      initiatorName: passedInitiatorName,
+      initiatorValue: passedInitiatorValue,
+      opponentName,
+      opponentValue: passedOpponentValue,
+      buildAttrButtons,
+      playerAttrs,
+      opponentAttrs,
+    });
 
     const panel = $(panelHtml);
     overlay.append(panel);
@@ -631,107 +530,8 @@ export function createShowContestPanel(deps: any) {
       panel.find('#contest-init-custom-fields, #contest-opp-custom-fields').hide();
     });
 
-    // 掷骰函数 - 使用 rollComplexDiceExpression 支持复合表达式
-    const rollDice = function (formula: any) { void rollDice;
-      const rollResult = rollComplexDiceExpression(formula);
-      const total = rollResult.total;
-      if (Number.isNaN(total)) return { total: 0, rolls: [], sides: 100 };
-      // 尝试从公式中提取基本信息用于显示
-      const basicMatch = formula.match(/^(\d*)d(\d+|F)/i);
-      const sidesStr = basicMatch ? basicMatch[2] : '100';
-      const sides = sidesStr.toUpperCase() === 'F' ? 3 : parseInt(sidesStr, 10);
-      return { total, rolls: [], sides };
-    };
 
-    const resolveContest = function (
-      preset: AdvancedDicePreset,
-      initOutcome: OutcomeLevel,
-      oppOutcome: OutcomeLevel,
-      initValue: number,
-      oppValue: number,
-      initAttr: number,
-      oppAttr: number,
-    ): 'initiator' | 'opponent' | 'tie' {
-      const contestRule = preset.contestRule;
-
-      if (!contestRule) {
-        if (initValue > oppValue) return 'initiator';
-        if (oppValue > initValue) return 'opponent';
-        return 'tie';
-      }
-
-      let winner: 'initiator' | 'opponent' | 'tie' = 'tie';
-      const contestMode = contestRule.mode ?? 'custom'; // 默认自定义模式，保持旧行为
-
-      switch (contestMode) {
-        case 'rank': {
-          const initRank = initOutcome.contestRank ?? 50;
-          const oppRank = oppOutcome.contestRank ?? 50;
-          if (initRank > oppRank) winner = 'initiator';
-          else if (oppRank > initRank) winner = 'opponent';
-          break;
-        }
-        case 'value':
-        case 'margin': {
-          // 余量模式裁决与 value 相同
-          if (initValue > oppValue) winner = 'initiator';
-          else if (oppValue > initValue) winner = 'opponent';
-          break;
-        }
-        case 'custom': {
-          if (contestRule.customExpr) {
-            const context = {
-              $initValue: initValue,
-              $oppValue: oppValue,
-              $initRank: initOutcome.contestRank ?? 50,
-              $oppRank: oppOutcome.contestRank ?? 50,
-            };
-            const conditionResult: { success: boolean; value?: number | boolean; error?: string } = deps.evaluateCondition(
-              contestRule.customExpr,
-              context,
-            );
-            if (conditionResult.success) {
-              const isMatch =
-                typeof conditionResult.value === 'number'
-                  ? conditionResult.value !== 0
-                  : Boolean(conditionResult.value);
-              winner = isMatch ? 'initiator' : 'opponent';
-            } else {
-              console.warn('[DICE] 对抗判定自定义表达式失败:', conditionResult.error);
-            }
-          }
-          break;
-        }
-      }
-
-      const tieBreakers =
-        Array.isArray(contestRule.tieBreakers) && contestRule.tieBreakers.length > 0
-          ? contestRule.tieBreakers
-          : contestRule.tieBreaker
-            ? [contestRule.tieBreaker]
-            : [];
-
-      if (winner === 'tie' && tieBreakers.length > 0) {
-        // 链式平局处理：按顺序尝试直到分出胜负
-        for (const tieBreaker of tieBreakers) {
-          if (winner !== 'tie') break;
-          switch (tieBreaker) {
-            case 'higher_attr':
-              if (initAttr > oppAttr) winner = 'initiator';
-              else if (oppAttr > initAttr) winner = 'opponent';
-              break;
-            case 'initiator_wins':
-              winner = 'initiator';
-              break;
-            case 'reroll':
-              // 重投由外层触发，此处保持平局继续后续规则
-              break;
-          }
-        }
-      }
-
-      return winner;
-    };
+    const resolveContest = createResolveContest(deps);
 
     // [新增] 自定义模式对抗掷骰逻辑
     const performCustomContestRoll = function () {
