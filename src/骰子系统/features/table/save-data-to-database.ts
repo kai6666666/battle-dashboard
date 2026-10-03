@@ -7,7 +7,7 @@ export function createSaveDataToDatabase(deps: any) {
   const saveDataToDatabase = async (tableData: any, skipRender = false, commitDeletes = false) => {
     if (deps.getIsSaving()) {
       console.warn('[DICE]保存操作正在进行中，跳过重复请求');
-      return;
+      return false;
     }
     console.info('[DICE]开始通过数据库 CRUD 保存数据...');
     deps.setIsSaving(true);
@@ -30,6 +30,7 @@ export function createSaveDataToDatabase(deps: any) {
       if (!skipRender) {
         deps.renderInterface();
       }
+      return true;
     } catch (e) {
       const errorMessage = (e as any).message || '保存出错，请检查数据格式和数据库版本';
       console.error('[DICE]保存数据失败:', {

@@ -483,7 +483,18 @@ export function createBindChangesEvents(deps: any) {
 
         // 将快照数据恢复为当前数据
         const restoredData = JSON.parse(JSON.stringify(snapshot));
-        await deps.saveDataToDatabase(restoredData, false, false);
+        try {
+          const saved = await deps.saveDataToDatabase(restoredData, false, false);
+          if (saved === false) {
+            if (window.toastr) window.toastr.info('保存进行中，请稍候再试');
+            return;
+          }
+          if (window.toastr) window.toastr.success('已恢复全部变更');
+          deps.refreshChangesPanel();
+        } catch (error) {
+          // saveDataToDatabase 失败时已弹出「保存失败」提示；此处仅记录，避免二次打扰
+          console.warn('[DICE]批量恢复全部变更失败:', error);
+        }
       });
 
     // === 简洁模式切换 ===
