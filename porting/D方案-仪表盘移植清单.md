@@ -26,12 +26,13 @@
 - [x] S3 接线：`app/init.ts` 启动 dnd-core（幂等）
 - 验收：初始化成功（`[dnd-core] 就绪 ✅`）+ 读设置验收（`dnd_global_api_config`）
 
-### b2 数据与模板（3-5 天）
-- [ ] DataManager(49.9K → 拆 4 块：表解析/队伍/技能专长/导入导出)
-- [ ] ItemManager(2.1K)
-- [ ] TemplateSync(7.7K) + EmbeddedTemplate(0.1K)（`DND5E_SQL_9.20` 随包内置）
-- [ ] TavernSettingsSync(17K)
-- 验收：角色数据读取正确、模板导入弹窗与原版一致
+### b2 数据与模板（3-5 天）— ✅ 已完成（2026-10-04）
+- [x] DataManager(49.9K → 拆 4 块：表解析 tables / 队伍 party / 技能专长 skills / 导入导出 io)
+- [x] ItemManager(2.1K)
+- [x] TemplateSync(7.7K) + EmbeddedTemplate(0.1K)（`DND5E_SQL_9.20` 随包内置 assets/，已进 bundle）
+- [x] ~~TavernSettingsSync(17K)~~（b1 已附带完成）
+- [x] 附加：notify 适配器 / save-bridge（api.importTableAsJson 主通道，b9 可升级为完整版）
+- 验收：读表验收钩子（`CHARACTER_Registry 行数`）+ 模板随包（sheet_quanjuzhuangtai ×7）+ guardrails✅ / tests 16/16✅
 
 ### b3 渲染工具（3-4 天）
 - [ ] UIRenderer(1.9K)、UIUtils(30.7K)

@@ -34,5 +34,6 @@
 
 ## 进度
 
-- ✅ **b1 地基适配已完成**（2026-10-04）：dnd-core 6+1 模块工厂化移植 + `app/init.ts` 接线 + 产物重建
-- 下一步：**b2 数据与模板**（DataManager 拆 4 块 / ItemManager / TemplateSync / TavernSettingsSync）
+- ✅ **b1 地基适配已完成**（2026-10-04）：dnd-core 6+1 模块 + `app/init.ts` 接线 + 产物重建
+- ✅ **b2 数据与模板已完成**（2026-10-04）：DataManager×4 / ItemManager / TemplateSync / 内置模板随包；notify + save-bridge
+- 下一步：**b3 渲染工具**（UIRenderer / UIUtils / styles 拆 part-08-dnd-* / ThemeManager / StyleManager）

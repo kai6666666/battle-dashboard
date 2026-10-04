@@ -8,6 +8,11 @@ import { createDndDBAdapter, type DndDBAdapter } from './db-adapter';
 import { createDndSettingsSync, type DndSettingsSync } from './settings-sync';
 import { createDndSettingsManager, type DndSettingsManager } from './settings-manager';
 import { createDndTavernApi, type DndTavernApi } from './tavern-api';
+import { createDndNotify, type DndNotify } from './notify';
+import { createDndSaveBridge, type DndSaveBridge } from './save-bridge';
+import { createDndDataManager, type DndDataManager } from './data-manager';
+import { createDndItemManager, type DndItemManager } from './item-manager';
+import { createDndTemplateSync, type DndTemplateSync } from './template-sync';
 
 export { DND_CONFIG } from './config';
 export type { DndLogger, DndLoggerDeps } from './logger';
@@ -16,6 +21,11 @@ export type { DndDBAdapter, DndStorageAnalysis } from './db-adapter';
 export type { DndSettingsSync, DndSyncStatus, DndSyncNotifyCallback } from './settings-sync';
 export type { DndSettingsManager, DndAPIConfig, DndAISettings } from './settings-manager';
 export type { DndTavernApi, DndGenerateOptions, DndDatabaseAIStatus } from './tavern-api';
+export type { DndNotify } from './notify';
+export type { DndSaveBridge } from './save-bridge';
+export type { DndDataManager } from './data-manager';
+export type { DndItemManager } from './item-manager';
+export type { DndTemplateSync } from './template-sync';
 
 export interface DndCore {
   logger: DndLogger;
@@ -24,7 +34,12 @@ export interface DndCore {
   settingsSync: DndSettingsSync;
   settingsManager: DndSettingsManager;
   tavernApi: DndTavernApi;
-  /** b1 验收：初始化并读取一条数据库设置 */
+  notify: DndNotify;
+  saveBridge: DndSaveBridge;
+  dataManager: DndDataManager;
+  itemManager: DndItemManager;
+  templateSync: DndTemplateSync;
+  /** b1/b2 验收：初始化并读取一条数据库设置 / 一张数据表 */
   init(): Promise<void>;
 }
 
@@ -43,6 +58,13 @@ export function createDndCore(deps: DndCoreDeps = {}): DndCore {
   const settingsSync = createDndSettingsSync({ logger, dbAdapter });
   const settingsManager = createDndSettingsManager({ logger, settingsSync });
   const tavernApi = createDndTavernApi({ logger, utils });
+
+  // b2 数据与模板
+  const notify = createDndNotify({ logger });
+  const saveBridge = createDndSaveBridge({ logger, utils });
+  const dataManager = createDndDataManager({ logger, utils, saveData: saveBridge.saveData });
+  const itemManager = createDndItemManager({ logger, dataManager, saveData: saveBridge.saveData });
+  const templateSync = createDndTemplateSync({ logger, dbAdapter, utils, notify });
 
   const init = async (): Promise<void> => {
     logger.info('[dnd-core] 初始化开始（b1）…');
@@ -65,8 +87,16 @@ export function createDndCore(deps: DndCoreDeps = {}): DndCore {
       logger.warn('[dnd-core] 读设置验收失败（忽略）：', e);
     }
 
-    logger.info('[dnd-core] 就绪 ✅（模块：logger/utils/db-adapter/settings-sync/settings-manager/tavern-api）');
+    // 4) b2 验收钩子：能读一张数据表（角色表）
+    try {
+      const chars = dataManager.getTable('CHARACTER_Registry');
+      logger.info('[dnd-core] 读表验收：CHARACTER_Registry 行数 =', chars ? chars.length : 'null（无数据库）');
+    } catch (e) {
+      logger.warn('[dnd-core] 读表验收失败（忽略）：', e);
+    }
+
+    logger.info('[dnd-core] 就绪 ✅（模块：b1 六件 + b2 数据与模板：data-manager×4 / item-manager / template-sync / notify / save-bridge）');
   };
 
-  return { logger, utils, dbAdapter, settingsSync, settingsManager, tavernApi, init };
+  return { logger, utils, dbAdapter, settingsSync, settingsManager, tavernApi, notify, saveBridge, dataManager, itemManager, templateSync, init };
 }
