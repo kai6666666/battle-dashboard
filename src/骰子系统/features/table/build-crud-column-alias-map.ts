@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * build-crud-column-alias-map.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -9,11 +8,11 @@ export function createBuildCrudColumnAliasMap(deps: any) {
     const aliases: Record<string, string> = {};
     if (!ddl) return aliases;
 
-    ddl.split(/\r?\n/).forEach(line => {
+    ddl.split(/\r?\n/).forEach((line: any) => {
       const parsed = deps.parseCrudColumnDefinitionLine(line);
       if (!parsed) return;
       const { columnName, comment } = parsed;
-      deps.getCrudSqlCommentAliases(comment).forEach(alias => deps.addCrudColumnAlias(aliases, alias, columnName));
+      deps.getCrudSqlCommentAliases(comment).forEach((alias: any) => deps.addCrudColumnAlias(aliases, alias, columnName));
     });
 
     return aliases;

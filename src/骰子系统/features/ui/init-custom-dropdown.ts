@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * init-custom-dropdown.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createInitCustomDropdown(deps: any) {
-  const initCustomDropdown = ($input, options) => {
+  const initCustomDropdown = ($input: any, options: any) => {
     const { $ } = deps.getCore();
     const inputId = $input.attr('id') || 'dd_' + Math.random().toString(36).substr(2, 9);
     $input.attr('id', inputId);
@@ -23,14 +22,14 @@ export function createInitCustomDropdown(deps: any) {
 
     const renderItems = (filter = '') => {
       const lowerFilter = filter.toLowerCase();
-      const filtered = options.filter(opt => opt.toLowerCase().includes(lowerFilter));
+      const filtered = options.filter((opt: any) => opt.toLowerCase().includes(lowerFilter));
 
       if (filtered.length === 0) {
         $dropdown.html(`<div class="acu-dropdown-empty">无匹配项</div>`);
       } else {
         $dropdown.html(
           filtered
-            .map(opt => `<div class="acu-dropdown-item" data-value="${deps.escapeHtml(opt)}">${deps.escapeHtml(opt)}</div>`)
+            .map((opt: any) => `<div class="acu-dropdown-item" data-value="${deps.escapeHtml(opt)}">${deps.escapeHtml(opt)}</div>`)
             .join(''),
         );
       }
@@ -47,20 +46,20 @@ export function createInitCustomDropdown(deps: any) {
     };
 
     // 点击输入框显示下拉
-    $input.off('.acudd').on('focus.acudd click.acudd', function (e) {
+    $input.off('.acudd').on('focus.acudd click.acudd', function (e: any) {
       e.stopPropagation();
       showDropdown();
     });
 
     // 输入筛选
-    $input.on('input.acudd', function () {
+    $input.on('input.acudd', function (this: any) {
       renderItems($(this).val());
     });
 
     // hover 效果已通过 CSS :hover 处理，无需 JS
 
     // 选择项目
-    $dropdown.on('click', '.acu-dropdown-item', function (e) {
+    $dropdown.on('click', '.acu-dropdown-item', function (this: any, e: any) {
       e.stopPropagation();
       e.preventDefault();
       const val = $(this).data('value');
@@ -69,7 +68,7 @@ export function createInitCustomDropdown(deps: any) {
     });
 
     // 点击下拉列表本身不关闭
-    $dropdown.on('click', function (e) {
+    $dropdown.on('click', function (e: any) {
       e.stopPropagation();
     });
 
@@ -77,7 +76,7 @@ export function createInitCustomDropdown(deps: any) {
     $input
       .closest('.acu-dice-panel, .acu-contest-panel')
       .off('click.acudd_' + inputId)
-      .on('click.acudd_' + inputId, function (e) {
+      .on('click.acudd_' + inputId, function (e: any) {
         if (!$(e.target).closest('.acu-dropdown-wrapper').length) {
           hideDropdown();
         }

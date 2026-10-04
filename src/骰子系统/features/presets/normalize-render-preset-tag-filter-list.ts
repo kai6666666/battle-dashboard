@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * normalize-render-preset-tag-filter-list.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createNormalizeRenderPresetTagFilterList(deps: any) {
+export function createNormalizeRenderPresetTagFilterList(_deps: any) {
   const normalizeRenderPresetTagFilterList = (value: unknown, fallback: readonly string[] = []): string[] => {
     const rawItems = typeof value === 'string' ? value.split(/[,，;；\n]/) : Array.isArray(value) ? value : fallback;
     const seen = new Set<string>();

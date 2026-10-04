@@ -1,8 +1,37 @@
-// @ts-nocheck
 /**
  * show-dice-config-backup-privacy-confirm.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupModuleId =
+  | 'uiLayout'
+  | 'diceConfig'
+  | 'advancedPresets'
+  | 'attributePresets'
+  | 'actionGm'
+  | 'dashboardPresets'
+  | 'renderPresets'
+  | 'tableTemplate'
+  | 'tableTemplateRequirementPresets'
+  | 'validation'
+  | 'regex'
+  | 'avatarMap'
+  | 'customIcons'
+  | 'gachaSettings';
+
+interface DiceConfigBackupModulePayload {
+  storage: Record<string, unknown>;
+  resources?: Record<string, unknown>;
+  warnings?: string[];
+}
+interface DiceConfigBackupDocument {
+  format: string;
+  schemaVersion: number;
+  exportedAt: string;
+  scriptVersion: string;
+  presetFormatVersion: string;
+  modules: Partial<Record<string, DiceConfigBackupModulePayload>>;
+}
+
 export function createShowDiceConfigBackupPrivacyConfirm(deps: any) {
   const showDiceConfigBackupPrivacyConfirm = (
     mode: 'export' | 'restore',

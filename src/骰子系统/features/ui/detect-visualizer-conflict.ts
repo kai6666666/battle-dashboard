@@ -1,9 +1,7 @@
-// @ts-nocheck
 /**
  * detect-visualizer-conflict.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-import { SCRIPT_ID } from '../../shared/constants';
 export function createDetectVisualizerConflict(deps: any) {
   const detectVisualizerConflict = () => {
     const { $ } = deps.getCore();
@@ -14,15 +12,12 @@ export function createDetectVisualizerConflict(deps: any) {
     const $wrapper = $('.acu-wrapper');
     if ($wrapper.length > 0) {
       // 检查 wrapper 内部是否有可视化前端特有的元素
-      // 可视化前端 v12.60 使用 'acu_visualizer_ui_v20_pagination' 作为 SCRIPT_ID
       // 检查是否有可视化前端特有的类名或结构
       const hasVisualizerNav = $wrapper.find('.acu-nav-container').length > 0;
       const hasVisualizerDataDisplay = $wrapper.find('.acu-data-display').length > 0;
 
       // 如果 wrapper 存在但没有骰子系统的特征元素，可能是可视化前端
       // 或者检查 wrapper 的 data 属性或 id
-      const wrapperId = $wrapper.attr('id') || '';
-      const wrapperClass = $wrapper.attr('class') || '';
 
       // 如果检测到可视化前端特有的结构，判定为冲突
       if (hasVisualizerNav && hasVisualizerDataDisplay) {

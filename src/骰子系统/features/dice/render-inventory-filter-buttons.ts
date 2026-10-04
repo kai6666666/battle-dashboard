@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * render-inventory-filter-buttons.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type InventoryFilterButtonMeta<T = any> = { [key: string]: any; value?: T };
+
 export function createRenderInventoryFilterButtons(deps: any) {
   const renderInventoryFilterButtons = <T extends string>(
     filterKey: 'type' | 'quality' | 'sort',

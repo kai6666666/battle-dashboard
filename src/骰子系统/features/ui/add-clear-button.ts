@@ -1,12 +1,11 @@
-// @ts-nocheck
 /**
  * add-clear-button.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createAddClearButton(deps: any) {
-  const addClearButton = ($panel, inputSelector) => {
+  const addClearButton = ($panel: any, inputSelector: any) => {
     const { $ } = deps.getCore();
-    $panel.find(inputSelector).each(function () {
+    $panel.find(inputSelector).each(function (this: any) {
       const $input = $(this);
       // 避免重复添加
       if ($input.parent().hasClass('acu-input-wrapper')) return;
@@ -18,7 +17,7 @@ export function createAddClearButton(deps: any) {
       );
       $input.after($clearBtn);
       // 点击清除
-      $clearBtn.on('click', function (e) {
+      $clearBtn.on('click', function (e: any) {
         e.preventDefault();
         e.stopPropagation();
         $input.val('').trigger('input').trigger('change').focus();

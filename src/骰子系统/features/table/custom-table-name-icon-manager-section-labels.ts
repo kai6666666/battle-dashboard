@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * custom-table-name-icon-manager-section-labels.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCustomTableNameIconManagerSectionLabels(deps: any) {
+import type { CustomTableNameIconSection } from '../../shared/index-local-types';
+export function createCustomTableNameIconManagerSectionLabels(_deps: any) {
   const CUSTOM_TABLE_NAME_ICON_MANAGER_SECTION_LABELS: Record<CustomTableNameIconSection, string> = {
     table: '表格',
     map: '地图',

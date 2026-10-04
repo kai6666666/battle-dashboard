@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * get-table-data.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RuntimeTableReadOptions = Record<string, any>;
+
 export function createGetTableData(deps: any) {
   const getTableData = (options?: RuntimeTableReadOptions) => {
     const api = deps.getCore().getDB();

@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * parse-check-suggestion-primitive-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createParseCheckSuggestionPrimitiveValue(deps: any) {
+type CheckSuggestionParamValue = string | number | boolean;
+
+export function createParseCheckSuggestionPrimitiveValue(_deps: any) {
   const parseCheckSuggestionPrimitiveValue = (value: string): CheckSuggestionParamValue => {
     const trimmed = String(value || '').trim();
     if (/^-?\d+(?:\.\d+)?$/.test(trimmed)) return Number(trimmed);

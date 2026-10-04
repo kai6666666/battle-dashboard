@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-action-preset-agent-prompt-filename.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildActionPresetAgentPromptFilename(deps: any) {
+export function createBuildActionPresetAgentPromptFilename(_deps: any) {
   const buildActionPresetAgentPromptFilename = (presetName: string): string => {
     const safeName =
       presetName

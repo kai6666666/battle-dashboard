@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * render-interface-impl.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DICE_ROOT_CLASS, DICE_ROOT_SELECTOR } from '../../shared/constants';
 import { Store } from '../../shared/storage/store';
+type NavigationItem = Record<string, any>;
+type SpecialNavigationItem = Record<string, any>;
 export function createRenderInterfaceImpl(deps: any) {
   const _renderInterfaceImpl = () => {
     console.info('[DICE]开始渲染界面...');
@@ -96,7 +97,7 @@ export function createRenderInterfaceImpl(deps: any) {
                 console.info(`[DICE]自动替换完成，共影响 ${transformResult.totalApplied} 处数据`);
 
                 deps.saveSheetsViaJsonFloorWithoutTracking(rawData, transformResult.modifiedSheetKeys)
-                  .catch(err => {
+                  .catch((err: any) => {
                     console.warn('[DICE]自动转换后保存数据失败:', err);
                   })
                   .finally(() => {
@@ -117,7 +118,7 @@ export function createRenderInterfaceImpl(deps: any) {
           }
         } catch (transformError) {
           deps.setIsAutoTransforming(false); // 确保异常时也清除标志
-          const errorMsg = transformError instanceof Error ? transformError.message : String(transformError);
+          const errorMsg = transformError instanceof Error ? transformError.message : String(transformError); void errorMsg;
           console.error('[DICE]自动转换失败:', transformError);
         }
       }
@@ -189,7 +190,7 @@ export function createRenderInterfaceImpl(deps: any) {
     const savedOrder = deps.getSavedTableOrder();
     let orderedNames = Object.keys(tables);
     if (savedOrder)
-      orderedNames = savedOrder.filter(n => tables[n]).concat(orderedNames.filter(n => !savedOrder.includes(n)));
+      orderedNames = savedOrder.filter((n: any) => tables[n]).concat(orderedNames.filter(n => !savedOrder.includes(n)));
 
     const hiddenList = deps.getHiddenTables();
     orderedNames = orderedNames.filter(n => !hiddenList.includes(n));
@@ -238,8 +239,8 @@ export function createRenderInterfaceImpl(deps: any) {
     let currentOptionHash = null; // 当前选项的指纹
 
     if (config.showOptionPanel !== false) {
-      const checkSuggestionTables = [];
-      const optionTables = [];
+      const checkSuggestionTables: any[] = [];
+      const optionTables: any[] = [];
       Object.keys(tables).forEach(k => {
         const table = tables[k];
         const tableName = table?.name || k;
@@ -375,7 +376,7 @@ export function createRenderInterfaceImpl(deps: any) {
 
       // === 构建导航按钮（支持排序和隐藏） ===
       const navHiddenList = deps.getHiddenTables();
-      const navSavedOrder = deps.getSavedTableOrder() || [];
+      const navSavedOrder = deps.getSavedTableOrder() || []; void navSavedOrder;
 
       // 定义所有导航项（特殊按钮 + 表格）
       const SPECIAL_NAV_ITEMS: SpecialNavigationItem[] = [
@@ -455,8 +456,8 @@ export function createRenderInterfaceImpl(deps: any) {
 
       // 应用保存的排序（统一稳定排序：导航盘管理顺序 → 会话首见 → 中文兜底）
       const navSortedKeys = deps.getStableTableSort(allNavItems.map(item => item.key));
-      const navOrderMap = new Map(navSortedKeys.map((k, i) => [k, i]));
-      allNavItems.sort((a, b) => (navOrderMap.get(a.key) ?? 9999) - (navOrderMap.get(b.key) ?? 9999));
+      const navOrderMap = new Map(navSortedKeys.map((k: any, i: any) => [k, i]));
+      allNavItems.sort((a, b) => ((navOrderMap.get(a.key) as any) ?? 9999) - ((navOrderMap.get(b.key) as any) ?? 9999));
       // 将生效顺序回写导航盘管理，使全局永久一致
       deps.ensureCanonicalTableOrder(allNavItems.map(item => item.key));
 
@@ -486,7 +487,7 @@ export function createRenderInterfaceImpl(deps: any) {
 
       // 渲染固定功能按钮（order 设为最大值，确保在最后）
       html += `<div class="acu-actions-group" id="acu-active-actions" style="order: 9999;">`;
-      deps.ACTION_BUTTONS.forEach(btn => {
+      deps.ACTION_BUTTONS.forEach((btn: any) => {
         html += `<button type="button" class="acu-action-btn" id="${btn.id}" title="${btn.title}" aria-label="${btn.title}"><i class="fa-solid ${btn.icon}"></i></button>`;
       });
       html += `</div>`;
@@ -503,7 +504,7 @@ export function createRenderInterfaceImpl(deps: any) {
 
     if (isFloatingCollapsed) {
       const hostDocument = deps.getTavernHostDocument();
-      const wrapperNodes = deps.collectHostAndLocalNodes<HTMLElement>(DICE_ROOT_SELECTOR);
+      const wrapperNodes = deps.collectHostAndLocalNodes(DICE_ROOT_SELECTOR);
 
       let replaced = false;
       for (const node of wrapperNodes) {
@@ -530,7 +531,7 @@ export function createRenderInterfaceImpl(deps: any) {
       }
     } else if (config.positionMode === 'viewport') {
       const hostDocument = deps.getTavernHostDocument();
-      const wrapperNodes = deps.collectHostAndLocalNodes<HTMLElement>(DICE_ROOT_SELECTOR);
+      const wrapperNodes = deps.collectHostAndLocalNodes(DICE_ROOT_SELECTOR);
 
       let replaced = false;
       for (const node of wrapperNodes) {
@@ -592,7 +593,7 @@ export function createRenderInterfaceImpl(deps: any) {
         } else {
           // [修复] 检查容器是否在最新的 AI 消息上，而不是旧消息
           const $lastAiMes = $('#chat .mes')
-            .filter(function () {
+            .filter(function (this: any) {
               const $this = $(this);
               if ($this.attr('is_user') === 'true' || $this.attr('is_system') === 'true' || $this.hasClass('sys_mes'))
                 return false;
@@ -657,14 +658,14 @@ export function createRenderInterfaceImpl(deps: any) {
 
         // 可选：在后台尝试获取数据（不阻塞界面显示）
         deps.MvuModule.getDataWithRetry(5, 800)
-          .then(mvuData => {
+          .then((mvuData: any) => {
             // 如果获取到数据，刷新面板显示
             if (mvuData && deps.canWriteMvuPanel()) {
               $panel.html('<div class="acu-mvu-panel">' + deps.MvuModule.renderPanel() + '</div>');
               deps.MvuModule.bindEvents($panel);
             }
           })
-          .catch(err => {
+          .catch((err: any) => {
             console.error('[DICE]MvuModule Error getting data:', err);
             if (deps.canWriteMvuPanel()) {
               // 错误时也刷新面板，显示错误状态

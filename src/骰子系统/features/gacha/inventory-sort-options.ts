@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * inventory-sort-options.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createInventorySortOptions(deps: any) {
+export function createInventorySortOptions(_deps: any) {
   const INVENTORY_SORT_OPTIONS = [
     { value: 'default', label: '默认', icon: 'fa-border-all' },
     { value: 'type', label: '类型', icon: 'fa-shapes' },

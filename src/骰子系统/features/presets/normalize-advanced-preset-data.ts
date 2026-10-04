@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * normalize-advanced-preset-data.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+
 export function createNormalizeAdvancedPresetData(deps: any) {
   const normalizeAdvancedPresetData = (
     rawData: Record<string, unknown>,
@@ -12,10 +13,10 @@ export function createNormalizeAdvancedPresetData(deps: any) {
     const importedVersion = typeof data.version === 'string' ? data.version : '0.0.0';
     const needsUpdate = deps.compareVersion(importedVersion, deps.getPRESET_FORMAT_VERSION()) < 0;
 
-    const ui = data.ui;
+    const ui = data.ui as Record<string, any>;
     if (deps.isAdvancedPresetRecord(ui)) {
-      const attribute = deps.isAdvancedPresetRecord(data.attribute) ? { ...data.attribute } : {};
-      const dc = deps.isAdvancedPresetRecord(data.dc) ? { ...data.dc } : {};
+      const attribute = deps.isAdvancedPresetRecord(data.attribute) ? { ...(data.attribute as Record<string, any>) } : {};
+      const dc = deps.isAdvancedPresetRecord(data.dc) ? { ...(data.dc as Record<string, any>) } : {};
       if (typeof ui.attributeLabel === 'string' && !attribute.label) attribute.label = ui.attributeLabel;
       if (typeof ui.dcLabel === 'string' && !dc.label) dc.label = ui.dcLabel;
       data.attribute = attribute;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * builtin-attribute-presets.ts
  * Feature-Sliced 模块（数据常量）。

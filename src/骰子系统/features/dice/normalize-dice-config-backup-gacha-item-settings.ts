@@ -1,15 +1,14 @@
-// @ts-nocheck
 /**
  * normalize-dice-config-backup-gacha-item-settings.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { GachaItemSettingsEntry, GachaItemSettingsRecord } from '../../features/gacha/gacha-types';
 export function createNormalizeDiceConfigBackupGachaItemSettings(deps: any) {
-  const normalizeDiceConfigBackupGachaItemSettings = (value: unknown): GachaItemSettingsRecord | null => {
+  const normalizeDiceConfigBackupGachaItemSettings = (value: any): GachaItemSettingsRecord | null => {
     if (!deps.isDiceConfigBackupRecord(value)) return null;
     const rawItems = deps.isDiceConfigBackupRecord(value.items) ? value.items : {};
     const items: Record<string, GachaItemSettingsEntry> = {};
-    Object.entries(rawItems).forEach(([rawId, rawEntry]) => {
+    Object.entries(rawItems).forEach(([rawId, rawEntry]: any) => {
       const id = String(rawId || '').trim();
       if (!id || !deps.isDiceConfigBackupRecord(rawEntry)) return;
       items[id] = {

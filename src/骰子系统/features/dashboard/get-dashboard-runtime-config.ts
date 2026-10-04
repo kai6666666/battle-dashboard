@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * get-dashboard-runtime-config.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DashboardConfigMap = Record<string, any>;
+type DashboardFilterConfig = Record<string, any>;
+
 export function createGetDashboardRuntimeConfig(deps: any) {
   const getDashboardRuntimeConfig = (): DashboardConfigMap => {
     if (deps.getDashboardRuntimeConfigCache()) return deps.getDashboardRuntimeConfigCache();
@@ -10,7 +12,7 @@ export function createGetDashboardRuntimeConfig(deps: any) {
     const runtimeConfig = deps.cloneDashboardConfig(deps.DASHBOARD_TABLE_CONFIG);
     const activePreset = deps.DashboardPresetManager.getActivePreset();
 
-    Object.entries(activePreset.modules || {}).forEach(([moduleKey, moduleOverride]) => {
+    Object.entries(activePreset.modules || {}).forEach(([moduleKey, moduleOverride]: any) => {
       const moduleConfig = runtimeConfig[moduleKey];
       if (!moduleConfig) return;
 
@@ -18,7 +20,7 @@ export function createGetDashboardRuntimeConfig(deps: any) {
         moduleConfig.tableKeywords = [...moduleOverride.tableKeywords];
       }
 
-      Object.entries(moduleOverride.columns || {}).forEach(([columnKey, columnOverride]) => {
+      Object.entries(moduleOverride.columns || {}).forEach(([columnKey, columnOverride]: any) => {
         const columnConfig = moduleConfig.columns[columnKey];
         if (columnConfig && columnOverride.keywords.length > 0) {
           columnConfig.keywords = [...columnOverride.keywords];
@@ -34,7 +36,7 @@ export function createGetDashboardRuntimeConfig(deps: any) {
         }
       });
 
-      Object.entries(moduleOverride.filters || {}).forEach(([filterKey, filterOverride]) => {
+      Object.entries(moduleOverride.filters || {}).forEach(([filterKey, filterOverride]: any) => {
         const allowedFilterKeys = deps.DASHBOARD_PRESET_FILTER_KEYS[moduleKey] || [];
         const filterConfig = moduleConfig.filters?.[filterKey];
         if (!allowedFilterKeys.includes(filterKey) || !filterConfig) return;

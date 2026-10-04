@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * read-textarea-visible-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createReadTextareaVisibleValue(deps: any) {
+type AcuDiceTextareaElement = any;
+
+export function createReadTextareaVisibleValue(_deps: any) {
   const readTextareaVisibleValue = (textarea: HTMLTextAreaElement): string => {
     const originalDescriptor = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value');
     if (originalDescriptor?.get) return String(originalDescriptor.get.call(textarea) ?? '');

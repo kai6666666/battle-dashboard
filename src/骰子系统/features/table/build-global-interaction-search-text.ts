@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * build-global-interaction-search-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildGlobalInteractionSearchText(deps: any) {
+type GlobalInteractionAction = Record<string, any>;
+
+export function createBuildGlobalInteractionSearchText(_deps: any) {
   const buildGlobalInteractionSearchText = (
     tableName: string,
     rowTitle: string,

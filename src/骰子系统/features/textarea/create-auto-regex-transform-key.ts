@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * create-auto-regex-transform-key.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RegexTransformationRule = Record<string, any>;
+
 export function createCreateAutoRegexTransformKey(deps: any) {
   const createAutoRegexTransformKey = (rawData: unknown, rules: readonly RegexTransformationRule[]): string => {
     const dataFingerprint = deps.createSheetDataFingerprint(rawData);

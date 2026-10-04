@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/api/gacha.ts
  * Feature-Sliced: 对外 API 的骰子商店子接口（AcuDice.gacha）。
@@ -40,7 +39,7 @@ export function createAcuDiceGachaApi(deps: {
   showShardShop: (...a: any[]) => any;
   showSettings: (...a: any[]) => any;
 }) {
-  const api = {
+  const api: AcuDice.GachaAPI = {
     costs: {
       singleDraw: deps.costs.singleDraw,
       tenDraw: deps.costs.tenDraw,
@@ -106,7 +105,7 @@ export function createAcuDiceGachaApi(deps: {
       const id = deps.normalizePoolId(poolTag);
       if (!id) throw new Error('[AcuDice][Gacha] setActivePool() 需要卡池 id');
       const visiblePools = deps.getVisiblePools();
-      if (!visiblePools.some(pool => pool.id === id)) throw new Error(`[AcuDice][Gacha] 未找到可见卡池: ${id}`);
+      if (!visiblePools.some((pool: any) => pool.id === id)) throw new Error(`[AcuDice][Gacha] 未找到可见卡池: ${id}`);
       deps.updatePoolTag(id);
       const state = deps.buildStateSnapshot();
       deps.emitEvent('gacha:pool_change', { poolTag: id, state });
@@ -129,17 +128,17 @@ export function createAcuDiceGachaApi(deps: {
     ) {
       const rawData = deps.getRuntimeRaw();
       await deps.ensureCatalogLoaded(rawData);
-      const customIds = new Set(deps.getCustomItems(rawData).map(item => item.id));
+      const customIds = new Set(deps.getCustomItems(rawData).map((item: any) => item.id));
       let items = deps.getAllItems(rawData);
       const poolTag = deps.normalizePoolId(options.poolTag);
       if (poolTag) {
         const activeTags = deps.getActivePoolTags(poolTag);
-        items = items.filter(item => item.poolTags.some(tag => activeTags.includes(tag)));
+        items = items.filter((item: any) => item.poolTags.some((tag: any) => activeTags.includes(tag)));
       }
       if (options.includeDisabled !== true) items = items.filter(deps.isItemEnabled);
-      if (options.customOnly === true || options.source === 'custom') items = items.filter(item => customIds.has(item.id));
-      if (options.source === 'builtin') items = items.filter(item => !customIds.has(item.id));
-      return items.sort(deps.compareItems).map(item => deps.serializeItem(item, customIds));
+      if (options.customOnly === true || options.source === 'custom') items = items.filter((item: any) => customIds.has(item.id));
+      if (options.source === 'builtin') items = items.filter((item: any) => !customIds.has(item.id));
+      return items.sort(deps.compareItems).map((item: any) => deps.serializeItem(item, customIds));
     },
 
     async exportCatalog(options: { poolTag?: string } = {}) {

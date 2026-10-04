@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * parse-render-preset-attributes.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RenderPreset = Record<string, any>;
+type CharacterAttributeEntry = Record<string, any>;
+
 export function createParseRenderPresetAttributes(deps: any) {
   const parseRenderPresetAttributes = (rawStr: string, preset: RenderPreset): CharacterAttributeEntry[] => {
     const rules = preset.rules.attributes;

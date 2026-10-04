@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * render-table-content.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,7 +6,7 @@ import { getDbLockAPI } from '../../shared/misc-utils';
 import { getDisplayName, isCharacterTable } from '../../entities/name-alias';
 import { getRowKey } from '../../shared/table-utils';
 export function createRenderTableContent(deps: any) {
-  const renderTableContent = (tableData, tableName) => {
+  const renderTableContent = (tableData: any, tableName: any) => {
     const isReversed = deps.isTableReversed(tableName);
     const reverseBtnHtml = deps.shouldShowReverseButton(tableName)
       ? `
@@ -61,13 +60,13 @@ export function createRenderTableContent(deps: any) {
       titleColIndex = 0;
     } else if (tableName.includes('总结') || tableName.includes('大纲')) {
       const idx = tableData.headers.findIndex(
-        h => h && (h.includes('索引') || h.includes('编号') || h.includes('代码')),
+        (h: any) => h && (h.includes('索引') || h.includes('编号') || h.includes('代码')),
       );
       if (idx > 0) titleColIndex = idx;
     }
 
     // --- 搜索和排序逻辑 ---
-    let processedRows = tableData.rows.map((row, index) => {
+    let processedRows = tableData.rows.map((row: any, index: any) => {
       const rowKey = getRowKey(tableName, row, tableData.headers);
       const isBookmarked = rowKey && deps.BookmarkManager.isBookmarked(tableName, rowKey);
       return { data: row, originalIndex: index, rowKey, isBookmarked };
@@ -75,10 +74,10 @@ export function createRenderTableContent(deps: any) {
     const searchTerm = (deps.getTableSearchStates()[tableName] || '').toLowerCase().trim();
 
     if (searchTerm) {
-      processedRows = processedRows.filter(item =>
-        item.data.some(cell => String(cell).toLowerCase().includes(searchTerm)),
+      processedRows = processedRows.filter((item: any) =>
+        item.data.some((cell: any) => String(cell).toLowerCase().includes(searchTerm)),
       );
-      processedRows.sort((a, b) => {
+      processedRows.sort((a: any, b: any) => {
         // 优先按bookmark状态排序：bookmark的在前
         if (a.isBookmarked && !b.isBookmarked) return -1;
         if (!a.isBookmarked && b.isBookmarked) return 1;
@@ -96,7 +95,7 @@ export function createRenderTableContent(deps: any) {
     } else {
       // 默认按原始顺序排列，如果启用倒序则反转
       // 但bookmark的始终在前
-      processedRows.sort((a, b) => {
+      processedRows.sort((a: any, b: any) => {
         // 优先按bookmark状态排序：bookmark的在前
         if (a.isBookmarked && !b.isBookmarked) return -1;
         if (!a.isBookmarked && b.isBookmarked) return 1;
@@ -151,7 +150,7 @@ export function createRenderTableContent(deps: any) {
             <div class="acu-panel-content"><div class="acu-card-grid">`;
 
     html += rowsToRender
-      .map(item => {
+      .map((item: any) => {
         const realRowIdx = item.originalIndex;
         const row = item.data;
         const cardTitle = row[titleColIndex] || '未命名';
@@ -159,7 +158,7 @@ export function createRenderTableContent(deps: any) {
         const cardTitleDisplay = isCharacterTable(tableName) ? getDisplayName(String(cardTitle)) : String(cardTitle);
         const showDefaultIndex = titleColIndex === 1;
         const titleCellId = `${tableData.key}-${realRowIdx}-${titleColIndex}`;
-        const isTitleModified = window.acuModifiedSet && window.acuModifiedSet.has(titleCellId);
+        const isTitleModified = (window as any).acuModifiedSet && (window as any).acuModifiedSet.has(titleCellId);
         const isRowNew = deps.getCurrentDiffMap().has(`${tableName}-row-${realRowIdx}`);
         let rowClass = '';
         if (config.highlightNew) {
@@ -179,11 +178,11 @@ export function createRenderTableContent(deps: any) {
           lockState && cardRowIndex !== null ? lockState.cells.includes(`${cardRowIndex}:${titleColIndex - 1}`) : false;
 
         // 计算有效列数，用于网格视图末行占满处理
-        const validColIndices = row.map((_, i) => i).filter(i => i > 0 && i !== titleColIndex);
+        const validColIndices = row.map((_: any, i: any) => i).filter((i: any) => i > 0 && i !== titleColIndex);
         const isOddValidCount = validColIndices.length % 2 === 1;
 
         const cardBody = row
-          .map((cell, cIdx) => {
+          .map((cell: any, cIdx: any) => {
             if (cIdx <= 0 || cIdx === titleColIndex) return '';
             // [新增] 隐藏"交互选项"列（因为已经以按钮形式显示）
             const currentHeader = headers[cIdx - 1] || '';
@@ -210,7 +209,7 @@ export function createRenderTableContent(deps: any) {
 
             const isDiffChanged = deps.getCurrentDiffMap().has(tableName + '-' + realRowIdx + '-' + cIdx);
             const cellId = tableData.key + '-' + realRowIdx + '-' + cIdx;
-            const isUserModified = window.acuModifiedSet && window.acuModifiedSet.has(cellId);
+            const isUserModified = (window as any).acuModifiedSet && (window as any).acuModifiedSet.has(cellId);
             let cellHighlight = '';
             if (config.highlightNew) {
               if (isUserModified) cellHighlight = 'acu-highlight-manual';
@@ -257,10 +256,10 @@ export function createRenderTableContent(deps: any) {
         let actionsHtml = '';
 
         if (tableActions.length > 0) {
-          const cardTitle = row[titleColIndex] || '未知';
+          const cardTitle = row[titleColIndex] || '未知'; void cardTitle; void cardTitle;
           const actionBtns = tableActions
             .map(
-              (act, actIdx) =>
+              (act: any, actIdx: any) =>
                 `<button type="button" class="acu-action-item ${act.type === 'check' ? 'check-type' : ''}" data-action-idx="${actIdx}" data-row="${realRowIdx}" title="${deps.escapeHtml(act.label)}"><i class="fa-solid ${act.icon || 'fa-play'}"></i> ${deps.escapeHtml(act.label)}</button>`,
             )
             .join('');

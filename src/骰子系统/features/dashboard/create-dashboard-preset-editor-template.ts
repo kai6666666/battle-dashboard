@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * create-dashboard-preset-editor-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCreateDashboardPresetEditorTemplate(deps: any) {
+export function createCreateDashboardPresetEditorTemplate(_deps: any) {
   const createDashboardPresetEditorTemplate = (): string => `{
   // 预设名称和描述在上方输入框填写；这里配置各区域如何抓取表格。
   // 每个区域保持现有渲染方式，只替换表名关键词和字段列关键词。

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * update-floating-collapse-bounds.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -12,8 +11,8 @@ export function createUpdateFloatingCollapseBounds(deps: any) {
     const targetWindow = deps.getTavernHostWindow();
     const targetDocument = deps.getTavernHostDocument();
     const wrapper =
-      targetDocument.querySelector<HTMLElement>(`${DICE_ROOT_SELECTOR}.acu-collapse-floating`) ||
-      document.querySelector<HTMLElement>(`${DICE_ROOT_SELECTOR}.acu-collapse-floating`);
+      targetDocument.querySelector(`${DICE_ROOT_SELECTOR}.acu-collapse-floating`) ||
+      document.querySelector(`${DICE_ROOT_SELECTOR}.acu-collapse-floating`);
     if (!wrapper) return;
 
     if (wrapper.ownerDocument !== targetDocument || wrapper.parentElement !== targetDocument.body) {
@@ -43,7 +42,7 @@ export function createUpdateFloatingCollapseBounds(deps: any) {
     wrapper.style.setProperty('pointer-events', 'none', 'important');
     wrapper.style.setProperty('z-index', '1000', 'important');
 
-    const expandTrigger = wrapper.querySelector<HTMLElement>('.acu-expand-trigger.acu-col-floating');
+    const expandTrigger = wrapper.querySelector('.acu-expand-trigger.acu-col-floating');
     if (expandTrigger) {
       expandTrigger.style.setProperty('display', 'flex', 'important');
       expandTrigger.style.setProperty('visibility', 'visible', 'important');

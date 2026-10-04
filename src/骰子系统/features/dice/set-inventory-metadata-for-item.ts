@@ -1,11 +1,13 @@
-// @ts-nocheck
 /**
  * set-inventory-metadata-for-item.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type InventoryParsedItem = Record<string, any>;
+type InventoryMetadataRecord = Record<string, any>;
+
 export function createSetInventoryMetadataForItem(deps: any) {
   const setInventoryMetadataForItem = (
-    rawData,
+    rawData: any,
     item: Pick<InventoryParsedItem, 'tableKey' | 'tableName' | 'name'>,
     record: InventoryMetadataRecord,
   ) => {

@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-inventory-field-label.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetInventoryFieldLabel(deps: any) {
+type InventoryEditableField = string;
+
+export function createGetInventoryFieldLabel(_deps: any) {
   const getInventoryFieldLabel = (fieldKey: InventoryEditableField): string => {
     const labelMap: Record<InventoryEditableField, string> = {
       name: '名称',

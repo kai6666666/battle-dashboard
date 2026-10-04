@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * render-data-card-cell-content.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RenderRelationshipItem = Record<string, any>;
+type RenderDataCardCellResult = Record<string, any>;
+type RenderDataCardCellOptions = Record<string, any>;
 export function createRenderDataCardCellContent(deps: any) {
   const renderDataCardCellContent = (options: RenderDataCardCellOptions): RenderDataCardCellResult => {
     const preset = deps.RenderPresetManager.getActivePreset();
@@ -121,12 +123,12 @@ export function createRenderDataCardCellContent(deps: any) {
     ) {
       const parts = rawStr
         .split(splitRegex)
-        .map(s => s.trim())
-        .filter(s => s && !deps.RenderPresetManager.isInvalidValue(s));
-      const allShort = parts.length > 1 && parts.every(p => p.length <= preset.rules.shortTags.maxLength);
+        .map((s: any) => s.trim())
+        .filter((s: any) => s && !deps.RenderPresetManager.isInvalidValue(s));
+      const allShort = parts.length > 1 && parts.every((p: any) => p.length <= preset.rules.shortTags.maxLength);
       if (allShort) {
         const tagsHtml = parts
-          .map(part => {
+          .map((part: any) => {
             const subStyle = deps.getRenderPresetBadgeStyle(part, preset) || 'acu-badge-neutral';
             return '<span class="acu-badge ' + subStyle + '">' + deps.escapeHtml(part) + '</span>';
           })

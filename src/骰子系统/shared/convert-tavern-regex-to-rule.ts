@@ -1,12 +1,24 @@
-// @ts-nocheck
 /**
  * convert-tavern-regex-to-rule.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { parseTavernFindRegex } from './misc-utils';
-export function createConvertTavernRegexToRule(deps: any) {
-  function convertTavernRegexToRule(tavernRegex: TavernRegex): RegexTransformationRule {
-    const { pattern, flags } = parseTavernFindRegex(tavernRegex.findRegex);
+type RegexTransformationRule = Record<string, any>;
+interface TavernRegexRuntime {
+  findRegex?: string;
+  scriptName?: string;
+  replaceString?: string;
+  minDepth?: number | null;
+  maxDepth?: number | null;
+  runOnEdit?: boolean;
+  markdownOnly?: boolean;
+  promptOnly?: boolean;
+  disabled?: boolean;
+  placement?: string[];
+}
+export function createConvertTavernRegexToRule(_deps: any) {
+  function convertTavernRegexToRule(tavernRegex: TavernRegexRuntime): RegexTransformationRule {
+    const { pattern, flags } = parseTavernFindRegex(tavernRegex.findRegex || '');
 
     // 构建额外信息描述，保留酒馆正则的原始配置供参考
     const extraInfo: string[] = [];

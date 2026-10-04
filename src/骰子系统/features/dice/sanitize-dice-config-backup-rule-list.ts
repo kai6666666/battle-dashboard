@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * sanitize-dice-config-backup-rule-list.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createSanitizeDiceConfigBackupRuleList(deps: any) {
+export function createSanitizeDiceConfigBackupRuleList(_deps: any) {
   const sanitizeDiceConfigBackupRuleList = (
     value: unknown,
     sanitizeRule: (rule: unknown) => Record<string, unknown> | null,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * assert-crud-required-cell-values.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,9 +5,9 @@
 export function createAssertCrudRequiredCellValues(deps: any) {
   const assertCrudRequiredCellValues = (
     tableName: string,
-    headers,
-    row,
-    sheet,
+    headers: any,
+    row: any,
+    sheet: any,
     rowIndex: number,
     columnAliasMap = deps.buildCrudColumnAliasMap(sheet),
   ): void => {
@@ -16,7 +15,7 @@ export function createAssertCrudRequiredCellValues(deps: any) {
     const requiredColumns = deps.getCrudRequiredColumnsByHeaderIndex(headers, sheet, columnAliasMap);
     if (requiredColumns.size === 0) return;
     const missingColumns: string[] = [];
-    requiredColumns.forEach((headerName, index) => {
+    requiredColumns.forEach((headerName: any, index: any) => {
       if (String(row[index] ?? '').trim() === '') missingColumns.push(headerName);
     });
     if (missingColumns.length > 0) {

@@ -1,14 +1,14 @@
-// @ts-nocheck
 /**
  * write-attributes-to-character.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type DiceRawData = Record<string, any>;
 export function createWriteAttributesToCharacter(deps: any) {
   const writeAttributesToCharacter = async (
-    charName,
-    newAttrs,
-    isDND = false,
+    charName: any,
+    newAttrs: any,
+    _isDND = false,
     specialAttrs: Record<string, number> | null = null,
   ) => {
     const rawData = deps.getCachedRawData() || deps.getTableData();
@@ -48,7 +48,7 @@ export function createWriteAttributesToCharacter(deps: any) {
     const preset = deps.AttributePresetManager.getActivePreset();
     const presetSpecialAttrNames = new Set<string>();
     if (preset && preset.specialAttributes) {
-      preset.specialAttributes.forEach(attr => presetSpecialAttrNames.add(attr.name));
+      preset.specialAttributes.forEach((attr: any) => presetSpecialAttrNames.add(attr.name));
     }
 
     // ========== 处理基础属性列 ==========
@@ -56,14 +56,14 @@ export function createWriteAttributesToCharacter(deps: any) {
     const existingBaseAttrs = deps.parseAttributeString(existingBaseStr);
 
     // 构建现有基础属性的映射
-    const existingBaseMap = {};
-    existingBaseAttrs.forEach(attr => {
+    const existingBaseMap: Record<string, any> = {};
+    existingBaseAttrs.forEach((attr: any) => {
       existingBaseMap[attr.name] = attr.value;
     });
 
     // 检查标准属性（基本属性）是否完整
     let standardCount = 0;
-    standardAttrs.forEach(attrName => {
+    standardAttrs.forEach((attrName: any) => {
       if (existingBaseMap[attrName] !== undefined) {
         standardCount++;
       }
@@ -72,7 +72,7 @@ export function createWriteAttributesToCharacter(deps: any) {
 
     // 收集基础属性列中的用户自定义属性（不属于当前规则预设的属性）
     const customBaseAttrs: Array<{ name: string; value: number }> = [];
-    existingBaseAttrs.forEach(attr => {
+    existingBaseAttrs.forEach((attr: any) => {
       if (!standardAttrs.includes(attr.name) && !presetSpecialAttrNames.has(attr.name)) {
         customBaseAttrs.push({ name: attr.name, value: attr.value });
       }
@@ -82,7 +82,7 @@ export function createWriteAttributesToCharacter(deps: any) {
     const baseResultParts: string[] = [];
 
     // 写入基本属性
-    standardAttrs.forEach(attrName => {
+    standardAttrs.forEach((attrName: any) => {
       if (isComplete) {
         // 完整 → 全部用新值覆盖
         const newValue = newAttrs[attrName] !== undefined ? newAttrs[attrName] : existingBaseMap[attrName];
@@ -127,14 +127,14 @@ export function createWriteAttributesToCharacter(deps: any) {
       const existingSpecialAttrs = deps.parseAttributeString(existingSpecialStr);
 
       // 构建现有特有属性的映射
-      const existingSpecialMap = {};
-      existingSpecialAttrs.forEach(attr => {
+      const existingSpecialMap: Record<string, any> = {};
+      existingSpecialAttrs.forEach((attr: any) => {
         existingSpecialMap[attr.name] = attr.value;
       });
 
       // 收集特有属性列中的用户自定义属性
       const customSpecialAttrs: Array<{ name: string; value: number }> = [];
-      existingSpecialAttrs.forEach(attr => {
+      existingSpecialAttrs.forEach((attr: any) => {
         if (!presetSpecialAttrNames.has(attr.name)) {
           customSpecialAttrs.push({ name: attr.name, value: attr.value });
         }
@@ -145,7 +145,7 @@ export function createWriteAttributesToCharacter(deps: any) {
 
       // 按预设顺序写入特有属性
       if (preset && preset.specialAttributes) {
-        preset.specialAttributes.forEach(attrDef => {
+        preset.specialAttributes.forEach((attrDef: any) => {
           const attrName = attrDef.name;
           if (specialAttrs[attrName] !== undefined) {
             if (isComplete || !existingSpecialMap[attrName]) {
@@ -174,7 +174,7 @@ export function createWriteAttributesToCharacter(deps: any) {
 
     // 返回写入的属性供UI更新
     const writtenAttrs: Array<{ name: string; value: number }> = [];
-    standardAttrs.forEach(attrName => {
+    standardAttrs.forEach((attrName: any) => {
       writtenAttrs.push({ name: attrName, value: newAttrs[attrName] });
     });
 

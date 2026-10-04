@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-dashboard-module-keys-for-table-name.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -10,7 +9,7 @@ export function createGetDashboardModuleKeysForTableName(deps: any) {
 
     return Object.entries(deps.getDashboardRuntimeConfig())
       .filter(([, moduleConfig]) =>
-        moduleConfig.tableKeywords.some(keyword =>
+        (moduleConfig as any).tableKeywords.some((keyword: any) =>
           normalizedTableName.includes(deps.normalizeGlobalInteractionCategoryText(keyword)),
         ),
       )

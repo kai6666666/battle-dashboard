@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * assert-crud-insert-required-cells.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createAssertCrudInsertRequiredCells(deps: any) {
-  const assertCrudInsertRequiredCells = (tableName: string, headers, row, sheet, rowIndex: number): void => {
+  const assertCrudInsertRequiredCells = (tableName: string, headers: any, row: any, sheet: any, rowIndex: number): void => {
     try {
       deps.assertCrudRequiredCellValues(tableName, headers, row, sheet, rowIndex);
     } catch (error) {

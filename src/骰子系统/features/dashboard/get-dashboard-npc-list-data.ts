@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * get-dashboard-npc-list-data.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RelationGraphTableInput = Record<string, any>;
+
 export function createGetDashboardNpcListData(deps: any) {
   const getDashboardNpcListData = (allTables: Record<string, RelationGraphTableInput>) => {
     const npcTableResults = deps.DashboardDataParser.findTables(allTables, 'npc');

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-gacha-pickup-items.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -12,7 +11,7 @@ export function createGetGachaPickupItems(deps: any) {
 
     const definitions = deps.getGachaPoolDefinitions(poolTag);
     const pickupItems = GACHA_PICKUP_RARITIES.map(rarity => {
-      const candidates = definitions.filter(item => item.quality === rarity).sort((a, b) => a.id.localeCompare(b.id));
+      const candidates = definitions.filter((item: any) => item.quality === rarity).sort((a: any, b: any) => a.id.localeCompare(b.id));
       if (candidates.length === 0) return null;
       const seed = `${deps.getGachaPickupRotationKey()}|${poolTag}|${rarity}`;
       return candidates[deps.hashGachaSeed(seed) % candidates.length];

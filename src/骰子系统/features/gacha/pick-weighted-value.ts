@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * pick-weighted-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createPickWeightedValue(deps: any) {
+export function createPickWeightedValue(_deps: any) {
   const pickWeightedValue = <T>(entries: Array<{ value: T; weight: number }>): T | null => {
     const safeEntries = entries.filter(entry => Number(entry.weight) > 0);
     if (safeEntries.length === 0) return null;

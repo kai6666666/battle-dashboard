@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-dice-config-backup-rule-override-map.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildDiceConfigBackupRuleOverrideMap(deps: any) {
+export function createBuildDiceConfigBackupRuleOverrideMap(_deps: any) {
   const buildDiceConfigBackupRuleOverrideMap = (
     rules: readonly Record<string, unknown>[],
     getRuleKey: (rule: Record<string, unknown>) => string,

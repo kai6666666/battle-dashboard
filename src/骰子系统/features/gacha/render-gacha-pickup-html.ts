@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * render-gacha-pickup-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -13,7 +12,7 @@ export function createRenderGachaPickupHtml(deps: any) {
         <div class="acu-gacha-pickup-title"><i class="fa-solid fa-bullhorn"></i><span>PICK UP</span></div>
         <div class="acu-gacha-pickup-grid">
           ${pickupItems
-            .map(item => {
+            .map((item: any) => {
               const customIconContext = deps.getGachaItemCustomTableNameIconContext(item);
               return `
 <button class="acu-gacha-pickup-card acu-gacha-pickup-detail-btn" type="button" data-item-id="${deps.escapeHtml(item.id)}">

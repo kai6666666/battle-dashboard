@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * conflict-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -138,7 +137,7 @@ export function createShowConflictDialog(deps: any) {
 
     // 绑定关闭事件
     $('#dice-conflict-close').on('click', function () {
-      $('.dice-conflict-dialog-overlay').fadeOut(200, function () {
+      $('.dice-conflict-dialog-overlay').fadeOut(200, function (this: any) {
         $(this).remove();
       });
     });
@@ -146,7 +145,7 @@ export function createShowConflictDialog(deps: any) {
     // 点击背景关闭
     const $conflictOverlay = $('.dice-conflict-dialog-overlay');
     deps.setupOverlayClose($conflictOverlay, 'dice-conflict-dialog-overlay', () => {
-      $conflictOverlay.fadeOut(200, function () {
+      $conflictOverlay.fadeOut(200, function (this: any) {
         $(this).remove();
       });
     });

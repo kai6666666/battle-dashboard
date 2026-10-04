@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-dice-profile-current-character-records.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -13,11 +12,11 @@ export function createGetDiceProfileCurrentCharacterRecords(deps: any) {
       const key =
         deps.getDiceConfigBackupRecordString(value, 'avatar') ||
         deps.getDiceConfigBackupRecordString(value, 'name') ||
-        deps.getDiceConfigBackupRecordString((value.data as Record<string, unknown>) || {}, 'name') ||
+        deps.getDiceConfigBackupRecordString(((value as Record<string, any>).data as Record<string, unknown>) || {}, 'name') ||
         JSON.stringify(value).slice(0, 200);
       if (seen.has(key)) return;
       seen.add(key);
-      records.push(value);
+      records.push(value as Record<string, unknown>);
       const jsonData = deps.getDiceConfigBackupRecordString(value, 'json_data');
       if (jsonData) {
         try {
@@ -35,7 +34,7 @@ export function createGetDiceProfileCurrentCharacterRecords(deps: any) {
     }
 
     try {
-      if (typeof getCharData === 'function') addRecord(getCharData('current', true));
+      if (typeof getCharData === 'function') addRecord((getCharData as any)('current', true));
     } catch {
       // ignore
     }

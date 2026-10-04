@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * diff-id-header-keywords.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createDiffIdHeaderKeywords(deps: any) {
+export function createDiffIdHeaderKeywords(_deps: any) {
   const DIFF_ID_HEADER_KEYWORDS = [
     '编码',
     '编号',

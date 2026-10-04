@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-latest-assistant-message-element.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,7 +6,7 @@ export function createGetLatestAssistantMessageElement(deps: any) {
   const getLatestAssistantMessageElement = (): JQuery<HTMLElement> => {
     const { $ } = deps.getCore();
     return $('#chat .mes')
-      .filter(function () {
+      .filter(function (this: any) {
         const $message = $(this);
         if ($message.attr('is_user') === 'true' || $message.attr('is_system') === 'true') return false;
         if ($message.hasClass('sys_mes') || $message.attr('data-is-system') === 'true') return false;

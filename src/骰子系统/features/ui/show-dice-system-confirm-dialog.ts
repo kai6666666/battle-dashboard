@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * show-dice-system-confirm-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceSystemConfirmTone = 'warning' | 'danger';
 export function createShowDiceSystemConfirmDialog(deps: any) {
   const showDiceSystemConfirmDialog = (options: {
     title: string;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * settle-gacha-fortune-for-dice-event.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

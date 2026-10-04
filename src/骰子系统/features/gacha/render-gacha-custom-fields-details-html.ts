@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * render-gacha-custom-fields-details-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { GachaItemDefinition } from '../../entities/gacha-items';
+type GachaCustomFieldsDetailsRenderOptions = Record<string, any>;
+
 export function createRenderGachaCustomFieldsDetailsHtml(deps: any) {
   const renderGachaCustomFieldsDetailsHtml = (
     item: Pick<GachaItemDefinition, 'customFields'>,
@@ -17,7 +18,7 @@ export function createRenderGachaCustomFieldsDetailsHtml(deps: any) {
     const openAttribute = entries.length <= openThreshold ? ' open' : '';
     const rowsHtml = entries
       .map(
-        ([key, value]) => `
+        ([key, value]: any) => `
           <div class="acu-gacha-custom-field-detail-row">
             <span class="acu-gacha-custom-field-detail-key">${deps.escapeHtml(key)}</span>
             <span class="acu-gacha-custom-field-detail-value">${deps.escapeHtml(value)}</span>

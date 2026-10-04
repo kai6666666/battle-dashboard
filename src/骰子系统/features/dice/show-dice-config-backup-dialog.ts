@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-dice-config-backup-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -51,7 +50,7 @@ export function createShowDiceConfigBackupDialog(deps: any) {
     const updateDiceProfileSaveScopeMeta = () => {
       const saveScope = dialog.find('.acu-profile-module-section');
       if (saveScope.length === 0) return;
-      const checkboxes = saveScope.find<HTMLInputElement>('.acu-config-backup-module-checkbox');
+      const checkboxes = saveScope.find('.acu-config-backup-module-checkbox');
       const selectedCount = checkboxes.filter(':checked').length;
       const totalCount = checkboxes.length;
       const text = totalCount > 0 ? `已选 ${selectedCount}/${totalCount} 个模块` : '勾选要存入方案的设置';
@@ -62,7 +61,7 @@ export function createShowDiceConfigBackupDialog(deps: any) {
 
     dialog.on('click', '.acu-config-backup-close', closeDialog);
     dialog.on('click', '#acu-config-backup-cancel', closeDialog);
-    dialog.on('click', '.acu-profile-collapse-header', function () {
+    dialog.on('click', '.acu-profile-collapse-header', function (this: any) {
       const section = $(this).closest('.acu-profile-collapsible');
       const sectionId = String(section.data('profile-section') || '');
       if (!sectionId) return;
@@ -73,7 +72,7 @@ export function createShowDiceConfigBackupDialog(deps: any) {
       deps.saveDiceProfileCollapsedSections(
         nextCollapsed
           ? [...collapsedSections, sectionId]
-          : collapsedSections.filter(item => item !== sectionId),
+          : collapsedSections.filter((item: any) => item !== sectionId),
       );
       const manager = section.closest('.acu-profile-manager');
       if (manager.length > 0) {
@@ -83,7 +82,7 @@ export function createShowDiceConfigBackupDialog(deps: any) {
         manager.toggleClass('is-save-scope-collapsed', saveScopeCollapsed);
       }
     });
-    dialog.on('click', '.acu-profile-tab', function () {
+    dialog.on('click', '.acu-profile-tab', function (this: any) {
       const tab = $(this);
       const target = String(tab.data('profile-tab') || '');
       const library = tab.closest('.acu-profile-library');
@@ -93,31 +92,31 @@ export function createShowDiceConfigBackupDialog(deps: any) {
       library.find('.acu-profile-tab-panel').prop('hidden', true).removeClass('is-active');
       library.find(`.acu-profile-tab-panel[data-profile-panel="${target}"]`).prop('hidden', false).addClass('is-active');
     });
-    dialog.on('click', '.acu-config-backup-select-all', function () {
+    dialog.on('click', '.acu-config-backup-select-all', function (this: any) {
       $(this)
         .closest('.acu-profile-module-section, .acu-config-backup-content')
-        .find<HTMLInputElement>('.acu-config-backup-module-checkbox')
+        .find('.acu-config-backup-module-checkbox')
         .prop('checked', true);
       updateDiceProfileSaveScopeMeta();
     });
-    dialog.on('click', '.acu-config-backup-invert', function () {
+    dialog.on('click', '.acu-config-backup-invert', function (this: any) {
       $(this)
         .closest('.acu-profile-module-section, .acu-config-backup-content')
-        .find<HTMLInputElement>('.acu-config-backup-module-checkbox')
-        .each((_, element) => {
+        .find('.acu-config-backup-module-checkbox')
+        .each((_: any, element: any) => {
         element.checked = !element.checked;
       });
       updateDiceProfileSaveScopeMeta();
     });
-    dialog.on('click', '.acu-config-backup-clear', function () {
+    dialog.on('click', '.acu-config-backup-clear', function (this: any) {
       $(this)
         .closest('.acu-profile-module-section, .acu-config-backup-content')
-        .find<HTMLInputElement>('.acu-config-backup-module-checkbox')
+        .find('.acu-config-backup-module-checkbox')
         .prop('checked', false);
       updateDiceProfileSaveScopeMeta();
     });
     dialog.on('change', '.acu-profile-module-section .acu-config-backup-module-checkbox', updateDiceProfileSaveScopeMeta);
-    dialog.on('click', '#acu-config-backup-export', async function () {
+    dialog.on('click', '#acu-config-backup-export', async function (this: any) {
       const button = this as HTMLButtonElement;
       try {
         button.disabled = true;
@@ -163,10 +162,10 @@ export function createShowDiceConfigBackupDialog(deps: any) {
       })();
     });
 
-    dialog.on('click', '#acu-profile-save-current', async function () {
+    dialog.on('click', '#acu-profile-save-current', async function (this: any) {
       const button = this as HTMLButtonElement;
       try {
-        const selectedIds = deps.getDiceConfigBackupSelectedModuleIdsFromDialog(dialog).filter(moduleId =>
+        const selectedIds = deps.getDiceConfigBackupSelectedModuleIdsFromDialog(dialog).filter((moduleId: any) =>
           deps.getAllDiceConfigBackupModuleIds().includes(moduleId),
         );
         if (selectedIds.length === 0) {
@@ -195,7 +194,7 @@ export function createShowDiceConfigBackupDialog(deps: any) {
       }
     });
 
-    dialog.on('click', '.acu-profile-action', async function () {
+    dialog.on('click', '.acu-profile-action', async function (this: any) {
       const button = this as HTMLButtonElement;
       const profileId = String($(button).data('profile-id') || '');
       const action = String($(button).data('profile-action') || '');

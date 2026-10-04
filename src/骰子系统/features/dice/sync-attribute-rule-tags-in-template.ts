@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * sync-attribute-rule-tags-in-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RuleTemplateRecord = Record<string, any>;
+
 export function createSyncAttributeRuleTagsInTemplate(deps: any) {
   const syncAttributeRuleTagsInTemplate = (
     template: RuleTemplateRecord,

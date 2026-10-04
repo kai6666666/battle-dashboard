@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * download-dice-profile-tavern-regex.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceProfileRecord = { id: string; [key: string]: any };
+
 export function createDownloadDiceProfileTavernRegex(deps: any) {
   const downloadDiceProfileTavernRegex = (profile: DiceProfileRecord): void => {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);

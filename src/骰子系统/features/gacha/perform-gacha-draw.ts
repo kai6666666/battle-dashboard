@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * perform-gacha-draw.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-import { FORTUNE_CURRENCY_NAME, GACHA_DRAW_COST_SINGLE, GACHA_DRAW_COST_TEN } from '../../entities/gacha-items';
+import { FORTUNE_CURRENCY_NAME, GACHA_DRAW_COST_SINGLE, GACHA_DRAW_COST_TEN, type GachaRewardTarget } from '../../entities/gacha-items';
+import type { GachaDrawOutcome, GachaState } from './gacha-types';
 import { cloneGachaState } from './gacha-helpers';
 export function createPerformGachaDraw(deps: any) {
   const performGachaDraw = async (drawCount: number) => {
@@ -35,7 +35,7 @@ export function createPerformGachaDraw(deps: any) {
         state.activePoolTag = deps.getGachaActivePoolTag(state);
         const availableTargets = deps.getAvailableGachaRewardTargets(rawData);
         const poolTargets = new Set(
-          deps.getGachaPoolDefinitions(state.activePoolTag, rawData).map(item => item.rewardTarget),
+          deps.getGachaPoolDefinitions(state.activePoolTag, rawData).map((item: any) => item.rewardTarget),
         ) as Set<GachaRewardTarget>;
         if (poolTargets.size > 0 && Array.from(poolTargets).every(target => !availableTargets.has(target))) {
           const label = Array.from(poolTargets).map(deps.getGachaRewardTargetTableLabel).join('或');

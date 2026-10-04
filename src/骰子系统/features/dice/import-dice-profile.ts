@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * import-dice-profile.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceProfileImportOptions = Record<string, any>;
+type DiceProfileRecord = { id: string; [key: string]: any };
+
 export function createImportDiceProfile(deps: any) {
   const importDiceProfile = async (input: unknown, options: DiceProfileImportOptions = {}): Promise<DiceProfileRecord> => {
     const record = deps.parseDiceProfileInput(input, {

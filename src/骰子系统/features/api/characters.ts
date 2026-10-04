@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/api/characters.ts
  * Feature-Sliced: 对外 API 的角色/属性读取方法（listCharacters/getCharacterAttributes/getAttributeValue）。

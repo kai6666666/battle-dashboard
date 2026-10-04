@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * merge-imported-gacha-pools.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -9,7 +8,7 @@ export function createMergeImportedGachaPools(deps: any) {
   const mergeImportedGachaPools = (pools: readonly GachaPoolDefinition[]) => {
     if (!pools.length) return;
     const current = deps.getConfiguredGachaPoolDefinitions();
-    const byId = new Map(current.map(pool => [pool.id, pool]));
+    const byId: Map<string, any> = new Map(current.map((pool: any) => [pool.id, pool]));
     pools.forEach(pool => {
       if (!pool.id || pool.id === GACHA_ALL_POOL_TAG) return;
       const existing = byId.get(pool.id);

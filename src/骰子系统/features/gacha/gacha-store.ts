@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/gacha/gacha-store.ts
  * Feature-Sliced: features/gacha 域的状态持久化层（DI 注入外部依赖）。

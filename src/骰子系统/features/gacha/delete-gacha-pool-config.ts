@@ -1,15 +1,17 @@
-// @ts-nocheck
 /**
  * delete-gacha-pool-config.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GACHA_ALL_POOL_TAG, GACHA_CUSTOM_ONLY_POOL_TAG, normalizeGachaPoolId } from '../../features/gacha/gacha-helpers';
 import { Store } from '../../shared/storage/store';
+type GachaPoolTag = string;
+type GachaItemDefinition = Record<string, any>;
+
 export function createDeleteGachaPoolConfig(deps: any) {
-  const deleteGachaPoolConfig = async (poolId: GachaPoolTag, rawData): Promise<boolean> => {
+  const deleteGachaPoolConfig = async (poolId: GachaPoolTag, rawData: any): Promise<boolean> => {
     const id = normalizeGachaPoolId(poolId);
     if (!id || id === GACHA_ALL_POOL_TAG) return false;
-    const pool = deps.getConfiguredGachaPoolDefinitions().find(candidate => candidate.id === id);
+    const pool = deps.getConfiguredGachaPoolDefinitions().find((candidate: any) => candidate.id === id);
     if (!pool || !deps.canDeleteGachaPoolDefinition(pool)) return false;
 
     await deps.ensureGachaCatalogLoaded(rawData);
@@ -19,12 +21,12 @@ export function createDeleteGachaPoolConfig(deps: any) {
     const removedItemIds: string[] = [];
     let needsFallbackPool = false;
 
-    deps.getCustomGachaItemDefinitions(rawData).forEach(item => {
+    deps.getCustomGachaItemDefinitions(rawData).forEach((item: any) => {
       if (!item.poolTags.includes(id)) {
         nextItems.push(item);
         return;
       }
-      const nextTags = item.poolTags.filter(tag => tag !== id);
+      const nextTags = item.poolTags.filter((tag: any) => tag !== id);
       if (nextTags.length > 0) {
         nextItems.push({
           ...item,
@@ -52,9 +54,9 @@ export function createDeleteGachaPoolConfig(deps: any) {
       deps.STORAGE_KEY_GACHA_SETTINGS_POOL_TAG,
     ]);
     try {
-      const pools = deps.getConfiguredGachaPoolDefinitions().filter(candidate => candidate.id !== id);
-      if (needsFallbackPool && !pools.some(candidate => candidate.id === GACHA_CUSTOM_ONLY_POOL_TAG)) {
-        const nextOrder = pools.reduce((max, candidate) => Math.max(max, Number(candidate.order) || 0), 0) + 10;
+      const pools = deps.getConfiguredGachaPoolDefinitions().filter((candidate: any) => candidate.id !== id);
+      if (needsFallbackPool && !pools.some((candidate: any) => candidate.id === GACHA_CUSTOM_ONLY_POOL_TAG)) {
+        const nextOrder = pools.reduce((max: any, candidate: any) => Math.max(max, Number(candidate.order) || 0), 0) + 10;
         pools.push(
           deps.buildDefaultGachaPoolDefinition(GACHA_CUSTOM_ONLY_POOL_TAG, {
             name: GACHA_CUSTOM_ONLY_POOL_TAG,

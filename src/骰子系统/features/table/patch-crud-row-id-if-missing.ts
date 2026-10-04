@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * patch-crud-row-id-if-missing.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiffRow = unknown[];
+type CrudRowIdPatch = Record<string, any>;
+
 export function createPatchCrudRowIdIfMissing(deps: any) {
   const patchCrudRowIdIfMissing = (
     row: DiffRow | null | undefined,

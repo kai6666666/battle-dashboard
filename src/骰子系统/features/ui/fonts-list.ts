@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * fonts-list.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createFontsList(deps: any) {
+export function createFontsList(_deps: any) {
   const FONTS = [
     { id: 'default', name: '系统默认 (Modern)', val: `'Segoe UI', 'Microsoft YaHei', sans-serif` },
     { id: 'hanchan', name: '寒蝉全圆体', val: `"寒蝉全圆体", sans-serif` },

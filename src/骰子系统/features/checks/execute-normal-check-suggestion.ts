@@ -1,11 +1,12 @@
-// @ts-nocheck
 /**
  * execute-normal-check-suggestion.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { rollComplexDiceExpression } from '../dice/dice-engine';
+type CheckSuggestionParsedCommand = Record<string, any>;
+
 export function createExecuteNormalCheckSuggestion(deps: any) {
-  const executeNormalCheckSuggestion = (command: Extract<CheckSuggestionParsedCommand, { kind: 'check' }>) => {
+  const executeNormalCheckSuggestion = (command: CheckSuggestionParsedCommand) => {
     deps.refreshNameAliasesForCheckSuggestion();
     const characterName = deps.resolveCheckSuggestionCharacterName(command.characterName);
     const targetValue = command.targetValue ?? deps.getAttributeValue(characterName, command.attributeName);

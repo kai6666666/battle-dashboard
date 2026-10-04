@@ -1,11 +1,11 @@
-// @ts-nocheck
 /**
  * render-gacha-settings-pool-items-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { GachaPoolTag } from '../../entities/gacha-items';
 export function createRenderGachaSettingsPoolItemsHtml(deps: any) {
-  const renderGachaSettingsPoolItemsHtml = (rawData, poolId: GachaPoolTag): string => {
-    const customIds = new Set(deps.getCustomGachaItemDefinitions(rawData).map(item => item.id));
+  const renderGachaSettingsPoolItemsHtml = (rawData: any, poolId: GachaPoolTag): string => {
+    const customIds = new Set(deps.getCustomGachaItemDefinitions(rawData).map((item: any) => item.id));
     const items = deps.getGachaSettingsPoolItems(rawData, poolId);
     const sortedItems = items.slice().sort(deps.compareGachaItemDefinitionsForDisplay);
     if (sortedItems.length === 0) {
@@ -13,7 +13,7 @@ export function createRenderGachaSettingsPoolItemsHtml(deps: any) {
     }
 
     return sortedItems
-      .map((item, index) => {
+      .map((item: any, index: any) => {
         const custom = customIds.has(item.id);
         const enabled = deps.isGachaItemEnabled(item);
         const customText = custom ? '自定义' : '内置';

@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * normalize-render-preset-string-list.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createNormalizeRenderPresetStringList(deps: any) {
+export function createNormalizeRenderPresetStringList(_deps: any) {
   const normalizeRenderPresetStringList = (value: unknown, fallback: readonly string[] = []): string[] => {
     const rawItems = Array.isArray(value) ? value : fallback;
     const seen = new Set<string>();

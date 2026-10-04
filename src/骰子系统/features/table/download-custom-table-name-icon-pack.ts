@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * download-custom-table-name-icon-pack.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { getCustomTableNameIconPackDownloadFileName } from './build-custom-table-name-icon-pack';
-export function createDownloadCustomTableNameIconPack(deps: any) {
+import type { CustomTableNameIconPack } from '../../shared/index-local-types';
+export function createDownloadCustomTableNameIconPack(_deps: any) {
   const downloadCustomTableNameIconPack = (pack: CustomTableNameIconPack): void => {
     const json = JSON.stringify(pack, null, 2);
     const blob = new Blob([json], { type: 'application/json' });

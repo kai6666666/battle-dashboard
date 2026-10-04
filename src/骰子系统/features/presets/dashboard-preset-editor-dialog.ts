@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * dashboard-preset-editor-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -114,7 +113,7 @@ export function createShowDashboardPresetEditor(deps: any) {
       deps.validateJsoncEditorConfig({
         text: String($jsonTextarea.val() || ''),
         parse: deps.parseDashboardPresetJson,
-        successMessage: parsed => `配置有效：${Object.keys(parsed.modules).length} 个区域`,
+        successMessage: (parsed: any) => `配置有效：${Object.keys(parsed.modules).length} 个区域`,
         errorMessage: deps.getJsonLikeErrorMessage,
         logLabel: '[DICE]ACU 仪表盘预设验证失败:',
       });

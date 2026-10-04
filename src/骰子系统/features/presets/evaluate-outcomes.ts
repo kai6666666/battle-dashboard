@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * evaluate-outcomes.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { OutcomeLevel } from '../../shared/advanced-preset-types';
 export function createEvaluateOutcomes(deps: any) {
   const evaluateOutcomes = (outcomes: OutcomeLevel[], context: Record<string, number>) => {
     if (!outcomes || outcomes.length === 0) {

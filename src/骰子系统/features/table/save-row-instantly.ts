@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * save-row-instantly.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type RuntimeRowSaveContext = Record<string, any>;
+
 export function createSaveRowInstantly(deps: any) {
   const saveRowInstantly = async (
     tableKey: string,

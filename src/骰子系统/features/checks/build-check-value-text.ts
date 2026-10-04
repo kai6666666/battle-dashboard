@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * build-check-value-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+
 export function createBuildCheckValueText(deps: any) {
   const buildCheckValueText = (options: {
     preset: AdvancedDicePreset;

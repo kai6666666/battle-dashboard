@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * format-gacha-reward-destination-label.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,7 +5,7 @@
 import type { GachaItemDefinition } from '../../entities/gacha-items';
 export function createFormatGachaRewardDestinationLabel(deps: any) {
   const formatGachaRewardDestinationLabel = (
-    rawData,
+    rawData: any,
     item: Pick<GachaItemDefinition, 'rewardTarget' | 'targetTable' | 'targetColumns'>,
   ): string => {
     const fallback = deps.normalizeGachaTargetTable(item.targetTable) || deps.getGachaRewardTargetTableLabel(item.rewardTarget);

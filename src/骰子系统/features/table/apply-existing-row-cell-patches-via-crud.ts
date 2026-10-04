@@ -1,16 +1,36 @@
-// @ts-nocheck
 /**
  * apply-existing-row-cell-patches-via-crud.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CrudExistingRowPatchInput = Record<string, any>;
 export function createApplyExistingRowCellPatchesViaCrud(deps: any) {
   const applyExistingRowCellPatchesViaCrud = async (input: CrudExistingRowPatchInput): Promise<Set<number>> => {
     const changedColumns =
       input.changedColumns || deps.getCrudChangedColumns(input.headers, input.currentRow, input.nextRow);
     const writableColumns = new Set<number>(
-      Array.from(changedColumns).filter(index => index > 0 && Boolean(input.headers[index])),
+      Array.from(changedColumns as number[]).filter(index => index > 0 && Boolean(input.headers[index])),
     );
     if (writableColumns.size === 0) return writableColumns;
+    // x9h②：写前锁预检（与数据库 S2-2 拒绝语义一致）：行锁/列锁/单元格锁命中时先行给出可读原因。
+    if (typeof deps.checkSheetWriteLocks === 'function') {
+      const lockViolation = deps.checkSheetWriteLocks({
+        api: input.api,
+        sheetKey: input.sheetKey || '',
+        tableName: input.tableName,
+        content: (input.sheet as any)?.content,
+        operations: [
+          {
+            kind: 'update',
+            rowIndex: input.rowIndex,
+            rowId: Array.isArray(input.currentRow) ? input.currentRow[0] : undefined,
+            colIndexes: Array.from(writableColumns),
+          },
+        ],
+      });
+      if (lockViolation) {
+        throw new Error(`保存已取消：${lockViolation}请先在数据库界面解锁后重试。`);
+      }
+    }
 
     const columnAliasMap = input.columnAliasMap || deps.buildCrudColumnAliasMap(input.sheet);
     deps.assertCrudRequiredColumnsRepresented(input.tableName, input.headers, input.sheet);

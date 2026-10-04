@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * preset-list-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -19,8 +18,8 @@ export function createShowPresetListDialog(deps: any) {
     }
 
     const presetsHtml = presets
-      .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
-      .map(preset => {
+      .sort((a: any, b: any) => (a.order ?? 999) - (b.order ?? 999))
+      .map((preset: any) => {
         const isBuiltin = preset.builtin;
         const isVisible = preset.visible !== false;
 
@@ -103,11 +102,11 @@ export function createShowPresetListDialog(deps: any) {
       deps.popModal(); // 返回上一个弹窗
     });
 
-    overlay.on('click', '.acu-preset-check', function (e) {
+    overlay.on('click', '.acu-preset-check', function (this: any, e: any) {
       e.stopPropagation();
       const $item = $(this).closest('.acu-preset-item');
       const id = $item.data('id');
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
       if (!preset) return;
 
       const isVisible = preset.visible !== false;
@@ -120,15 +119,15 @@ export function createShowPresetListDialog(deps: any) {
       deps.refreshDicePanelPresets();
     });
 
-    overlay.on('click', '.acu-advanced-preset-edit', function () {
+    overlay.on('click', '.acu-advanced-preset-edit', function (this: any) {
       const id = $(this).data('id');
       overlay.remove();
       deps.showAdvancedPresetEditor(id);
     });
 
-    overlay.on('click', '.acu-advanced-preset-copy', function () {
+    overlay.on('click', '.acu-advanced-preset-copy', function (this: any) {
       const id = $(this).data('id');
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
       if (!preset) return;
 
       const copied = {
@@ -143,22 +142,22 @@ export function createShowPresetListDialog(deps: any) {
       deps.refreshDicePanelPresets();
     });
 
-    overlay.on('click', '.acu-advanced-preset-export', function () {
+    overlay.on('click', '.acu-advanced-preset-export', function (this: any) {
       const id = $(this).data('id');
       const json = deps.AdvancedDicePresetManager.exportPreset(id);
       if (!json) {
         if (window.toastr) showActionableErrorToast('导出失败', { title: '高级骰子预设导出失败', suggestion: 'importExport' });
         return;
       }
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
       const filename = `acu_advanced_preset_${preset?.name || id}_${Date.now()}.json`;
 
       deps.downloadJsonFile(json, filename);
     });
 
-    overlay.on('click', '.acu-advanced-preset-delete', async function () {
+    overlay.on('click', '.acu-advanced-preset-delete', async function (this: any) {
       const id = $(this).data('id');
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
 
       const confirmed = await deps.showDiceSystemConfirmDialog({
         title: '删除检定预设',
@@ -176,7 +175,7 @@ export function createShowPresetListDialog(deps: any) {
           showPresetListDialog({ fromDicePanel }, false);
           deps.refreshDicePanelPresets();
         } catch (err) {
-          if (window.toastr) showActionableErrorToast('删除失败: ' + err.message, { title: '高级骰子预设删除失败', suggestion: 'save' });
+          if (window.toastr) showActionableErrorToast('删除失败: ' + (err as any).message, { title: '高级骰子预设删除失败', suggestion: 'save' });
         }
       }
     });
@@ -196,21 +195,21 @@ export function createShowPresetListDialog(deps: any) {
       itemSelector: '.acu-preset-item',
       handleSelector: '.acu-preset-handle',
       cancelSelector: '.acu-preset-actions button, .acu-toggle, .acu-preset-check',
-      getItemId: item => {
+      getItemId: (item: any) => {
         const id = $(item).data('id');
         if (typeof id === 'string') return id;
         if (id !== undefined && id !== null) return String(id);
         return null;
       },
-      onOrderChange: newOrderIds => {
-        newOrderIds.forEach((id, index) => {
+      onOrderChange: (newOrderIds: any) => {
+        newOrderIds.forEach((id: any, index: any) => {
           deps.AdvancedDicePresetManager.setPresetOrder(id, index);
         });
         deps.refreshDicePanelPresets();
       },
     });
 
-    overlay.find('#acu-advanced-preset-file-input').on('change', function (e) {
+    overlay.find('#acu-advanced-preset-file-input').on('change', function (e: any) {
       const input = e.target as HTMLInputElement;
       const file = input.files?.[0];
       if (!file) return;

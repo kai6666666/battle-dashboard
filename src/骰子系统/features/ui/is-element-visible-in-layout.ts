@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * is-element-visible-in-layout.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createIsElementVisibleInLayout(deps: any) {
+export function createIsElementVisibleInLayout(_deps: any) {
   const isElementVisibleInLayout = (element: HTMLElement): boolean => {
     const targetWindow = element.ownerDocument.defaultView || window;
     const style = targetWindow.getComputedStyle(element);

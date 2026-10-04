@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * builtin-advanced-presets.ts
  * Feature-Sliced 模块（数据常量）。
@@ -6,7 +5,8 @@
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 import { COC7_CHECK_SUGGESTION_ALIASES, COC7_CHECK_SUGGESTION_GUIDE, COC7_GROWTH_CHECK_SUGGESTION_GUIDE, DND5E_CHECK_SUGGESTION_ALIASES, DND5E_CHECK_SUGGESTION_GUIDE, FATE_CHECK_SUGGESTION_GUIDE, PBTA_CHECK_SUGGESTION_GUIDE, TRIANGLE_AGENCY_CHECK_SUGGESTION_GUIDE } from './builtin-check-suggestion-guides';
 
-export const BUILTIN_ADVANCED_PRESETS: AdvancedDicePreset[] = [
+// [x5aj] AdvancedDicePreset import removed (data const relaxed to any[])
+export const BUILTIN_ADVANCED_PRESETS: any[] = [
     // CoC7 规则: 1d100 <= 属性值
     {
       kind: 'advanced',

@@ -1,8 +1,25 @@
-// @ts-nocheck
 /**
  * show-dice-profile-apply-confirm.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceProfileRecord = { id: string; [key: string]: any };
+
+type DiceConfigBackupModuleId =
+  | 'uiLayout'
+  | 'diceConfig'
+  | 'advancedPresets'
+  | 'attributePresets'
+  | 'actionGm'
+  | 'dashboardPresets'
+  | 'renderPresets'
+  | 'tableTemplate'
+  | 'tableTemplateRequirementPresets'
+  | 'validation'
+  | 'regex'
+  | 'avatarMap'
+  | 'customIcons'
+  | 'gachaSettings';
+
 export function createShowDiceProfileApplyConfirm(deps: any) {
   const showDiceProfileApplyConfirm = async (
     profile: DiceProfileRecord,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * advanced-preset-editor-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -13,7 +12,7 @@ export function createShowAdvancedPresetEditor(deps: any) {
 
     const config = deps.getConfig();
     const isEdit = !!presetId;
-    const existingPreset = isEdit ? deps.AdvancedDicePresetManager.getAllPresets().find(p => p.id === presetId) : null;
+    const existingPreset = isEdit ? deps.AdvancedDicePresetManager.getAllPresets().find((p: any) => p.id === presetId) : null;
 
     const defaultJsonText = existingPreset
       ? JSON.stringify(JSON.parse(JSON.stringify(existingPreset)), null, 2)
@@ -165,8 +164,8 @@ export function createShowAdvancedPresetEditor(deps: any) {
       const description = String(overlay.find('#advanced-preset-desc').val() || '').trim();
       deps.validateJsoncEditorConfig({
         text: String($jsonTextarea.val() || ''),
-        parse: text => deps.parseAdvancedPresetText(text, getEditorPresetParseOptions(name, description)),
-        successMessage: result => {
+        parse: (text: any) => deps.parseAdvancedPresetText(text, getEditorPresetParseOptions(name, description)),
+        successMessage: (result: any) => {
           const testText = result.tests.length > 0 ? `，测试 ${result.tests.length} 条` : '';
           return `配置有效：${result.preset.name}${testText}`;
         },

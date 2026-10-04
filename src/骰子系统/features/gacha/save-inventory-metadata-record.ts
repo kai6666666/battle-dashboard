@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * save-inventory-metadata-record.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type InventoryMetadataRecord = Record<string, any>;
+
 export function createSaveInventoryMetadataRecord(deps: any) {
   const saveInventoryMetadataRecord = async (rowIndex: number, nextRecord: InventoryMetadataRecord) => {
     const context = deps.getInventoryDetailContext(rowIndex);

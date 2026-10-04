@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ensure-canonical-table-order.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -16,13 +15,13 @@ export function createEnsureCanonicalTableOrder(deps: any) {
   let lastFingerprint = '';
   const ensureCanonicalTableOrder = (candidateKeys: any[]): void => {
     try {
-      const keys = (candidateKeys || []).map(key => String(key)).filter(key => key.length > 0);
+      const keys = (candidateKeys || []).map((key: any) => String(key)).filter((key: any) => key.length > 0);
       if (keys.length === 0) return;
       const sorted = deps.getStableTableSort(keys);
-      const saved = (deps.getSavedTableOrder() || []).map(key => String(key));
+      const saved = (deps.getSavedTableOrder() || []).map((key: any) => String(key));
       const seen = new Set(sorted);
       // 已保存但不在当前集合中的条目（如被隐藏的特殊项）追加保留，避免丢序
-      const merged = sorted.concat(saved.filter(key => !seen.has(key)));
+      const merged = sorted.concat(saved.filter((key: any) => !seen.has(key)));
       const fingerprint = merged.join('|');
       if (fingerprint === lastFingerprint) return;
       lastFingerprint = fingerprint;

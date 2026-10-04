@@ -1,11 +1,11 @@
-// @ts-nocheck
 /**
  * shared/misc-utils.ts
  * Feature-Sliced: batch extract (FSD batch A1).
  */
+type RegexFlags = { global?: boolean; caseInsensitive?: boolean; multiline?: boolean; unicode?: boolean; sticky?: boolean };
 
 
-export function suggestFormatValue(pattern, rowIndex, existingValues = [], tableContent = null) {
+export function suggestFormatValue(pattern: string, rowIndex: number, _existingValues: any[] = [], tableContent: any = null) {
     if (!pattern || rowIndex === undefined || rowIndex < 0) return null;
 
     try {
@@ -27,8 +27,8 @@ export function suggestFormatValue(pattern, rowIndex, existingValues = [], table
 
           if (codeIndex >= 0) {
             // 提取所有现有编码索引的数字部分
-            const existingNumbers = [];
-            rows.forEach(row => {
+            const existingNumbers: number[] = [];
+            rows.forEach((row: any) => {
               const codeValue = row?.[codeIndex];
               if (codeValue && typeof codeValue === 'string') {
                 const match = codeValue.match(new RegExp(`^${prefix}(\\d+)$`));

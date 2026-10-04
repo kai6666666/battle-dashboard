@@ -1,11 +1,14 @@
-// @ts-nocheck
 /**
  * get-inventory-filters.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { Store } from '../../shared/storage/store';
 import { STORAGE_KEY_INVENTORY_FILTERS } from '../../shared/storage-keys';
-import type { InventoryFilterState, InventoryTypeFilter, InventoryQualityFilter, InventorySortFilter } from './gacha-types';
+type InventoryFilterState = Record<string, any>;
+type InventoryTypeFilter = string;
+type InventoryQualityFilter = string;
+type InventorySortFilter = string;
+
 export function createGetInventoryFilters(deps: any) {
   const getInventoryFilters = (): InventoryFilterState => {
     const target = deps.getInventoryPanelTarget();
@@ -19,7 +22,7 @@ export function createGetInventoryFilters(deps: any) {
       quality: deps.getINVENTORY_QUALITY_OPTIONS().includes(stored.quality as InventoryQualityFilter)
         ? (stored.quality as InventoryQualityFilter)
         : '全部',
-      sort: deps.getINVENTORY_SORT_OPTIONS().some(option => option.value === stored.sort)
+      sort: deps.getINVENTORY_SORT_OPTIONS().some((option: any) => option.value === stored.sort)
         ? (stored.sort as InventorySortFilter)
         : 'default',
     };

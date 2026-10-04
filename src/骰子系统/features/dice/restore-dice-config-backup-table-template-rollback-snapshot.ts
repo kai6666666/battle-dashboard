@@ -1,13 +1,14 @@
-// @ts-nocheck
 /**
  * restore-dice-config-backup-table-template-rollback-snapshot.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupTableTemplateRollbackSnapshot = Record<string, any>;
+
 export function createRestoreDiceConfigBackupTableTemplateRollbackSnapshot(deps: any) {
   const restoreDiceConfigBackupTableTemplateRollbackSnapshot = async (snapshot: unknown): Promise<string[]> => {
     const warnings: string[] = [];
     const template =
-      deps.isDiceConfigBackupRecord(snapshot) && 'template' in snapshot
+      deps.isDiceConfigBackupRecord(snapshot) && 'template' in (snapshot as any)
         ? (snapshot as DiceConfigBackupTableTemplateRollbackSnapshot).template
         : snapshot;
     if (!deps.isDiceConfigBackupRecord(template)) {
@@ -20,7 +21,13 @@ export function createRestoreDiceConfigBackupTableTemplateRollbackSnapshot(deps:
       return warnings;
     }
     try {
-      const result = await Promise.resolve(api.importTemplateFromData(deps.cloneDiceConfigBackupValue(template), { scope: 'chat' }));
+      // x9h③：显式锁定冲突策略 keep-current（不静默覆盖运行时数据）；dataMode 仍由数据库按上下文自动推导。
+      const result = await Promise.resolve(
+        api.importTemplateFromData(deps.cloneDiceConfigBackupValue(template), {
+          scope: 'chat',
+          conflictPolicy: 'keep-current',
+        }),
+      );
       if (deps.isDiceConfigBackupRecord(result) && result.success === false) {
         const message = typeof result.message === 'string' ? result.message : '未知错误';
         warnings.push(`当前数据库表格模板: 回滚失败：${message}`);

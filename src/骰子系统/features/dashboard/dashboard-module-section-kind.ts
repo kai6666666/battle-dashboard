@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * dashboard-module-section-kind.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createDashboardModuleSectionKind(deps: any) {
+type GlobalInteractionSectionKind = string;
+
+export function createDashboardModuleSectionKind(_deps: any) {
   const DASHBOARD_MODULE_SECTION_KIND: Record<string, GlobalInteractionSectionKind> = {
     player: 'character',
     npc: 'character',

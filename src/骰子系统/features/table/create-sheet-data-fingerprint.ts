@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * create-sheet-data-fingerprint.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCreateSheetDataFingerprint(deps: any) {
+export function createCreateSheetDataFingerprint(_deps: any) {
   const createSheetDataFingerprint = (rawData: unknown): string => {
     if (!rawData || typeof rawData !== 'object') return '';
     const tableRecord = rawData as Record<string, unknown>;

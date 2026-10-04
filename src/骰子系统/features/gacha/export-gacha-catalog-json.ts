@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * export-gacha-catalog-json.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,12 +6,12 @@ import { GACHA_ALL_POOL_TAG, normalizeGachaPoolId } from './gacha-helpers';
 import { GACHA_CATALOG_EXPORT_KIND, GACHA_CATALOG_VERSION } from '../../entities/gacha-items';
 import type { GachaPoolTag } from '../../entities/gacha-items';
 export function createExportGachaCatalogJson(deps: any) {
-  const exportGachaCatalogJson = (rawData, poolId?: GachaPoolTag): string => {
+  const exportGachaCatalogJson = (rawData: any, poolId?: GachaPoolTag): string => {
     const normalizedPoolId = normalizeGachaPoolId(poolId);
     const isPoolExport = Boolean(normalizedPoolId);
     const items = deps.getGachaCatalogItemsForExport(rawData, normalizedPoolId);
     if (!isPoolExport && items.length === 0) return deps.buildGachaCatalogTemplateJsonc();
-    const pools = deps.getAllGachaPoolConfigDefinitions(rawData).filter(pool => {
+    const pools = deps.getAllGachaPoolConfigDefinitions(rawData).filter((pool: any) => {
       if (pool.id === GACHA_ALL_POOL_TAG) return false;
       if (!normalizedPoolId || normalizedPoolId === GACHA_ALL_POOL_TAG) return true;
       return pool.id === normalizedPoolId;

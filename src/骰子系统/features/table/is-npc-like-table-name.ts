@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * is-npc-like-table-name.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { isNpcTableName } from '../../shared/constants';
-export function createIsNpcLikeTableName(deps: any) {
+export function createIsNpcLikeTableName(_deps: any) {
   const isNpcLikeTableName = (tableName: string): boolean => {
     const normalized = String(tableName || '').toLowerCase();
     return (

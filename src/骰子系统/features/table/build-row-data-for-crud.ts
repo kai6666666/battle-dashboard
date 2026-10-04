@@ -1,19 +1,20 @@
-// @ts-nocheck
 /**
  * build-row-data-for-crud.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RuntimeCrudRowData = Record<string, any>;
+
 export function createBuildRowDataForCrud(deps: any) {
   const buildRowDataForCrud = (
-    headers,
-    row,
+    headers: any,
+    row: any,
     changedColumns?: Set<number>,
     sheet?: unknown,
     columnAliasMap = sheet ? deps.buildCrudColumnAliasMap(sheet) : {},
     enumConstraints = sheet ? deps.buildCrudEnumConstraintMap(sheet) : {},
   ) => {
     const data: RuntimeCrudRowData = {};
-    headers.forEach((header, index) => {
+    headers.forEach((header: any, index: any) => {
       if (index === 0) return;
       if (!header) return;
       if (changedColumns && !changedColumns.has(index)) return;

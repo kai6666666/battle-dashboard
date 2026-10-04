@@ -1,15 +1,14 @@
-// @ts-nocheck
 /**
  * get-option-items-from-table.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetOptionItemsFromTable(deps: any) {
-  const getOptionItemsFromTable = tableData => {
+export function createGetOptionItemsFromTable(_deps: any) {
+  const getOptionItemsFromTable = (tableData: any) => {
     const items: { text: string; rowIndex: number; colIndex: number; header: string }[] = [];
     const rows = Array.isArray(tableData?.rows) ? tableData.rows : [];
     const headers = Array.isArray(tableData?.headers) ? tableData.headers : [];
 
-    rows.forEach((row, rowIndex) => {
+    rows.forEach((row: any, rowIndex: any) => {
       if (!Array.isArray(row)) return;
       row.forEach((cell, colIndex) => {
         if (colIndex <= 0) return;

@@ -1,15 +1,16 @@
-// @ts-nocheck
 /**
  * validate-gacha-custom-fields-for-existing-row.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type GachaExistingCustomFieldValidationOptions = Record<string, any>;
+
 export function createValidateGachaCustomFieldsForExistingRow(deps: any) {
   const validateGachaCustomFieldsForExistingRow = (options: GachaExistingCustomFieldValidationOptions): void => {
     const validation = deps.validateGachaCustomFieldsForTargetTable({ ...options, throwOnMissing: false });
     if (validation.missingHeaders.length === 0) return;
 
     const headerMap = deps.buildGachaCustomFieldHeaderMap(options.headers);
-    const missingEmptyHeaders = validation.missingHeaders.filter(headerName => {
+    const missingEmptyHeaders = validation.missingHeaders.filter((headerName: any) => {
       const columnIndex = headerMap.get(headerName);
       return typeof columnIndex !== 'number' || !String(options.row[columnIndex] ?? '').trim();
     });

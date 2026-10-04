@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * throw-advanced-preset-validation-issues.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createThrowAdvancedPresetValidationIssues(deps: any) {
+type AdvancedPresetValidationIssue = { path: string; message: string };
+
+export function createThrowAdvancedPresetValidationIssues(_deps: any) {
   const throwAdvancedPresetValidationIssues = (issues: AdvancedPresetValidationIssue[]): void => {
     if (issues.length === 0) return;
     const summary = issues

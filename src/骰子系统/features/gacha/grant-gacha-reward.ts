@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * grant-gacha-reward.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,7 +6,7 @@ import type { GachaState, GachaDrawOutcome } from './gacha-types';
 import type { GachaItemDefinition } from '../../entities/gacha-items';
 export function createGrantGachaReward(deps: any) {
   const grantGachaReward = (
-    rawData,
+    rawData: any,
     state: GachaState,
     item: GachaItemDefinition,
     quantity: number,

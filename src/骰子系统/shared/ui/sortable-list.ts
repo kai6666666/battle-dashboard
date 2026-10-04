@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * sortable-list.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createSortableListFactory(deps: any) {
+type SortableListOptions = Record<string, any>;
+export function createSortableListFactory(_deps: any) {
   const createSortableList = (options: SortableListOptions) => {
     const containerEl = options.container instanceof HTMLElement ? options.container : options.container[0];
     if (!containerEl) return;
@@ -30,8 +30,8 @@ export function createSortableListFactory(deps: any) {
 
     const buildOrder = () => {
       const ids: string[] = [];
-      const items = containerEl.querySelectorAll<HTMLElement>(options.itemSelector);
-      items.forEach(item => {
+      const items = (containerEl as HTMLElement).querySelectorAll<HTMLElement>(options.itemSelector);
+      items.forEach((item: HTMLElement) => {
         const id = options.getItemId(item);
         if (id) ids.push(id);
       });
@@ -76,13 +76,13 @@ export function createSortableListFactory(deps: any) {
 
     const placeIndicator = (clientY: number) => {
       if (!state.draggedItem) return;
-      const items = Array.from(containerEl.querySelectorAll<HTMLElement>(options.itemSelector)).filter(
+      const items = Array.from((containerEl as HTMLElement).querySelectorAll<HTMLElement>(options.itemSelector)).filter(
         item => item !== state.draggedItem,
       );
       let target: HTMLElement | null = null;
       let insertBefore = true;
 
-      for (const item of items) {
+      for (const item of items as HTMLElement[]) {
         const rect = item.getBoundingClientRect();
         const midY = rect.top + rect.height / 2;
         if (clientY < midY) {
@@ -192,7 +192,7 @@ export function createSortableListFactory(deps: any) {
 
     containerEl.addEventListener(
       'pointerdown',
-      e => {
+      (e: PointerEvent) => {
         const target = e.target as HTMLElement | null;
         if (!target) return;
         if (options.cancelSelector && target.closest(options.cancelSelector)) return;
@@ -228,7 +228,7 @@ export function createSortableListFactory(deps: any) {
 
     containerEl.addEventListener(
       'pointermove',
-      e => {
+      (e: PointerEvent) => {
         if (state.timer && (Math.abs(e.clientY - state.startY) > 8 || Math.abs(e.clientX - state.startX) > 8)) {
           clearTimer();
         }
@@ -245,7 +245,7 @@ export function createSortableListFactory(deps: any) {
     containerEl.addEventListener('pointercancel', finishDrag);
     containerEl.addEventListener(
       'touchmove',
-      e => {
+      (e: TouchEvent) => {
         if (state.isDragging) {
           e.preventDefault();
         }

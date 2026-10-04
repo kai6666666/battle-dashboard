@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * gacha-settings-sort-options.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { GachaSettingsFilterOption, GachaSettingsItemSortMode } from './gacha-types';
-export function createGachaSettingsSortOptions(deps: any) {
+export function createGachaSettingsSortOptions(_deps: any) {
   const GACHA_SETTINGS_SORT_OPTIONS: readonly GachaSettingsFilterOption<GachaSettingsItemSortMode>[] = [
     { value: 'default', label: '默认排序', iconClass: 'fa-arrow-down-wide-short' },
     { value: 'nameAsc', label: '名称 A-Z', iconClass: 'fa-arrow-down-a-z' },

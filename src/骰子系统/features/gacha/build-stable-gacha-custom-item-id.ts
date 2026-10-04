@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * build-stable-gacha-custom-item-id.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

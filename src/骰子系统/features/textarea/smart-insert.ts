@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * smart-insert.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = HTMLTextAreaElement & Record<string, any>;
 export function createSmartInsertToTextarea(deps: any) {
   const smartInsertToTextarea = (newContent: string, contentType: 'action' | 'dice') => {
     // contentType: 'action' (交互选项) 或 'dice' (骰子结果)

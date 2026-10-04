@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * extract-check-suggestion-tie-rule.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CheckSuggestionTieRule = 'initiator_win' | 'tie' | 'initiator_lose';
+
 export function createExtractCheckSuggestionTieRule(deps: any) {
   const extractCheckSuggestionTieRule = (
     text: string,

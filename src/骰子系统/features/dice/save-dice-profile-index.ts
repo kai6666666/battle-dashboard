@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * save-dice-profile-index.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { Store } from '../../shared/storage/store';
+type DiceProfileSummary = Record<string, any>;
+
 export function createSaveDiceProfileIndex(deps: any) {
   const saveDiceProfileIndex = (summaries: readonly DiceProfileSummary[]): boolean =>
     Store.set(

@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-render-preset-badge-style.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetRenderPresetBadgeStyle(deps: any) {
+type RenderPreset = Record<string, any>;
+
+export function createGetRenderPresetBadgeStyle(_deps: any) {
   const getRenderPresetBadgeStyle = (text: string, preset: RenderPreset): string => {
     const rules = preset.rules.badges;
     if (!rules.enabled) return '';

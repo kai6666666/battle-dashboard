@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * inventory-field-edit-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type InventoryEditableField = string;
 export function createShowInventoryFieldEditDialog(deps: any) {
   const showInventoryFieldEditDialog = (rowIndex: number, fieldKey: InventoryEditableField) => {
     const context = deps.getInventoryDetailContext(rowIndex);
@@ -20,7 +20,7 @@ export function createShowInventoryFieldEditDialog(deps: any) {
       const options = deps.getInventoryEnumOptions(context.item.tableName, fieldKey);
       const optionButtonsHtml = options
         .map(
-          option => `
+          (option: any) => `
             <button
               type="button"
               class="acu-dialog-btn acu-inventory-enum-option ${option === currentValue ? 'is-active' : ''}"
@@ -45,7 +45,7 @@ export function createShowInventoryFieldEditDialog(deps: any) {
       $('body').append(dialog);
       deps.setupOverlayClose(dialog, 'acu-edit-overlay', () => dialog.remove());
       dialog.on('click', '.acu-inventory-enum-cancel', () => dialog.remove());
-      dialog.on('click', '.acu-inventory-enum-option', async function () {
+      dialog.on('click', '.acu-inventory-enum-option', async function (this: any) {
         const nextValue = String($(this).data('value') || '').trim();
         if (!nextValue) return;
         try {
@@ -73,7 +73,7 @@ export function createShowInventoryFieldEditDialog(deps: any) {
         fieldKey === 'acquiredAtLocation' ? currentRecord.acquiredAtLocation : currentRecord.acquiredAt;
       deps.showEditDialog(
         currentValue,
-        async newVal => {
+        async (newVal: any) => {
           try {
             await deps.saveInventoryFieldValue(rowIndex, fieldKey, String(newVal || ''));
           } catch (e) {
@@ -103,7 +103,7 @@ export function createShowInventoryFieldEditDialog(deps: any) {
     const currentValue = String(context.row[colIdx] ?? '');
     deps.showEditDialog(
       currentValue,
-      async newVal => {
+      async (newVal: any) => {
         try {
           await deps.saveInventoryFieldValue(rowIndex, fieldKey, String(newVal || ''));
         } catch (e) {

@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * parse-sql-quoted-values.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createParseSqlQuotedValues(deps: any) {
+export function createParseSqlQuotedValues(_deps: any) {
   const parseSqlQuotedValues = (value: string): string[] => {
     const values: string[] = [];
     const regex = /'((?:''|[^'])*)'/g;

@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * normalize-gacha-timestamp.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createNormalizeGachaTimestamp(deps: any) {
+export function createNormalizeGachaTimestamp(_deps: any) {
   const normalizeGachaTimestamp = (value: unknown): number | undefined => {
     if (value === undefined || value === null || value === '') return undefined;
     const numeric = typeof value === 'number' ? value : Number(value);

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * validation-rule-manager.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
@@ -9,17 +8,17 @@ import { Store } from '../../shared/storage/store';
 export function createValidationRuleManager(deps: any) {
   const ValidationRuleManager = {
     _cache: null,
-    _enabledCache: null,
+    _enabledCache: null as any,
 
     // 获取所有规则（从当前激活预设）
     getAllRules() {
       if (this._cache) return this._cache;
 
       const preset = deps.getPresetManager().getActivePreset();
-      const enabledStates = this.getEnabledStates();
+      const enabledStates = this.getEnabledStates() as Record<string, any>;
 
       // 应用启用状态
-      const allRules = (preset?.rules || []).map(rule => ({
+      const allRules = (preset?.rules || []).map((rule: any) => ({
         ...rule,
         enabled: enabledStates[rule.id] !== undefined ? enabledStates[rule.id] : rule.enabled,
       }));
@@ -36,8 +35,8 @@ export function createValidationRuleManager(deps: any) {
     },
 
     // 切换规则启用状态
-    toggleRuleEnabled(ruleId, enabled) {
-      const states = this.getEnabledStates();
+    toggleRuleEnabled(ruleId: any, enabled: any) {
+      const states = this.getEnabledStates() as Record<string, any>;
       states[ruleId] = enabled;
       Store.set(deps.STORAGE_KEY_VALIDATION_ENABLED, states);
       this._enabledCache = states;
@@ -45,11 +44,11 @@ export function createValidationRuleManager(deps: any) {
     },
 
     // 切换规则拦截状态
-    toggleRuleIntercept(ruleId, intercept) {
+    toggleRuleIntercept(ruleId: any, intercept: any) {
       const preset = deps.getPresetManager().getActivePreset();
       if (!preset) return false;
 
-      const rule = preset.rules.find(r => r.id === ruleId);
+      const rule = preset.rules.find((r: any) => r.id === ruleId);
       if (!rule) return false;
 
       rule.intercept = intercept;
@@ -59,11 +58,11 @@ export function createValidationRuleManager(deps: any) {
 
     // 获取启用的规则
     getEnabledRules() {
-      return this.getAllRules().filter(rule => rule.enabled);
+      return this.getAllRules().filter((rule: any) => rule.enabled);
     },
 
     // 添加自定义规则（到当前激活预设）
-    addCustomRule(rule) {
+    addCustomRule(rule: any) {
       if (!rule.id || !rule.name || !rule.targetTable) {
         console.error('[DICE]ValidationRuleManager 规则缺少必要字段');
         return false;
@@ -73,7 +72,7 @@ export function createValidationRuleManager(deps: any) {
       if (!preset) return false;
 
       // 检查 ID 是否重复
-      if (preset.rules.some(r => r.id === rule.id)) {
+      if (preset.rules.some((r: any) => r.id === rule.id)) {
         console.error('[DICE]ValidationRuleManager 规则 ID 已存在:', rule.id);
         return false;
       }
@@ -86,18 +85,18 @@ export function createValidationRuleManager(deps: any) {
     },
 
     // 删除规则
-    removeCustomRule(ruleId) {
+    removeCustomRule(ruleId: any) {
       const preset = deps.getPresetManager().getActivePreset();
       if (!preset) return false;
 
-      const index = preset.rules.findIndex(r => r.id === ruleId);
+      const index = preset.rules.findIndex((r: any) => r.id === ruleId);
       if (index === -1) return false;
 
       preset.rules.splice(index, 1);
       deps.getPresetManager().updatePresetRules(preset.id, preset.rules);
 
       // 清理启用状态
-      const states = this.getEnabledStates();
+      const states = this.getEnabledStates() as Record<string, any>;
       delete states[ruleId];
       Store.set(deps.STORAGE_KEY_VALIDATION_ENABLED, states);
       this._enabledCache = states;
@@ -107,11 +106,11 @@ export function createValidationRuleManager(deps: any) {
     },
 
     // 更新规则
-    updateCustomRule(ruleId, updates) {
+    updateCustomRule(ruleId: any, updates: any) {
       const preset = deps.getPresetManager().getActivePreset();
       if (!preset) return false;
 
-      const index = preset.rules.findIndex(r => r.id === ruleId);
+      const index = preset.rules.findIndex((r: any) => r.id === ruleId);
       if (index === -1) return false;
 
       preset.rules[index] = { ...preset.rules[index], ...updates, id: ruleId };
@@ -120,8 +119,8 @@ export function createValidationRuleManager(deps: any) {
     },
 
     // 获取单个规则
-    getRule(ruleId) {
-      return this.getAllRules().find(r => r.id === ruleId);
+    getRule(ruleId: any) {
+      return this.getAllRules().find((r: any) => r.id === ruleId);
     },
 
     // 清除缓存
@@ -131,9 +130,9 @@ export function createValidationRuleManager(deps: any) {
     },
 
     // 获取按表名分组的规则
-    getRulesByTable(tableName) {
+    getRulesByTable(tableName: any) {
       return this.getEnabledRules().filter(
-        rule => rule.targetTable === tableName || (deps.isNpcTableName(rule.targetTable) && deps.isNpcTableName(tableName)),
+        (rule: any) => rule.targetTable === tableName || (deps.isNpcTableName(rule.targetTable) && deps.isNpcTableName(tableName)),
       );
     },
   };

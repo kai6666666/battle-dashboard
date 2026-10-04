@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * favorites-db.ts
  * Feature-Sliced: 收藏夹 IndexedDB 适配器（自包含）
  */
+type FavoriteItem = Record<string, any>;
 
   export const FavoritesDB = {
     DB_NAME: 'acu_favorites',

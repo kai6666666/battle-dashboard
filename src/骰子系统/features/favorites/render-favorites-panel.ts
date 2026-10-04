@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * render-favorites-panel.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { FavoritesManager } from '../../features/favorites/favorites-manager';
+import type { FavoriteItem } from '../../shared/index-local-types';
 export function createRenderFavoritesPanel(deps: any) {
   const renderFavoritesPanel = async (): Promise<string> => {
     const allFavorites = await FavoritesManager.getAll();
@@ -28,7 +28,7 @@ export function createRenderFavoritesPanel(deps: any) {
     const renderFavoriteCard = (fav: FavoriteItem) => {
       // 显示所有行，不做截断，超过高度内部滚动
       const rowsHtml = fav.header
-        .map((h, i) => {
+        .map((h: any, i: any) => {
           const renderedCell = deps.renderDataCardCellContent({
             rawHeaderName: h || '属性' + i,
             cell: fav.rowData[i] ?? '',
@@ -42,7 +42,7 @@ export function createRenderFavoritesPanel(deps: any) {
       `;
         })
         .join('');
-      const tagsHtml = fav.tags.map(tag => `<span class="acu-fav-tag">${deps.escapeHtml(tag)}</span>`).join('');
+      const tagsHtml = fav.tags.map((tag: any) => `<span class="acu-fav-tag">${deps.escapeHtml(tag)}</span>`).join('');
       const sourceLabel = fav.sourceInfo ? deps.escapeHtml(fav.sourceInfo.tableName) : '';
 
       // 复用 acu-data-card 结构，来源标签移到底部与tags一起显示

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * error-handler.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
@@ -14,7 +13,7 @@ export function createErrorHandler(deps: any) {
     fatalErrorDetected: false,
 
     // 判断是否为致命错误（高阈值）
-    isFatalError(error, source, lineno, colno, stack) {
+    isFatalError(error: any, source: any, _lineno: any, _colno: any, stack: any) {
       // 排除第三方库错误
       const thirdPartyPatterns = [/jquery/i, /lodash/i, /vue/i, /react/i, /pixi/i, /gsap/i, /toastr/i, /node_modules/i];
 
@@ -52,7 +51,7 @@ export function createErrorHandler(deps: any) {
     },
 
     // 处理错误
-    handleError(error, source, lineno, colno, stack) {
+    handleError(error: any, source: any, lineno: any, colno: any, stack: any) {
       try {
         // 检查是否为致命错误
         if (!this.isFatalError(error, source, lineno, colno, stack)) {
@@ -132,11 +131,11 @@ export function createErrorHandler(deps: any) {
           transition: all 0.2s;
         `;
 
-        btn.onmouseenter = function () {
+        btn.onmouseenter = function (this: any) {
           this.style.background = '#c0392b';
           this.style.transform = 'scale(1.05)';
         };
-        btn.onmouseleave = function () {
+        btn.onmouseleave = function (this: any) {
           this.style.background = '#e74c3c';
           this.style.transform = 'scale(1)';
         };
@@ -144,8 +143,8 @@ export function createErrorHandler(deps: any) {
         btn.onclick = function () {
           try {
             // 尝试调用全局的 showDebugConsoleModal
-            if (typeof window.showDebugConsoleModal === 'function') {
-              window.showDebugConsoleModal();
+            if (typeof (window as any).showDebugConsoleModal === 'function') {
+              (window as any).showDebugConsoleModal();
             } else {
               // 系统弹窗尚未初始化时的浏览器级应急兜底，符合 DESIGN.md 的原生提示例外。
               alert('脚本出现错误，请打开浏览器开发者工具（F12）查看控制台');

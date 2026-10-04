@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * grant-equipment-gacha-reward.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,7 +7,7 @@ import type { GachaState, GachaDrawOutcome } from './gacha-types';
 import type { GachaItemDefinition } from '../../entities/gacha-items';
 export function createGrantEquipmentGachaReward(deps: any) {
   const grantEquipmentGachaReward = (
-    rawData,
+    rawData: any,
     state: GachaState,
     item: GachaItemDefinition,
     quantity: number,
@@ -22,7 +21,7 @@ export function createGrantEquipmentGachaReward(deps: any) {
       snapshots.set(parsed.tableKey, deps.cloneRuntimeDataValue(rawData[parsed.tableKey]));
     }
 
-    const existing = parsed.items.find(candidate => candidate.name === item.name) || null;
+    const existing = parsed.items.find((candidate: any) => candidate.name === item.name) || null;
     const canStackInEquipmentTable = item.stackable && !item.unique && parsed.colMap.quantity >= 0;
     if (existing && !canStackInEquipmentTable) {
       const shardGain = deps.addGachaShards(state, item.quality, GACHA_SHARD_VALUES[item.quality] * Math.max(1, quantity));

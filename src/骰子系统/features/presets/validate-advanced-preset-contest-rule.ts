@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * validate-advanced-preset-contest-rule.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+type AdvancedPresetValidationIssue = Record<string, any>;
+
 export function createValidateAdvancedPresetContestRule(deps: any) {
   const validateAdvancedPresetContestRule = (
     preset: AdvancedDicePreset,
@@ -40,7 +42,7 @@ export function createValidateAdvancedPresetContestRule(deps: any) {
     if ('tieBreakers' in contestRule) {
       if (!Array.isArray(contestRule.tieBreakers)) {
         deps.pushAdvancedPresetIssue(issues, 'contestRule.tieBreakers', '必须是字符串数组');
-      } else if (contestRule.tieBreakers.some(item => typeof item !== 'string')) {
+      } else if (contestRule.tieBreakers.some((item: any) => typeof item !== 'string')) {
         deps.pushAdvancedPresetIssue(issues, 'contestRule.tieBreakers', '只能包含字符串');
       }
     }

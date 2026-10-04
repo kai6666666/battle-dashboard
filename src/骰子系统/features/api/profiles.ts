@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/api/profiles.ts
  * Feature-Sliced: 对外 API 的骰子配置档案（profiles）子对象方法。

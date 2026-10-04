@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * apply-dice-config-backup-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { Store } from '../../shared/storage/store';
+type DiceConfigBackupApplyStats = Record<string, any>;
 export function createApplyDiceConfigBackupValue(deps: any) {
   const applyDiceConfigBackupValue = (
     key: string,
@@ -46,7 +46,7 @@ export function createApplyDiceConfigBackupValue(deps: any) {
         return;
       }
       const currentRecord = deps.isDiceConfigBackupRecord(current) ? current : {};
-      const merged = { ...currentRecord, ...value };
+      const merged = { ...currentRecord, ...(value as Record<string, any>) };
       if (deps.isDiceConfigBackupSameValue(current, merged)) {
         stats.skipped += 1;
       } else {
@@ -84,7 +84,7 @@ export function createApplyDiceConfigBackupValue(deps: any) {
       const currentRules = deps.getDiceConfigBackupRuleRecords(current, deps.sanitizeDiceConfigBackupValidationRule);
       const incomingRules = deps.getDiceConfigBackupRuleRecords(value, deps.sanitizeDiceConfigBackupValidationRule);
       const builtinKeys = new Set(
-        deps.BUILTIN_VALIDATION_RULES.map(rule =>
+        deps.BUILTIN_VALIDATION_RULES.map((rule: any) =>
           deps.getDiceConfigBackupValidationRuleKey(rule as Record<string, unknown>),
         ).filter(Boolean),
       );

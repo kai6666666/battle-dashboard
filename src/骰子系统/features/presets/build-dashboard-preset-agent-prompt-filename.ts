@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-dashboard-preset-agent-prompt-filename.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildDashboardPresetAgentPromptFilename(deps: any) {
+export function createBuildDashboardPresetAgentPromptFilename(_deps: any) {
   const buildDashboardPresetAgentPromptFilename = (presetName: string): string => {
     const safeName =
       presetName

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * save-gacha-pool-settings.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -10,7 +9,7 @@ import type { GachaPoolDefinition } from '../../entities/gacha-items';
 import type { GachaPoolSettingsRecord } from '../../features/gacha/gacha-types';
 export function createSaveGachaPoolSettings(deps: any) {
   const saveGachaPoolSettings = (pools: readonly GachaPoolDefinition[]) => {
-    const normalized = deps.cloneGachaPoolDefinitions(pools).map(pool => {
+    const normalized = deps.cloneGachaPoolDefinitions(pools).map((pool: any) => {
       const enabled = pool.id !== GACHA_ALL_POOL_TAG && pool.includeInAll === true;
       return {
         ...pool,

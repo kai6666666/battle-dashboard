@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * shared/effect-math.ts
  * Feature-Sliced: batch extract (FSD batch A1).
  */
 
 import { rollComplexDiceExpression } from '../features/dice/dice-engine';
+type Effect = Record<string, any>;
+type EffectResult = Record<string, any>;
 
 export function computeEffectVariables(results: EffectResult[]): Record<string, string | number | boolean> {
     if (!results || results.length === 0) {

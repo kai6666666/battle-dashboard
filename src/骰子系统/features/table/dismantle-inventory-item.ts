@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * dismantle-inventory-item.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -52,7 +51,7 @@ export function createDismantleInventoryItem(deps: any) {
 
         const state = deps.touchGachaActivity(deps.getGachaState(context.rawData, true));
         if (!state) return;
-        const shardGain = deps.addGachaShards(state, rarity, GACHA_SHARD_VALUES[rarity] * dismantleUnits);
+        const shardGain = deps.addGachaShards(state, rarity, (GACHA_SHARD_VALUES as any)[rarity] * dismantleUnits);
         const nextQuantity = quantityAvailable - dismantleQuantity;
 
         if (nextQuantity <= 0) {

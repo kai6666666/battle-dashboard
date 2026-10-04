@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/api/check.ts
  * Feature-Sliced: 对外 API 的属性/技能检定（check）方法。

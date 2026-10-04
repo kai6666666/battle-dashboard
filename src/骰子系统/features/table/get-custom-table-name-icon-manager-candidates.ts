@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * get-custom-table-name-icon-manager-candidates.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CustomTableNameIconManagerCandidate = Record<string, any>;
+
+import type { CustomTableNameIconSection, CustomTableNameIconModuleId } from '../../shared/index-local-types';
 export function createGetCustomTableNameIconManagerCandidates(deps: any) {
   const getCustomTableNameIconManagerCandidates = (): CustomTableNameIconManagerCandidate[] => {
     const candidateMap = new Map<string, CustomTableNameIconManagerCandidate>();
@@ -12,7 +14,7 @@ export function createGetCustomTableNameIconManagerCandidates(deps: any) {
     };
 
     const sheets = deps.getCustomTableNameIconManagerRawSheets();
-    sheets.forEach(sheet => {
+    sheets.forEach((sheet: any) => {
       const headers = sheet.content[0] || [];
       const rows = sheet.content.slice(1);
       const dashboardContextInfo = deps.resolveDashboardCustomTableNameIconContextInfo(sheet.name);
@@ -21,7 +23,7 @@ export function createGetCustomTableNameIconManagerCandidates(deps: any) {
         ? deps.CUSTOM_TABLE_NAME_ICON_MANAGER_DIRECT_MODULE_BY_SECTION[directSection]
         : undefined;
       if (!dashboardContextInfo && !directModuleId) {
-        rows.forEach((row, rowIndex) => {
+        rows.forEach((row: any, rowIndex: any) => {
           const name = deps.resolveCustomTableNameIconRowName(sheet.name, headers, row, rowIndex);
           addCandidate(
             deps.createCustomTableNameIconManagerCandidate(
@@ -33,7 +35,7 @@ export function createGetCustomTableNameIconManagerCandidates(deps: any) {
         });
       }
       if (dashboardContextInfo) {
-        rows.forEach((row, rowIndex) => {
+        rows.forEach((row: any, rowIndex: any) => {
           const name = deps.resolveCustomTableNameIconRowName(sheet.name, headers, row, rowIndex);
           addCandidate(
             deps.createCustomTableNameIconManagerCandidate(
@@ -45,7 +47,7 @@ export function createGetCustomTableNameIconManagerCandidates(deps: any) {
         });
       }
       if (directSection && directModuleId) {
-        rows.forEach((row, rowIndex) => {
+        rows.forEach((row: any, rowIndex: any) => {
           const name = deps.resolveGlobalInteractionRowTitle(headers, row, rowIndex);
           addCandidate(
             deps.createCustomTableNameIconManagerCandidate(
@@ -59,12 +61,12 @@ export function createGetCustomTableNameIconManagerCandidates(deps: any) {
     });
 
     const rawData = deps.getTableData({ silent: true }) as unknown;
-    deps.buildGlobalInteractionGroups(rawData).forEach(group => {
+    deps.buildGlobalInteractionGroups(rawData).forEach((group: any) => {
       const meta = deps.resolveGlobalInteractionSectionMeta(group.tableName);
       const section = meta.kind as CustomTableNameIconSection;
       const moduleId: CustomTableNameIconModuleId =
         section === 'map' ? 'global-interaction-map-marker' : 'global-interaction-panel';
-      group.rows.forEach(row => {
+      group.rows.forEach((row: any) => {
         addCandidate(
           deps.createCustomTableNameIconManagerCandidate(
             { moduleId, tableName: group.tableName, section, name: row.title },
@@ -75,7 +77,7 @@ export function createGetCustomTableNameIconManagerCandidates(deps: any) {
       });
     });
 
-    deps.CustomTableNameIconStoreManager.getAll().forEach(entry => {
+    deps.CustomTableNameIconStoreManager.getAll().forEach((entry: any) => {
       addCandidate(deps.createCustomTableNameIconManagerCandidate(entry, 'saved', 'saved'));
     });
 

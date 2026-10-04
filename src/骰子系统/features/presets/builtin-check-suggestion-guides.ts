@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * builtin-check-suggestion-guides.ts
  * Feature-Sliced 模块（数据常量）。
  */
+import type { CheckSuggestionAliases, CheckSuggestionGuide } from '../../shared/advanced-preset-types';
 
 export const COC7_CHECK_SUGGESTION_ALIASES: CheckSuggestionAliases = {
     params: {

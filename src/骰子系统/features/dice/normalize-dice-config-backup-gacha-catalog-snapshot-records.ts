@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * normalize-dice-config-backup-gacha-catalog-snapshot-records.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

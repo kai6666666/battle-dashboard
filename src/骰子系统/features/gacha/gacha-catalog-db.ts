@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/gacha/gacha-catalog-db.ts
  * Feature-Sliced: entities/data 层 - 骰子商店"自定义物品"分类目录的 IndexedDB 适配器。

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * setup-fixed-anchor-mutation-observer.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -16,7 +15,7 @@ export function createSetupFixedAnchorMutationObserver(deps: any) {
     deps.clearFixedAnchorMutationObserver();
     if (!targetDocument.body) return;
 
-    const MutationObserverCtor = targetWindow.MutationObserver || window.MutationObserver;
+    const MutationObserverCtor = (targetWindow as any).MutationObserver || (window as any).MutationObserver;
     deps.setFixedAnchorMutationObserver(new MutationObserverCtor(() => deps.scheduleFixedAnchorTargetRefresh()));
     deps.getFixedAnchorMutationObserver().observe(targetDocument.body, { childList: true, subtree: true });
     deps.setFixedAnchorMutationWindow(targetWindow);

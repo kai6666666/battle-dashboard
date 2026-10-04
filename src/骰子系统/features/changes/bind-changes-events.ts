@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * bind-changes-events.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -10,7 +9,7 @@ export function createBindChangesEvents(deps: any) {
   const bindChangesEvents = () => {
     const { $ } = deps.getCore();
     const getChangesPanel = (): JQuery<HTMLElement> => {
-      const $panel = $('.acu-changes-content').closest<HTMLElement>('.acu-data-display').first();
+      const $panel = $('.acu-changes-content').closest('.acu-data-display').first();
       if ($panel.length) return $panel;
       return $('#acu-data-area').first() as JQuery<HTMLElement>;
     };
@@ -78,7 +77,7 @@ export function createBindChangesEvents(deps: any) {
     // === 验证错误：回滚按钮（恢复快照值）===
     $('.acu-validation-error-item .acu-action-reject')
       .off('click')
-      .on('click', async function (e) {
+      .on('click', async function (this: any, e: any) {
         e.stopPropagation();
         const $item = $(this).closest('.acu-validation-error-item');
         const tableName = $item.data('table');
@@ -127,7 +126,7 @@ export function createBindChangesEvents(deps: any) {
     // === 验证错误：编辑按钮（智能修改）===
     $('.acu-validation-error-item .acu-action-edit')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (this: any, e: any) {
         e.stopPropagation();
         const $item = $(this).closest('.acu-validation-error-item');
         const ruleData = $item.data('rule-data');
@@ -161,11 +160,11 @@ export function createBindChangesEvents(deps: any) {
 
     $('.acu-validation-error-item')
       .off('click touchstart touchend touchmove')
-      .on('touchstart', function (e) {
+      .on('touchstart', function (e: any) {
         const touch = (e.originalEvent as TouchEvent).touches[0];
         validationItemTouchStartPos = { x: touch.clientX, y: touch.clientY };
       })
-      .on('touchmove', function (e) {
+      .on('touchmove', function (e: any) {
         if (!validationItemTouchStartPos) return;
         const touch = (e.originalEvent as TouchEvent).touches[0];
         const deltaX = Math.abs(touch.clientX - validationItemTouchStartPos.x);
@@ -175,7 +174,7 @@ export function createBindChangesEvents(deps: any) {
           validationItemTouchStartPos = null;
         }
       })
-      .on('touchend', function (e) {
+      .on('touchend', function (this: any, e: any) {
         // 如果触摸位置已被清除（滑动），不触发点击
         if (!validationItemTouchStartPos) return;
         validationItemTouchStartPos = null;
@@ -194,7 +193,7 @@ export function createBindChangesEvents(deps: any) {
 
         jumpToChangesPanelTarget($(this));
       })
-      .on('click', function (e) {
+      .on('click', function (this: any, e: any) {
         // 桌面端仍使用 click 事件
         // 如果点击的是按钮区域，不触发定位
         if ($(e.target).closest('.acu-change-actions, .acu-change-action-btn').length) {
@@ -217,7 +216,7 @@ export function createBindChangesEvents(deps: any) {
     // 折叠/展开分组（根据模式使用不同的存储键）
     $('.acu-changes-group-header')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (this: any, e: any) {
         if ($(e.target).closest('.acu-change-item').length) return;
 
         const tableName = $(this).data('table');
@@ -234,7 +233,7 @@ export function createBindChangesEvents(deps: any) {
           $group.removeClass('collapsed');
           $body.slideDown(200);
           $icon.removeClass('fa-chevron-right').addClass('fa-chevron-down');
-          collapsedGroups = collapsedGroups.filter(n => n !== tableName);
+          collapsedGroups = collapsedGroups.filter((n: any) => n !== tableName);
         } else {
           $group.addClass('collapsed');
           $body.slideUp(200);
@@ -250,7 +249,7 @@ export function createBindChangesEvents(deps: any) {
     // === 单项操作：接受（完整面板变更条目）===
     $('.acu-change-item .acu-action-accept')
       .off('click')
-      .on('click', async function (e) {
+      .on('click', async function (this: any, e: any) {
         e.stopPropagation();
         const $item = $(this).closest('.acu-change-item');
         const changeType = $item.data('change-type');
@@ -294,7 +293,7 @@ export function createBindChangesEvents(deps: any) {
         deps.saveSnapshot(snapshot);
 
         // 移除该条目并刷新
-        $item.fadeOut(200, function () {
+        $item.fadeOut(200, function (this: any) {
           $(this).remove();
           deps.refreshChangesPanel();
         });
@@ -303,7 +302,7 @@ export function createBindChangesEvents(deps: any) {
     // === 单项操作：拒绝（完整面板变更条目）===
     $('.acu-change-item .acu-action-reject')
       .off('click')
-      .on('click', async function (e) {
+      .on('click', async function (this: any, e: any) {
         e.stopPropagation();
         const $item = $(this).closest('.acu-change-item');
         const changeType = $item.data('change-type');
@@ -345,7 +344,7 @@ export function createBindChangesEvents(deps: any) {
         }
 
         // 移除该条目并刷新
-        $item.fadeOut(200, function () {
+        $item.fadeOut(200, function (this: any) {
           $(this).remove();
           deps.refreshChangesPanel();
         });
@@ -354,7 +353,7 @@ export function createBindChangesEvents(deps: any) {
     // === 单项操作：恢复（用于已删除的行/表）===
     $('.acu-action-restore')
       .off('click')
-      .on('click', async function (e) {
+      .on('click', async function (this: any, e: any) {
         e.stopPropagation();
         const $item = $(this).closest('.acu-change-item');
         const changeType = $item.data('change-type');
@@ -381,7 +380,7 @@ export function createBindChangesEvents(deps: any) {
         }
 
         // 移除该条目并刷新
-        $item.fadeOut(200, function () {
+        $item.fadeOut(200, function (this: any) {
           $(this).remove();
           deps.refreshChangesPanel();
         });
@@ -390,7 +389,7 @@ export function createBindChangesEvents(deps: any) {
     // === 单项操作：编辑（完整面板变更条目，排除验证错误项）===
     $('.acu-change-item:not(.acu-validation-error-item) .acu-action-edit')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (this: any, e: any) {
         e.stopPropagation();
         const $item = $(this).closest('.acu-change-item');
         const tableKey = $item.data('table-key');
@@ -484,7 +483,18 @@ export function createBindChangesEvents(deps: any) {
 
         // 将快照数据恢复为当前数据
         const restoredData = JSON.parse(JSON.stringify(snapshot));
-        await deps.saveDataToDatabase(restoredData, false, false);
+        try {
+          const saved = await deps.saveDataToDatabase(restoredData, false, false);
+          if (saved === false) {
+            if (window.toastr) window.toastr.info('保存进行中，请稍候再试');
+            return;
+          }
+          if (window.toastr) window.toastr.success('已恢复全部变更');
+          deps.refreshChangesPanel();
+        } catch (error) {
+          // saveDataToDatabase 失败时已弹出「保存失败」提示；此处仅记录，避免二次打扰
+          console.warn('[DICE]批量恢复全部变更失败:', error);
+        }
       });
 
     // === 简洁模式切换 ===
@@ -509,7 +519,7 @@ export function createBindChangesEvents(deps: any) {
       .closest('.acu-data-display')
       .find('.acu-height-drag-handle')
       .off('pointerdown')
-      .on('pointerdown', function (e) {
+      .on('pointerdown', function (this: any, e: any) {
         if (e.button !== 0) return;
         e.preventDefault();
         e.stopPropagation();
@@ -522,11 +532,11 @@ export function createBindChangesEvents(deps: any) {
         const startY = e.clientY;
         const tableName = $(handle).data('table');
 
-        handle.onpointermove = function (moveE) {
+        handle.onpointermove = function (moveE: any) {
           const dy = moveE.clientY - startY;
           requestedHeight = deps.setPanelRequestedHeight($panel, startHeight - dy) || requestedHeight;
         };
-        handle.onpointerup = function (upE) {
+        handle.onpointerup = function (upE: any) {
           $(handle).add($(handle).closest('.acu-height-control')).removeClass('active');
           handle.releasePointerCapture(upE.pointerId);
           handle.onpointermove = null;
@@ -536,7 +546,7 @@ export function createBindChangesEvents(deps: any) {
         };
       })
       .off('dblclick')
-      .on('dblclick', function (e) {
+      .on('dblclick', function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
         const tableName = $(this).data('table');
@@ -549,7 +559,7 @@ export function createBindChangesEvents(deps: any) {
     if ($horizontalScroller.length) {
       $horizontalScroller[0].addEventListener(
         'touchstart',
-        function (e) {
+        function (this: any, e: any) {
           this._touchStartX = e.touches[0].clientX;
           this._touchStartY = e.touches[0].clientY;
           this._scrollDirection = null; // 重置滚动方向
@@ -559,7 +569,7 @@ export function createBindChangesEvents(deps: any) {
 
       $horizontalScroller[0].addEventListener(
         'touchmove',
-        function (e) {
+        function (this: any, e: any) {
           if (!this._touchStartX) return;
 
           const deltaX = Math.abs(e.touches[0].clientX - this._touchStartX);
@@ -581,7 +591,7 @@ export function createBindChangesEvents(deps: any) {
 
       $horizontalScroller[0].addEventListener(
         'touchend',
-        function () {
+        function (this: any) {
           this._touchStartX = null;
           this._touchStartY = null;
           this._scrollDirection = null;
@@ -589,7 +599,7 @@ export function createBindChangesEvents(deps: any) {
         { passive: true },
       );
 
-      $horizontalScroller.off('wheel.acuHorizontalScroll').on('wheel.acuHorizontalScroll', function (e) {
+      $horizontalScroller.off('wheel.acuHorizontalScroll').on('wheel.acuHorizontalScroll', function (this: any, e: any) {
         const event = e.originalEvent as WheelEvent | undefined;
         if (!event) return;
 

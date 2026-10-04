@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * resolve-custom-table-name-icon-asset-url.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { CustomTableNameIconImageDB } from '../../shared/storage/custom-table-name-icon-image-db';
+import type { CustomTableNameIconContext } from '../../shared/index-local-types';
 export function createResolveCustomTableNameIconAssetUrl(deps: any) {
   const resolveCustomTableNameIconAssetUrl = async (
     context?: CustomTableNameIconContext | null,

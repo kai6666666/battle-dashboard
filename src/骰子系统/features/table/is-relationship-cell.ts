@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * is-relationship-cell.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createIsRelationshipCell(deps: any) {
-  const isRelationshipCell = (value, headerName) => {
+export function createIsRelationshipCell(_deps: any) {
+  const isRelationshipCell = (value: any, headerName: any) => {
     if (!value) return false;
     const str = String(value).trim();
     const lowerHeader = (headerName || '').toLowerCase();

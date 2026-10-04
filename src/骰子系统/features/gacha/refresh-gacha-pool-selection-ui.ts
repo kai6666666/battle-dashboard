@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * refresh-gacha-pool-selection-ui.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -10,7 +9,7 @@ export function createRefreshGachaPoolSelectionUi(deps: any) {
     const $overlay = $('.acu-gacha-overlay');
     if (!$overlay.length) return;
 
-    $overlay.find('.acu-gacha-pool-btn').each(function () {
+    $overlay.find('.acu-gacha-pool-btn').each(function (this: any) {
       const $button = $(this);
       const isActive = String($button.data('pool-tag') || '') === poolTag;
       $button.toggleClass('active', isActive).attr('aria-selected', isActive ? 'true' : 'false');

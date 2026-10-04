@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * favorites-events.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -99,7 +98,7 @@ export function createBindFavoritesEvents(deps: any) {
       const tableName = $(handle).data('table');
 
       handle.onpointermove = function (moveE: PointerEvent) {
-        const dy = moveE.clientY - startY;
+        const dy = moveE.clientY - (startY ?? 0);
         requestedHeight = deps.setPanelRequestedHeight($dataArea, startHeight - dy) || requestedHeight;
       };
       handle.onpointerup = function (upE: PointerEvent) {
@@ -161,7 +160,7 @@ export function createBindFavoritesEvents(deps: any) {
     // 搜索
     $panel.find('#acu-fav-search').on(
       'input.favEvents',
-      _.debounce(function () {
+      _.debounce(function (this: any) {
         const searchTerm = ($(this).val() as string).toLowerCase().trim();
         $panel.find('.acu-fav-card').each(function () {
           const cardText = $(this).text().toLowerCase();
@@ -206,7 +205,7 @@ export function createBindFavoritesEvents(deps: any) {
       });
 
       // 菜单项点击事件
-      menu.on('click', '.acu-cell-menu-item', async function () {
+      menu.on('click', '.acu-cell-menu-item', async function (this: any) {
         const action = $(this).data('action');
         const id = menu.data('fav-id');
         $('.acu-cell-menu, .acu-menu-backdrop').remove();
@@ -217,7 +216,7 @@ export function createBindFavoritesEvents(deps: any) {
         if (!fav) return;
 
         if (action === 'edit') {
-          deps.showFavoriteEditModal(fav, async updated => {
+          deps.showFavoriteEditModal(fav, async (updated: any) => {
             await FavoritesManager.updateFavorite(id, updated);
             $panel.html(await deps.renderFavoritesPanel());
             bindFavoritesEvents($panel);

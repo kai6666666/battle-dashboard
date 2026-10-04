@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * crazy-roll-with-preset.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { rollComplexDiceExpression } from './dice-engine';
-export function createCrazyRollWithPreset(deps: any) {
+type AdvancedDicePreset = Record<string, any>;
+export function createCrazyRollWithPreset(_deps: any) {
   const crazyRollWithPreset = (preset: AdvancedDicePreset | null, attrValue: number) => {
     if (!preset) {
       // 没有激活预设时，使用默认 d100 规则

@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * replace-check-suggestion-condition-vars.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { RollResult } from '../../shared/types';
-export function createReplaceCheckSuggestionConditionVars(deps: any) {
+export function createReplaceCheckSuggestionConditionVars(_deps: any) {
   const replaceCheckSuggestionConditionVars = (
     expression: string,
     context: Record<string, string | number | boolean | RollResult>,

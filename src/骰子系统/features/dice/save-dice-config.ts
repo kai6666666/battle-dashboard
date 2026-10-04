@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * save-dice-config.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,7 +5,7 @@
 import { STORAGE_KEY_DICE_CONFIG } from '../../shared/storage-keys';
 import { Store } from '../../shared/storage/store';
 export function createSaveDiceConfig(deps: any) {
-  const saveDiceConfig = cfg => {
+  const saveDiceConfig = (cfg: any) => {
     const oldCfg = deps.getDiceConfig();
     const newCfg = { ...oldCfg, ...cfg };
     Store.set(STORAGE_KEY_DICE_CONFIG, newCfg);

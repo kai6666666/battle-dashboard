@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * inventory-item-detail.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { GachaRarity } from '../../entities/gacha-items';
 export function createShowInventoryItemDetail(deps: any) {
-  const showInventoryItemDetail = (rowIndex, target: 'inventory' | 'equipment' = 'inventory') => {
+  const showInventoryItemDetail = (rowIndex: any, target: 'inventory' | 'equipment' = 'inventory') => {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
     const rawData = deps.getCachedRawData() || deps.getTableData();
@@ -63,7 +63,7 @@ export function createShowInventoryItemDetail(deps: any) {
                 : ''
             }
             ${quickActions
-              .map((action, actionIdx) => {
+              .map((action: any, actionIdx: any) => {
                 const iconClass = String(action.icon || deps.ACTION_ICON_MAP[action.label] || 'fa-play').trim();
                 return `<button class="acu-action-item acu-inventory-detail-quick-action" type="button" data-action-idx="${actionIdx}"><i class="fa-solid ${deps.escapeHtml(iconClass)}"></i> ${deps.escapeHtml(action.label)}</button>`;
               })
@@ -109,12 +109,12 @@ export function createShowInventoryItemDetail(deps: any) {
       }
     };
     detail.on('click', '.acu-inventory-detail-dismantle', handleDismantle);
-    detail.on('click', '.acu-inventory-detail-dismantle-action', e => {
+    detail.on('click', '.acu-inventory-detail-dismantle-action', (e: any) => {
       e.stopPropagation();
       e.preventDefault();
       handleDismantle();
     });
-    detail.on('click', '.acu-inventory-detail-quick-action', function (e) {
+    detail.on('click', '.acu-inventory-detail-quick-action', function (this: any, e: any) {
       e.stopPropagation();
       e.preventDefault();
       const actionIdx = Number.parseInt(String($(this).data('action-idx') || ''), 10);

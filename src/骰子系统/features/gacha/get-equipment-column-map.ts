@@ -1,11 +1,13 @@
-// @ts-nocheck
 /**
  * get-equipment-column-map.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DASHBOARD_TABLE_CONFIG } from '../../features/dashboard/dashboard-table-config';
+type GachaRewardParseOptions = Record<string, any>;
+type GachaRewardColumnMap = Record<string, any>;
+
 export function createGetEquipmentColumnMap(deps: any) {
-  const getEquipmentColumnMap = (equipmentResult, options: GachaRewardParseOptions = {}) => {
+  const getEquipmentColumnMap = (equipmentResult: any, options: GachaRewardParseOptions = {}) => {
     const headers = equipmentResult?.data?.headers || [];
     const config = equipmentResult?.config || deps.getDashboardModuleConfig('equip') || DASHBOARD_TABLE_CONFIG.equip;
     const colMap: GachaRewardColumnMap = {

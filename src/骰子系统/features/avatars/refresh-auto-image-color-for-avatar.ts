@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * refresh-auto-image-color-for-avatar.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。

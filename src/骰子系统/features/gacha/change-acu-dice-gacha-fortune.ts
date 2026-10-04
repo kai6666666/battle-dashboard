@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * change-acu-dice-gacha-fortune.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -13,12 +12,7 @@ export function createChangeAcuDiceGachaFortune(deps: any) {
     const amount = deps.normalizeAcuDiceGachaInteger(value, mode === 'set' ? FORTUNE_CURRENCY_NAME : `${FORTUNE_CURRENCY_NAME}变化量`, {
       allowNegative: mode === 'add',
     });
-    let result: {
-      before: number;
-      after: number;
-      delta: number;
-      state: ReturnType<typeof deps.buildAcuDiceGachaStateSnapshot>;
-    } | null = null;
+    let result: any = null;
 
     await deps.runInSaveQueue(async () => {
       const state = deps.touchGachaActivity(deps.getGachaState(undefined, true));

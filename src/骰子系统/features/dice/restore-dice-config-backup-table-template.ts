@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * restore-dice-config-backup-table-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupApplyStats = Record<string, any>;
+
 export function createRestoreDiceConfigBackupTableTemplate(deps: any) {
   const restoreDiceConfigBackupTableTemplate = async (
     templateValue: unknown,
@@ -27,7 +28,10 @@ export function createRestoreDiceConfigBackupTableTemplate(deps: any) {
 
     const template = deps.cloneDiceConfigBackupValue(templateValue);
     onImportAttempt?.();
-    const result = await Promise.resolve(api.importTemplateFromData(template, { scope: 'chat' }));
+    // x9h③：显式锁定冲突策略 keep-current（不静默覆盖运行时数据）；dataMode 仍由数据库按上下文自动推导。
+    const result = await Promise.resolve(
+      api.importTemplateFromData(template, { scope: 'chat', conflictPolicy: 'keep-current' }),
+    );
     if (deps.isDiceConfigBackupRecord(result) && result.success === false) {
       const message = typeof result.message === 'string' ? result.message : '数据库模板导入失败';
       throw new Error(message);

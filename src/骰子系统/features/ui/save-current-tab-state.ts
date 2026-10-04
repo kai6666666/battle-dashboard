@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * save-current-tab-state.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -12,7 +11,7 @@ export function createSaveCurrentTabState(deps: any) {
     if (activeTab && $content.length) {
       const innerScrolls = {};
       // 遍历所有卡片，记录内部滚动条位置
-      $content.find('.acu-data-card, .acu-card-body, .acu-edit-textarea').each(function () {
+      $content.find('.acu-data-card, .acu-card-body, .acu-edit-textarea').each(function (this: any) {
         if (this.scrollTop > 0) {
           // 尝试找到这张卡片的唯一标识 (Row Index)
           const $card = $(this).closest('.acu-data-card');
@@ -22,7 +21,7 @@ export function createSaveCurrentTabState(deps: any) {
 
           if (rIdx !== undefined) {
             const key = isEdit ? `edit-${rIdx}` : rIdx;
-            innerScrolls[key] = this.scrollTop;
+            (innerScrolls as any)[key] = this.scrollTop;
           }
         }
       });

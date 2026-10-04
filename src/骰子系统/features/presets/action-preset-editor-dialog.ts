@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * action-preset-editor-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -181,8 +180,8 @@ export function createShowActionPresetEditor(deps: any) {
       deps.validateJsoncEditorConfig({
         text: String($jsonTextarea.val() || ''),
         parse: parseActionPresetRules,
-        successMessage: rules => {
-          const actionCount = rules.reduce((total, rule) => {
+        successMessage: (rules: any) => {
+          const actionCount = rules.reduce((total: any, rule: any) => {
             const actions = Array.isArray(rule.actions) ? rule.actions : [];
             return total + actions.length;
           }, 0);

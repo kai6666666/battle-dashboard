@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * find-attribute-column-indices.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createFindAttributeColumnIndices(deps: any) {
+export function createFindAttributeColumnIndices(_deps: any) {
   const findAttributeColumnIndices = (headers: unknown[], includeSkill = false): number[] => {
     const cols: number[] = [];
     headers.forEach((header, idx) => {

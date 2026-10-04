@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * inventory-visualization.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { INVENTORY_QUALITY_ORDER } from '../../shared/defaults-config';
 export function createRenderInventoryVisualization(deps: any) {
-  const renderInventoryVisualization = (rawData, target = deps.getInventoryPanelTarget() as 'inventory' | 'equipment') => {
+  const renderInventoryVisualization = (rawData: any, target = deps.getInventoryPanelTarget() as 'inventory' | 'equipment') => {
     const config = deps.getConfig();
     const filters = deps.getInventoryFilters();
     const isFilterCollapsed = deps.getInventoryFiltersCollapsedState();
@@ -16,21 +15,21 @@ export function createRenderInventoryVisualization(deps: any) {
       .trim()
       .toLowerCase();
 
-    let filteredItems = items.filter(item => {
+    let filteredItems = items.filter((item: any) => {
       if (filters.type !== '全部' && item.type !== filters.type) return false;
       if (filters.quality !== '全部' && item.quality !== filters.quality) return false;
       if (!normalizedSearch) return true;
       return `${item.name} ${item.description}`.toLowerCase().includes(normalizedSearch);
     });
 
-    filteredItems = filteredItems.sort((a, b) => {
+    filteredItems = filteredItems.sort((a: any, b: any) => {
       const taskPriority = (b.type === '任务物品' ? 1 : 0) - (a.type === '任务物品' ? 1 : 0);
       if (taskPriority !== 0) return taskPriority;
       if (a.isChanged !== b.isChanged) return a.isChanged ? -1 : 1;
       if (filters.sort === 'type') return a.type.localeCompare(b.type, 'zh-CN') || a.rowIndex - b.rowIndex;
       if (filters.sort === 'quality') {
         return (
-          (INVENTORY_QUALITY_ORDER[b.quality] || 0) - (INVENTORY_QUALITY_ORDER[a.quality] || 0) ||
+          ((INVENTORY_QUALITY_ORDER as Record<string, number>)[b.quality] || 0) - ((INVENTORY_QUALITY_ORDER as Record<string, number>)[a.quality] || 0) ||
           a.rowIndex - b.rowIndex
         );
       }
@@ -43,7 +42,7 @@ export function createRenderInventoryVisualization(deps: any) {
     const itemCardsHtml =
       filteredItems.length > 0
         ? filteredItems
-            .map(item => {
+            .map((item: any) => {
               const icon = deps.getElementEmoji(item.name, null);
               const depletedClass = item.quantity <= 0 ? ' is-depleted' : '';
               const changedClass = item.isChanged ? ' acu-inventory-changed' : '';

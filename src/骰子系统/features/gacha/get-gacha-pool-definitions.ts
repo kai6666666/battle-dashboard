@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-gacha-pool-definitions.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -16,7 +15,7 @@ export function createGetGachaPoolDefinitions(deps: any) {
       return cached.items;
     }
     const items = deps.getAllGachaItemDefinitions(rawData)
-      .filter(item => deps.isGachaItemEnabled(item) && item.poolTags.some(tag => activeTags.includes(tag)))
+      .filter((item: any) => deps.isGachaItemEnabled(item) && item.poolTags.some((tag: any) => activeTags.includes(tag)))
       .sort(deps.compareGachaItemDefinitionsForDisplay);
     deps.setGachaPoolDefinitionsCache({ poolTag, rawData, activeTagsKey, items });
     return items;

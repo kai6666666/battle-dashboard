@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * bookmark-manager.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
@@ -9,11 +8,11 @@ export function createBookmarkManager(deps: any) {
     STORAGE_KEY_PREFIX: 'acu_bookmarks_v1_',
     MAX_CONTEXTS: 20, // 最多保留多少个聊天的bookmark数据
 
-    _cache: null,
+    _cache: null as any,
     _currentContextId: null,
 
     // 获取当前上下文专属的存储键
-    _getStorageKey(ctxId) {
+    _getStorageKey(ctxId?: any) {
       return this.STORAGE_KEY_PREFIX + (ctxId || deps.getCurrentContextFingerprint());
     },
 
@@ -38,7 +37,7 @@ export function createBookmarkManager(deps: any) {
         // 按最后访问时间排序（通过内部 _lastAccess 字段）
         const keyWithTime = allKeys.map(key => {
           try {
-            const data = JSON.parse(localStorage.getItem(key));
+            const data = JSON.parse(localStorage.getItem(key) as string);
             return { key, time: data?._lastAccess || 0 };
           } catch {
             return { key, time: 0 };
@@ -98,12 +97,12 @@ export function createBookmarkManager(deps: any) {
       }
     },
 
-    isBookmarked(tableName, rowKey) {
+    isBookmarked(tableName: any, rowKey: any) {
       const data = this._load();
       return !!(data[tableName] && data[tableName][rowKey]);
     },
 
-    toggleBookmark(tableName, rowKey) {
+    toggleBookmark(tableName: any, rowKey: any) {
       const data = this._load();
       if (!data[tableName]) data[tableName] = {};
 
@@ -120,7 +119,7 @@ export function createBookmarkManager(deps: any) {
       this._save();
     },
 
-    getBookmarks(tableName) {
+    getBookmarks(tableName: any) {
       const data = this._load();
       if (!data[tableName]) return [];
       return Object.keys(data[tableName]);

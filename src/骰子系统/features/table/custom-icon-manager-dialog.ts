@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * custom-icon-manager-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,6 +5,7 @@
 import { CustomTableNameIconImageDB } from '../../shared/storage/custom-table-name-icon-image-db';
 import { Store } from '../../shared/storage/store';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type CustomTableNameIconManagerCandidate = Record<string, any>;
 export function createShowCustomTableNameIconManager(deps: any) {
   const showCustomTableNameIconManager = () => {
     const { $ } = deps.getCore();
@@ -13,18 +13,18 @@ export function createShowCustomTableNameIconManager(deps: any) {
 
     const config = deps.getConfig();
     let candidates = deps.getCustomTableNameIconManagerCandidates();
-    let candidateByKey = new Map(candidates.map(candidate => [candidate.key, candidate]));
+    let candidateByKey = new Map(candidates.map((candidate: any) => [candidate.key, candidate]));
     let selectedKey = candidates[0]?.key || '';
     let pendingLocalFile: File | null = null;
 
-    const moduleOptions = [...new Set(candidates.map(candidate => candidate.context.moduleId))]
+    const moduleOptions = [...new Set(candidates.map((candidate: any) => candidate.context.moduleId))]
       .map(
         moduleId =>
           `<option value="${deps.escapeHtml(moduleId)}">${deps.escapeHtml(deps.getCustomTableNameIconManagerModuleLabel(moduleId))}</option>`,
       )
       .join('');
-    const tableOptions = [...new Set(candidates.map(candidate => candidate.context.tableName))]
-      .sort((left, right) => left.localeCompare(right, 'zh-CN'))
+    const tableOptions = [...new Set(candidates.map((candidate: any) => candidate.context.tableName))]
+      .sort((left: any, right: any) => left.localeCompare(right, 'zh-CN'))
       .map(tableName => `<option value="${deps.escapeHtml(tableName)}">${deps.escapeHtml(tableName)}</option>`)
       .join('');
 
@@ -83,8 +83,8 @@ export function createShowCustomTableNameIconManager(deps: any) {
 
     const updateCandidateCache = (): void => {
       candidates = deps.getCustomTableNameIconManagerCandidates();
-      candidateByKey = new Map(candidates.map(candidate => [candidate.key, candidate]));
-      if (!candidates.some(candidate => candidate.key === selectedKey)) {
+      candidateByKey = new Map(candidates.map((candidate: any) => [candidate.key, candidate]));
+      if (!candidates.some((candidate: any) => candidate.key === selectedKey)) {
         selectedKey = candidates[0]?.key || '';
       }
     };
@@ -94,20 +94,20 @@ export function createShowCustomTableNameIconManager(deps: any) {
       const tableSelect = overlay.find('#acu-custom-icon-table-filter');
       const currentModule = String(moduleSelect.val() || '').trim();
       const currentTable = String(tableSelect.val() || '').trim();
-      const nextModuleOptions = [...new Set(candidates.map(candidate => candidate.context.moduleId))]
+      const nextModuleOptions = [...new Set(candidates.map((candidate: any) => candidate.context.moduleId))]
         .map(
           moduleId =>
             `<option value="${deps.escapeHtml(moduleId)}">${deps.escapeHtml(deps.getCustomTableNameIconManagerModuleLabel(moduleId))}</option>`,
         )
         .join('');
-      const nextTableOptions = [...new Set(candidates.map(candidate => candidate.context.tableName))]
-        .sort((left, right) => left.localeCompare(right, 'zh-CN'))
+      const nextTableOptions = [...new Set(candidates.map((candidate: any) => candidate.context.tableName))]
+        .sort((left: any, right: any) => left.localeCompare(right, 'zh-CN'))
         .map(tableName => `<option value="${deps.escapeHtml(tableName)}">${deps.escapeHtml(tableName)}</option>`)
         .join('');
       moduleSelect.html(`<option value="">全部模块</option>${nextModuleOptions}`);
       tableSelect.html(`<option value="">全部表格</option>${nextTableOptions}`);
-      moduleSelect.val(candidates.some(candidate => candidate.context.moduleId === currentModule) ? currentModule : '');
-      tableSelect.val(candidates.some(candidate => candidate.context.tableName === currentTable) ? currentTable : '');
+      moduleSelect.val(candidates.some((candidate: any) => candidate.context.moduleId === currentModule) ? currentModule : '');
+      tableSelect.val(candidates.some((candidate: any) => candidate.context.tableName === currentTable) ? currentTable : '');
     };
 
     const getFilteredCandidates = (): CustomTableNameIconManagerCandidate[] => {
@@ -116,7 +116,7 @@ export function createShowCustomTableNameIconManager(deps: any) {
       const query = String(overlay.find('#acu-custom-icon-search').val() || '')
         .trim()
         .toLowerCase();
-      return candidates.filter(candidate => {
+      return candidates.filter((candidate: any) => {
         if (moduleFilter && candidate.context.moduleId !== moduleFilter) return false;
         if (tableFilter && candidate.context.tableName !== tableFilter) return false;
         if (query && !candidate.searchText.includes(query)) return false;
@@ -332,13 +332,13 @@ export function createShowCustomTableNameIconManager(deps: any) {
       },
     );
 
-    overlay.on('click', '.acu-custom-table-name-icon-item', function () {
+    overlay.on('click', '.acu-custom-table-name-icon-item', function (this: any) {
       selectedKey = String($(this).data('key') || '');
       pendingLocalFile = null;
       void refreshManager();
     });
 
-    overlay.on('keydown', '.acu-custom-table-name-icon-item', function (event) {
+    overlay.on('keydown', '.acu-custom-table-name-icon-item', function (this: any, event: any) {
       if (event.key !== 'Enter' && event.key !== ' ') return;
       event.preventDefault();
       $(this).trigger('click');
@@ -457,7 +457,7 @@ export function createShowCustomTableNameIconManager(deps: any) {
       overlay.find('#acu-custom-icon-local-file').trigger('click');
     });
 
-    overlay.on('change', '#acu-custom-icon-local-file', function (event) {
+    overlay.on('change', '#acu-custom-icon-local-file', function (event: any) {
       const input = event.target as HTMLInputElement;
       const file = input.files?.[0] || null;
       const validationError = deps.getCustomTableNameIconLocalFileValidationError(file);
@@ -543,7 +543,7 @@ export function createShowCustomTableNameIconManager(deps: any) {
       overlay.find('#acu-custom-icon-import-file').trigger('click');
     });
 
-    overlay.on('change', '#acu-custom-icon-import-file', function (event) {
+    overlay.on('change', '#acu-custom-icon-import-file', function (event: any) {
       const input = event.target as HTMLInputElement;
       const file = input.files?.[0] || null;
       if (!file) return;
@@ -613,7 +613,7 @@ export function createShowCustomTableNameIconManager(deps: any) {
       reader.readAsText(file);
     });
 
-    overlay.find('.acu-custom-icon-close').on('click', event => {
+    overlay.find('.acu-custom-icon-close').on('click', (event: any) => {
       event.preventDefault();
       event.stopPropagation();
       closeCustomIconManager();

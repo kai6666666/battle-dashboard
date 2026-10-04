@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * save-current-dice-profile.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { ACU_DICE_PROFILE_FORMAT } from '../../features/profiles/profile-packages';
+type DiceProfileSaveCurrentOptions = Record<string, any>;
+type DiceProfileRecord = { id: string; [key: string]: any };
+
 export function createSaveCurrentDiceProfile(deps: any) {
   const saveCurrentDiceProfile = async (
     options: DiceProfileSaveCurrentOptions = {},

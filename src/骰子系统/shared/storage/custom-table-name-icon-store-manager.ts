@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * custom-table-name-icon-store-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { Store } from './store';
+type CustomTableNameIconEntry = Record<string, any>;
+type CustomTableNameIconContext = Record<string, any>;
 export function createCustomTableNameIconStoreManager(deps: any) {
   const CustomTableNameIconStoreManager = (() => {
     let cache: Record<string, CustomTableNameIconEntry> | null = null;

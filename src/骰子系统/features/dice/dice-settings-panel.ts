@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * dice-settings-panel.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -170,15 +169,15 @@ export function createShowDiceSettingsPanel(deps: any) {
     deps.setupOverlayClose($panel, 'acu-dice-config-overlay', closePanel);
 
     // === Stepper 步进器事件 ===
-    $panel.find('.acu-stepper').each(function () {
+    $panel.find('.acu-stepper').each(function (this: any) {
       const $stepper = $(this);
-      const id = $stepper.data('id');
+      const id = $stepper.data('id'); void id;
       const min = parseInt($stepper.data('min'));
       const max = parseInt($stepper.data('max'));
       const step = parseInt($stepper.data('step'));
       const $value = $stepper.find('.acu-stepper-value');
 
-      const updateValue = newVal => {
+      const updateValue = (newVal: any) => {
         newVal = Math.max(min, Math.min(max, newVal));
         $value.text(newVal);
       };
@@ -198,10 +197,10 @@ export function createShowDiceSettingsPanel(deps: any) {
     });
 
     $panel.find('#cfg-save-dice').click(function () {
-      const newCfg = { contestTieRule: $('#cfg-tie-rule').val() };
+      const newCfg: Record<string, any> = { contestTieRule: $('#cfg-tie-rule').val() };
 
       // 从stepper读取值
-      const getStepperValue = id => {
+      const getStepperValue = (id: any) => {
         const $stepper = $panel.find(`.acu-stepper[data-id="${id}"]`);
         if ($stepper.length) {
           const text = $stepper.find('.acu-stepper-value').text().replace(/[^\d]/g, '');
@@ -242,7 +241,7 @@ export function createShowDiceSettingsPanel(deps: any) {
 
     $panel.find('#cfg-reset-dice').click(function () {
       // 重置stepper到默认值
-      const resetStepper = (id, defaultValue) => {
+      const resetStepper = (id: any, defaultValue: any) => {
         const $stepper = $panel.find(`.acu-stepper[data-id="${id}"]`);
         if ($stepper.length) {
           $stepper.find('.acu-stepper-value').text(defaultValue);

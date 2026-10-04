@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * row-compare-edit-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createShowRowCompareEditModal(deps: any) {
-  const showRowCompareEditModal = (row, headers, tableName, rowIndex, tableKey) => {
+  const showRowCompareEditModal = (row: any, headers: any, tableName: any, rowIndex: any, tableKey: any) => {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
 
@@ -51,14 +50,14 @@ export function createShowRowCompareEditModal(deps: any) {
     $('body').append(dialog);
 
     // 自动高度
-    const adjustHeight = el => {
+    const adjustHeight = (el: any) => {
       el.style.height = 'auto';
       el.style.height = Math.min(el.scrollHeight + 2, 200) + 'px';
     };
-    dialog.find('textarea').each(function () {
+    dialog.find('textarea').each(function (this: any) {
       adjustHeight(this);
     });
-    dialog.find('textarea').on('input', function () {
+    dialog.find('textarea').on('input', function (this: any) {
       adjustHeight(this);
     });
 
@@ -68,7 +67,7 @@ export function createShowRowCompareEditModal(deps: any) {
 
     // 全部恢复
     dialog.find('#dlg-row-revert').click(function () {
-      dialog.find('textarea').each(function () {
+      dialog.find('textarea').each(function (this: any) {
         const colIdx = parseInt($(this).data('col'));
         $(this)
           .val(oldRow[colIdx] ?? '')
@@ -88,7 +87,7 @@ export function createShowRowCompareEditModal(deps: any) {
       const nextRow = [...currentRow];
       let hasChanges = false;
 
-      dialog.find('textarea').each(function () {
+      dialog.find('textarea').each(function (this: any) {
         const colIdx = parseInt($(this).data('col'));
         const newVal = $(this).val();
         if (String(nextRow[colIdx]) !== String(newVal)) {

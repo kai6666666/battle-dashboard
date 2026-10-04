@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * global-interaction-name-header-keywords.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGlobalInteractionNameHeaderKeywords(deps: any) {
+export function createGlobalInteractionNameHeaderKeywords(_deps: any) {
   const GLOBAL_INTERACTION_NAME_HEADER_KEYWORDS = [
     '名称',
     '名字',

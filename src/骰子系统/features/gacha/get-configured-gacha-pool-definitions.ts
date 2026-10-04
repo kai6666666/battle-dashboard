@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-configured-gacha-pool-definitions.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -9,8 +8,8 @@ import type { GachaPoolDefinition, GachaPoolTag } from '../../entities/gacha-ite
 export function createGetConfiguredGachaPoolDefinitions(deps: any) {
   const getConfiguredGachaPoolDefinitions = (): GachaPoolDefinition[] => {
     const byId = new Map<GachaPoolTag, GachaPoolDefinition>();
-    BUILTIN_GACHA_POOL_DEFINITIONS.forEach(pool => byId.set(pool.id, { ...pool }));
-    deps.getStoredGachaPoolSettings().pools.forEach(pool => {
+    BUILTIN_GACHA_POOL_DEFINITIONS.forEach((pool: any) => byId.set(pool.id, { ...pool }));
+    deps.getStoredGachaPoolSettings().pools.forEach((pool: any) => {
       const existing = byId.get(pool.id);
       const enabled = pool.id !== GACHA_ALL_POOL_TAG && pool.includeInAll === true;
       byId.set(pool.id, {

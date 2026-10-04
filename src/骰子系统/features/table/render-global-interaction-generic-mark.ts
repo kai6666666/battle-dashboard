@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * render-global-interaction-generic-mark.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { CustomTableNameIconContext } from '../../shared/index-local-types';
+
 export function createRenderGlobalInteractionGenericMark(deps: any) {
   const renderGlobalInteractionGenericMark = (
     rowTitle: string,

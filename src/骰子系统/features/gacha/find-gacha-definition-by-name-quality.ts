@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * find-gacha-definition-by-name-quality.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -15,7 +14,7 @@ export function createFindGachaDefinitionByNameQuality(deps: any) {
     if (!normalizedName || !normalizedQuality) return null;
     return (
       deps.getAllGachaItemDefinitions(rawData).find(
-        definition => definition.name === normalizedName && definition.quality === normalizedQuality,
+        (definition: any) => definition.name === normalizedName && definition.quality === normalizedQuality,
       ) || null
     );
   };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * fixed-wrapper-bounds.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -16,11 +15,11 @@ export function createUpdateFixedWrapperBounds(deps: any) {
     const targetWindow = deps.getTavernHostWindow();
     const targetDocument = deps.getTavernHostDocument();
     const wrapper =
-      targetDocument.querySelector<HTMLElement>(`${DICE_ROOT_SELECTOR}.acu-mode-fixed`) ||
+      targetDocument.querySelector(`${DICE_ROOT_SELECTOR}.acu-mode-fixed`) ||
       document.querySelector<HTMLElement>(`${DICE_ROOT_SELECTOR}.acu-mode-fixed`);
     if (!wrapper) return;
 
-    const chat = targetDocument.querySelector<HTMLElement>('#chat');
+    const chat = targetDocument.querySelector('#chat');
     if (chat && wrapper.ownerDocument === targetDocument && wrapper.parentElement !== chat) {
       chat.appendChild(wrapper);
     }

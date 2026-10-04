@@ -1,10 +1,12 @@
-// @ts-nocheck
 /**
  * apply-dice-profile.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DiceProfileDB } from '../../shared/storage/dice-profile-db';
 import { Store } from '../../shared/storage/store';
+type DiceProfileApplyOptions = Record<string, any>;
+type DiceConfigBackupApplyStats = Record<string, any>;
+
 export function createApplyDiceProfile(deps: any) {
   const applyDiceProfile = async (
     profileId: string,

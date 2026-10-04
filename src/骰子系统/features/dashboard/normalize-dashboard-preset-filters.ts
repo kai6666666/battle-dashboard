@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * normalize-dashboard-preset-filters.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DashboardPresetFilterConfig = Record<string, any>;
+
 export function createNormalizeDashboardPresetFilters(deps: any) {
   const normalizeDashboardPresetFilters = (
     moduleKey: string,
@@ -16,8 +17,8 @@ export function createNormalizeDashboardPresetFilters(deps: any) {
     const allowedFilterKeys = deps.DASHBOARD_PRESET_FILTER_KEYS[moduleKey] || [];
     const filters: Record<string, DashboardPresetFilterConfig> = {};
 
-    Object.entries(rawFilters).forEach(([filterKey, rawFilter]) => {
-      if (!allowedFilterKeys.includes(filterKey)) {
+    Object.entries(rawFilters as Record<string, any>).forEach(([filterKey, rawFilter]: any) => {
+      if (!(allowedFilterKeys as any).includes(filterKey)) {
         throw new Error(`模块 ${moduleKey} 不支持过滤器: ${filterKey}`);
       }
       if (!moduleConfig.filters?.[filterKey]) {

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * render-preset-manager-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -15,7 +14,7 @@ export function createShowRenderPresetManager(deps: any) {
     const activeId = deps.RenderPresetManager.getActivePresetId();
 
     const presetsHtml = presets
-      .map(preset => {
+      .map((preset: any) => {
         const isActive = preset.id === activeId;
         const isBuiltin = preset.builtin === true;
         const aliasCount = Object.keys(preset.rules.columnDisplay.aliases).length;
@@ -105,14 +104,14 @@ export function createShowRenderPresetManager(deps: any) {
       deps.popModal();
     });
 
-    overlay.on('change', '.acu-render-preset-toggle', function () {
+    overlay.on('change', '.acu-render-preset-toggle', function (this: any) {
       const $toggle = $(this);
       const id = String($toggle.data('id') || '');
       const isChecked = $toggle.is(':checked');
 
       if (isChecked) {
         deps.RenderPresetManager.setActivePresetId(id);
-        overlay.find('.acu-render-preset-toggle').each(function () {
+        overlay.find('.acu-render-preset-toggle').each(function (this: any) {
           if (String($(this).data('id') || '') !== id) {
             $(this).prop('checked', false);
           }
@@ -124,7 +123,7 @@ export function createShowRenderPresetManager(deps: any) {
       }
 
       deps.RenderPresetManager.setActivePresetId(deps.RENDER_DEFAULT_PRESET_ID);
-      overlay.find('.acu-render-preset-toggle').each(function () {
+      overlay.find('.acu-render-preset-toggle').each(function (this: any) {
         const toggleId = String($(this).data('id') || '');
         $(this).prop('checked', toggleId === deps.RENDER_DEFAULT_PRESET_ID);
       });
@@ -133,15 +132,15 @@ export function createShowRenderPresetManager(deps: any) {
       if (window.toastr) window.toastr.info('已切回默认渲染预设');
     });
 
-    overlay.on('click', '.acu-render-preset-edit', function () {
+    overlay.on('click', '.acu-render-preset-edit', function (this: any) {
       const id = String($(this).data('id') || '');
       overlay.remove();
       deps.showRenderPresetEditor(id);
     });
 
-    overlay.on('click', '.acu-render-preset-export', function () {
+    overlay.on('click', '.acu-render-preset-export', function (this: any) {
       const id = String($(this).data('id') || '');
-      const preset = presets.find(item => item.id === id);
+      const preset = presets.find((item: any) => item.id === id);
       const json = deps.RenderPresetManager.exportPreset(id);
       if (!json) {
         if (window.toastr) showActionableErrorToast('导出失败', { title: '渲染预设导出失败', suggestion: 'importExport' });
@@ -152,9 +151,9 @@ export function createShowRenderPresetManager(deps: any) {
       if (window.toastr) window.toastr.success('已导出渲染预设');
     });
 
-    overlay.on('click', '.acu-render-preset-copy', function () {
+    overlay.on('click', '.acu-render-preset-copy', function (this: any) {
       const id = String($(this).data('id') || '');
-      const preset = presets.find(item => item.id === id);
+      const preset = presets.find((item: any) => item.id === id);
       if (!preset) return;
 
       const copy = deps.RenderPresetManager.createPreset({
@@ -167,9 +166,9 @@ export function createShowRenderPresetManager(deps: any) {
       showRenderPresetManager();
     });
 
-    overlay.on('click', '.acu-render-preset-delete', async function () {
+    overlay.on('click', '.acu-render-preset-delete', async function (this: any) {
       const id = String($(this).data('id') || '');
-      const preset = presets.find(item => item.id === id);
+      const preset = presets.find((item: any) => item.id === id);
       if (!preset || preset.builtin) return;
 
       const confirmed = await deps.showDiceSystemConfirmDialog({

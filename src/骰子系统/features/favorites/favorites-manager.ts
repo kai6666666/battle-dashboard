@@ -1,10 +1,11 @@
-// @ts-nocheck
 /**
  * favorites-manager.ts
  * Feature-Sliced: 收藏夹管理器（依赖于 FavoritesDB 模块）
  */
 
 import { FavoritesDB } from '../../shared/storage/favorites-db';
+type TableCompatibility = Record<string, any>;
+type FavoriteItem = any;
 
   export const FavoritesManager = {
     // 添加收藏
@@ -164,11 +165,11 @@ import { FavoritesDB } from '../../shared/storage/favorites-db';
 
         // 检查是否严格匹配
         const isStrict =
-          favorite.header.length === tableHeader.length && favorite.header.every((h, i) => h === tableHeader[i]);
+          favorite.header.length === tableHeader.length && favorite.header.every((h: any, i: any) => h === tableHeader[i]);
 
         // 计算匹配列
-        const matchedCols = favorite.header.filter(h => tableHeader.includes(h));
-        const unmatchedCols = favorite.header.filter(h => !tableHeader.includes(h));
+        const matchedCols = favorite.header.filter((h: any) => tableHeader.includes(h));
+        const unmatchedCols = favorite.header.filter((h: any) => !tableHeader.includes(h));
         const matchRatio = favorite.header.length > 0 ? matchedCols.length / favorite.header.length : 0;
 
         if (isStrict) {

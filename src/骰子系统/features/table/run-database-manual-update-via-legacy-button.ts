@@ -1,13 +1,14 @@
-// @ts-nocheck
 /**
  * run-database-manual-update-via-legacy-button.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DatabaseManualUpdateResult = Record<string, any>;
+
 export function createRunDatabaseManualUpdateViaLegacyButton(deps: any) {
   const runDatabaseManualUpdateViaLegacyButton = (): DatabaseManualUpdateResult => {
     for (const targetWindow of deps.collectAccessibleRuntimeWindows()) {
       const targetDocument = deps.getAccessibleDocument(targetWindow);
-      const manualUpdateButton = targetDocument?.querySelector<HTMLElement>(
+      const manualUpdateButton = targetDocument?.querySelector(
         deps.getACU_DATABASE_LEGACY_MANUAL_UPDATE_BUTTON_SELECTOR(),
       );
       if (!manualUpdateButton || typeof manualUpdateButton.click !== 'function') continue;

@@ -1,11 +1,11 @@
-// @ts-nocheck
 /**
  * normalize-render-preset-rules.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RenderPresetRules = Record<string, any>;
 export function createNormalizeRenderPresetRules(deps: any) {
   const normalizeRenderPresetRules = (rawRules: unknown): RenderPresetRules => {
-    const raw = deps.isRecordValue(rawRules) ? rawRules : {};
+    const raw = (deps.isRecordValue(rawRules) ? rawRules : {}) as Record<string, any>;
     const columnDisplay = deps.isRecordValue(raw.columnDisplay) ? raw.columnDisplay : {};
     const relationship = deps.isRecordValue(raw.relationship) ? raw.relationship : {};
     const attributes = deps.isRecordValue(raw.attributes) ? raw.attributes : {};

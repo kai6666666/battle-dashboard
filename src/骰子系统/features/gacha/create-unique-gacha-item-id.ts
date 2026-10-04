@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * create-unique-gacha-item-id.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCreateUniqueGachaItemId(deps: any) {
+export function createCreateUniqueGachaItemId(_deps: any) {
   const createUniqueGachaItemId = (baseId: string, existingIds: Set<string>): string => {
     const safeBase =
       String(baseId || 'custom_item')

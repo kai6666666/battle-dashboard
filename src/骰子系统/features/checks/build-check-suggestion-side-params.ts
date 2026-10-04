@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * build-check-suggestion-side-params.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildCheckSuggestionSideParams(deps: any) {
+type CheckSuggestionParams = Record<string, any>;
+
+export function createBuildCheckSuggestionSideParams(_deps: any) {
   const buildCheckSuggestionSideParams = (
     params: CheckSuggestionParams,
     side: 'left' | 'right',

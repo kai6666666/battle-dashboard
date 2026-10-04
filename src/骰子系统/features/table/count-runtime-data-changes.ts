@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * count-runtime-data-changes.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -37,21 +36,21 @@ export function createCountRuntimeDataChanges(deps: any) {
       const oldRows = deps.getDiffRows(oldSheet);
       const matcher = deps.createDiffRowMatcher(oldHeaders, oldRows);
 
-      newRows.forEach((row, rowIndex) => {
+      newRows.forEach((row: any, rowIndex: any) => {
         const matched = deps.takeDiffRowMatch(matcher, headers, row, rowIndex);
         if (!matched) {
           changesCount++;
           return;
         }
 
-        const hasChange = row.some((cell, colIndex) => {
+        const hasChange = row.some((cell: any, colIndex: any) => {
           if (colIndex === 0) return false;
           return String(cell ?? '') !== String(matched.row[colIndex] ?? '');
         });
         if (hasChange) changesCount++;
       });
 
-      changesCount += oldRows.filter((_, rowIndex) => !matcher.usedIndices.has(rowIndex)).length;
+      changesCount += oldRows.filter((_: any, rowIndex: any) => !matcher.usedIndices.has(rowIndex)).length;
     }
 
     for (const sheetId in snapshotRecord) {

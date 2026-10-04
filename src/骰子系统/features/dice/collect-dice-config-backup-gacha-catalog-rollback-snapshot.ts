@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * collect-dice-config-backup-gacha-catalog-rollback-snapshot.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GachaCatalogDB } from '../gacha/gacha-catalog-db';
+type DiceConfigBackupGachaCatalogRollbackSnapshot = Record<string, any>;
+
 export function createCollectDiceConfigBackupGachaCatalogRollbackSnapshot(deps: any) {
   const collectDiceConfigBackupGachaCatalogRollbackSnapshot =
     async (): Promise<DiceConfigBackupGachaCatalogRollbackSnapshot> => {

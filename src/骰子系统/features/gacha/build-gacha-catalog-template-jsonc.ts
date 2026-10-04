@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * build-gacha-catalog-template-jsonc.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GACHA_CATALOG_EXPORT_KIND, GACHA_CATALOG_VERSION } from '../../entities/gacha-items';
-export function createBuildGachaCatalogTemplateJsonc(deps: any) {
+export function createBuildGachaCatalogTemplateJsonc(_deps: any) {
   const buildGachaCatalogTemplateJsonc = (): string => `{
   // 骰子商店自定义物品与卡池导入模板。
   // 注意：抽到或兑换的奖励默认写入当前仪表盘预设解析到的物品/装备区，也可以用 targetTable 固定到指定表。

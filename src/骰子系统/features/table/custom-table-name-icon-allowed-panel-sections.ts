@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * custom-table-name-icon-allowed-panel-sections.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCustomTableNameIconAllowedPanelSections(deps: any) {
+import type { CustomTableNameIconSection } from '../../shared/index-local-types';
+
+export function createCustomTableNameIconAllowedPanelSections(_deps: any) {
   const CUSTOM_TABLE_NAME_ICON_ALLOWED_PANEL_SECTIONS = new Set<CustomTableNameIconSection>([
     'map',
     'item',

@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * render-dashboard.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { getDisplayName } from '../../entities/name-alias';
 export function createRenderDashboard(deps: any) {
-  const renderDashboard = allTables => {
+  const renderDashboard = (allTables: any) => {
     console.info('[DICE]开始抓取仪表盘数据...');
     // 重建角色名别名注册表
     deps.NameAliasRegistry.rebuild(allTables);
@@ -20,7 +19,7 @@ export function createRenderDashboard(deps: any) {
     const equipResult = deps.DashboardDataParser.findTable(allTables, 'equip');
 
     // [重构] 主角数据 - 使用新解析器
-    let player = { name: '主角', status: '正常', position: '', attrs: '', money: '0' };
+    let player: Record<string, any> = { name: '主角', status: '正常', position: '', attrs: '', money: '0' };
     const playerParsed = deps.DashboardDataParser.parseRows(playerResult, 'player');
 
     if (playerParsed.length > 0) {
@@ -36,7 +35,7 @@ export function createRenderDashboard(deps: any) {
         const headers = playerResult.data.headers;
         const row = playerResult.data.rows[0];
         let allAttrsStr = '';
-        headers.forEach((h, idx) => {
+        headers.forEach((h: any, idx: any) => {
           if (h && h.includes('属性')) {
             const val = row[idx];
             if (val) allAttrsStr += (allAttrsStr ? '; ' : '') + val;
@@ -45,7 +44,7 @@ export function createRenderDashboard(deps: any) {
         player.attrs = allAttrsStr;
 
         // 解析资源数据
-        headers.forEach((h, idx) => {
+        headers.forEach((h: any, idx: any) => {
           if (h && (h.includes('资源') || h.includes('金钱'))) {
             const val = row[idx];
             if (val) player.resources = val;
@@ -89,9 +88,9 @@ export function createRenderDashboard(deps: any) {
     const npcTableKey = npcListData.tableKey;
 
     // 分离在场和离场的NPC
-    let inSceneNPCs = [];
-    let offSceneNPCs = [];
-    npcListData.entries.forEach(npc => {
+    let inSceneNPCs: any[] = [];
+    let offSceneNPCs: any[] = [];
+    npcListData.entries.forEach((npc: any) => {
       if (npc.isInScene) {
         inSceneNPCs.push(npc);
       } else {
@@ -132,7 +131,7 @@ export function createRenderDashboard(deps: any) {
     };
 
     let activeTasks = questParsed
-      .map(q => ({
+      .map((q: any) => ({
         name: q.name || '任务',
         type: q.type || '',
         status: q.status || '',
@@ -140,7 +139,7 @@ export function createRenderDashboard(deps: any) {
         progress: q.progress || '',
         _rowIndex: q._rowIndex,
       }))
-      .sort((a, b) => {
+      .sort((a: any, b: any) => {
         // 1. 状态：进行中 > 已完成
         const aStatusOrder = questStatusOrder(a.status);
         const bStatusOrder = questStatusOrder(b.status);
@@ -166,7 +165,7 @@ export function createRenderDashboard(deps: any) {
     const bagTableName = bagResult?.name || '背包物品表';
 
     const bagParsed = deps.DashboardDataParser.parseRows(bagResult, 'bag');
-    let bagItems = bagParsed.map(item => ({
+    let bagItems = bagParsed.map((item: any) => ({
       name: item.name || '未知物品',
       count: item.count || '1',
       type: item.type || '',
@@ -178,7 +177,7 @@ export function createRenderDashboard(deps: any) {
     const equipParsed = deps.DashboardDataParser.parseRows(equipResult, 'equip');
     const equippedParsed = deps.DashboardDataParser.applyFilter(equipParsed, 'equipped', 'equip');
 
-    let equippedItems = equippedParsed.map(e => ({
+    let equippedItems = equippedParsed.map((e: any) => ({
       name: e.name || '未知装备',
       type: e.type || '',
       part: e.part || '',
@@ -224,21 +223,21 @@ export function createRenderDashboard(deps: any) {
                       const parsedResources = deps.parseAttributeString(resourcesStr);
 
                       // 分别收集基础属性和特有属性
-                      let baseAttrs = [];
-                      let specialAttrs = [];
+                      let baseAttrs: any[] = [];
+                      let specialAttrs: any[] = [];
                       if (playerRows.length > 0 && playerHeaders.length > 0) {
                         const row = playerRows[0];
-                        playerHeaders.forEach((h, idx) => {
+                        playerHeaders.forEach((h: any, idx: any) => {
                           if (h && h.includes('基础属性')) {
                             const parsed = deps.parseAttributeString(row[idx] || '');
-                            parsed.forEach(attr => {
+                            parsed.forEach((attr: any) => {
                               if (!baseAttrs.some(a => a.name === attr.name)) {
                                 baseAttrs.push(attr);
                               }
                             });
                           } else if (h && h.includes('特有属性')) {
                             const parsed = deps.parseAttributeString(row[idx] || '');
-                            parsed.forEach(attr => {
+                            parsed.forEach((attr: any) => {
                               if (!specialAttrs.some(a => a.name === attr.name)) {
                                 specialAttrs.push(attr);
                               }
@@ -254,7 +253,7 @@ export function createRenderDashboard(deps: any) {
                         html += `<div class="acu-dash-resource-list">
                                 ${parsedResources
                                   .map(
-                                    res => `
+                                    (res: any) => `
                                     <div class="acu-dash-metric-row">
                                         <span class="acu-dash-metric-label" title="${deps.escapeHtml(res.name)}">${deps.escapeHtml(res.name.substring(0, 3))}</span>
                                         <div class="acu-dash-metric-value-group">
@@ -311,7 +310,7 @@ export function createRenderDashboard(deps: any) {
                     ${
                       locationParsed.length > 0
                         ? locationParsed
-                            .map((loc, idx) => {
+                            .map((loc: any, _idx: any) => {
                               const areaName = loc.name || '未知';
                               const isCurrent =
                                 currentPlaceName &&
@@ -416,7 +415,7 @@ export function createRenderDashboard(deps: any) {
                     ${
                       bagItems.length > 0
                         ? bagItems
-                            .map((item, idx) => {
+                            .map((item: any, idx: any) => {
                               const isLastBag = idx === bagItems.length - 1;
                               const emoji = deps.getElementEmoji(item.name, null);
                               const iconContext = deps.createCustomTableNameIconContext(
@@ -469,7 +468,7 @@ export function createRenderDashboard(deps: any) {
                     ${
                       equippedItems.length > 0
                         ? equippedItems
-                            .map((item, idx) => {
+                            .map((item: any, idx: any) => {
                               const isLast = idx === equippedItems.length - 1;
                               const emoji = deps.getElementEmoji(item.name, null);
                               const iconContext = deps.createCustomTableNameIconContext(
@@ -493,7 +492,7 @@ export function createRenderDashboard(deps: any) {
                               iconHtml = deps.renderCustomTableNameIconContent(iconHtml, iconContext);
                               return `<div class="acu-dash-equipment-row acu-dash-clickable acu-dash-preview-trigger ${!isLast ? 'acu-dash-row-separated' : ''}"
                             data-table-key="${equipResult?.key || ''}"
-                            data-row-index="${equipParsed.findIndex(r => r.name === item.name)}"
+                            data-row-index="${equipParsed.findIndex((r: any) => r.name === item.name)}"
                             data-preview-type="equipment">
                             ${iconHtml}
                             <span title="${deps.escapeHtml(item.name)}">${deps.escapeHtml(item.name)}</span>
@@ -509,7 +508,7 @@ export function createRenderDashboard(deps: any) {
                     ${
                       activeTasks.length > 0
                         ? activeTasks
-                            .map((t, idx) => {
+                            .map((t: any, _idx: any) => {
                               const isMain = String(t.type || '').includes('主线');
                               // 解析进度百分比
                               let progressPercent = null;
@@ -523,7 +522,7 @@ export function createRenderDashboard(deps: any) {
                                   : '';
                               return `<div class="acu-task-item acu-dash-clickable acu-dash-preview-trigger"
                             data-table-key="${questResult?.key || ''}"
-                            data-row-index="${t._rowIndex !== undefined ? t._rowIndex : questParsed.findIndex(q => q.name === t.name)}"
+                            data-row-index="${t._rowIndex !== undefined ? t._rowIndex : questParsed.findIndex((q: any) => q.name === t.name)}"
                             data-preview-type="quest"
                             >
                             <div class="acu-dash-row-main">

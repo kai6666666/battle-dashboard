@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * smart-fix-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,7 +7,7 @@ import { getColumnExamples, getNearestValidNumber, getRelationOptions, isValueIn
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 import { suggestFormatValue } from '../../shared/misc-utils';
 export function createShowSmartFixModal(deps: any) {
-  const showSmartFixModal = error => {
+  const showSmartFixModal = (error: any) => {
     if (!error || !error.rule) {
       if (window.toastr) window.toastr.warning('无法获取规则信息');
       return;
@@ -19,7 +18,7 @@ export function createShowSmartFixModal(deps: any) {
     const currentThemeClass = `acu-theme-${config.theme}`;
     const rule = error.rule;
     const ruleType = error.ruleType || rule.ruleType;
-    const typeInfo = RULE_TYPE_INFO[ruleType] || { name: ruleType, icon: 'fa-question' };
+    const typeInfo = (RULE_TYPE_INFO as Record<string, any>)[ruleType] || { name: ruleType, icon: 'fa-question' };
     const isTableRule = typeInfo?.scope === 'table';
 
     // 获取原始数据和快照。这里拿克隆数据，避免智能修复在保存前污染前端缓存。
@@ -108,7 +107,7 @@ export function createShowSmartFixModal(deps: any) {
             <div class="acu-smart-fix-suggest-options">
               ${examples
                 .map(
-                  val => `
+                  (val: any) => `
                 <span class="acu-smart-fix-option" data-value="${deps.escapeHtml(val)}" title="点击填充">
                   ${deps.escapeHtml(val.length > 20 ? val.substring(0, 20) + '...' : val)}
                 </span>
@@ -130,7 +129,7 @@ export function createShowSmartFixModal(deps: any) {
           <div class="acu-smart-fix-suggest-options acu-smart-fix-suggest-options-scroll">
             ${validValues
               .map(
-                val => `
+                (val: any) => `
               <span class="acu-smart-fix-option ${error.currentValue === val ? 'acu-smart-fix-option-current' : ''}"
                     data-value="${deps.escapeHtml(val)}" title="${error.currentValue === val ? '当前值（无效）' : '点击选择'}">
                 ${deps.escapeHtml(val)}
@@ -225,7 +224,7 @@ export function createShowSmartFixModal(deps: any) {
           <div class="acu-smart-fix-suggest-options acu-smart-fix-suggest-options-scroll" id="smart-fix-options-container">
             ${options
               .map(
-                val => `
+                (val: any) => `
               <span class="acu-smart-fix-option ${error.currentValue === val ? 'acu-smart-fix-option-current' : ''}"
                     data-value="${deps.escapeHtml(val)}" title="${error.currentValue === val ? '当前值（无效）' : '点击选择'}">
                 ${deps.escapeHtml(val)}
@@ -249,7 +248,7 @@ export function createShowSmartFixModal(deps: any) {
               </div>
               <div style="margin-top:8px;">
                 <select id="smart-fix-reverse-column" class="acu-edit-select" style="width:100%;margin-bottom:8px;">
-                  ${refColumns.map(col => `<option value="${deps.escapeHtml(col)}">${deps.escapeHtml(col)}</option>`).join('')}
+                  ${refColumns.map((col: any) => `<option value="${deps.escapeHtml(col)}">${deps.escapeHtml(col)}</option>`).join('')}
                 </select>
                 <button class="acu-smart-fix-quick-btn" id="smart-fix-reverse-write-btn" style="width:100%;">
                   <i class="fa-solid fa-plus"></i> 将 "${deps.escapeHtml(currentInvalidValue.length > 30 ? currentInvalidValue.substring(0, 30) + '...' : currentInvalidValue)}" 写入到 "${deps.escapeHtml(rule.config.refTable)}"
@@ -477,7 +476,7 @@ export function createShowSmartFixModal(deps: any) {
     $('body').append(dialog);
 
     // 点击建议选项或快速修正按钮，填充到输入框
-    dialog.on('click', '.acu-smart-fix-option, .acu-smart-fix-quick-btn', function () {
+    dialog.on('click', '.acu-smart-fix-option, .acu-smart-fix-quick-btn', function (this: any) {
       // 排除反向写入按钮
       if ($(this).attr('id') === 'smart-fix-reverse-write-btn') return;
       if ($(this).hasClass('acu-smart-fix-option-current')) return;
@@ -486,7 +485,7 @@ export function createShowSmartFixModal(deps: any) {
     });
 
     // 反向写入到关联表
-    dialog.on('click', '#smart-fix-reverse-write-btn', async function () {
+    dialog.on('click', '#smart-fix-reverse-write-btn', async function (this: any) {
       const currentInvalidValue = String(error.currentValue || '').trim();
       if (!currentInvalidValue) {
         if (window.toastr) window.toastr.warning('无法写入空值');
@@ -552,7 +551,7 @@ export function createShowSmartFixModal(deps: any) {
         deps.renderInterface();
       } catch (e) {
         console.error('[DICE]ACU 反向写入失败:', e);
-        if (window.toastr) showActionableErrorToast('反向写入失败: ' + (e.message || '未知错误'), { suggestion: 'save' });
+        if (window.toastr) showActionableErrorToast('反向写入失败: ' + ((e as any).message || '未知错误'), { suggestion: 'save' });
       }
     });
 
@@ -613,7 +612,7 @@ export function createShowSmartFixModal(deps: any) {
         }
       } catch (e) {
         console.error('[DICE]ACU 更新单元格失败:', e);
-        if (window.toastr) showActionableErrorToast('更新失败: ' + (e.message || '未知错误'), { suggestion: 'save' });
+        if (window.toastr) showActionableErrorToast('更新失败: ' + ((e as any).message || '未知错误'), { suggestion: 'save' });
       }
     });
   };

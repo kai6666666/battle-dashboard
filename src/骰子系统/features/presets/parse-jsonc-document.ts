@@ -1,8 +1,12 @@
-// @ts-nocheck
 /**
  * parse-jsonc-document.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type JsoncDocumentParseOptions<T = any> = {
+  validate?: (value: unknown) => T;
+  [key: string]: any;
+};
+
 export function createParseJsoncDocument(deps: any) {
   const parseJsoncDocument = <T>({
     text,
@@ -18,7 +22,7 @@ export function createParseJsoncDocument(deps: any) {
     } catch {
       throw new Error(invalidJsonMessage);
     }
-    return validate(parsed);
+    return validate!(parsed);
   };
   return parseJsoncDocument;
 }

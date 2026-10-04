@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * render-gacha-custom-fields-preview-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { GachaItemDefinition } from '../../entities/gacha-items';
+type GachaCustomFieldsPreviewRenderOptions = Record<string, any>;
+
 export function createRenderGachaCustomFieldsPreviewHtml(deps: any) {
   const renderGachaCustomFieldsPreviewHtml = (
     item: Pick<GachaItemDefinition, 'customFields' | 'targetColumns'>,
@@ -16,7 +17,7 @@ export function createRenderGachaCustomFieldsPreviewHtml(deps: any) {
     const visibleEntries = limit > 0 ? entries.slice(0, limit) : [];
     const overflowCount = Math.max(0, entries.length - visibleEntries.length);
     const fieldsHtml = visibleEntries
-      .map(([key, value]) => {
+      .map(([key, value]: any) => {
         const title = `${key}：${value}`;
         const valueOnlyClass = options.valueOnly ? ' acu-gacha-custom-field-preview-chip-value-only' : '';
         return `

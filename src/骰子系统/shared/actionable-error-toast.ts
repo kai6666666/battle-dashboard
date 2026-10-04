@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    toastr?: any;
+  }
+}
+
 export type ActionableErrorToastSuggestion =
   | 'input'
   | 'clipboard'
@@ -15,7 +21,7 @@ export type ActionableErrorToastSuggestion =
 
 export interface ActionableErrorToastOptions {
   title?: string;
-  toastrOptions?: ToastrOptions;
+  toastrOptions?: Record<string, unknown>; // x7-d: @types/toastr>=2.1.44 不再全局暴露 ToastrOptions
   suggestion?: ActionableErrorToastSuggestion | string;
   developerHint?: boolean;
 }
@@ -253,7 +259,7 @@ const getToastr = () => {
   try {
     return window.toastr || window.parent?.toastr;
   } catch {
-    return window.toastr;
+    return (window as any).toastr; // x5-a: 宿主注入的全局 toastr（无类型声明）
   }
 };
 

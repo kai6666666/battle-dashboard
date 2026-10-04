@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-new-favorite-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -50,7 +49,7 @@ export function createShowNewFavoriteModal(deps: any) {
 
     const closeModal = () => $overlay.remove();
 
-    $overlay.on('click', e => {
+    $overlay.on('click', (e: any) => {
       if ($(e.target).hasClass('acu-fav-new-overlay')) closeModal();
     });
 

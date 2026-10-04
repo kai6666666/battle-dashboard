@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * clone-quick-select-name-mapping.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCloneQuickSelectNameMapping(deps: any) {
+type AttributeQuickSelectTarget = string;
+
+export function createCloneQuickSelectNameMapping(_deps: any) {
   const cloneQuickSelectNameMapping = (
     mapping: Partial<Record<AttributeQuickSelectTarget, string[]>> | undefined,
   ): Partial<Record<AttributeQuickSelectTarget, string[]>> => {

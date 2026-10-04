@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * shared/defaults-config.ts
  * Feature-Sliced: batch extract (FSD batch A1).

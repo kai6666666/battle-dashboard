@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * restore-gacha-local-storage-snapshot.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createRestoreGachaLocalStorageSnapshot(deps: any) {
+export function createRestoreGachaLocalStorageSnapshot(_deps: any) {
   const restoreGachaLocalStorageSnapshot = (snapshot: ReadonlyMap<string, string | null>): string[] => {
     const warnings: string[] = [];
     snapshot.forEach((value, key) => {

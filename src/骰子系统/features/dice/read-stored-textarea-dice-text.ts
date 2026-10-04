@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * read-stored-textarea-dice-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AcuDiceTextareaElement = any;
+
 export function createReadStoredTextareaDiceText(deps: any) {
   const readStoredTextareaDiceText = (textarea: AcuDiceTextareaElement): string => {
     if (typeof textarea._acuOriginalTextareaText === 'string') return textarea._acuOriginalTextareaText;

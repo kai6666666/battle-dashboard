@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * validate-advanced-preset-outcomes.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+type AdvancedPresetValidationIssue = Record<string, any>;
+
 export function createValidateAdvancedPresetOutcomes(deps: any) {
   const validateAdvancedPresetOutcomes = (
     preset: AdvancedDicePreset,
@@ -15,7 +17,7 @@ export function createValidateAdvancedPresetOutcomes(deps: any) {
 
     const ids = new Set<string>();
     const smokeContext = deps.buildAdvancedPresetEvaluationContext(preset);
-    preset.outcomes.forEach((outcome, index) => {
+    preset.outcomes.forEach((outcome: any, index) => {
       const path = `outcomes[${index}]`;
       if (!deps.isAdvancedPresetRecord(outcome)) {
         deps.pushAdvancedPresetIssue(issues, path, '必须是对象');

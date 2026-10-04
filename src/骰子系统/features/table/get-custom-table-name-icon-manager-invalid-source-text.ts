@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-custom-table-name-icon-manager-invalid-source-text.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetCustomTableNameIconManagerInvalidSourceText(deps: any) {
+import type { CustomTableNameIconInvalidSourceReason } from '../../shared/index-local-types';
+
+export function createGetCustomTableNameIconManagerInvalidSourceText(_deps: any) {
   const getCustomTableNameIconManagerInvalidSourceText = (
     reason: CustomTableNameIconInvalidSourceReason | null,
   ): string => {

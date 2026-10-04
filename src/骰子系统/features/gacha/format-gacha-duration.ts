@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * format-gacha-duration.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createFormatGachaDuration(deps: any) {
+export function createFormatGachaDuration(_deps: any) {
   const formatGachaDuration = (ms: number): string => {
     const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
     const minutes = Math.floor(totalSeconds / 60);

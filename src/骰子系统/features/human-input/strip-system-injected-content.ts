@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * strip-system-injected-content.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,7 +7,7 @@ export function createStripSystemInjectedContent(deps: any) {
     const normalized = deps.normalizeTrackedText(text);
     const explicitHumanInput = deps.extractExplicitHumanInputText(normalized);
     let result = explicitHumanInput || normalized;
-    deps.getHUMAN_INPUT_TAG_BLOCK_PATTERNS().forEach(pattern => {
+    deps.getHUMAN_INPUT_TAG_BLOCK_PATTERNS().forEach((pattern: any) => {
       result = result.replace(pattern, ' ');
     });
     if (!explicitHumanInput) {

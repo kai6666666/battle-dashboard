@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * read-advanced-preset-policy-number.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createReadAdvancedPresetPolicyNumber(deps: any) {
+type RollResult = Record<string, any>;
+
+export function createReadAdvancedPresetPolicyNumber(_deps: any) {
   const readAdvancedPresetPolicyNumber = (
     context: Record<string, string | number | boolean | RollResult>,
     key: string,

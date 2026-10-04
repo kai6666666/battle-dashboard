@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * inventory-type-filter-meta.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createInventoryTypeFilterMeta(deps: any) {
+type InventoryFilterButtonMeta<T = any> = { value: T; icon: string; label: string };
+type InventoryTypeFilter = string;
+
+export function createInventoryTypeFilterMeta(_deps: any) {
   const INVENTORY_TYPE_FILTER_META: InventoryFilterButtonMeta<InventoryTypeFilter>[] = [
     { value: '全部', icon: 'fa-boxes-stacked', label: '全部类型' },
     { value: '消耗品', icon: 'fa-flask', label: '消耗品' },

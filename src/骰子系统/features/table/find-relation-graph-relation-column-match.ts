@@ -1,8 +1,11 @@
-// @ts-nocheck
 /**
  * find-relation-graph-relation-column-match.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type RelationGraphColumnMatch = Record<string, any>;
+
+type RelationGraphCell = Record<string, any>;
+
 export function createFindRelationGraphRelationColumnMatch(deps: any) {
   const findRelationGraphRelationColumnMatch = (
     headers: RelationGraphCell[],

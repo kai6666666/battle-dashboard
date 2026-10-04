@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-new-advanced-preset-jsonc-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildNewAdvancedPresetJsoncTemplate(deps: any) {
+export function createBuildNewAdvancedPresetJsoncTemplate(_deps: any) {
   const buildNewAdvancedPresetJsoncTemplate = (): string => `{
   // 这是一个可直接使用的 CoC7 风格高级检定预设示例。
   // 预设名称和描述可以在上方输入框填写；如果这里也写 name / description，保存时会以最终解析结果为准。

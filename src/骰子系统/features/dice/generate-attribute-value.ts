@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * generate-attribute-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createGenerateAttributeValue(deps: any) {
-  const generateAttributeValue = (formula, range, context) => {
+  const generateAttributeValue = (formula: any, range: any, context: any) => {
     let value = deps.evaluateFormula(formula, context);
 
     if (range && Array.isArray(range) && range.length === 2) {

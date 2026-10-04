@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * create-builtin-render-preset.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
+type RenderPreset = Record<string, any>;
+
 export function createCreateBuiltinRenderPreset(deps: any) {
   const createBuiltinRenderPreset = (): RenderPreset => ({
     format: deps.getRENDER_PRESET_FORMAT(),

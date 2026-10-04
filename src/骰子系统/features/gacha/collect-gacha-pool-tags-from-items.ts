@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * collect-gacha-pool-tags-from-items.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -10,8 +9,8 @@ export function createCollectGachaPoolTagsFromItems(deps: any) {
   const collectGachaPoolTagsFromItems = (rawData = deps.getRuntimeGachaRawData()): GachaPoolTag[] => {
     const tags = new Set<GachaPoolTag>();
     try {
-      deps.getAllGachaItemDefinitions(rawData).forEach(item => {
-        (item.poolTags || []).forEach(tag => {
+      deps.getAllGachaItemDefinitions(rawData).forEach((item: any) => {
+        (item.poolTags || []).forEach((tag: any) => {
           const normalized = normalizeGachaPoolId(tag);
           if (normalized && normalized !== GACHA_ALL_POOL_TAG) tags.add(normalized);
         });

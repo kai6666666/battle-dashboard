@@ -1,9 +1,13 @@
-// @ts-nocheck
 /**
  * validate-jsonc-editor-config.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type JsoncEditorValidationOptions<T = any> = {
+  validate?: (value: unknown) => T;
+  [key: string]: any;
+};
+
 export function createValidateJsoncEditorConfig(deps: any) {
   const validateJsoncEditorConfig = <T>(options: JsoncEditorValidationOptions<T>): T | null => {
     const text = String(options.text || '').trim();

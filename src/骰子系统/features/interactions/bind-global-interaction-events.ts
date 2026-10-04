@@ -1,9 +1,9 @@
-// @ts-nocheck
 /**
  * bind-global-interaction-events.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DICE_ROOT_SELECTOR } from '../../shared/constants';
+type GlobalInteractionAction = Record<string, any>;
 import { Store } from '../../shared/storage/store';
 export function createBindGlobalInteractionEvents(deps: any) {
   const bindGlobalInteractionEvents = ($panel: JQuery<HTMLElement>): void => {
@@ -58,7 +58,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
     $panel.on(
       'pointerdown.globalInteractionEvents',
       '.acu-height-control',
-      function (this: HTMLElement, e: JQuery.Event) {
+      function (this: HTMLElement, e: any) {
         const pointerEvent = e.originalEvent as PointerEvent | undefined;
         if (!pointerEvent || typeof pointerEvent.pointerId !== 'number' || pointerEvent.button !== 0) return;
         e.preventDefault();
@@ -89,7 +89,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
       },
     );
 
-    $panel.on('dblclick.globalInteractionEvents', '.acu-height-control', function (this: HTMLElement, e: JQuery.Event) {
+    $panel.on('dblclick.globalInteractionEvents', '.acu-height-control', function (this: HTMLElement, e: any) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -101,7 +101,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
 
     const describeTarget = (target: EventTarget | null): Record<string, unknown> => {
       const element = target instanceof Element ? target : null;
-      const row = element?.closest<HTMLElement>('.acu-global-interaction-row') || null;
+      const row = element?.closest('.acu-global-interaction-row') || null;
       const button = element?.closest<HTMLElement>('.acu-global-interaction-row-main') || null;
       return {
         tag: element?.tagName || '',
@@ -160,7 +160,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
       const actions = deps.dedupeInteractionActions(deps.getInteractOptionsForRow(sheet.name, headers, rowData));
       const normalizedLabel = deps.normalizeInteractionLabel(actionLabel);
       const actionByLabel = normalizedLabel
-        ? actions.find(action => deps.normalizeInteractionLabel(action.label) === normalizedLabel)
+        ? actions.find((action: any) => deps.normalizeInteractionLabel(action.label) === normalizedLabel)
         : undefined;
       const actionByIndex = Number.isInteger(actionIndex) && actionIndex >= 0 ? actions[actionIndex] : undefined;
       const action = actionByLabel || actionByIndex;
@@ -232,7 +232,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
       { root: $panel, selector: '.acu-global-interaction-search', namespace: 'globalInteractionEvents' },
       {
         delay: 120,
-        onCommit: ({ value }) => {
+        onCommit: ({ value }: any) => {
           const query = value.trim().toLowerCase();
           let visibleRowCount = 0;
 
@@ -253,7 +253,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
             const hasVisibleRows = $group
               .find('.acu-global-interaction-row')
               .toArray()
-              .some(row => $(row).css('display') !== 'none');
+              .some((row: any) => $(row).css('display') !== 'none');
             $group.toggle(hasVisibleRows);
           });
 
@@ -262,7 +262,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
             const hasVisibleGroups = $section
               .find('.acu-global-interaction-group')
               .toArray()
-              .some(group => $(group).css('display') !== 'none');
+              .some((group: any) => $(group).css('display') !== 'none');
             $section.toggle(hasVisibleGroups);
           });
 
@@ -386,8 +386,8 @@ export function createBindGlobalInteractionEvents(deps: any) {
       collapseExpandedGlobalInteractionRows();
 
       const $header = $(this);
-      const $section = $header.closest<HTMLElement>('.acu-global-interaction-section');
-      const $body = $section.find<HTMLElement>('.acu-global-interaction-section-body').first();
+      const $section = $header.closest('.acu-global-interaction-section');
+      const $body = $section.find('.acu-global-interaction-section-body').first();
       const $icon = $header.find('.acu-collapse-icon');
       const sectionKind = String($header.attr('data-section-kind') || '').trim();
       const collapsedSections = deps.getGlobalInteractionCollapsedSections();
@@ -399,7 +399,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
         $icon.removeClass('fa-chevron-right').addClass('fa-chevron-down');
         Store.set(
           deps.STORAGE_KEY_GLOBAL_INTERACTION_COLLAPSED_SECTIONS,
-          collapsedSections.filter(kind => kind !== sectionKind),
+          collapsedSections.filter((kind: any) => kind !== sectionKind),
         );
         return;
       }
@@ -573,7 +573,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
       panelDocument.removeEventListener('touchstart', handleGlobalInteractionOutsideCapture, true);
     });
 
-    $(panelDocument).on('click.globalInteractionEvents', function (event) {
+    $(panelDocument).on('click.globalInteractionEvents', function (event: any) {
       const target = event.target instanceof Element ? event.target : null;
       if (!target || $panel.find('.acu-global-interaction-row.is-expanded').length === 0) return;
       if (target.closest('.acu-global-interaction-row-main')) return;
@@ -590,7 +590,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
       });
       event.stopPropagation();
       event.preventDefault();
-      toggleGlobalInteractionRow($(this).closest<HTMLElement>('.acu-global-interaction-row'));
+      toggleGlobalInteractionRow($(this).closest('.acu-global-interaction-row'));
     });
 
     const handleGlobalInteractionActionClick = function (this: HTMLElement, e: JQuery.ClickEvent): void {

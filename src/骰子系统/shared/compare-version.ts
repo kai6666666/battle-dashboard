@@ -1,12 +1,11 @@
-// @ts-nocheck
 /**
  * compare-version.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCompareVersion(deps: any) {
-  const compareVersion = (v1, v2) => {
+export function createCompareVersion(_deps: any) {
+  const compareVersion = (v1: number | string, v2: number | string) => {
     // 处理数字版本号（向后兼容）
-    const normalizeVersion = v => {
+    const normalizeVersion = (v: number | string) => {
       if (typeof v === 'number') return `${v}.0.0`;
       if (typeof v !== 'string') return '0.0.0';
       return v;

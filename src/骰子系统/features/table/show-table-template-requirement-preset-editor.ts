@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-table-template-requirement-preset-editor.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -124,7 +123,7 @@ export function createShowTableTemplateRequirementPresetEditor(deps: any) {
       deps.validateJsoncEditorConfig({
         text: String($jsonTextarea.val() || ''),
         parse: () => parseEditorPreset(),
-        successMessage: preset => {
+        successMessage: (preset: any) => {
           const stats = deps.getTableTemplateRequirementPresetStats(preset);
           return `配置有效：${preset.name}，${stats.sheetCount} 张表，${stats.headerCount} 个业务列`;
         },

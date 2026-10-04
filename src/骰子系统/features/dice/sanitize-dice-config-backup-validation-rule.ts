@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * sanitize-dice-config-backup-validation-rule.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createSanitizeDiceConfigBackupValidationRule(deps: any) {
-  const sanitizeDiceConfigBackupValidationRule = (rule: unknown): Record<string, unknown> | null => {
+  const sanitizeDiceConfigBackupValidationRule = (rule: any): Record<string, unknown> | null => {
     if (!deps.isDiceConfigBackupRecord(rule)) return null;
     if (rule.builtin === true) {
       const key = deps.getDiceConfigBackupValidationRuleKey(rule);

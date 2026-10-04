@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * create-advanced-preset-roll-result.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { RollResult } from '../../shared/types';
-export function createCreateAdvancedPresetRollResult(deps: any) {
+export function createCreateAdvancedPresetRollResult(_deps: any) {
   const createAdvancedPresetRollResult = (total: number, tags: string[] = []): RollResult => ({
     total,
     rawDice: [total],

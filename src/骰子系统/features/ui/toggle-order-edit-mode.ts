@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * toggle-order-edit-mode.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -49,10 +48,10 @@ export function createToggleOrderEditMode(deps: any) {
           .css('display', 'flex');
 
         $root.find('#acu-btn-finish-sort').hover(
-          function () {
+          function (this: any) {
             $(this).addClass('hover');
           },
-          function () {
+          function (this: any) {
             $(this).removeClass('hover');
           },
         );
@@ -60,7 +59,7 @@ export function createToggleOrderEditMode(deps: any) {
         $root
           .find('#acu-btn-finish-sort')
           .off('click')
-          .on('click', function (e) {
+          .on('click', function (e: any) {
             e.stopPropagation();
             e.preventDefault();
             toggleOrderEditMode();
@@ -89,8 +88,8 @@ export function createToggleOrderEditMode(deps: any) {
       $root.find('#acu-action-pool, #acu-active-actions').off('.sort');
 
       // 保存导航盘入口顺序
-      const newTableOrder = [];
-      $container.find('.acu-nav-btn[data-nav-key], .acu-nav-btn[data-table]').each(function () {
+      const newTableOrder: any[] = [];
+      $container.find('.acu-nav-btn[data-nav-key], .acu-nav-btn[data-table]').each(function (this: any) {
         const navKey = $(this).data('nav-key');
         const tableName = $(this).data('table');
         const orderKey = navKey || tableName;
@@ -103,8 +102,8 @@ export function createToggleOrderEditMode(deps: any) {
       }
 
       // 保存功能按钮顺序
-      const newActionOrder = [];
-      $root.find('#acu-active-actions .acu-action-btn').each(function () {
+      const newActionOrder: any[] = [];
+      $root.find('#acu-active-actions .acu-action-btn').each(function (this: any) {
         const btnId = $(this).attr('id');
         if (btnId) {
           newActionOrder.push(btnId);

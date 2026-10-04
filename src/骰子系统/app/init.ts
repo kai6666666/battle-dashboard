@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * init.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,6 +5,12 @@
 import { ConsoleCaptureManager } from '../features/console/console-capture-manager';
 import { DICE_ROOT_SELECTOR } from '../shared/constants';
 import { setDatabaseToastMute } from '../shared/database-toast-mute';
+import { injectDatabaseStyles } from '../database-ui-override';
+import { createFontsList } from '../features/ui/fonts-list';
+declare function abortAllPendingRequests(): void;
+declare function processPendingEffectRuns(...args: any[]): any;
+declare function enqueueMessageMutation(...args: any[]): any;
+type AcuDiceTextareaElement = HTMLTextAreaElement & Record<string, any>;
 export function createInit(deps: any) {
   const init = () => {
     if (deps.getIsInitialized()) return;
@@ -67,6 +72,7 @@ export function createInit(deps: any) {
     deps.bindAcuDiceGachaRegexActions();
     const initCfg = deps.getConfig();
     setDatabaseToastMute(initCfg.muteDatabaseToasts === true);
+    injectDatabaseStyles(initCfg.theme, createFontsList({}).find((f: any) => f.id === initCfg.fontFamily)?.val);
     // 2. 保留原有的 SillyTavern 事件监听（使用具名函数防止重复注册）
     if (window.SillyTavern && window.SillyTavern.eventSource) {
       console.info('[DICE]注册 SillyTavern 事件监听器...');
@@ -92,8 +98,8 @@ export function createInit(deps: any) {
       }
 
       // 确保只创建一次聊天切换处理函数（移到模块级防止重复注册）
-      if (!window._acuBoundChatChangeHandler) {
-        window._acuBoundChatChangeHandler = () => {
+      if (!(window as any)._acuBoundChatChangeHandler) {
+        (window as any)._acuBoundChatChangeHandler = () => {
           console.info('[DICE]聊天切换事件触发，清理缓存并重新渲染');
           deps.setCachedRawData(null);
           deps.setTablePageStates({});
@@ -101,7 +107,7 @@ export function createInit(deps: any) {
           deps.setTableScrollStates({});
           deps.setHasUnsavedChanges(false);
           deps.getCurrentDiffMap().clear();
-          if (window.acuModifiedSet) window.acuModifiedSet.clear();
+          if ((window as any).acuModifiedSet) (window as any).acuModifiedSet.clear();
           // 清除变量面板缓存，避免不同聊天间模式/数据串线
           try {
             if (typeof deps.MvuModule?.clearCache === 'function') {
@@ -115,13 +121,13 @@ export function createInit(deps: any) {
           deps.scheduleCharacterDiceProfileDetection(900);
         };
       }
-      const _boundChatChangeHandler = window._acuBoundChatChangeHandler;
-      if (!window._acuBoundDialogueIndentHandler) {
-        window._acuBoundDialogueIndentHandler = () => {
+      const _boundChatChangeHandler = (window as any)._acuBoundChatChangeHandler;
+      if (!(window as any)._acuBoundDialogueIndentHandler) {
+        (window as any)._acuBoundDialogueIndentHandler = () => {
           deps.scheduleDialogueIndentRender();
         };
       }
-      const _boundDialogueIndentHandler = window._acuBoundDialogueIndentHandler;
+      const _boundDialogueIndentHandler = (window as any)._acuBoundDialogueIndentHandler;
 
       triggers.forEach(evt => {
         if (evt) {
@@ -292,10 +298,10 @@ export function createInit(deps: any) {
       } else {
         // 限制重试次数，防止无限循环 (约 60秒后放弃)
         if (!deps.getIsInitialized()) {
-          window._acuInitRetries = (window._acuInitRetries || 0) + 1;
-          if (window._acuInitRetries < 60) {
-            if (window._acuInitRetries % 10 === 0) {
-              console.info(`[DICE]等待数据库 API 就绪... (${window._acuInitRetries}/60)`);
+          (window as any)._acuInitRetries = ((window as any)._acuInitRetries || 0) + 1;
+          if ((window as any)._acuInitRetries < 60) {
+            if ((window as any)._acuInitRetries % 10 === 0) {
+              console.info(`[DICE]等待数据库 API 就绪... (${(window as any)._acuInitRetries}/60)`);
             }
             setTimeout(loop, 1000);
           } else {
@@ -311,7 +317,7 @@ export function createInit(deps: any) {
       const { $ } = deps.getCore();
       const hideOptionPanel = () => {
         deps.setOptionPanelVisible(false);
-        $('.acu-option-panel, .acu-embedded-options-container').fadeOut(200, function () {
+        $('.acu-option-panel, .acu-embedded-options-container').fadeOut(200, function (this: any) {
           $(this).remove();
         });
       };
@@ -461,7 +467,7 @@ export function createInit(deps: any) {
         lastCrazyPreSendAt = Date.now();
         console.info('[DICE]疯狂模式: 已同步注入到用户消息', id);
       };
-      const queueCrazyAppend = (messageId: number | string) => {
+      const queueCrazyAppend = (messageId: number | string) => { void queueCrazyAppend;
         const id = normalizeMessageId(messageId);
         if (id === null) return;
         if (!deps.shouldTriggerCrazyMode()) return;
@@ -570,7 +576,7 @@ export function createInit(deps: any) {
         // 监听发送按钮点击（jQuery方式作为备用）
         $(document)
           .off('click.acu_restore_dice', '#send_but')
-          .on('click.acu_restore_dice', '#send_but', function (e) {
+          .on('click.acu_restore_dice', '#send_but', function (_e: any) {
             const $ta = $('#send_textarea');
             if ($ta.length) {
               const textarea = $ta[0] as AcuDiceTextareaElement;
@@ -584,7 +590,7 @@ export function createInit(deps: any) {
 
         $(document)
           .off('keydown.acu_restore_dice', '#send_textarea')
-          .on('keydown.acu_restore_dice', '#send_textarea', function (e) {
+          .on('keydown.acu_restore_dice', '#send_textarea', function (this: any, e: any) {
             if (e.isComposing) return;
             if (e.key !== 'Enter' || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) return;
             const textarea = this as AcuDiceTextareaElement;
@@ -612,8 +618,8 @@ export function createInit(deps: any) {
         if (rootWindow.__acuCrazyGenerateHookInstalled) return;
         if (!rootWindow.TavernHelper || typeof rootWindow.TavernHelper.generate !== 'function') return;
 
-        rootWindow.__acuCrazyGenerateOriginal = rootWindow.TavernHelper.generate;
-        rootWindow.TavernHelper.generate = async function (...args: unknown[]) {
+        (rootWindow as any).__acuCrazyGenerateOriginal = rootWindow.TavernHelper.generate;
+        (rootWindow.TavernHelper as any).generate = async function (...args: unknown[]) {
           const options =
             args.length > 0 && args[0] && typeof args[0] === 'object' ? (args[0] as Record<string, unknown>) : null;
 
@@ -660,7 +666,7 @@ export function createInit(deps: any) {
             }
           }
 
-          return (rootWindow.__acuCrazyGenerateOriginal as (...args: unknown[]) => unknown).apply(this, args);
+          return ((rootWindow as any).__acuCrazyGenerateOriginal as (...args: unknown[]) => unknown).apply(this, args);
         };
         rootWindow.__acuCrazyGenerateHookInstalled = true;
       };
@@ -669,13 +675,13 @@ export function createInit(deps: any) {
       const ST = window.SillyTavern || window.parent?.SillyTavern;
       // 获取事件名，兼容不同版本
       const evtName =
-        ST?.eventTypes?.MESSAGE_SENT || (window.tavern_events ? window.tavern_events.MESSAGE_SENT : 'message_sent');
+        ST?.eventTypes?.MESSAGE_SENT || ((window as any).tavern_events ? (window as any).tavern_events.MESSAGE_SENT : 'message_sent');
 
       // 1. 优先使用 ST.eventSource (官方标准)
       if (ST?.eventSource) {
         ST.eventSource.on(evtName, hideOptionPanel);
         // [新增] 同时监听消息发送事件，应用投骰结果隐藏
-        ST.eventSource.on(evtName, async messageId => {
+        ST.eventSource.on(evtName, async (messageId: any) => {
           // 同步注入疯狂模式到用户消息（确保在 GENERATION_AFTER_COMMANDS 之前完成）
           syncInjectCrazyToMessage(messageId);
 
@@ -701,9 +707,9 @@ export function createInit(deps: any) {
         // [新增] 在 GENERATION_AFTER_COMMANDS 中注入（影响剧情推进接收内容）
         const afterCommandsEvtName =
           ST?.eventTypes?.GENERATION_AFTER_COMMANDS ||
-          (window.tavern_events ? window.tavern_events.GENERATION_AFTER_COMMANDS : 'GENERATION_AFTER_COMMANDS');
+          ((window as any).tavern_events ? (window as any).tavern_events.GENERATION_AFTER_COMMANDS : 'GENERATION_AFTER_COMMANDS');
         if (afterCommandsEvtName) {
-          ST.eventSource.on(afterCommandsEvtName, (type, params, dryRun) => {
+          ST.eventSource.on(afterCommandsEvtName, (type: any, params: any, dryRun: any) => {
             applyCrazyModeToPrompt(type, params, dryRun);
           });
         }
@@ -714,10 +720,10 @@ export function createInit(deps: any) {
       }
 
       // 2. 降级尝试全局 eventOn (TavernHelper 或旧版环境)
-      if (typeof window.eventOn === 'function') {
-        window.eventOn(evtName, hideOptionPanel);
+      if (typeof (window as any).eventOn === 'function') {
+        (window as any).eventOn(evtName, hideOptionPanel);
         // [新增] 同时监听消息发送事件，应用投骰结果隐藏
-        window.eventOn(evtName, async messageId => {
+        (window as any).eventOn(evtName, async (messageId: any) => {
           // 同步注入疯狂模式到用户消息（确保在 GENERATION_AFTER_COMMANDS 之前完成）
           syncInjectCrazyToMessage(messageId);
 
@@ -741,10 +747,10 @@ export function createInit(deps: any) {
         });
 
         // [新增] 在 GENERATION_AFTER_COMMANDS 中注入（影响剧情推进接收内容）
-        const afterCommandsEvtName = window.tavern_events
-          ? window.tavern_events.GENERATION_AFTER_COMMANDS
+        const afterCommandsEvtName = (window as any).tavern_events
+          ? (window as any).tavern_events.GENERATION_AFTER_COMMANDS
           : 'GENERATION_AFTER_COMMANDS';
-        window.eventOn(afterCommandsEvtName, (type, params, dryRun) => {
+        (window as any).eventOn(afterCommandsEvtName, (type: any, params: any, dryRun: any) => {
           applyCrazyModeToPrompt(type, params, dryRun);
         });
 
@@ -767,9 +773,9 @@ export function createInit(deps: any) {
     deps.scheduleCharacterDiceProfileDetection(1500);
 
     // [新增] 监听ERA变量更新，自动刷新变量面板
-    const eventOn = window.eventOn || window.parent?.eventOn;
+    const eventOn = (window as any).eventOn || (window.parent as any)?.eventOn;
     if (typeof eventOn === 'function') {
-      eventOn('era:writeDone', detail => {
+      eventOn('era:writeDone', (_detail: any) => {
         // 清除 ERA 缓存
         if (typeof deps.MvuModule === 'object' && typeof deps.MvuModule.clearCache === 'function') {
           deps.MvuModule.clearCache();
@@ -802,10 +808,10 @@ export function createInit(deps: any) {
           }
           // 取消所有挂起的异步请求
           abortAllPendingRequests();
-          const timer = (window as Record<string, unknown>).__acuEffectRunCleanerTimer;
+          const timer = (window as unknown as Record<string, unknown>).__acuEffectRunCleanerTimer;
           if (typeof timer === 'number') {
             window.clearInterval(timer);
-            delete (window as Record<string, unknown>).__acuEffectRunCleanerTimer;
+            delete (window as unknown as Record<string, unknown>).__acuEffectRunCleanerTimer;
           }
           localStorage.setItem(deps.STORAGE_KEY_SCROLL, JSON.stringify(deps.getTableScrollStates()));
           if (deps.getObserver()) {

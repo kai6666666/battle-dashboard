@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-template-inspection-sheets.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetTemplateInspectionSheets(deps: any) {
+type TemplateInspectionSheet = Record<string, any>;
+
+export function createGetTemplateInspectionSheets(_deps: any) {
   const getTemplateInspectionSheets = (template: unknown): TemplateInspectionSheet[] => {
     if (!template || typeof template !== 'object') return [];
     return Object.entries(template as Record<string, unknown>)

@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-new-attribute-preset-jsonc-template.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildNewAttributePresetJsoncTemplate(deps: any) {
+export function createBuildNewAttributePresetJsoncTemplate(_deps: any) {
   const buildNewAttributePresetJsoncTemplate = (): string => `{
   // 这里只填写属性配置本体；预设名称和描述在上方输入框填写。
   // baseAttributes：基础属性，会作为表格生成和属性快捷选择的主要属性池。

@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * render-inventory-metadata-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createRenderInventoryMetadataHtml(deps: any) {
-  const renderInventoryMetadataHtml = record => {
+  const renderInventoryMetadataHtml = (record: any) => {
     const acquiredAtLocation = String(record?.acquiredAtLocation || '').trim() || '未知';
     const acquiredAt = String(record?.acquiredAt || '').trim() || '未知';
     return `

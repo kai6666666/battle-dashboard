@@ -1,8 +1,10 @@
-// @ts-nocheck
 /**
  * validate-advanced-preset-outcome-policy.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type AdvancedDicePreset = Record<string, any>;
+type AdvancedPresetValidationIssue = Record<string, any>;
+
 export function createValidateAdvancedPresetOutcomePolicy(deps: any) {
   const validateAdvancedPresetOutcomePolicy = (
     preset: AdvancedDicePreset,
@@ -27,7 +29,7 @@ export function createValidateAdvancedPresetOutcomePolicy(deps: any) {
         ? policy.requiredRankVarId.slice(1)
         : policy.requiredRankVarId;
       const fieldIndex = Array.isArray(preset.customFields)
-        ? preset.customFields.findIndex(candidate => candidate.id === fieldId)
+        ? preset.customFields.findIndex((candidate: any) => candidate.id === fieldId)
         : -1;
       const field = fieldIndex >= 0 && Array.isArray(preset.customFields) ? preset.customFields[fieldIndex] : undefined;
       const fieldPath = fieldIndex >= 0 ? `customFields[${fieldIndex}]` : `customFields.${fieldId}`;
@@ -38,7 +40,7 @@ export function createValidateAdvancedPresetOutcomePolicy(deps: any) {
       } else if (field.type === 'select') {
         if (!Array.isArray(field.options) || field.options.length === 0) {
           deps.pushAdvancedPresetIssue(issues, `${fieldPath}.options`, 'minRank 使用的 select 必须提供数值选项');
-        } else if (field.options.some(option => !deps.isAdvancedPresetNumericLike(option.value))) {
+        } else if (field.options.some((option: any) => !deps.isAdvancedPresetNumericLike(option.value))) {
           deps.pushAdvancedPresetIssue(issues, `${fieldPath}.options`, 'minRank 使用的 select 选项 value 必须是数字');
         }
         if (!deps.isAdvancedPresetNumericLike(field.defaultValue)) {
@@ -49,7 +51,7 @@ export function createValidateAdvancedPresetOutcomePolicy(deps: any) {
 
     if (typeof policy.unmetOutcomeId !== 'string' || !policy.unmetOutcomeId.trim()) {
       deps.pushAdvancedPresetIssue(issues, 'outcomePolicy.unmetOutcomeId', '必须是 outcomes 里的 outcome ID');
-    } else if (!preset.outcomes.some(outcome => outcome.id === policy.unmetOutcomeId)) {
+    } else if (!preset.outcomes.some((outcome: any) => outcome.id === policy.unmetOutcomeId)) {
       deps.pushAdvancedPresetIssue(issues, 'outcomePolicy.unmetOutcomeId', `找不到 outcome: ${policy.unmetOutcomeId}`);
     }
 
@@ -57,7 +59,7 @@ export function createValidateAdvancedPresetOutcomePolicy(deps: any) {
       deps.pushAdvancedPresetIssue(issues, 'outcomePolicy.keepActualOutcome', '必须是布尔值');
     }
 
-    if (!preset.outcomes.some(outcome => typeof outcome.rank === 'number')) {
+    if (!preset.outcomes.some((outcome: any) => typeof outcome.rank === 'number')) {
       deps.pushAdvancedPresetIssue(issues, 'outcomes', '使用 minRank 时，参与成功等级比较的 outcomes 需要提供数字 rank');
     }
   };

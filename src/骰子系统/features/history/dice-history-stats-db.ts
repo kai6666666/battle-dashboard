@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * dice-history-stats-db.ts
  * Feature-Sliced: features 层模块（工厂版，DI 注入依赖）。
  */
+import type { DiceHistoryStatRecord, DiceHistoryStatsSummary, DiceStatsScope } from '../../shared/index-local-types';
 
 export function createDiceHistoryStatsDB(deps: any) {
   const DiceHistoryStatsDB = {

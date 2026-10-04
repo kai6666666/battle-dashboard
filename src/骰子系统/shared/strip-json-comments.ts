@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * strip-json-comments.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createStripJsonComments(deps: any) {
+export function createStripJsonComments(_deps: any) {
   const stripJsonComments = (jsonText: string): string => {
     let result = '';
     let inString = false;

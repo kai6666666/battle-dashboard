@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * draw-single-gacha-outcome.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,7 +6,7 @@ import type { GachaDrawOutcome, GachaState } from './gacha-types';
 import type { GachaRewardTarget } from '../../entities/gacha-items';
 export function createDrawSingleGachaOutcome(deps: any) {
   const drawSingleGachaOutcome = (
-    rawData,
+    rawData: any,
     state: GachaState,
     availableTargets: ReadonlySet<GachaRewardTarget> = deps.getAvailableGachaRewardTargets(rawData),
     snapshots?: Map<string, unknown>,

@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * render-changes-panel.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { Store } from '../../shared/storage/store';
 export function createRenderChangesPanel(deps: any) {
-  const renderChangesPanel = rawData => {
+  const renderChangesPanel = (rawData: any) => {
     const snapshot = deps.loadSnapshot();
     const config = deps.getConfig();
 
@@ -67,7 +66,7 @@ export function createRenderChangesPanel(deps: any) {
       const oldHeaders = oldSheet.content[0] || headers;
       const rowMatcher = deps.createDiffRowMatcher(oldHeaders, oldRows.map(deps.normalizeDiffRow));
 
-      newRows.forEach((row, rowIdx) => {
+      newRows.forEach((row: any, rowIdx: any) => {
         const safeRow = deps.normalizeDiffRow(row);
         const matched = deps.takeDiffRowMatch(rowMatcher, headers, safeRow, rowIdx);
         const oldRow = matched?.row;
@@ -92,7 +91,7 @@ export function createRenderChangesPanel(deps: any) {
             oldValue: string;
             newValue: string;
           }> = [];
-          safeRow.forEach((cell, colIdx) => {
+          safeRow.forEach((cell: any, colIdx: any) => {
             if (colIdx === 0) return; // 跳过索引列
             const oldVal = String(oldRow[colIdx] ?? '');
             const newVal = String(cell ?? '');
@@ -137,7 +136,7 @@ export function createRenderChangesPanel(deps: any) {
         }
       });
 
-      oldRows.forEach((oldRow, rIdx) => {
+      oldRows.forEach((oldRow: any, rIdx: any) => {
         if (rowMatcher.usedIndices.has(rIdx)) return;
         const safeOldRow = deps.normalizeDiffRow(oldRow);
         changes.push({
@@ -233,7 +232,7 @@ export function createRenderChangesPanel(deps: any) {
                     </div>
                     <div class="acu-changes-group-body" style="${isCollapsed ? 'display:none;' : ''}">`;
 
-          tableErrors.forEach(error => {
+          tableErrors.forEach((error: any) => {
             const ruleData = error.rule
               ? deps.escapeHtml(
                   JSON.stringify({
@@ -281,7 +280,7 @@ export function createRenderChangesPanel(deps: any) {
             </div>`;
       } else {
         // 按表名分组
-        const groupedChanges = {};
+        const groupedChanges: Record<string, any[]> = {};
         changes.forEach(c => {
           const key = c.tableName;
           if (!groupedChanges[key]) groupedChanges[key] = [];
@@ -304,7 +303,7 @@ export function createRenderChangesPanel(deps: any) {
                     </div>
                     <div class="acu-changes-group-body" style="${isCollapsed ? 'display:none;' : ''}">`;
 
-          tableChanges.forEach(change => {
+          tableChanges.forEach((change: any) => {
             if (change.type === 'row_added') {
               html += `<div class="acu-change-item acu-change-added"
                             data-change-type="row_added"
@@ -366,7 +365,7 @@ export function createRenderChangesPanel(deps: any) {
               const fieldCount = change.changedFields.length;
               const fieldNames = change.changedFields
                 .slice(0, 2)
-                .map(f => f.header)
+                .map((f: any) => f.header)
                 .join('、');
               const moreText = fieldCount > 2 ? ` 等${fieldCount}项` : '';
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * dashboard-preset-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,6 +5,7 @@
 import { PRESET_FORMAT_VERSION } from '../../shared/constants';
 import { Store } from '../../shared/storage/store';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+import type { DashboardPreset, DashboardPresetModules } from '../../shared/index-local-types';
 export function createDashboardPresetManager(deps: any) {
   const DashboardPresetManager = (() => {
     let _cache: DashboardPreset[] | null = null;

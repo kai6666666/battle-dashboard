@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-table-template-requirement-preset-manager.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -15,7 +14,7 @@ export function createShowTableTemplateRequirementPresetManager(deps: any) {
     const presets = deps.TableTemplateRequirementPresetManager.getAllPresets();
     const activeId = deps.TableTemplateRequirementPresetManager.getActivePresetId();
     const presetsHtml = presets
-            .map(preset => {
+            .map((preset: any) => {
               const isActive = preset.id === activeId;
               const isBuiltin = preset.builtin === true;
               const stats = deps.getTableTemplateRequirementPresetStats(preset);
@@ -87,7 +86,7 @@ export function createShowTableTemplateRequirementPresetManager(deps: any) {
       deps.popModal();
     });
 
-    overlay.on('change', '.acu-table-template-requirement-preset-toggle', function () {
+    overlay.on('change', '.acu-table-template-requirement-preset-toggle', function (this: any) {
       const $toggle = $(this);
       const id = String($toggle.data('id') || '');
       if (!$toggle.is(':checked')) {
@@ -99,7 +98,7 @@ export function createShowTableTemplateRequirementPresetManager(deps: any) {
         showActionableErrorToast('切换模板检验预设失败', { suggestion: 'tableTemplate' });
         return;
       }
-      overlay.find('.acu-table-template-requirement-preset-toggle').each(function () {
+      overlay.find('.acu-table-template-requirement-preset-toggle').each(function (this: any) {
         if (String($(this).data('id') || '') !== id) $(this).prop('checked', false);
       });
       if (window.toastr) window.toastr.success('已切换模板检验预设');
@@ -107,7 +106,7 @@ export function createShowTableTemplateRequirementPresetManager(deps: any) {
       showTableTemplateRequirementPresetManager();
     });
 
-    overlay.on('click', '.acu-table-template-requirement-preset-copy', function () {
+    overlay.on('click', '.acu-table-template-requirement-preset-copy', function (this: any) {
       const id = String($(this).data('id') || '');
       const preset = deps.TableTemplateRequirementPresetManager.getPresetById(id);
       if (!preset) return;
@@ -122,14 +121,14 @@ export function createShowTableTemplateRequirementPresetManager(deps: any) {
       showTableTemplateRequirementPresetManager();
     });
 
-    overlay.on('click', '.acu-table-template-requirement-preset-edit', function () {
+    overlay.on('click', '.acu-table-template-requirement-preset-edit', function (this: any) {
       const id = String($(this).data('id') || '');
       overlay.remove();
       deps.popModal();
       deps.showTableTemplateRequirementPresetEditor(id);
     });
 
-    overlay.on('click', '.acu-table-template-requirement-preset-export', function () {
+    overlay.on('click', '.acu-table-template-requirement-preset-export', function (this: any) {
       const id = String($(this).data('id') || '');
       const preset = deps.TableTemplateRequirementPresetManager.getPresetById(id);
       const json = deps.TableTemplateRequirementPresetManager.exportPreset(id);
@@ -141,7 +140,7 @@ export function createShowTableTemplateRequirementPresetManager(deps: any) {
       if (window.toastr) window.toastr.success('已导出文件');
     });
 
-    overlay.on('click', '.acu-table-template-requirement-preset-delete', async function () {
+    overlay.on('click', '.acu-table-template-requirement-preset-delete', async function (this: any) {
       const id = String($(this).data('id') || '');
       const preset = deps.TableTemplateRequirementPresetManager.getPresetById(id);
       const confirmed = await deps.showDiceSystemConfirmDialog({

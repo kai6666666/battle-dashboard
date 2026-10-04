@@ -1,11 +1,14 @@
-// @ts-nocheck
 /**
  * get-full-attributes-for-character.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CharacterAttributeEntry = Record<string, any>;
+type DiceRawData = Record<string, any>;
+type CharacterAttributeSource = string;
+
 export function createGetFullAttributesForCharacter(deps: any) {
   const getFullAttributesForCharacter = (
-    characterName,
+    characterName: any,
     dataOverride?: Record<string, { name: string; content: (string | number | null)[][] }>,
   ): CharacterAttributeEntry[] => {
     const rawData = (dataOverride || deps.getCachedRawData() || deps.getTableData()) as DiceRawData | null;
@@ -15,9 +18,9 @@ export function createGetFullAttributesForCharacter(deps: any) {
     const attrs: CharacterAttributeEntry[] = [];
     const row = lookup.sheet.content[lookup.rowIndex] || [];
     const { baseColIndex, specialColIndex } = deps.findPrimaryAttributeColumns(lookup.headers);
-    deps.findAttributeColumnIndices(lookup.headers).forEach(idx => {
+    deps.findAttributeColumnIndices(lookup.headers).forEach((idx: any) => {
       const parsed = deps.parseAttributeString(row[idx] || '');
-      parsed.forEach(attr => {
+      parsed.forEach((attr: any) => {
         if (!attrs.some(existing => existing.name === attr.name)) {
           const source: CharacterAttributeSource =
             idx === baseColIndex ? 'base' : idx === specialColIndex ? 'special' : 'generic';

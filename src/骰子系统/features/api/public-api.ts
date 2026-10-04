@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * public-api.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createAcuDiceAPI(deps: any) {
-  const AcuDiceAPI = {
+  const AcuDiceAPI: Omit<AcuDice.API, 'gacha'> = {
     /** API 版本号 */
     version: '1.3.0',
 
@@ -79,15 +78,15 @@ export function createAcuDiceAPI(deps: any) {
     /**
      * 获取最近一次普通检定结果
      */
-    getLatestCheck(): (AcuDice.CheckResult & { timestamp: number }) | null {
-      return deps.acuDiceHistory.getLatestCheck() as (AcuDice.CheckResult & { timestamp: number }) | null;
+    getLatestCheck(): AcuDice.CheckHistoryItem | null {
+      return deps.acuDiceHistory.getLatestCheck() as AcuDice.CheckHistoryItem | null;
     },
 
     /**
      * 获取最近一次对抗检定结果
      */
-    getLatestContest(): (AcuDice.ContestResult & { timestamp: number }) | null {
-      return deps.acuDiceHistory.getLatestContest() as (AcuDice.ContestResult & { timestamp: number }) | null;
+    getLatestContest(): AcuDice.ContestHistoryItem | null {
+      return deps.acuDiceHistory.getLatestContest() as AcuDice.ContestHistoryItem | null;
     },
 
     /**

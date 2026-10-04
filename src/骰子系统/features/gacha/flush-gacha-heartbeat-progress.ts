@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * flush-gacha-heartbeat-progress.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,7 +5,7 @@
 import { GACHA_ACTIVE_SECONDS_PER_FORTUNE } from '../../entities/gacha-items';
 export function createFlushGachaHeartbeatProgress(deps: any) {
   const flushGachaHeartbeatProgress = (_persistProgress: boolean) => {
-    const state = deps.getGachaState(undefined, true);
+    const state = deps.getGachaState(undefined, false); // [x9-b] 懒初始化：不再强制创建抽卡状态
     if (!state) return;
 
     const now = Date.now();

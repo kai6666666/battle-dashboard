@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * save-stored-gacha-catalog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -17,7 +16,7 @@ export function createSaveStoredGachaCatalog(deps: any) {
     };
     const saved = await GachaCatalogDB.put({
       scopeKey,
-      version: catalog.version,
+      version: String(catalog.version),
       items: deps.cloneGachaCatalogItems(catalog.items),
       updatedAt: catalog.updatedAt,
     });

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * table-rule-fix-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -7,9 +6,9 @@ import { RULE_TYPE_INFO } from '../../shared/defaults-config';
 import { alignAndFixPairedTables, buildCodeMapping, extractCodesFromTable } from '../../shared/table-utils';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowTableRuleFixModal(deps: any) {
-  const showTableRuleFixModal = (error, rule, ruleType, rawData, snapshot, currentThemeClass) => {
+  const showTableRuleFixModal = (error: any, rule: any, ruleType: any, rawData: any, snapshot: any, currentThemeClass: any) => {
     const { $ } = deps.getCore();
-    const typeInfo = RULE_TYPE_INFO[ruleType] || { name: ruleType, icon: 'fa-question' };
+    const typeInfo = (RULE_TYPE_INFO as Record<string, any>)[ruleType] || { name: ruleType, icon: 'fa-question' }; void typeInfo;
 
     let contentHtml = '';
     let actionBtns = '';
@@ -26,7 +25,7 @@ export function createShowTableRuleFixModal(deps: any) {
             const oldRows = snapshot[sheetId].content?.slice(1) || [];
 
             // 检测修改
-            newRows.forEach((row, idx) => {
+            newRows.forEach((row: any, idx: any) => {
               const oldRow = oldRows[idx];
               if (!oldRow) {
                 changeDetails.push(`第${idx + 1}行: 新增`);
@@ -164,7 +163,7 @@ export function createShowTableRuleFixModal(deps: any) {
       const prefix = rule.config?.prefix || '';
       const startFrom = rule.config?.startFrom !== undefined ? rule.config?.startFrom : 1;
       let targetSheet = null;
-      let issues = [];
+      let issues: any[] = [];
       let fixSuggestions = [];
 
       // 找到目标表
@@ -200,7 +199,7 @@ export function createShowTableRuleFixModal(deps: any) {
               num = parseInt(strValue, 10);
             }
 
-            if (!isNaN(num)) {
+            if (num !== null && !isNaN(num)) {
               numbers.push({ rowIndex: i, value: strValue, num, originalRowIndex: i + 2 }); // +2 因为表头+1索引
             }
           }
@@ -246,7 +245,7 @@ export function createShowTableRuleFixModal(deps: any) {
 
             // 检测跳号或顺序错误
             if (actualNum !== expectedNum) {
-              if (actualNum < expectedNum) {
+              if (actualNum !== null && actualNum < expectedNum) {
                 // 数字小于期望值（可能是重复或顺序错误）
                 outOfOrder.push({ rowNum, value: numbers[i].value, num: actualNum, expectedNum });
               } else {
@@ -269,7 +268,7 @@ export function createShowTableRuleFixModal(deps: any) {
                 rowNum,
                 currentValue,
                 fixedValue,
-                reason: actualNum < expectedNum ? '重复或顺序错误' : actualNum > expectedNum ? '跳号' : '重复',
+                reason: (actualNum ?? 0) < expectedNum ? '重复或顺序错误' : (actualNum ?? 0) > expectedNum ? '跳号' : '重复',
               });
             }
           }
@@ -390,7 +389,7 @@ export function createShowTableRuleFixModal(deps: any) {
     deps.setupOverlayClose(dialog, 'acu-validation-modal-overlay', closeDialog);
 
     // 自动修复序列递增
-    dialog.on('click', '#smart-fix-fix-sequence', async function () {
+    dialog.on('click', '#smart-fix-fix-sequence', async function (this: any) {
       const $btn = $(this);
       const tableName = $btn.data('table');
       const columnName = $btn.data('column');
@@ -468,7 +467,7 @@ export function createShowTableRuleFixModal(deps: any) {
           const mapping = buildCodeMapping(extract1.allCodes, extract2.allCodes, prefix, startFrom);
 
           // 对齐和修复
-          const { fixedCount1, fixedCount2 } = alignAndFixPairedTables(
+          alignAndFixPairedTables(
             targetSheet,
             targetSheetId,
             pairedSheet,
@@ -504,7 +503,7 @@ export function createShowTableRuleFixModal(deps: any) {
               num = parseInt(strValue, 10);
             }
 
-            if (!isNaN(num)) {
+            if (num !== null && !isNaN(num)) {
               numbers.push({ rowIndex: i, value: strValue, num });
             }
           }
@@ -532,13 +531,13 @@ export function createShowTableRuleFixModal(deps: any) {
         }
       } catch (e) {
         console.error('[DICE]ACU 修复序列递增失败:', e);
-        if (window.toastr) showActionableErrorToast('修复失败: ' + (e.message || '未知错误'), { suggestion: 'save' });
+        if (window.toastr) showActionableErrorToast('修复失败: ' + ((e as any).message || '未知错误'), { suggestion: 'save' });
         $btn.prop('disabled', false).html('<i class="fa-solid fa-magic"></i> 自动修复');
       }
     });
 
     // 删除多余行
-    dialog.on('click', '#smart-fix-delete-rows', async function () {
+    dialog.on('click', '#smart-fix-delete-rows', async function (this: any) {
       const startRow = parseInt($(this).data('start'), 10);
       const tableName = $(this).data('table');
 
@@ -564,7 +563,7 @@ export function createShowTableRuleFixModal(deps: any) {
         deps.renderInterface();
       } catch (e) {
         console.error('[DICE]ACU 删除行失败:', e);
-        if (window.toastr) showActionableErrorToast('删除失败: ' + (e.message || '未知错误'), { suggestion: 'save' });
+        if (window.toastr) showActionableErrorToast('删除失败: ' + ((e as any).message || '未知错误'), { suggestion: 'save' });
       }
     });
   };

@@ -1,9 +1,12 @@
-// @ts-nocheck
 /**
  * build-check-suggestion-preset-side.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { rollComplexDiceExpression } from '../../features/dice/dice-engine';
+type CheckSuggestionPresetSideResult = Record<string, any>;
+type CheckSuggestionParams = Record<string, any>;
+import type { RollResult } from '../../shared/types';
+import type { AdvancedDicePreset } from '../../shared/advanced-preset-types';
 export function createBuildCheckSuggestionPresetSide(deps: any) {
   const buildCheckSuggestionPresetSide = (
     preset: AdvancedDicePreset,
@@ -57,7 +60,7 @@ export function createBuildCheckSuggestionPresetSide(deps: any) {
 
     const customValues: Record<string, string | number | boolean> = {};
     if (Array.isArray(preset.customFields)) {
-      preset.customFields.forEach(field => {
+      preset.customFields.forEach((field: any) => {
         customValues[`$${field.id}`] = deps.resolveCheckSuggestionFieldValue(field, input.params, input.characterName);
       });
     }
@@ -74,7 +77,7 @@ export function createBuildCheckSuggestionPresetSide(deps: any) {
 
     const derivedValues: Record<string, number> = {};
     if (Array.isArray(preset.derivedVars)) {
-      preset.derivedVars.forEach(spec => {
+      preset.derivedVars.forEach((spec: any) => {
         const id = spec?.id?.trim();
         if (!id) return;
         const varName = id.startsWith('$') ? id : `$${id}`;
@@ -96,7 +99,7 @@ export function createBuildCheckSuggestionPresetSide(deps: any) {
         ...baseContext,
         ...derivedValues,
       };
-      preset.dicePatches.forEach(patch => {
+      preset.dicePatches.forEach((patch: any) => {
         if (!patch) return;
         if (patch.when) {
           const conditionResult = deps.evaluateCondition(patch.when, patchContext as Record<string, number>);
@@ -131,7 +134,7 @@ export function createBuildCheckSuggestionPresetSide(deps: any) {
         ...baseContext,
         ...customValues,
       };
-      preset.derivedVars.forEach(spec => {
+      preset.derivedVars.forEach((spec: any) => {
         const id = spec?.id?.trim();
         if (!id) return;
         const varName = id.startsWith('$') ? id : `$${id}`;

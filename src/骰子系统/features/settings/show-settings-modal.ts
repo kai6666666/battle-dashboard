@@ -1,12 +1,13 @@
-// @ts-nocheck
 /**
  * show-settings-modal.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DICE_ROOT_SELECTOR, PRESET_FORMAT_VERSION, SCRIPT_VERSION } from '../../shared/constants';
+import { buildSettingsDialogHtml } from './build-settings-dialog-html';
 import { RULE_TYPE_INFO } from '../../shared/defaults-config';
 import { Store } from '../../shared/storage/store';
 import { normalizeDialogueIndentStrategy } from '../../features/dialogue-indent-renderer';
+type AvatarManagerNode = Record<string, any>;
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowSettingsModal(deps: any) {
   const showSettingsModal = () => {
@@ -25,7 +26,7 @@ export function createShowSettingsModal(deps: any) {
     // 分组折叠状态（从存储读取，默认第一组展开）
     const expandedGroups = Store.get('acu_settings_expanded', ['appearance']);
 
-    const isGroupExpanded = groupId => expandedGroups.includes(groupId);
+    const isGroupExpanded = (groupId: any) => expandedGroups.includes(groupId);
     // 生成导航盘管理列表HTML（包含特殊按钮：仪表盘、投骰、审核、MVU变量）
     const SPECIAL_BUTTONS_CONFIG = [
       { key: '__dashboard__', name: '仪表盘', icon: 'fa-chart-line' },
@@ -60,7 +61,7 @@ export function createShowSettingsModal(deps: any) {
     ];
 
     const tableManagerHtml = (() => {
-      const savedOrder = deps.getSavedTableOrder() || [];
+      const savedOrder = deps.getSavedTableOrder() || []; void savedOrder;
       const hiddenList = deps.getHiddenTables();
 
       // 构建所有可管理项：特殊按钮 + 真实表格
@@ -79,9 +80,9 @@ export function createShowSettingsModal(deps: any) {
 
       // 应用保存的排序（与导航条/审核面板共用同一稳定排序工具）
       const sortedKeys = deps.getStableTableSort(allItems.map(item => item.key));
-      const stableOrderMap = new Map(sortedKeys.map((k, i) => [k, i]));
+      const stableOrderMap = new Map(sortedKeys.map((k: any, i: any) => [k, i]));
       const orderedItems = [...allItems].sort(
-        (a, b) => (stableOrderMap.get(a.key) ?? 9999) - (stableOrderMap.get(b.key) ?? 9999),
+        (a, b) => ((stableOrderMap.get(a.key) as any) ?? 9999) - ((stableOrderMap.get(b.key) as any) ?? 9999),
       );
       deps.ensureCanonicalTableOrder(orderedItems.map(item => item.key));
       return orderedItems
@@ -115,7 +116,7 @@ export function createShowSettingsModal(deps: any) {
         })
         .join('');
     })();
-    const chevron = groupId => (isGroupExpanded(groupId) ? 'fa-chevron-down' : 'fa-chevron-right');
+    const chevron = (groupId: any) => (isGroupExpanded(groupId) ? 'fa-chevron-down' : 'fa-chevron-right');
     const renderSettingSegmented = (
       id: string,
       label: string,
@@ -132,664 +133,13 @@ export function createShowSettingsModal(deps: any) {
                                       .join('')}
                                 </div>`;
 
-    const dialog = $(`
-        <div class="acu-edit-overlay ${currentThemeClass}">
-            <div class="acu-edit-dialog acu-settings-dialog ${currentThemeClass}">
-                <div class="acu-settings-header">
-                    <div class="acu-settings-title">
-                        <span class="acu-settings-title-main">
-                            <span class="acu-settings-title-icon"><i class="fa-solid fa-cog"></i></span>
-                            <span class="acu-settings-heading">设置</span>
-                        </span>
-                    </div>
-                    <div class="acu-header-actions">
-                        <span class="acu-version-badge" title="当前版本 ${SCRIPT_VERSION}">${SCRIPT_VERSION}</span>
-                        <button type="button" class="acu-manual-update-btn" id="acu-manual-update-btn" aria-label="清理缓存并刷新以获取最新版本" title="清理缓存并刷新以获取最新版本"><i class="fa-solid fa-rotate"></i></button>
-                        ${deps.getTutorialButtonHtml('settings', '查看设置页面教程', 'acu-help-btn')}
-                        <button type="button" class="acu-close-btn" id="dlg-close-x" aria-label="关闭设置" title="关闭"><i class="fa-solid fa-times"></i></button>
-                    </div>
-                </div>
-
-                <div class="acu-settings-body">
-                <!-- 外观样式 -->
-                <div class="acu-settings-group ${isGroupExpanded('appearance') ? '' : 'collapsed'}" data-group="appearance">                    <div class="acu-settings-group-title">
-                        <span class="acu-settings-group-title-main">
-                            <i class="fa-solid ${chevron('appearance')} acu-group-chevron"></i>
-                            <i class="fa-solid fa-palette"></i>
-                            <span>外观样式</span>
-                        </span>
-                        ${deps.getTutorialButtonHtml('settingsAppearance', '查看外观样式教程', 'acu-settings-group-help')}
-                    </div>
-                    <div class="acu-settings-group-body">
-                        <div class="acu-setting-row" id="settings-row-theme">
-                            <div class="acu-setting-info">
-                                <span class="acu-setting-label">背景主题</span>
-                            </div>
-                            <select id="cfg-theme" class="acu-setting-select">
-                                ${deps.THEMES.map(t => `<option value="${t.id}" ${t.id === config.theme ? 'selected' : ''}>${t.name}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="acu-setting-row" id="settings-row-font-family">
-                            <div class="acu-setting-info">
-                                <span class="acu-setting-label">字体风格</span>
-                            </div>
-                            <select id="cfg-font-family" class="acu-setting-select">
-                                ${deps.FONTS.map(f => `<option value="${f.id}" ${f.id === config.fontFamily ? 'selected' : ''}>${f.name}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="acu-setting-row" id="settings-row-font-main">
-                            <div class="acu-setting-info">
-                                <span class="acu-setting-label">字体大小（界面）</span>
-                            </div>
-                            <div class="acu-stepper" data-id="cfg-font-main" data-min="10" data-max="24" data-step="1">
-                                <button class="acu-stepper-btn acu-stepper-dec"><i class="fa-solid fa-minus"></i></button>
-                                <span class="acu-stepper-value">${config.fontSize}px</span>
-                                <button class="acu-stepper-btn acu-stepper-inc"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-                        </div>
-                        <div class="acu-setting-row" id="settings-row-font-option">
-                            <div class="acu-setting-info">
-                                <span class="acu-setting-label">字体大小（选项）</span>
-                            </div>
-                            <div class="acu-stepper" data-id="cfg-font-opt" data-min="10" data-max="24" data-step="1">
-                                <button class="acu-stepper-btn acu-stepper-dec"><i class="fa-solid fa-minus"></i></button>
-                                <span class="acu-stepper-value">${config.optionFontSize || 12}px</span>
-                                <button class="acu-stepper-btn acu-stepper-inc"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-                        </div>
-                        <div class="acu-setting-row" id="settings-row-font-nav">
-                            <div class="acu-setting-info">
-                                <span class="acu-setting-label">字体大小（导航栏）</span>
-                            </div>
-                            <div class="acu-stepper" data-id="cfg-font-nav" data-min="10" data-max="20" data-step="1">
-                                <button class="acu-stepper-btn acu-stepper-dec"><i class="fa-solid fa-minus"></i></button>
-                                <span class="acu-stepper-value">${deps.getNavigationFontMetrics(config.navFontSize).fontSize}px</span>
-                                <button class="acu-stepper-btn acu-stepper-inc"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-                        </div>
-                        <div class="acu-setting-row" id="settings-row-highlight-new">
-                            <div class="acu-setting-info">
-                                <span class="acu-setting-label">高亮表格更新</span>
-                            </div>
-                            ${renderSettingSegmented(
-                              'cfg-highlight-updates',
-                              '高亮表格更新',
-                              ENABLE_DISABLE_OPTIONS,
-                              config.highlightNew ? 'enabled' : 'disabled',
-                            )}
-                        </div>
-                        <div class="acu-setting-row" id="settings-row-dialogue-indent-enabled">
-                            <div class="acu-setting-info">
-                                <span class="acu-setting-label">正文头像渲染</span>
-                            </div>
-                            ${renderSettingSegmented(
-                              'cfg-dialogue-indent-enabled',
-                              '正文头像渲染',
-                              ENABLE_DISABLE_OPTIONS,
-                              config.dialogueIndentEnabled === true ? 'enabled' : 'disabled',
-                            )}
-                        </div>
-                        <div class="acu-setting-row acu-setting-dependent-row" id="settings-row-dialogue-indent-strategy" ${config.dialogueIndentEnabled === true ? '' : 'hidden'}>
-                            <div class="acu-setting-info">
-                                <span class="acu-setting-label">识别强度</span>
-                            </div>
-                            ${renderSettingSegmented(
-                              'cfg-dialogue-indent-strategy',
-                              '识别强度',
-                              DIALOGUE_INDENT_STRATEGY_OPTIONS,
-                              normalizeDialogueIndentStrategy(config.dialogueIndentStrategy),
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                    <!-- 布局与浏览 -->
-                    <div class="acu-settings-group ${isGroupExpanded('layout') ? '' : 'collapsed'}" data-group="layout">
-                        <div class="acu-settings-group-title">
-                            <span class="acu-settings-group-title-main">
-                                <i class="fa-solid ${chevron('layout')} acu-group-chevron"></i>
-                                <i class="fa-solid fa-th-large"></i>
-                                <span>布局与浏览</span>
-                            </span>
-                            ${deps.getTutorialButtonHtml('settingsLayout', '查看布局与浏览教程', 'acu-settings-group-help')}
-                        </div>
-                        <div class="acu-settings-group-body">
-                            <div class="acu-setting-row" id="settings-row-layout-mode">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">布局模式</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-layout',
-                                  '布局模式',
-                                  [
-                                    { value: 'horizontal', label: '横向滚动' },
-                                    { value: 'vertical', label: '竖向滚动' },
-                                  ],
-                                  config.layout === 'vertical' ? 'vertical' : 'horizontal',
-                                )}
-                            </div>
-                            <div class="acu-setting-row acu-setting-dependent-row" id="settings-row-horizontal-scrollbar" ${config.layout === 'vertical' ? 'hidden' : ''}>
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">横向滚动条</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-horizontal-scrollbar',
-                                  '横向滚动条',
-                                  ENABLE_DISABLE_OPTIONS,
-                                  config.showHorizontalScrollbar === true ? 'enabled' : 'disabled',
-                                )}
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-reverse-all">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">卡片顺序</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-display-order',
-                                  '卡片顺序',
-                                  [
-                                    { value: 'normal', label: '正序', title: '按原始顺序显示' },
-                                    { value: 'reverse', label: '倒序', title: '最新记录优先显示' },
-                                  ],
-                                  deps.areAllTablesReversed(allTableNames) ? 'reverse' : 'normal',
-                                )}
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-desktop-nav-aligned">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">PC导航布局</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-desktop-nav-layout',
-                                  'PC导航布局',
-                                  [
-                                    { value: 'compact', label: '紧凑', title: '按内容宽度紧凑排列' },
-                                    { value: 'aligned', label: '对齐', title: '使用等宽网格对齐按钮' },
-                                  ],
-                                  config.desktopNavAligned === true ? 'aligned' : 'compact',
-                                )}
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-card-width">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">卡片宽度</span>
-                                </div>
-                                <div class="acu-stepper" data-id="cfg-width" data-min="200" data-max="500" data-step="10">
-                                    <button class="acu-stepper-btn acu-stepper-dec"><i class="fa-solid fa-minus"></i></button>
-                                    <span class="acu-stepper-value">${config.cardWidth}px</span>
-                                    <button class="acu-stepper-btn acu-stepper-inc"><i class="fa-solid fa-plus"></i></button>
-                                </div>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-per-page">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">每页卡片数</span>
-                                </div>
-                                <div class="acu-stepper" data-id="cfg-per-page" data-min="10" data-max="200" data-step="10">
-                                    <button class="acu-stepper-btn acu-stepper-dec"><i class="fa-solid fa-minus"></i></button>
-                                    <span class="acu-stepper-value">${config.itemsPerPage}</span>
-                                    <button class="acu-stepper-btn acu-stepper-inc"><i class="fa-solid fa-plus"></i></button>
-                                </div>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-grid-cols">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">移动端导航栏列数</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-grid-cols',
-                                  '移动端导航栏列数',
-                                  [
-                                    { value: '2', label: '2列' },
-                                    { value: '3', label: '3列' },
-                                    { value: '4', label: '4列' },
-                                    { value: 'auto', label: '自动' },
-                                  ],
-                                  String(config.gridColumns || 'auto'),
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- 面板与交互 -->
-                    <div class="acu-settings-group ${isGroupExpanded('position') ? '' : 'collapsed'}" data-group="position">
-                        <div class="acu-settings-group-title">
-                            <span class="acu-settings-group-title-main">
-                                <i class="fa-solid ${chevron('position')} acu-group-chevron"></i>
-                                <i class="fa-solid fa-arrows-alt"></i>
-                                <span>面板与交互</span>
-                            </span>
-                            ${deps.getTutorialButtonHtml('settingsPosition', '查看面板与交互教程', 'acu-settings-group-help')}
-                        </div>
-                        <div class="acu-settings-group-body">
-                            <div class="acu-setting-row" id="settings-row-panel-position">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">导航盘位置</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-position',
-                                  '导航盘位置',
-                                  [
-                                    { value: 'fixed', label: '悬浮底部' },
-                                    { value: 'embedded', label: '跟随消息' },
-                                    { value: 'viewport', label: '固定底部' },
-                                  ],
-                                  String(config.positionMode || 'fixed'),
-                                )}
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-action-position">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">功能按钮位置</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-action-pos',
-                                  '功能按钮位置',
-                                  [
-                                    { value: 'bottom', label: '底部' },
-                                    { value: 'top', label: '顶部' },
-                                  ],
-                                  config.actionsPosition === 'top' ? 'top' : 'bottom',
-                                )}
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-collapse-style">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">收起样式</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-col-style',
-                                  '收起样式',
-                                  [
-                                    { value: 'bar', label: '长条' },
-                                    { value: 'pill', label: '胶囊' },
-                                    { value: 'floating', label: '浮球' },
-                                  ],
-                                  deps.normalizeCollapseStyle(config.collapseStyle),
-                                )}
-                            </div>
-                            <div class="acu-setting-row acu-setting-dependent-row" id="cfg-col-align-row" style="${deps.normalizeCollapseStyle(config.collapseStyle) === 'pill' ? '' : 'display:none;'}">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">收起位置</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-col-align',
-                                  '收起位置',
-                                  [
-                                    { value: 'right', label: '靠右' },
-                                    { value: 'left', label: '靠左' },
-                                    { value: 'center', label: '居中' },
-                                  ],
-                                  String(config.collapseAlign || 'right'),
-                                )}
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-show-options">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">选项面板</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-option-panel',
-                                  '选项面板',
-                                  ENABLE_DISABLE_OPTIONS,
-                                  config.showOptionPanel !== false ? 'enabled' : 'disabled',
-                                )}
-                            </div>
-                            <div class="acu-setting-row" id="row-auto-send">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">点击选项后</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-option-click',
-                                  '点击选项后',
-                                  [
-                                    { value: 'send', label: '直接发送' },
-                                    { value: 'input', label: '填入输入框' },
-                                  ],
-                                  config.clickOptionToAutoSend !== false ? 'send' : 'input',
-                                )}
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-navigation-manager">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label">导航盘管理</span>
-                                </div>
-                                <button type="button" id="cfg-navigation-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 骰子系统预设 -->
-                    <div class="acu-settings-group ${isGroupExpanded('dicePresets') ? '' : 'collapsed'}" data-group="dicePresets">
-                        <div class="acu-settings-group-title">
-                            <span class="acu-settings-group-title-main">
-                                <i class="fa-solid ${chevron('dicePresets')} acu-group-chevron"></i>
-                                <i class="fa-solid fa-layer-group"></i>
-                                <span>骰子系统预设</span>
-                            </span>
-                            ${deps.getTutorialButtonHtml('settingsDicePresets', '查看骰子系统预设教程', 'acu-settings-group-help')}
-                        </div>
-                        <div class="acu-settings-group-body">
-                            <div class="acu-setting-row" id="settings-row-check-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-sliders"></i> 检定预设</span>
-                                </div>
-                                <button type="button" id="cfg-advanced-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-attribute-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-gem"></i> 属性预设</span>
-                                </div>
-                                <button type="button" id="cfg-attribute-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-action-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-wand-magic-sparkles"></i> 交互规则预设</span>
-                                </div>
-                                <button type="button" id="cfg-action-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-dashboard-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-chart-line"></i> 仪表盘预设</span>
-                                </div>
-                                <button type="button" id="cfg-dashboard-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-render-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-table-cells-large"></i> 渲染预设</span>
-                                </div>
-                                <button type="button" id="cfg-render-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-table-template-requirement-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-table-list"></i> 模板检验预设</span>
-                                </div>
-                                <button type="button" id="cfg-table-template-requirement-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-avatar-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-user-circle"></i> 角色头像预设</span>
-                                </div>
-                                <button type="button" id="cfg-avatar-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-custom-table-name-icon-manager">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-icons"></i> 图标预设</span>
-                                </div>
-                                <button type="button" id="cfg-custom-table-name-icon-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-validation-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-shield-halved"></i> 数据验证预设 ${deps.renderDeprecatedBadge(deps.DATA_VALIDATION_DEPRECATED_META.deprecatedReason)}</span>
-                                </div>
-                                <button type="button" id="cfg-validation-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-regex-preset">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-table-list"></i> 表格正则预设</span>
-                                </div>
-                                <button type="button" id="cfg-regex-preset-manage" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-cog"></i> 管理
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="acu-settings-manager-overlay" id="navigation-manager-dialog" role="dialog" aria-modal="true" aria-labelledby="navigation-manager-title" hidden>
-                        <div class="acu-settings-manager-backdrop" data-settings-manager-close="true"></div>
-                        <div class="acu-settings-manager-dialog">
-                            <div class="acu-panel-header acu-settings-manager-header">
-                                <div class="acu-avatar-title acu-settings-manager-title" id="navigation-manager-title">
-                                    <i class="fa-solid fa-table"></i> 导航盘管理
-                                </div>
-                                <button type="button" class="acu-settings-manager-close acu-btn-icon" title="关闭" aria-label="关闭导航盘管理">
-                                    <i class="fa-solid fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="acu-settings-manager-body">
-                                <div class="acu-table-manager-hint">
-                                    <i class="fa-solid fa-info-circle"></i> 点击眼睛切换显示，拖拽右侧把手调整顺序
-                                </div>
-                                <div class="acu-table-manager-list" id="table-manager-list">
-                                    ${tableManagerHtml}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="acu-settings-manager-overlay" id="validation-preset-manager-dialog" role="dialog" aria-modal="true" aria-labelledby="validation-preset-manager-title" hidden>
-                        <div class="acu-settings-manager-backdrop" data-settings-manager-close="true"></div>
-                        <div class="acu-settings-manager-dialog">
-                            <div class="acu-panel-header acu-settings-manager-header">
-                                <div class="acu-avatar-title acu-settings-manager-title" id="validation-preset-manager-title">
-                                    <i class="fa-solid fa-shield-halved"></i> 数据验证预设 ${deps.renderDeprecatedBadge(deps.DATA_VALIDATION_DEPRECATED_META.deprecatedReason)}
-                                </div>
-                                <button type="button" class="acu-settings-manager-close acu-btn-icon" title="关闭" aria-label="关闭数据验证预设管理">
-                                    <i class="fa-solid fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="acu-settings-manager-body">
-                            <div class="acu-setting-row acu-settings-manager-control-row" id="settings-row-validation-preset-select" style="margin-bottom:8px;">
-                                <span>选择数据验证预设</span>
-                                <select class="acu-setting-select" id="preset-select" style="flex:1;max-width:160px;">
-                                    ${deps.PresetManager.getAllPresets()
-                                      .map(
-                                        p =>
-                                          `<option value="${deps.escapeHtml(p.id)}" ${p.id === deps.PresetManager.getActivePreset()?.id ? 'selected' : ''}>${deps.escapeHtml(p.name)}${p.id === 'default' ? ` v${PRESET_FORMAT_VERSION}` : p.builtin ? ' (内置)' : ''}</option>`,
-                                      )
-                                      .join('')}
-                                </select>
-                            </div>
-                            <!-- 预设操作按钮 -->
-                            <div id="settings-row-validation-preset-actions" style="display:flex;gap:6px;margin-bottom:10px;">
-                                <button class="acu-action-btn" id="btn-preset-dup" title="复制预设" style="flex:1;height:28px;"><i class="fa-solid fa-copy"></i></button>
-                                <button class="acu-action-btn" id="btn-preset-new" title="新建预设" style="flex:1;height:28px;"><i class="fa-solid fa-plus"></i></button>
-                                <button class="acu-action-btn" id="btn-preset-del" title="删除预设" style="flex:1;height:28px;"><i class="fa-solid fa-trash"></i></button>
-                                <button class="acu-action-btn" id="btn-preset-export" title="导出" style="flex:1;height:28px;"><i class="fa-solid fa-file-export"></i></button>
-                                <button class="acu-action-btn" id="btn-preset-import" title="导入" style="flex:1;height:28px;"><i class="fa-solid fa-file-import"></i></button>
-                                <button class="acu-action-btn" id="btn-preset-reset" title="恢复默认预设规则" style="flex:1;height:28px;"><i class="fa-solid fa-rotate-left"></i></button>
-                            </div>
-                            <div class="acu-validation-hint" style="font-size:11px;color:var(--acu-text-sub);margin-bottom:8px;padding:0 4px;">
-                                <i class="fa-solid fa-info-circle"></i> 验证规则用于检测数据合法性，<i class="fa-solid fa-shield-halved"></i> 表示启用拦截
-                            </div>
-                            <div class="acu-validation-rules-list" id="validation-rules-list">
-                                ${deps.ValidationRuleManager.getAllRules()
-                                  .map(rule => {
-                                    const typeInfo = RULE_TYPE_INFO[rule.ruleType] || {
-                                      name: rule.ruleType,
-                                      icon: 'fa-question',
-                                    };
-                                    const isTableRule = typeInfo.scope === 'table';
-                                    const hasIntercept = rule.intercept;
-                                    return `
-                                    <div class="acu-validation-rule-item ${rule.enabled ? '' : 'disabled'}" data-rule-id="${deps.escapeHtml(rule.id)}">
-                                        <div class="acu-rule-type-icon" title="${deps.escapeHtml(typeInfo.name)}${isTableRule ? ' (表级)' : ''}">
-                                            <i class="fa-solid ${typeInfo.icon}"></i>
-                                        </div>
-                                        <div class="acu-rule-info">
-                                            <div class="acu-rule-name">${deps.escapeHtml(rule.name)}</div>
-                                            <div class="acu-rule-target">${deps.escapeHtml(rule.targetTable)}${rule.targetColumn ? '.' + deps.escapeHtml(rule.targetColumn) : isTableRule ? ' (整表)' : ''}</div>
-                                        </div>
-                                        <div class="acu-rule-intercept ${hasIntercept ? 'active' : ''}" data-rule-id="${deps.escapeHtml(rule.id)}" title="${hasIntercept ? '点击关闭拦截提示' : '点击启用拦截提示（违反时标注）'}"><i class="fa-solid fa-shield-halved"></i></div>
-                                        <button type="button" class="acu-rule-action acu-rule-edit" data-rule-id="${deps.escapeHtml(rule.id)}" title="编辑此规则" aria-label="编辑此规则"><i class="fa-solid fa-pen"></i></button>
-                                        <div class="acu-rule-toggle ${rule.enabled ? 'active' : ''}" title="点击切换启用/禁用">
-                                            <i class="fa-solid ${rule.enabled ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
-                                        </div>
-                                        <button type="button" class="acu-rule-action acu-rule-delete" data-rule-id="${deps.escapeHtml(rule.id)}" title="删除此规则" aria-label="删除此规则"><i class="fa-solid fa-trash"></i></button>
-                                    </div>
-                                `;
-                                  })
-                                  .join('')}
-                            </div>
-                            <button class="acu-add-rule-btn" id="btn-add-validation-rule">
-                                <i class="fa-solid fa-plus"></i> 新建数据验证规则
-                            </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="acu-settings-manager-overlay" id="regex-preset-manager-dialog" role="dialog" aria-modal="true" aria-labelledby="regex-preset-manager-title" hidden>
-                        <div class="acu-settings-manager-backdrop" data-settings-manager-close="true"></div>
-                        <div class="acu-settings-manager-dialog">
-                            <div class="acu-panel-header acu-settings-manager-header">
-                                <div class="acu-avatar-title acu-settings-manager-title" id="regex-preset-manager-title">
-                                    <i class="fa-solid fa-table-list"></i> 表格正则预设
-                                </div>
-                                <button type="button" class="acu-settings-manager-close acu-btn-icon" title="关闭" aria-label="关闭表格正则预设管理">
-                                    <i class="fa-solid fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="acu-settings-manager-body">
-                            <div class="acu-setting-row acu-settings-manager-control-row" id="settings-row-regex-preset-select" style="margin-bottom:8px;">
-                                <span>选择表格正则预设</span>
-                                <select class="acu-setting-select" id="regex-preset-select" style="flex:1;max-width:160px;">
-                                    ${deps.RegexPresetManager.getAllPresets()
-                                      .map(
-                                        p =>
-                                          `<option value="${deps.escapeHtml(p.id)}" ${p.id === deps.RegexPresetManager.getActivePreset()?.id ? 'selected' : ''}>${deps.escapeHtml(p.name)}${p.id === 'regex_default' ? ` v${PRESET_FORMAT_VERSION}` : ''}</option>`,
-                                      )
-                                      .join('')}
-                                </select>
-                            </div>
-                            <!-- 预设操作按钮 -->
-                            <div id="settings-row-regex-preset-actions" style="display:flex;gap:6px;margin-bottom:10px;">
-                                <button class="acu-action-btn" id="btn-regex-preset-dup" title="复制预设" style="flex:1;height:28px;"><i class="fa-solid fa-copy"></i></button>
-                                <button class="acu-action-btn" id="btn-regex-preset-new" title="新建预设" style="flex:1;height:28px;"><i class="fa-solid fa-plus"></i></button>
-                                <button class="acu-action-btn" id="btn-regex-preset-del" title="删除预设" style="flex:1;height:28px;"><i class="fa-solid fa-trash"></i></button>
-                                <button class="acu-action-btn" id="btn-regex-preset-export" title="导出" style="flex:1;height:28px;"><i class="fa-solid fa-file-export"></i></button>
-                                <button class="acu-action-btn" id="btn-regex-preset-import" title="导入" style="flex:1;height:28px;"><i class="fa-solid fa-file-import"></i></button>
-                                <button class="acu-action-btn" id="btn-regex-preset-reset" title="恢复默认预设" style="flex:1;height:28px;"><i class="fa-solid fa-rotate-left"></i></button>
-                            </div>
-                            <div class="acu-validation-hint" style="font-size:11px;color:var(--acu-text-sub);margin-bottom:8px;padding:0 4px;">
-                                <i class="fa-solid fa-info-circle"></i> 表格正则规则用于自动修改数据库表格内容
-                            </div>
-                            <!-- 规则列表 -->
-                            <div class="acu-validation-rules-list" id="regex-rules-list">
-                                ${deps.RegexTransformationManager.getAllRules()
-                                  .map(rule => {
-                                    const scopeIcon =
-                                      rule.scope.type === 'global'
-                                        ? 'fa-globe'
-                                        : rule.scope.type === 'table'
-                                          ? 'fa-table'
-                                          : 'fa-columns';
-                                    const scopeText =
-                                      rule.scope.type === 'global'
-                                        ? '全局'
-                                        : rule.scope.type === 'table'
-                                          ? rule.scope.tableNames?.join(',')
-                                          : `${rule.scope.tableNames?.join(',')}.${rule.scope.columnNames?.join(',')}`;
-                                    return `
-                                    <div class="acu-validation-rule-item ${rule.enabled ? '' : 'disabled'}" data-rule-id="${deps.escapeHtml(rule.id)}">
-                                        <div class="acu-rule-type-icon" title="作用域: ${deps.escapeHtml(rule.scope.type)}">
-                                            <i class="fa-solid ${scopeIcon}"></i>
-                                        </div>
-                                        <div class="acu-rule-info">
-                                            <div class="acu-rule-name">${deps.escapeHtml(rule.name)}</div>
-                                            <div class="acu-rule-target" style="font-size:10px;">${deps.escapeHtml(scopeText)} | ${deps.escapeHtml(rule.operation)}</div>
-                                        </div>
-                                        <button type="button" class="acu-rule-action acu-rule-edit" data-rule-id="${deps.escapeHtml(rule.id)}" title="编辑此规则" aria-label="编辑此规则"><i class="fa-solid fa-pen"></i></button>
-                                        <div class="acu-rule-toggle ${rule.enabled ? 'active' : ''}" title="点击切换启用/禁用">
-                                            <i class="fa-solid ${rule.enabled ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
-                                        </div>
-                                        <button type="button" class="acu-rule-action acu-rule-delete" data-rule-id="${deps.escapeHtml(rule.id)}" title="删除此规则" aria-label="删除此规则"><i class="fa-solid fa-trash"></i></button>
-                                    </div>
-                                `;
-                                  })
-                                  .join('')}
-                            </div>
-                            <div style="display:flex;gap:8px;margin-top:8px;">
-                                <button class="acu-add-rule-btn" id="btn-add-regex-rule" style="flex:1;">
-                                    <i class="fa-solid fa-plus"></i> 新建验证规则
-                                </button>
-                                <button class="acu-add-rule-btn" id="btn-import-tavern-regex" style="flex:1;">
-                                    <i class="fa-solid fa-file-import"></i> 导入酒馆正则
-                                </button>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 高级设置 -->
-                    <div class="acu-settings-group ${isGroupExpanded('advanced') ? '' : 'collapsed'}" data-group="advanced">
-                        <div class="acu-settings-group-title">
-                            <span class="acu-settings-group-title-main">
-                                <i class="fa-solid ${chevron('advanced')} acu-group-chevron"></i>
-                                <i class="fa-solid fa-sliders-h"></i>
-                                <span>高级设置</span>
-                            </span>
-                            ${deps.getTutorialButtonHtml('settingsAdvanced', '查看高级设置教程', 'acu-settings-group-help')}
-                        </div>
-                        <div class="acu-settings-group-body">
-                            <div class="acu-setting-row" id="settings-row-template-inspection">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-stethoscope"></i> 检验表格模板</span>
-                                </div>
-                                <button type="button" id="cfg-template-inspection" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-magnifying-glass-chart"></i> 检验
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-debug-console">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-bug"></i> Debug控制台</span>
-                                </div>
-                                <button type="button" id="btn-open-debug-console" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-terminal"></i> 打开
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-config-backup">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-layer-group"></i> 配置方案与备份</span>
-                                </div>
-                                <button type="button" id="cfg-config-backup-restore" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-arrows-rotate"></i> 打开
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-clear-cache">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-trash-can"></i> 清空本地缓存</span>
-                                </div>
-                                <button type="button" id="cfg-clear-local-cache" class="acu-setting-action-btn acu-settings-compact-action">
-                                    <i class="fa-solid fa-eraser"></i> 清空
-                                </button>
-                            </div>
-                            <div class="acu-setting-row" id="settings-row-db-toast-mute">
-                                <div class="acu-setting-info">
-                                    <span class="acu-setting-label"><i class="fa-solid fa-bell"></i> 数据库弹窗</span>
-                                </div>
-                                ${renderSettingSegmented(
-                                  'cfg-db-toast',
-                                  '数据库弹窗',
-                                  ENABLE_DISABLE_OPTIONS,
-                                  config.muteDatabaseToasts ? 'disabled' : 'enabled',
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                </div><!-- 关闭 .acu-settings-body -->
-            </div>
-        </div>
-    `);
+    const dialog = $(buildSettingsDialogHtml({ deps, config, currentThemeClass, allTableNames, chevron, isGroupExpanded, renderSettingSegmented, tableManagerHtml, ENABLE_DISABLE_OPTIONS, DIALOGUE_INDENT_STRATEGY_OPTIONS, RULE_TYPE_INFO, PRESET_FORMAT_VERSION, SCRIPT_VERSION, normalizeDialogueIndentStrategy }));
     $('body').append(dialog);
     // 二级管理弹窗不能留在设置面板的滚动内容里，否则部分移动端浏览器会把 fixed 定位裁进父弹窗。
     dialog.find('.acu-settings-manager-overlay').appendTo(dialog);
 
     // === 分组折叠交互（带动画） ===
-    dialog.find('.acu-settings-group-title').on('click', function () {
+    dialog.find('.acu-settings-group-title').on('click', function (this: any) {
       const $group = $(this).closest('.acu-settings-group');
       const $body = $group.find('.acu-settings-group-body');
 
@@ -808,20 +158,20 @@ export function createShowSettingsModal(deps: any) {
 
         $body.addClass('acu-animating').show();
         const targetHeight = $body.prop('scrollHeight');
-        $body.css('height', 0).animate({ height: targetHeight }, 180, function () {
+        $body.css('height', 0).animate({ height: targetHeight }, 180, function (this: any) {
           $(this).css('height', '').removeClass('acu-animating');
         });
       } else {
         // 收起
         $group.addClass('collapsed');
         $chevron.removeClass('fa-chevron-down').addClass('fa-chevron-right');
-        expanded = expanded.filter(id => id !== groupId);
+        expanded = expanded.filter((id: any) => id !== groupId);
 
         const currentHeight = $body.outerHeight();
         $body
           .addClass('acu-animating')
           .css('height', currentHeight)
-          .animate({ height: 0 }, 180, function () {
+          .animate({ height: 0 }, 180, function (this: any) {
             $(this).hide().css('height', '').removeClass('acu-animating');
           });
       }
@@ -831,24 +181,24 @@ export function createShowSettingsModal(deps: any) {
 
     // === 设置项事件绑定 ===
     // 主题
-    dialog.find('#cfg-theme').on('change', function () {
+    dialog.find('#cfg-theme').on('change', function (this: any) {
       const newTheme = $(this).val();
       deps.saveConfig({ theme: newTheme });
-      dialog.removeClass(deps.THEMES.map(t => `acu-theme-${t.id}`).join(' ')).addClass(`acu-theme-${newTheme}`);
+      dialog.removeClass(deps.THEMES.map((t: any) => `acu-theme-${t.id}`).join(' ')).addClass(`acu-theme-${newTheme}`);
       dialog
         .find('.acu-edit-dialog')
-        .removeClass(deps.THEMES.map(t => `acu-theme-${t.id}`).join(' '))
+        .removeClass(deps.THEMES.map((t: any) => `acu-theme-${t.id}`).join(' '))
         .addClass(`acu-theme-${newTheme}`);
       deps.scheduleDialogueIndentRender();
     });
 
     // 字体
-    dialog.find('#cfg-font-family').on('change', function () {
+    dialog.find('#cfg-font-family').on('change', function (this: any) {
       deps.saveConfig({ fontFamily: $(this).val() });
     });
 
     // 管理检定预设按钮
-    dialog.find('#cfg-advanced-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-advanced-preset-manage').on('click', function (e: any) {
       e.stopPropagation();
       dialog.remove();
       deps.setIsSettingsOpen(false);
@@ -856,7 +206,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理属性预设按钮
-    dialog.find('#cfg-attribute-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-attribute-preset-manage').on('click', function (e: any) {
       e.stopPropagation();
       dialog.remove();
       deps.setIsSettingsOpen(false);
@@ -864,7 +214,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理交互规则预设按钮
-    dialog.find('#cfg-action-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-action-preset-manage').on('click', function (e: any) {
       e.stopPropagation();
       dialog.remove();
       deps.setIsSettingsOpen(false);
@@ -872,7 +222,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理仪表盘预设按钮
-    dialog.find('#cfg-dashboard-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-dashboard-preset-manage').on('click', function (e: any) {
       e.stopPropagation();
       dialog.remove();
       deps.setIsSettingsOpen(false);
@@ -880,20 +230,20 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 检验当前聊天表格模板
-    dialog.find('#cfg-template-inspection').on('click', function (e) {
+    dialog.find('#cfg-template-inspection').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       deps.showTemplateInspectionModal();
     });
 
-    dialog.find('#cfg-custom-table-name-icon-manage').on('click', function (e) {
+    dialog.find('#cfg-custom-table-name-icon-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       deps.showCustomTableNameIconManager();
     });
 
     // 管理渲染预设按钮
-    dialog.find('#cfg-render-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-render-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       dialog.remove();
@@ -902,7 +252,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理模板检验预设按钮
-    dialog.find('#cfg-table-template-requirement-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-table-template-requirement-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       dialog.remove();
@@ -911,7 +261,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // 管理角色头像预设按钮
-    dialog.find('#cfg-avatar-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-avatar-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       let nodeArr: AvatarManagerNode[] = [];
@@ -938,35 +288,35 @@ export function createShowSettingsModal(deps: any) {
       $manager.prop('hidden', true).attr('aria-hidden', 'true');
     };
 
-    dialog.find('#cfg-validation-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-validation-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       openSettingsManagerDialog('#validation-preset-manager-dialog');
     });
 
-    dialog.find('#cfg-regex-preset-manage').on('click', function (e) {
+    dialog.find('#cfg-regex-preset-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       openSettingsManagerDialog('#regex-preset-manager-dialog');
     });
 
-    dialog.find('#cfg-navigation-manage').on('click', function (e) {
+    dialog.find('#cfg-navigation-manage').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       openSettingsManagerDialog('#navigation-manager-dialog');
     });
 
-    dialog.on('click', '.acu-settings-manager-close, .acu-settings-manager-backdrop', function (e) {
+    dialog.on('click', '.acu-settings-manager-close, .acu-settings-manager-backdrop', function (this: any, e: any) {
       e.preventDefault();
       e.stopPropagation();
       closeSettingsManagerDialog($(this).closest('.acu-settings-manager-overlay') as JQuery<HTMLElement>);
     });
 
-    dialog.on('click', '.acu-settings-manager-dialog', function (e) {
+    dialog.on('click', '.acu-settings-manager-dialog', function (e: any) {
       e.stopPropagation();
     });
 
-    dialog.on('keydown', function (e) {
+    dialog.on('keydown', function (e: any) {
       if (e.key !== 'Escape') return;
       const $visibleManager = dialog.find('.acu-settings-manager-overlay:not([hidden])').last();
       if (!$visibleManager.length) return;
@@ -975,7 +325,7 @@ export function createShowSettingsModal(deps: any) {
       closeSettingsManagerDialog($visibleManager as JQuery<HTMLElement>);
     });
 
-    dialog.on('click', '.acu-setting-segmented-option', function (e) {
+    dialog.on('click', '.acu-setting-segmented-option', function (this: any, e: any) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -1069,7 +419,7 @@ export function createShowSettingsModal(deps: any) {
       }
     });
     // === 导航盘管理：点击切换显示/隐藏 ===
-    dialog.find('.acu-table-item-check').on('click', function (e) {
+    dialog.find('.acu-table-item-check').on('click', function (this: any, e: any) {
       e.stopPropagation();
       const $item = $(this).closest('.acu-table-manager-item');
       const tableName = $item.data('table-name');
@@ -1078,7 +428,7 @@ export function createShowSettingsModal(deps: any) {
 
       if (hiddenList.includes(tableName)) {
         // 显示
-        hiddenList = hiddenList.filter(n => n !== tableName);
+        hiddenList = hiddenList.filter((n: any) => n !== tableName);
         $item.removeClass('hidden-table');
         $icon.removeClass('fa-eye-slash').addClass('fa-eye');
       } else {
@@ -1099,19 +449,19 @@ export function createShowSettingsModal(deps: any) {
       itemSelector: '.acu-table-manager-item',
       handleSelector: '.acu-table-item-handle',
       cancelSelector: '.acu-table-item-check',
-      getItemId: item => {
+      getItemId: (item: any) => {
         const tableName = $(item).data('table-name');
         if (typeof tableName === 'string') return tableName;
         if (tableName !== undefined && tableName !== null) return String(tableName);
         return null;
       },
-      onOrderChange: newOrder => {
+      onOrderChange: (newOrder: any) => {
         deps.saveTableOrder(newOrder);
       },
     });
 
     // === Stepper 步进器事件 ===
-    dialog.find('.acu-stepper').each(function () {
+    dialog.find('.acu-stepper').each(function (this: any) {
       const $stepper = $(this);
       const id = $stepper.data('id');
       const min = parseInt($stepper.data('min'));
@@ -1119,7 +469,7 @@ export function createShowSettingsModal(deps: any) {
       const step = parseInt($stepper.data('step'));
       const $value = $stepper.find('.acu-stepper-value');
 
-      const updateValue = newVal => {
+      const updateValue = (newVal: any) => {
         newVal = Math.max(min, Math.min(max, newVal));
         const unit = id === 'cfg-per-page' ? '' : 'px';
         $value.text(newVal + unit);
@@ -1162,7 +512,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 验证规则：切换启用/禁用（使用事件委托支持动态元素）===
-    dialog.on('click', '.acu-rule-toggle', function (e) {
+    dialog.on('click', '.acu-rule-toggle', function (this: any, e: any) {
       e.stopPropagation();
       const $toggle = $(this);
       const $item = $toggle.closest('.acu-validation-rule-item');
@@ -1186,7 +536,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 验证规则：编辑规则 ===
-    dialog.on('click', '#validation-rules-list .acu-rule-edit', function (e) {
+    dialog.on('click', '#validation-rules-list .acu-rule-edit', function (this: any, e: any) {
       e.stopPropagation();
       const ruleId = $(this).data('rule-id');
       const rule = deps.ValidationRuleManager.getRule(ruleId);
@@ -1197,7 +547,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 验证规则：删除规则（使用事件委托）===
-    dialog.on('click', '#validation-rules-list .acu-rule-delete', async function (e) {
+    dialog.on('click', '#validation-rules-list .acu-rule-delete', async function (this: any, e: any) {
       e.stopPropagation();
       const ruleId = $(this).data('rule-id');
       const $item = $(this).closest('.acu-validation-rule-item');
@@ -1214,7 +564,7 @@ export function createShowSettingsModal(deps: any) {
       });
       if (confirmed) {
         if (deps.ValidationRuleManager.removeCustomRule(ruleId)) {
-          $item.fadeOut(200, function () {
+          $item.fadeOut(200, function (this: any) {
             $(this).remove();
           });
         }
@@ -1222,7 +572,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 验证规则：切换拦截状态（使用事件委托）===
-    dialog.on('click', '.acu-rule-intercept', function (e) {
+    dialog.on('click', '.acu-rule-intercept', function (this: any, e: any) {
       e.stopPropagation();
       const $btn = $(this);
       const ruleId = $btn.data('rule-id');
@@ -1242,8 +592,8 @@ export function createShowSettingsModal(deps: any) {
       deps.ValidationRuleManager.clearCache();
       const rules = deps.ValidationRuleManager.getAllRules();
       let html = '';
-      rules.forEach(rule => {
-        const typeInfo = RULE_TYPE_INFO[rule.ruleType] || { name: rule.ruleType, icon: 'fa-question' };
+      rules.forEach((rule: any) => {
+        const typeInfo = (RULE_TYPE_INFO as Record<string, any>)[rule.ruleType] || { name: rule.ruleType, icon: 'fa-question' };
         const isTableRule = typeInfo.scope === 'table';
         const hasIntercept = rule.intercept;
         html += `
@@ -1267,7 +617,7 @@ export function createShowSettingsModal(deps: any) {
     };
 
     // 切换预设
-    dialog.find('#preset-select').on('change', function () {
+    dialog.find('#preset-select').on('change', function (this: any) {
       if (deps.PresetManager.setActivePreset($(this).val())) {
         refreshPresetUI();
       }
@@ -1379,13 +729,13 @@ export function createShowSettingsModal(deps: any) {
             return;
           }
 
-          const parsedPreset = deps.isRecordValue(parsedData.preset) ? parsedData.preset : null;
+          const parsedPreset = (deps.isRecordValue(parsedData.preset) ? parsedData.preset : null) as Record<string, any> | null;
           const importingName =
             typeof parsedPreset?.name === 'string' && parsedPreset.name.trim()
               ? parsedPreset.name.trim()
               : '导入的预设';
           const existingPresets = deps.PresetManager.getAllPresets();
-          const existingNames = existingPresets.map(p => p.name);
+          const existingNames = existingPresets.map((p: any) => p.name);
           const hasConflict = existingNames.includes(importingName);
 
           // 执行导入的函数
@@ -1401,7 +751,7 @@ export function createShowSettingsModal(deps: any) {
 
             // 如果是覆盖模式且存在同名预设，先删除旧预设
             if (overwrite && hasConflict) {
-              const existingPreset = existingPresets.find(p => p.name === importingName);
+              const existingPreset = existingPresets.find((p: any) => p.name === importingName);
               if (existingPreset && existingPreset.id !== 'default') {
                 deps.PresetManager.deletePreset(existingPreset.id);
                 dialog.find(`#preset-select option[value="${existingPreset.id}"]`).remove();
@@ -1449,7 +799,7 @@ export function createShowSettingsModal(deps: any) {
               onOverwrite: () => {
                 void doImport(true);
               },
-              onRename: newName => {
+              onRename: (newName: any) => {
                 void doImport(false, newName);
               },
               onCancel: () => {},
@@ -1488,12 +838,12 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 表格正则规则:切换启用/禁用 ===
-    dialog.on('click', '#regex-rules-list .acu-rule-toggle', function () {
+    dialog.on('click', '#regex-rules-list .acu-rule-toggle', function (this: any) {
       const $item = $(this).closest('.acu-validation-rule-item');
       const ruleId = $item.data('rule-id');
-      const currentState = deps.RegexTransformationManager.getAllRules().find(r => r.id === ruleId)?.enabled;
+      const currentState = deps.RegexTransformationManager.getAllRules().find((r: any) => r.id === ruleId)?.enabled;
       const newState = !currentState;
-      const rule = deps.RegexTransformationManager.getRule(ruleId);
+      const rule = deps.RegexTransformationManager.getRule(ruleId); void rule;
 
       deps.RegexTransformationManager.toggleRuleEnabled(ruleId, newState);
 
@@ -1506,10 +856,10 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 表格正则规则：编辑规则 ===
-    dialog.on('click', '#regex-rules-list .acu-rule-edit', function () {
+    dialog.on('click', '#regex-rules-list .acu-rule-edit', function (this: any) {
       const $item = $(this).closest('.acu-validation-rule-item');
       const ruleId = $item.data('rule-id');
-      const rule = deps.RegexTransformationManager.getRule(ruleId);
+      const rule = deps.RegexTransformationManager.getRule(ruleId); void rule;
       if (!rule) return;
 
       // 打开编辑弹窗
@@ -1517,10 +867,10 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 表格正则规则:删除规则 ===
-    dialog.on('click', '#regex-rules-list .acu-rule-delete', async function () {
+    dialog.on('click', '#regex-rules-list .acu-rule-delete', async function (this: any) {
       const $item = $(this).closest('.acu-validation-rule-item');
       const ruleId = $item.data('rule-id');
-      const rule = deps.RegexTransformationManager.getRule(ruleId);
+      const rule = deps.RegexTransformationManager.getRule(ruleId); void rule;
       if (!rule) return;
 
       const confirmed = await deps.showDiceSystemConfirmDialog({
@@ -1539,7 +889,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 表格正则预设:切换预设 ===
-    dialog.find('#regex-preset-select').on('change', function () {
+    dialog.find('#regex-preset-select').on('change', function (this: any) {
       const presetId = $(this).val();
       deps.RegexPresetManager.setActivePreset(String(presetId));
 
@@ -1666,7 +1016,7 @@ export function createShowSettingsModal(deps: any) {
           const importingName =
             typeof parsedData.name === 'string' && parsedData.name.trim() ? parsedData.name.trim() : '导入的预设';
           const existingPresets = deps.RegexPresetManager.getAllPresets();
-          const existingNames = existingPresets.map(p => p.name);
+          const existingNames = existingPresets.map((p: any) => p.name);
           const hasConflict = existingNames.includes(importingName);
 
           // 执行导入的函数
@@ -1682,7 +1032,7 @@ export function createShowSettingsModal(deps: any) {
 
             // 如果是覆盖模式且存在同名预设，先删除旧预设
             if (overwrite && hasConflict) {
-              const existingPreset = existingPresets.find(p => p.name === importingName);
+              const existingPreset = existingPresets.find((p: any) => p.name === importingName);
               if (existingPreset) {
                 // 检查是否不是最后一个预设
                 if (existingPresets.length > 1) {
@@ -1717,7 +1067,7 @@ export function createShowSettingsModal(deps: any) {
               presetType: '表格正则',
               existingNames,
               onOverwrite: () => doImport(true),
-              onRename: newName => doImport(false, newName),
+              onRename: (newName: any) => doImport(false, newName),
               onCancel: () => {},
             });
           } else {
@@ -1745,11 +1095,11 @@ export function createShowSettingsModal(deps: any) {
 
       // 重置默认预设的规则为内置规则
       const presets = deps.RegexPresetManager.getAllPresets();
-      let defaultPreset = presets.find(p => p.id === 'regex_default');
+      let defaultPreset = presets.find((p: any) => p.id === 'regex_default');
 
       if (defaultPreset) {
         // 用内置规则覆盖默认预设
-        defaultPreset.rules = JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map(r => ({ ...r, builtin: true }))));
+        defaultPreset.rules = JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map((r: any) => ({ ...r, builtin: true }))));
         defaultPreset.version = PRESET_FORMAT_VERSION;
         defaultPreset.updatedAt = Date.now();
       } else {
@@ -1759,7 +1109,7 @@ export function createShowSettingsModal(deps: any) {
           name: '默认预设',
           description: '系统默认的表格正则预设',
           version: PRESET_FORMAT_VERSION,
-          rules: JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map(r => ({ ...r, builtin: true })))),
+          rules: JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map((r: any) => ({ ...r, builtin: true })))),
           createdAt: Date.now(),
           updatedAt: Date.now(),
         };
@@ -1773,14 +1123,14 @@ export function createShowSettingsModal(deps: any) {
       // 强制用内置规则覆盖规则存储
       Store.set(
         deps.STORAGE_KEY_REGEX_RULES,
-        JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map(r => ({ ...r, builtin: true })))),
+        JSON.parse(JSON.stringify(deps.BUILTIN_REGEX_RULES.map((r: any) => ({ ...r, builtin: true })))),
       );
       deps.RegexTransformationManager.clearCache();
 
       // 刷新UI - 重新渲染下拉框选项
       const $presetSelect = dialog.find('#regex-preset-select');
       $presetSelect.empty();
-      deps.RegexPresetManager.getAllPresets().forEach(p => {
+      deps.RegexPresetManager.getAllPresets().forEach((p: any) => {
         const versionSuffix = p.id === 'regex_default' ? ` v${PRESET_FORMAT_VERSION}` : '';
         $presetSelect.append(`<option value="${deps.escapeHtml(p.id)}">${deps.escapeHtml(p.name)}${versionSuffix}</option>`);
       });
@@ -1820,7 +1170,7 @@ export function createShowSettingsModal(deps: any) {
           const tavernRegexList: TavernRegex[] = Array.isArray(parsed) ? parsed : [parsed];
 
           // 验证格式：必须有 scriptName 和 findRegex
-          if (!tavernRegexList.every(r => r.scriptName && r.findRegex)) {
+          if (!tavernRegexList.every(r => (r as any).scriptName && (r as any).findRegex)) {
             showActionableErrorToast('不是有效的酒馆正则格式（需要 scriptName 和 findRegex 字段）', {
               suggestion: '请确认导入文件是 SillyTavern 正则导出 JSON，并包含 scriptName 与 findRegex 字段。',
             });
@@ -1828,7 +1178,7 @@ export function createShowSettingsModal(deps: any) {
           }
 
           const existingRules = deps.RegexTransformationManager.getAllRules();
-          const existingNames = existingRules.map(r => r.name);
+          const existingNames = existingRules.map((r: any) => r.name);
 
           let importedCount = 0;
           let skippedCount = 0;
@@ -1858,14 +1208,14 @@ export function createShowSettingsModal(deps: any) {
                 existingNames,
                 onOverwrite: () => {
                   // 删除旧规则
-                  const oldRule = deps.RegexTransformationManager.getAllRules().find(r => r.name === convertedRule.name);
+                  const oldRule = deps.RegexTransformationManager.getAllRules().find((r: any) => r.name === convertedRule.name);
                   if (oldRule) deps.RegexTransformationManager.removeRule(oldRule.id);
                   deps.RegexTransformationManager.addCustomRule(convertedRule);
                   existingNames.push(convertedRule.name);
                   importedCount++;
                   processNext(index + 1);
                 },
-                onRename: newName => {
+                onRename: (newName: any) => {
                   convertedRule.name = newName;
                   convertedRule.id = `tavern_import_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                   deps.RegexTransformationManager.addCustomRule(convertedRule);
@@ -1902,7 +1252,7 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === Debug控制台 ===
-    dialog.find('#btn-open-debug-console').on('click', function (e) {
+    dialog.find('#btn-open-debug-console').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       dialog.remove();
@@ -1911,14 +1261,14 @@ export function createShowSettingsModal(deps: any) {
     });
 
     // === 配置方案与备份 ===
-    dialog.find('#cfg-config-backup-restore').on('click', function (e) {
+    dialog.find('#cfg-config-backup-restore').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
       deps.showDiceConfigBackupDialog();
     });
 
     // === 清空本地缓存 ===
-    dialog.find('#cfg-clear-local-cache').on('click', function (e) {
+    dialog.find('#cfg-clear-local-cache').on('click', function (e: any) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -1952,7 +1302,7 @@ export function createShowSettingsModal(deps: any) {
     dialog.on('click', '#dlg-close-x, .acu-settings-header .acu-close-btn', closeDialog);
 
     // 手动更新按钮点击事件
-    dialog.on('click', '#acu-manual-update-btn', function (e) {
+    dialog.on('click', '#acu-manual-update-btn', function (e: any) {
       e.stopPropagation();
       deps.showManualUpdateDialog();
     });

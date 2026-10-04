@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * debug-console-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -135,7 +134,7 @@ export function createShowDebugConsoleModal(deps: any) {
     updateCounts();
 
     // Console抓取开关
-    dialog.find('#debug-console-capture-toggle').on('change', function () {
+    dialog.find('#debug-console-capture-toggle').on('change', function (this: any) {
       const checked = $(this).is(':checked');
       const $status = dialog.find('#debug-console-capture-status');
       if (checked) {
@@ -150,7 +149,7 @@ export function createShowDebugConsoleModal(deps: any) {
     });
 
     // 过滤选项变化
-    dialog.find('.acu-debug-filter-btn').on('click', function () {
+    dialog.find('.acu-debug-filter-btn').on('click', function (this: any) {
       const type = $(this).data('filter-type');
       const isActive = $(this).hasClass('active');
       const newState = !isActive;
@@ -261,7 +260,7 @@ export function createShowDebugConsoleModal(deps: any) {
     });
 
     // 关闭按钮
-    dialog.find('#debug-console-close, .acu-edit-overlay').on('click', function (e) {
+    dialog.find('#debug-console-close, .acu-edit-overlay').on('click', function (this: any, e: any) {
       if (e.target === this || $(e.target).closest('.acu-close-btn').length) {
         dialog.remove();
       }

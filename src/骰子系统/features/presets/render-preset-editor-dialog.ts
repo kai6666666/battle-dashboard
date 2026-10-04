@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * render-preset-editor-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -114,7 +113,7 @@ export function createShowRenderPresetEditor(deps: any) {
       deps.validateJsoncEditorConfig({
         text: String($jsonTextarea.val() || ''),
         parse: deps.parseRenderPresetJson,
-        successMessage: parsed => {
+        successMessage: (parsed: any) => {
           const aliasCount = Object.keys(parsed.rules.columnDisplay.aliases).length;
           const excludedCount = parsed.rules.quickCheck.excludeKeywords.length;
           const dialogueBlacklistCount = parsed.rules.dialogueIndent.blacklist.length;

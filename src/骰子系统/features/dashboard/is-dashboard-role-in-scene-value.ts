@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * is-dashboard-role-in-scene-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createIsDashboardRoleInSceneValue(deps: any) {
-  const isDashboardRoleInSceneValue = (value, header = ''): boolean => {
+export function createIsDashboardRoleInSceneValue(_deps: any) {
+  const isDashboardRoleInSceneValue = (value: any, header = ''): boolean => {
     const normalized = String(value || '')
       .trim()
       .toLowerCase();

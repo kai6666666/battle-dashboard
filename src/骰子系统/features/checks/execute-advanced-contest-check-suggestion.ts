@@ -1,11 +1,11 @@
-// @ts-nocheck
 /**
  * execute-advanced-contest-check-suggestion.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type CheckSuggestionParsedCommand = Record<string, any>;
 export function createExecuteAdvancedContestCheckSuggestion(deps: any) {
   const executeAdvancedContestCheckSuggestion = (
-    command: Extract<CheckSuggestionParsedCommand, { kind: 'contest' }>,
+    command: CheckSuggestionParsedCommand,
   ) => {
     deps.refreshNameAliasesForCheckSuggestion();
     const presetId = command.rawParams.preset || null;
@@ -123,7 +123,7 @@ export function createExecuteAdvancedContestCheckSuggestion(deps: any) {
     const contestResultText = deps.formatOutputTemplate(template, contestOutputContext);
     deps.smartInsertToTextarea(contestResultText, 'dice');
 
-    const contestResult: AcuDice.ContestResult = {
+    const contestResult: Record<string, any> = {
       left: {
         name: leftName,
         attribute: command.leftAttribute,

@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * run-database-manual-update-via-new-ui-button.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DatabaseManualUpdateResult = Record<string, any>;
+
 export function createRunDatabaseManualUpdateViaNewUiButton(deps: any) {
   const runDatabaseManualUpdateViaNewUiButton = async (): Promise<DatabaseManualUpdateResult> => {
     let buttonResult = await deps.waitForDatabaseNewUiManualUpdateButton(360);

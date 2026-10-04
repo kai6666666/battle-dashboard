@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * render-dice-profile-tab-panel.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceProfileSummary = Record<string, any>;
+
 export function createRenderDiceProfileTabPanel(deps: any) {
   const renderDiceProfileTabPanel = (
     id: 'character' | 'library' | 'snapshots',

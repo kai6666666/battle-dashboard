@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * attribute-preset-manager-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -43,7 +42,7 @@ export function createShowAttributePresetManager(deps: any) {
 
     // 生成预设列表HTML
     const presetsHtml = presets
-      .map(preset => {
+      .map((preset: any) => {
         const isActive = preset.id === activeId;
         const isBuiltin = preset.builtin;
 
@@ -126,7 +125,7 @@ export function createShowAttributePresetManager(deps: any) {
     });
 
     // Toggle切换预设激活状态
-    overlay.on('change', '.acu-preset-toggle', function () {
+    overlay.on('change', '.acu-preset-toggle', function (this: any) {
       const $toggle = $(this);
       const id = $toggle.data('id');
       const isChecked = $toggle.is(':checked');
@@ -137,7 +136,7 @@ export function createShowAttributePresetManager(deps: any) {
         deps.AttributePresetManager.setActivePreset(finalId);
 
         // 将其他所有toggle设置为未选中状态（确保只有一个激活）
-        overlay.find('.acu-preset-toggle').each(function () {
+        overlay.find('.acu-preset-toggle').each(function (this: any) {
           const $thisToggle = $(this);
           const thisId = $thisToggle.data('id');
           if (thisId !== id) {
@@ -151,14 +150,14 @@ export function createShowAttributePresetManager(deps: any) {
     });
 
     // 编辑预设
-    overlay.on('click', '.acu-preset-edit', function () {
+    overlay.on('click', '.acu-preset-edit', function (this: any) {
       const id = $(this).data('id');
       overlay.remove();
       deps.showAttributePresetEditor(id);
     });
 
     // 导出预设
-    overlay.on('click', '.acu-preset-export', function () {
+    overlay.on('click', '.acu-preset-export', function (this: any) {
       const id = $(this).data('id');
 
       let json;
@@ -190,7 +189,7 @@ export function createShowAttributePresetManager(deps: any) {
           if (window.toastr) showActionableErrorToast('导出失败', { title: '属性预设导出失败', suggestion: 'importExport' });
           return;
         }
-        const preset = presets.find(p => p.id === id);
+        const preset = presets.find((p: any) => p.id === id);
         filename = `acu_preset_${preset?.name || id}_${Date.now()}.json`;
       }
 
@@ -198,9 +197,9 @@ export function createShowAttributePresetManager(deps: any) {
     });
 
     // 删除预设
-    overlay.on('click', '.acu-preset-delete', async function () {
+    overlay.on('click', '.acu-preset-delete', async function (this: any) {
       const id = $(this).data('id');
-      const preset = presets.find(p => p.id === id);
+      const preset = presets.find((p: any) => p.id === id);
 
       const confirmed = await deps.showDiceSystemConfirmDialog({
         title: '删除属性预设',
@@ -223,7 +222,7 @@ export function createShowAttributePresetManager(deps: any) {
     });
 
     // 复制预设为自定义预设
-    overlay.on('click', '.acu-preset-copy', function () {
+    overlay.on('click', '.acu-preset-copy', function (this: any) {
       const id = $(this).data('id');
 
       let copyData;
@@ -245,7 +244,7 @@ export function createShowAttributePresetManager(deps: any) {
         };
       } else {
         // 复制内置预设
-        const preset = presets.find(p => p.id === id);
+        const preset = presets.find((p: any) => p.id === id);
         if (!preset) return;
 
         copyData = {
@@ -276,7 +275,7 @@ export function createShowAttributePresetManager(deps: any) {
       overlay.find('#acu-preset-file-input').click();
     });
 
-    overlay.find('#acu-preset-file-input').on('change', function (e) {
+    overlay.find('#acu-preset-file-input').on('change', function (e: any) {
       const input = e.target as HTMLInputElement;
       const file = input.files?.[0];
       if (!file) return;
@@ -299,7 +298,7 @@ export function createShowAttributePresetManager(deps: any) {
           const importingName =
             typeof parsedData.name === 'string' && parsedData.name.trim() ? parsedData.name.trim() : '导入的预设';
           const existingPresets = deps.AttributePresetManager.getAllPresets();
-          const existingNames = existingPresets.map(p => p.name);
+          const existingNames = existingPresets.map((p: any) => p.name);
           const hasConflict = existingNames.includes(importingName);
 
           // 执行导入的函数
@@ -315,7 +314,7 @@ export function createShowAttributePresetManager(deps: any) {
 
             // 如果是覆盖模式且存在同名预设，先删除旧预设
             if (overwrite && hasConflict) {
-              const existingPreset = existingPresets.find(p => p.name === importingName);
+              const existingPreset = existingPresets.find((p: any) => p.name === importingName);
               if (existingPreset && !existingPreset.builtin) {
                 deps.AttributePresetManager.deletePreset(existingPreset.id);
               }
@@ -337,7 +336,7 @@ export function createShowAttributePresetManager(deps: any) {
               presetType: '属性预设',
               existingNames,
               onOverwrite: () => doImport(true),
-              onRename: newName => doImport(false, newName),
+              onRename: (newName: any) => doImport(false, newName),
               onCancel: () => {},
             });
           } else {

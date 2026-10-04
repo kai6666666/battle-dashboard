@@ -1,9 +1,14 @@
-// @ts-nocheck
 /**
  * build-relationship-graph-table-from-preset.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { findNameColumnIndex } from '../../entities/name-alias';
+type RelationGraphTableInput = Record<string, any>;
+type DashboardRelationshipGraphSourceConfig = Record<string, any>;
+type RelationshipGraphBuildOptions = Record<string, any>;
+type RelationGraphRow = Record<string, any>;
+type RelationGraphCell = unknown;
+
 export function createBuildRelationshipGraphTableFromPreset(deps: any) {
   const buildRelationshipGraphTableFromPreset = (
     allTables: Record<string, RelationGraphTableInput>,
@@ -28,11 +33,11 @@ export function createBuildRelationshipGraphTableFromPreset(deps: any) {
       }
 
       const tableResults = targetTableName
-        ? sourceTableResults.filter(tableResult => tableResult.tableName === targetTableName)
+        ? sourceTableResults.filter((tableResult: any) => tableResult.tableName === targetTableName)
         : sourceTableResults;
 
-      tableResults.forEach(tableResult => {
-        const sourceHeaders = (tableResult.table.headers || []).map(header => String(header || ''));
+      tableResults.forEach((tableResult: any) => {
+        const sourceHeaders = (tableResult.table.headers || []).map((header: any) => String(header || ''));
         const configuredNameIdx = deps.findRelationGraphColumnIndex(sourceHeaders, source.nameColumn);
         const nameIdx = configuredNameIdx >= 0 ? configuredNameIdx : findNameColumnIndex(sourceHeaders, -1);
         const relationColumnMatch = deps.findRelationGraphRelationColumnMatch(sourceHeaders, source.relationColumn);
@@ -46,9 +51,9 @@ export function createBuildRelationshipGraphTableFromPreset(deps: any) {
           return;
         }
 
-        const inSceneIdx = sourceHeaders.findIndex(header => header.includes('在场'));
+        const inSceneIdx = sourceHeaders.findIndex((header: any) => header.includes('在场'));
         const sourceRows = tableResult.table.rows || [];
-        sourceRows.forEach((row, rowIndex) => {
+        sourceRows.forEach((row: any, rowIndex: any) => {
           const name = String(row[nameIdx] || '').trim();
           const relationValue = String(row[relationIdx] || '').trim();
           if (!name || !relationValue) return;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * get-viewport-bottom-anchor-elements.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,7 +7,7 @@ export function createGetViewportBottomAnchorElements(deps: any) {
     const seen = new Set<HTMLElement>();
     const elements: HTMLElement[] = [];
 
-    deps.getVIEWPORT_BOTTOM_ANCHOR_SELECTORS().forEach(selector => {
+    deps.getVIEWPORT_BOTTOM_ANCHOR_SELECTORS().forEach((selector: any) => {
       targetDocument.querySelectorAll<HTMLElement>(selector).forEach(el => {
         if (seen.has(el)) return;
         seen.add(el);

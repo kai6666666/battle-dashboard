@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * select-crazy-attribute.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 export function createSelectCrazyAttribute(deps: any) {
-  const selectCrazyAttribute = participant => {
+  const selectCrazyAttribute = (participant: any) => {
     if (!participant) return { name: '幸运', value: 50 };
 
     // 1. 优先使用角色已有属性

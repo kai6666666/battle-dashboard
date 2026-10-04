@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * build-table-template-requirement-preset-agent-prompt-filename.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createBuildTableTemplateRequirementPresetAgentPromptFilename(deps: any) {
+export function createBuildTableTemplateRequirementPresetAgentPromptFilename(_deps: any) {
   const buildTableTemplateRequirementPresetAgentPromptFilename = (presetName: string): string => {
     const safeName =
       presetName

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * show-cell-menu.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -8,7 +7,7 @@ import { getDbLockAPI } from '../../shared/misc-utils';
 import { getRowKey } from '../../shared/table-utils';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowCellMenu(deps: any) {
-  const showCellMenu = (e, cell) => {
+  const showCellMenu = (e: any, cell: any) => {
     const { $ } = deps.getCore();
     $('.acu-cell-menu, .acu-menu-backdrop').remove();
     const backdrop = $('<div class="acu-menu-backdrop"></div>');
@@ -33,10 +32,10 @@ export function createShowCellMenu(deps: any) {
 
     // 唯一标识 ID
     const cellId = `${tableKey}-${rowIdx}-${colIdx}`;
-    if (!window.acuModifiedSet) window.acuModifiedSet = new Set();
+    if (!(window as any).acuModifiedSet) (window as any).acuModifiedSet = new Set();
 
     // 状态检查
-    const isModified = window.acuModifiedSet.has(cellId);
+    const isModified = (window as any).acuModifiedSet.has(cellId);
 
     // 计算锁定状态
     const headers = deps.getCachedRawData()?.[tableKey]?.content?.[0] || [];
@@ -158,7 +157,7 @@ export function createShowCellMenu(deps: any) {
     // 锁定字段
     // [修复] colIdx 是包含行号列的索引，数据库的 colIndex 不包含行号列，需要 -1
     const dbColIndex = colIdx - 1;
-    menu.find('#act-lock-field').click(e => {
+    menu.find('#act-lock-field').click((e: any) => {
       e.stopPropagation();
       if (lockRowKey && currentHeader) {
         if (api && sheetKey && rowIndex !== null && rowIndex !== -1 && dbColIndex >= 0) {
@@ -177,7 +176,7 @@ export function createShowCellMenu(deps: any) {
     });
 
     // 解锁字段
-    menu.find('#act-unlock-field').click(e => {
+    menu.find('#act-unlock-field').click((e: any) => {
       e.stopPropagation();
       if (lockRowKey && currentHeader) {
         if (api && sheetKey && rowIndex !== null && rowIndex !== -1 && dbColIndex >= 0) {
@@ -196,7 +195,7 @@ export function createShowCellMenu(deps: any) {
     });
 
     // 锁定整行
-    menu.find('#act-lock-row').click(e => {
+    menu.find('#act-lock-row').click((e: any) => {
       e.stopPropagation();
       if (lockRowKey) {
         if (api && sheetKey && rowIndex !== null && rowIndex !== -1) {
@@ -211,7 +210,7 @@ export function createShowCellMenu(deps: any) {
     });
 
     // 解锁整行
-    menu.find('#act-unlock-row').click(e => {
+    menu.find('#act-unlock-row').click((e: any) => {
       e.stopPropagation();
       if (lockRowKey) {
         if (api && sheetKey && rowIndex !== null && rowIndex !== -1) {
@@ -241,7 +240,7 @@ export function createShowCellMenu(deps: any) {
     });
 
     // 复制功能 (v7.9 融合增强版：优先酒馆接口，兼容性最佳)
-    menu.find('#act-copy').click(async e => {
+    menu.find('#act-copy').click(async (e: any) => {
       e.stopPropagation();
 
       // 【第一优先级】尝试使用酒馆 v7.7 的原生接口 (移动端/PWA 完美兼容)
@@ -264,7 +263,7 @@ export function createShowCellMenu(deps: any) {
       }
 
       // 【第二优先级】浏览器原生逻辑 (v7.8 的兜底方案)
-      const doCopy = text => {
+      const doCopy = (text: any) => {
         // 方案A: 现代 API (仅在 HTTPS 或 localhost 下有效)
         if (navigator.clipboard && window.isSecureContext) {
           navigator.clipboard
@@ -279,7 +278,7 @@ export function createShowCellMenu(deps: any) {
         }
       };
 
-      const fallbackCopy = text => {
+      const fallbackCopy = (text: any) => {
         try {
           const textArea = document.createElement('textarea');
           textArea.value = text;
@@ -356,8 +355,8 @@ export function createShowCellMenu(deps: any) {
         const tags: string[] = tagInput
           ? tagInput
               .split(',')
-              .map(t => t.trim())
-              .filter(t => t.length > 0)
+              .map((t: any) => t.trim())
+              .filter((t: any) => t.length > 0)
           : [];
 
         // 添加到收藏夹
@@ -439,9 +438,9 @@ export function createShowCellMenu(deps: any) {
         $displayTarget.removeClass('acu-highlight-manual acu-highlight-diff');
         if ($cell.hasClass('acu-editable-title')) $cell.removeClass('acu-highlight-manual acu-highlight-diff');
 
-        window.acuModifiedSet.delete(cellId);
+        (window as any).acuModifiedSet.delete(cellId);
 
-        if (window.acuModifiedSet.size === 0) {
+        if ((window as any).acuModifiedSet.size === 0) {
           deps.setHasUnsavedChanges(false);
           deps.updateSaveButtonState();
         }
@@ -574,7 +573,7 @@ export function createShowCellMenu(deps: any) {
 
     menu.find('#act-edit').click(() => {
       closeAll();
-      deps.showEditDialog(content, async newVal => {
+      deps.showEditDialog(content, async (newVal: any) => {
         const rawData = deps.getCachedRawData() || deps.getTableData() || deps.loadSnapshot();
         const entry = deps.findRuntimeSheetEntryForMutation(rawData, tableKey);
         const currentRow = deps.getDiffDataRow(entry?.sheet, rowIdx);

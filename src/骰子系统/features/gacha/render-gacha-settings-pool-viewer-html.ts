@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * render-gacha-settings-pool-viewer-html.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,8 +5,8 @@
 import { GACHA_ALL_POOL_TAG } from '../../features/gacha/gacha-helpers';
 import type { GachaPoolTag } from '../../entities/gacha-items';
 export function createRenderGachaSettingsPoolViewerHtml(deps: any) {
-  const renderGachaSettingsPoolViewerHtml = (rawData, selectedPoolId: GachaPoolTag): string => {
-    const pool = deps.getVisibleGachaPoolConfigDefinitions(rawData).find(candidate => candidate.id === selectedPoolId);
+  const renderGachaSettingsPoolViewerHtml = (rawData: any, selectedPoolId: GachaPoolTag): string => {
+    const pool = deps.getVisibleGachaPoolConfigDefinitions(rawData).find((candidate: any) => candidate.id === selectedPoolId);
     const safePoolId = pool?.id || GACHA_ALL_POOL_TAG;
     const items = deps.getGachaSettingsPoolItems(rawData, safePoolId);
     return `

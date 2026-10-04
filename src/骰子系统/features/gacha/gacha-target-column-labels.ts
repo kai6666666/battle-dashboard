@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * gacha-target-column-labels.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import type { GachaRewardTargetColumnKey } from '../../entities/gacha-items';
-export function createGachaTargetColumnLabels(deps: any) {
+export function createGachaTargetColumnLabels(_deps: any) {
   const GACHA_TARGET_COLUMN_LABELS: Record<GachaRewardTargetColumnKey, string> = {
     name: '名称列',
     type: '类型列',

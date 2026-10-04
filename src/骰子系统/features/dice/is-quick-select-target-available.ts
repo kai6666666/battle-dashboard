@@ -1,9 +1,11 @@
-// @ts-nocheck
 /**
  * is-quick-select-target-available.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createIsQuickSelectTargetAvailable(deps: any) {
+type AttributeQuickSelectTarget = string;
+type QuickSelectCheckPresetConfig = Record<string, any>;
+
+export function createIsQuickSelectTargetAvailable(_deps: any) {
   const isQuickSelectTargetAvailable = (
     target: AttributeQuickSelectTarget,
     preset: QuickSelectCheckPresetConfig | null | undefined,

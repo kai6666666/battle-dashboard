@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * custom-table-name-icon-denied-table-names.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createCustomTableNameIconDeniedTableNames(deps: any) {
+export function createCustomTableNameIconDeniedTableNames(_deps: any) {
   const CUSTOM_TABLE_NAME_ICON_DENIED_TABLE_NAMES = new Set<string>([
     '全局数据表',
     '纪要表',

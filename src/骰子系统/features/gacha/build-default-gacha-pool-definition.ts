@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * build-default-gacha-pool-definition.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { GACHA_ALL_POOL_TAG } from './gacha-helpers';
 import type { GachaPoolDefinition, GachaPoolTag } from '../../entities/gacha-items';
-export function createBuildDefaultGachaPoolDefinition(deps: any) {
+export function createBuildDefaultGachaPoolDefinition(_deps: any) {
   const buildDefaultGachaPoolDefinition = (
     id: GachaPoolTag,
     options: Partial<Omit<GachaPoolDefinition, 'id'>> = {},

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * entities/name-alias.ts
  * Feature-Sliced: entities 层 - 角色名别名域。
@@ -226,7 +225,7 @@ export class NameAliasRegistryCore {
     // AvatarManager 手动别名
     const manualAliases = this.deps.getAvatarMap()[primaryName]?.aliases || [];
     for (const a of manualAliases) {
-      if (!result.includes(a)) result.push(a);
+      if (!result.includes(a as string)) result.push(a as string);
     }
 
     return result;

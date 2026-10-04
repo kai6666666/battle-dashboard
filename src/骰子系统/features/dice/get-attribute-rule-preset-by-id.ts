@@ -1,9 +1,10 @@
-// @ts-nocheck
 /**
  * get-attribute-rule-preset-by-id.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DEFAULT_VIRTUAL_PRESET } from '../../shared/defaults-config';
+type AttributeRulePresetConfig = Record<string, any>;
+
 export function createGetAttributeRulePresetById(deps: any) {
   const getAttributeRulePresetById = (presetId: string | null | undefined): AttributeRulePresetConfig => {
     if (presetId === null || presetId === undefined || presetId === '__default__') {

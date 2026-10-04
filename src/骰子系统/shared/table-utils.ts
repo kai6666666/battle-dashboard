@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * shared/table-utils.ts
  * Feature-Sliced: batch extract (FSD batch A1).
@@ -7,15 +6,15 @@
 import { PRIMARY_KEYS } from './constants';
 
 export function alignAndFixPairedTables(
-    table1Sheet,
-    table1SheetId,
-    table2Sheet,
-    table2SheetId,
-    columnName,
-    mapping,
-    prefix,
-    startFrom,
-    rawData,
+    table1Sheet: any,
+    _table1SheetId: any,
+    table2Sheet: any,
+    _table2SheetId: any,
+    columnName: any,
+    mapping: any,
+    prefix: any,
+    _startFrom: any,
+    _rawData: any,
   ) {
     if (!table1Sheet || !table2Sheet) return { fixedCount1: 0, fixedCount2: 0 };
 
@@ -39,16 +38,16 @@ export function alignAndFixPairedTables(
     }
 
     // 按新编码的数字部分排序
-    const sortedNewCodes = Array.from(mapping.values()).sort((a, b) => {
+    const sortedNewCodes = Array.from(mapping.values() as any[]).sort((a: any, b: any) => {
       const numA = parseInt(a.replace(prefix, ''), 10);
       const numB = parseInt(b.replace(prefix, ''), 10);
       return numA - numB;
     });
 
     // 分析表结构：识别有效编码行和空白编码行，记录空白行在哪两个编码之间
-    const analyzeTable = (rows, colIndex) => {
+    const analyzeTable = (rows: any, colIndex: any) => {
       const codeRows = []; // {rowIndex, oldCode, row}
-      const emptyRows = []; // {rowIndex, row, prevOldCode, nextOldCode}
+      const emptyRows: any[] = []; // {rowIndex, row, prevOldCode, nextOldCode}
 
       for (let i = 0; i < rows.length; i++) {
         const value = rows[i]?.[colIndex];
@@ -61,7 +60,7 @@ export function alignAndFixPairedTables(
           if (match) isValid = true;
         } else if (strValue) {
           const num = parseInt(strValue, 10);
-          if (!isNaN(num)) isValid = true;
+          if (!isNaN(num as number)) isValid = true;
         }
 
         if (isValid) {
@@ -97,7 +96,7 @@ export function alignAndFixPairedTables(
     const analysis2 = analyzeTable(rows2, colIndex2);
 
     // 构建新的行序列
-    const buildNewRows = (analysis, headers, colIndex, allOldCodes) => {
+    const buildNewRows = (analysis: any, headers: any, colIndex: any, _allOldCodes: any) => {
       const newRows = [];
       const codeRowMap = new Map(); // oldCode -> row data
 
@@ -113,7 +112,7 @@ export function alignAndFixPairedTables(
         if (codeRowMap.has(oldCode)) {
           // 有对应的旧数据，更新编码
           const oldRow = codeRowMap.get(oldCode);
-          const newRow = oldRow.map(cell => cell);
+          const newRow = oldRow.map((cell: any) => cell);
           newRow[colIndex] = newCode;
           newRows.push({ newCode, row: newRow, isCodeRow: true });
         } else {
@@ -171,14 +170,14 @@ export function alignAndFixPairedTables(
     };
 
     // 构建两个表的新行
-    const newRows1 = buildNewRows(analysis1, headers1, colIndex1, new Set(analysis1.codeRows.map(r => r.oldCode)));
-    const newRows2 = buildNewRows(analysis2, headers2, colIndex2, new Set(analysis2.codeRows.map(r => r.oldCode)));
+    const newRows1 = buildNewRows(analysis1, headers1, colIndex1, new Set(analysis1.codeRows.map((r: any) => r.oldCode)));
+    const newRows2 = buildNewRows(analysis2, headers2, colIndex2, new Set(analysis2.codeRows.map((r: any) => r.oldCode)));
 
     // 计算修复数量
-    const countCodeChanges = (oldAnalysis, newRows, colIndex) => {
+    const countCodeChanges = (oldAnalysis: any, newRows: any, colIndex: any) => {
       let count = 0;
       // 统计编码变化的数量
-      const oldCodes = new Set(oldAnalysis.codeRows.map(r => r.oldCode));
+      const oldCodes = new Set(oldAnalysis.codeRows.map((r: any) => r.oldCode));
       const newCodes = new Set();
 
       for (const row of newRows) {
@@ -214,7 +213,7 @@ export function alignAndFixPairedTables(
     return { fixedCount1, fixedCount2 };
   }
 
-export function isValueInRelationTable(value, refTable, refColumns, rawData) {
+export function isValueInRelationTable(value: any, refTable: any, refColumns: any, rawData: any) {
     if (!value || !refTable || !refColumns || !rawData) return false;
     if (String(value).trim() === '') return false;
 
@@ -248,7 +247,7 @@ export function isValueInRelationTable(value, refTable, refColumns, rawData) {
     return false; // 值不存在于任何列中
   }
 
-export function getRelationOptions(refTable, refColumns, rawData) {
+export function getRelationOptions(refTable: any, refColumns: any, rawData: any) {
     const options = new Set();
     if (!refTable || !refColumns || !rawData) return Array.from(options);
 
@@ -264,7 +263,7 @@ export function getRelationOptions(refTable, refColumns, rawData) {
         columns.forEach(col => {
           const colIdx = headers.indexOf(col);
           if (colIdx >= 0) {
-            rows.forEach(row => {
+            rows.forEach((row: any) => {
               const value = row?.[colIdx];
               if (value !== null && value !== undefined && String(value).trim() !== '') {
                 options.add(String(value).trim());
@@ -280,7 +279,7 @@ export function getRelationOptions(refTable, refColumns, rawData) {
     return Array.from(options).sort();
   }
 
-export function getColumnExamples(tableName, columnName, currentRowIndex, rawData, maxCount = 5) {
+export function getColumnExamples(tableName: any, columnName: any, currentRowIndex: any, rawData: any, maxCount = 5) {
     const examples = new Set();
     if (!tableName || !columnName || !rawData) return [];
 
@@ -291,7 +290,7 @@ export function getColumnExamples(tableName, columnName, currentRowIndex, rawDat
         const colIdx = headers.indexOf(columnName);
 
         if (colIdx >= 0) {
-          rows.forEach((row, idx) => {
+          rows.forEach((row: any, idx: any) => {
             if (idx !== currentRowIndex) {
               const value = row?.[colIdx];
               if (value !== null && value !== undefined && String(value).trim() !== '') {
@@ -307,8 +306,8 @@ export function getColumnExamples(tableName, columnName, currentRowIndex, rawDat
     return Array.from(examples).slice(0, maxCount);
   }
 
-export function getRowKey(tableName, row, headers) {
-    const pkField = PRIMARY_KEYS[tableName];
+export function getRowKey(tableName: any, row: any, headers: any) {
+    const pkField = (PRIMARY_KEYS as any)[tableName];
     if (pkField === null) return '_row_0';
 
     let fieldIndex = 1;
@@ -321,15 +320,15 @@ export function getRowKey(tableName, row, headers) {
     return `${pkField || headers[fieldIndex]}=${row[fieldIndex]}`;
   }
 
-export function getNearestValidNumber(currentValue, min, max) {
+export function getNearestValidNumber(currentValue: any, min: any, max: any) {
     const num = parseFloat(currentValue);
-    if (isNaN(num)) return min !== undefined ? min : 0;
+    if (isNaN(num as number)) return min !== undefined ? min : 0;
     if (min !== undefined && num < min) return min;
     if (max !== undefined && num > max) return max;
     return num;
   }
 
-export function extractCodesFromTable(sheet, columnName, prefix) {
+export function extractCodesFromTable(sheet: any, columnName: any, prefix: any) {
     if (!sheet || !sheet.content || sheet.content.length < 2) {
       return { codes: new Map(), allCodes: new Set(), codeToRows: new Map() };
     }
@@ -362,7 +361,7 @@ export function extractCodesFromTable(sheet, columnName, prefix) {
         }
       } else {
         const num = parseInt(strValue, 10);
-        if (!isNaN(num)) {
+        if (!isNaN(num as number)) {
           isValid = true;
         }
       }
@@ -379,12 +378,12 @@ export function extractCodesFromTable(sheet, columnName, prefix) {
     return { codes, allCodes, codeToRows };
   }
 
-export function buildCodeMapping(codes1, codes2, prefix, startFrom) {
+export function buildCodeMapping(codes1: any, codes2: any, prefix: any, startFrom: any) {
     // 合并两个表的所有唯一编码值
     const allUniqueCodes = new Set([...codes1, ...codes2]);
 
     // 提取数字部分并排序
-    const codeNumbers = [];
+    const codeNumbers: any[] = [];
     for (const code of allUniqueCodes) {
       let num = null;
       if (prefix) {
@@ -396,7 +395,7 @@ export function buildCodeMapping(codes1, codes2, prefix, startFrom) {
         num = parseInt(code, 10);
       }
 
-      if (!isNaN(num)) {
+      if (!isNaN(num as number)) {
         codeNumbers.push({ code, num });
       }
     }

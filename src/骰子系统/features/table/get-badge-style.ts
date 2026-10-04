@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * get-badge-style.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createGetBadgeStyle(deps: any) {
-  const getBadgeStyle = text => {
+export function createGetBadgeStyle(_deps: any) {
+  const getBadgeStyle = (text: any) => {
     if (!text) return '';
     const str = String(text).trim();
     if (/^[0-9]+%?$/.test(str) || /^Lv\.\d+$/.test(str)) return 'acu-badge-green';

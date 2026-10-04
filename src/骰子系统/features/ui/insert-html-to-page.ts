@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * insert-html-to-page.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DICE_ROOT_SELECTOR } from '../../shared/constants';
 export function createInsertHtmlToPage(deps: any) {
-  const insertHtmlToPage = html => {
+  const insertHtmlToPage = (html: any) => {
     const { $ } = deps.getCore();
     const config = deps.getConfig();
 
@@ -29,7 +28,7 @@ export function createInsertHtmlToPage(deps: any) {
 
       const getTargetContainer = () => {
         const $allMes = $('#chat .mes');
-        const $aiMes = $allMes.filter(function () {
+        const $aiMes = $allMes.filter(function (this: any) {
           const $this = $(this);
           if ($this.attr('is_user') === 'true') return false;
           if ($this.attr('is_system') === 'true') return false;

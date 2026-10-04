@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * gacha-item-editor-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -6,29 +5,32 @@
 import { GACHA_ALL_POOL_TAG, GACHA_CUSTOM_ONLY_POOL_TAG, normalizeGachaPoolId } from './gacha-helpers';
 import { GACHA_RARITY_ORDER, GACHA_REWARD_TARGETS, GACHA_UNIQUE_RARITY } from '../../entities/gacha-items';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type GachaRewardParseResult = Record<string, any>;
+type GachaRewardParseOptions = Record<string, any>;
+import type { GachaItemDefinition, GachaPoolTag, GachaRarity, GachaRewardTarget, GachaRewardTargetColumnKey, GachaRewardTargetColumns, GachaCustomFields } from '../../entities/gacha-items';
 export function createShowGachaItemEditorDialog(deps: any) {
   const showGachaItemEditorDialog = async (itemId: string | null, initialPoolTag?: GachaPoolTag) => {
     const { $ } = deps.getCore();
     const rawData = deps.getCachedRawData() || deps.getTableData();
     await deps.ensureGachaCatalogLoaded(rawData);
     const customItems = deps.getCustomGachaItemDefinitions(rawData);
-    const existingItem = itemId ? customItems.find(item => item.id === itemId) || null : null;
+    const existingItem = itemId ? customItems.find((item: any) => item.id === itemId) || null : null;
     if (itemId && !existingItem) {
       if (window.toastr) window.toastr.warning('内置物品不能编辑定义，只能调整启用状态和顺序');
       return;
     }
     const existingResolvedItem = existingItem
-      ? deps.getAllGachaItemDefinitions(rawData).find(item => item.id === existingItem.id) || existingItem
+      ? deps.getAllGachaItemDefinitions(rawData).find((item: any) => item.id === existingItem.id) || existingItem
       : null;
-    const storedPools = deps.getAllGachaPoolConfigDefinitions(rawData).filter(pool => pool.id !== GACHA_ALL_POOL_TAG);
+    const storedPools = deps.getAllGachaPoolConfigDefinitions(rawData).filter((pool: any) => pool.id !== GACHA_ALL_POOL_TAG);
     const normalizedInitialPoolTag = normalizeGachaPoolId(initialPoolTag);
     const needsDefaultCustomPool =
       !existingItem &&
       (!normalizedInitialPoolTag ||
         normalizedInitialPoolTag === GACHA_ALL_POOL_TAG ||
-        !storedPools.some(pool => pool.id === normalizedInitialPoolTag));
+        !storedPools.some((pool: any) => pool.id === normalizedInitialPoolTag));
     const pools =
-      needsDefaultCustomPool && !storedPools.some(pool => pool.id === GACHA_CUSTOM_ONLY_POOL_TAG)
+      needsDefaultCustomPool && !storedPools.some((pool: any) => pool.id === GACHA_CUSTOM_ONLY_POOL_TAG)
         ? [
             ...storedPools,
             deps.buildDefaultGachaPoolDefinition(GACHA_CUSTOM_ONLY_POOL_TAG, {
@@ -36,14 +38,14 @@ export function createShowGachaItemEditorDialog(deps: any) {
               builtin: false,
               visibleInTabs: false,
               includeInAll: false,
-              order: storedPools.reduce((max, pool) => Math.max(max, Number(pool.order) || 0), 0) + 10,
+              order: storedPools.reduce((max: any, pool: any) => Math.max(max, Number(pool.order) || 0), 0) + 10,
             }),
           ]
         : storedPools;
     const editorCreatablePoolIds = new Set<GachaPoolTag>(
       !existingItem && needsDefaultCustomPool ? [GACHA_CUSTOM_ONLY_POOL_TAG] : [],
     );
-    const initialPoolExists = pools.some(pool => pool.id === normalizedInitialPoolTag);
+    const initialPoolExists = pools.some((pool: any) => pool.id === normalizedInitialPoolTag);
     const baseItem: GachaItemDefinition = existingResolvedItem || {
       id: '',
       name: '',
@@ -66,7 +68,7 @@ export function createShowGachaItemEditorDialog(deps: any) {
     const fieldLimits = deps.getGachaRewardFieldLimits(item.rewardTarget);
     const config = deps.getConfig();
     const poolOptionsHtml = pools
-      .map(pool => {
+      .map((pool: any) => {
         const checked = item.poolTags.includes(pool.id);
         return `
           <label class="acu-gacha-item-pool-option">
@@ -122,7 +124,7 @@ export function createShowGachaItemEditorDialog(deps: any) {
       ...(storedTags ? ([['标签', storedTags]] as [string, string][]) : []),
       ...(storedEffect ? ([['效果', storedEffect]] as [string, string][]) : []),
       ...deps.getGachaCustomFieldEntries(item).filter(
-        ([key]) =>
+        ([key]: any) =>
           !deps.isGachaFieldAlias(key, deps.GACHA_TAG_FIELD_ALIASES) &&
           !deps.isGachaFieldAlias(key, deps.GACHA_EFFECT_FIELD_ALIASES),
       ),
@@ -259,7 +261,7 @@ export function createShowGachaItemEditorDialog(deps: any) {
       deps.normalizeGachaTargetTable(overlay.find('.acu-gacha-item-target-table').val());
     const collectEditorTargetColumns = (): GachaRewardTargetColumns | undefined => {
       const rawColumns: Record<string, string> = {};
-      overlay.find('.acu-gacha-target-column-input').each((_, element) => {
+      overlay.find('.acu-gacha-target-column-input').each((_: any, element: any) => {
         const key = String($(element).attr('data-column-key') || '').trim();
         if (!deps.GACHA_TARGET_COLUMN_KEYS.includes(key as GachaRewardTargetColumnKey)) return;
         const value = String($(element).val() || '').trim();
@@ -353,7 +355,7 @@ export function createShowGachaItemEditorDialog(deps: any) {
       let effect = '';
       let message = '';
 
-      overlay.find('.acu-gacha-custom-field-row').each((_, element) => {
+      overlay.find('.acu-gacha-custom-field-row').each((_: any, element: any) => {
         if (message) return;
         const row = $(element);
         const rawKey = String(row.find('.acu-gacha-custom-field-key').val() || '').trim();
@@ -434,11 +436,11 @@ export function createShowGachaItemEditorDialog(deps: any) {
       const row = appendCustomFieldRow();
       row?.find('.acu-gacha-custom-field-key').trigger('focus');
     });
-    overlay.on('click', '.acu-gacha-custom-field-remove', event => {
+    overlay.on('click', '.acu-gacha-custom-field-remove', (event: any) => {
       $(event.currentTarget).closest('.acu-gacha-custom-field-row').remove();
       updateCustomFieldRowControls();
     });
-    overlay.on('click', '.acu-gacha-item-label-edit', function () {
+    overlay.on('click', '.acu-gacha-item-label-edit', function (this: any) {
       void (async () => {
         const labelKey = String($(this).attr('data-label-key') || '').trim();
         if (labelKey !== 'type' && labelKey !== 'quality') return;
@@ -459,12 +461,12 @@ export function createShowGachaItemEditorDialog(deps: any) {
         refreshEditorIconPreview();
       })();
     });
-    overlay.on('click', '.acu-gacha-custom-field-suggestion', event => {
+    overlay.on('click', '.acu-gacha-custom-field-suggestion', (event: any) => {
       const headerName = String($(event.currentTarget).attr('data-header') || '').trim();
       if (!headerName) return;
       let targetRow = overlay
         .find('.acu-gacha-custom-field-row')
-        .filter((_, element) => !String($(element).find('.acu-gacha-custom-field-key').val() || '').trim())
+        .filter((_: any, element: any) => !String($(element).find('.acu-gacha-custom-field-key').val() || '').trim())
         .first();
       if (!targetRow.length) {
         targetRow = appendCustomFieldRow() || $();
@@ -494,7 +496,7 @@ export function createShowGachaItemEditorDialog(deps: any) {
       },
     );
 
-    overlay.on('submit', '.acu-gacha-item-editor', function (event) {
+    overlay.on('submit', '.acu-gacha-item-editor', function (event: any) {
       event.preventDefault();
       if (isSubmittingItemEditor) return;
       setItemEditorSubmitting(true);
@@ -520,7 +522,7 @@ export function createShowGachaItemEditorDialog(deps: any) {
           const poolTags = overlay
             .find('.acu-gacha-item-pool-check:checked')
             .toArray()
-            .map(element => normalizeGachaPoolId((element as HTMLInputElement).value))
+            .map((element: any) => normalizeGachaPoolId((element as HTMLInputElement).value))
             .filter(Boolean);
           const submitFieldLimits = deps.getGachaRewardFieldLimits(rewardTarget);
 
@@ -626,7 +628,7 @@ export function createShowGachaItemEditorDialog(deps: any) {
             await deps.ensureGachaCatalogLoaded(rawData);
             const latestCustomItems = deps.getCustomGachaItemDefinitions(rawData);
             const latestExistingItem = existingItem
-              ? latestCustomItems.find(candidate => candidate.id === existingItem.id) || null
+              ? latestCustomItems.find((candidate: any) => candidate.id === existingItem.id) || null
               : null;
             if (existingItem && !latestExistingItem) {
               throw new Error('这个自定义物品已被删除，请重新打开编辑器后再保存。');
@@ -639,15 +641,15 @@ export function createShowGachaItemEditorDialog(deps: any) {
               throw new Error('这个自定义物品已被其他操作更新，请重新打开编辑器后再保存。');
             }
             if (!existingItem) {
-              const currentPoolIds = new Set(deps.getAllGachaPoolConfigDefinitions(rawData).map(pool => pool.id));
+              const currentPoolIds = new Set(deps.getAllGachaPoolConfigDefinitions(rawData).map((pool: any) => pool.id));
               const stalePoolTags = poolTags.filter(
-                tag => tag !== GACHA_ALL_POOL_TAG && !currentPoolIds.has(tag) && !editorCreatablePoolIds.has(tag),
+                (tag: any) => tag !== GACHA_ALL_POOL_TAG && !currentPoolIds.has(tag) && !editorCreatablePoolIds.has(tag),
               );
               if (stalePoolTags.length > 0) {
                 throw new Error(`所选卡池已被删除或更新：${stalePoolTags.join('、')}。请重新打开编辑器后再保存。`);
               }
             }
-            const existingIds = new Set(deps.getAllGachaItemDefinitions(rawData).map(candidate => candidate.id));
+            const existingIds = new Set(deps.getAllGachaItemDefinitions(rawData).map((candidate: any) => candidate.id));
             if (existingItem) existingIds.delete(existingItem.id);
             const id = existingItem?.id || deps.createUniqueGachaItemId(draftItem.id, existingIds);
             const savedAt = Date.now();
@@ -660,7 +662,7 @@ export function createShowGachaItemEditorDialog(deps: any) {
               updatedAt: savedAt,
             };
             const nextItems = latestExistingItem
-              ? latestCustomItems.map(candidate => (candidate.id === latestExistingItem.id ? nextItem : candidate))
+              ? latestCustomItems.map((candidate: any) => (candidate.id === latestExistingItem.id ? nextItem : candidate))
               : [...latestCustomItems, nextItem];
             const localStorageSnapshot = deps.collectGachaLocalStorageSnapshot([deps.STORAGE_KEY_GACHA_POOL_SETTINGS]);
             const savedCatalog = await deps.saveStoredGachaCatalog(nextItems);

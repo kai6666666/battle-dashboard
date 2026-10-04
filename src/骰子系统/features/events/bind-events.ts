@@ -1,17 +1,19 @@
-// @ts-nocheck
 /**
  * bind-events.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
 import { DICE_ROOT_SELECTOR } from '../../shared/constants';
-import { GACHA_RARITY_ORDER } from '../../entities/gacha-items';
+import { GACHA_RARITY_ORDER, type GachaPoolTag, type GachaRarity } from '../../entities/gacha-items';
 import { Store } from '../../shared/storage/store';
 import { getDbLockAPI } from '../../shared/misc-utils';
 import { getDisplayName, isCharacterTable } from '../../entities/name-alias';
 import { getRowKey } from '../../shared/table-utils';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+type InventoryEditableField = string;
+type InventoryMenuScope = string;
+type RelationGraphTableInput = Record<string, any>;
 export function createBindEvents(deps: any) {
-  const bindEvents = tables => {
+  const bindEvents = (_tables: any) => {
     const { $ } = deps.getCore();
     const $wrapper = $(DICE_ROOT_SELECTOR);
     if (!deps.getTutorialButtonEventsBound()) {
@@ -20,7 +22,7 @@ export function createBindEvents(deps: any) {
       const hostDoc = (bodyEl && bodyEl.ownerDocument) || (rootEl && rootEl.ownerDocument) || document;
       if (!(hostDoc as any).__acuTutCaptureInstalled) {
         (hostDoc as any).__acuTutCaptureInstalled = true;
-        hostDoc.addEventListener('click', function (e) {
+        hostDoc.addEventListener('click', function (e: any) {
           const target = e.target as Element | null;
           const btn = target && (target as any).closest ? (target as any).closest('.acu-panel-tutorial-btn') : null;
           if (!btn) return;
@@ -34,7 +36,7 @@ export function createBindEvents(deps: any) {
 
     $wrapper
       .off('click.acu_dashboard_preset_settings')
-      .on('click.acu_dashboard_preset_settings', '.acu-dashboard-preset-settings-btn', function (e) {
+      .on('click.acu_dashboard_preset_settings', '.acu-dashboard-preset-settings-btn', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         deps.showDashboardPresetManager();
@@ -43,7 +45,7 @@ export function createBindEvents(deps: any) {
     // [新增] 仪表盘-人物关系图按钮
     $wrapper
       .off('click.acu_dash_relation_graph', '.acu-dash-relation-graph-btn')
-      .on('click.acu_dash_relation_graph', '.acu-dash-relation-graph-btn', function (e) {
+      .on('click.acu_dash_relation_graph', '.acu-dash-relation-graph-btn', function (e: any) {
         e.stopPropagation();
         const allTables = deps.processJsonData(deps.getCachedRawData() || deps.getTableData()) as Record<string, RelationGraphTableInput>;
         const graphSources = deps.getActiveDashboardRelationshipGraphSources();
@@ -65,13 +67,13 @@ export function createBindEvents(deps: any) {
       });
 
     // [新增] 仪表盘-地图可视化按钮
-    $wrapper.on('click', '.acu-dash-map-btn', function (e) {
+    $wrapper.on('click', '.acu-dash-map-btn', function (e: any) {
       e.stopPropagation();
       deps.showMapVisualization();
     });
 
     // 仪表盘-物品栏可视化按钮
-    $wrapper.on('click', '.acu-dash-inventory-btn', function (e) {
+    $wrapper.on('click', '.acu-dash-inventory-btn', function (this: any, e: any) {
       e.stopPropagation();
       e.preventDefault();
       const target = String($(this).data('inventory-target') || 'inventory') === 'equipment' ? 'equipment' : 'inventory';
@@ -79,14 +81,14 @@ export function createBindEvents(deps: any) {
     });
 
     // 仪表盘-骰子商店按钮
-    $wrapper.on('click', '.acu-dash-gacha-btn', function (e) {
+    $wrapper.on('click', '.acu-dash-gacha-btn', function (e: any) {
       e.stopPropagation();
       e.preventDefault();
       void deps.showGachaVisualization();
     });
 
     // [新增] 仪表盘-头像管理按钮
-    $wrapper.on('click', '.acu-dash-avatar-manager-btn', function (e) {
+    $wrapper.on('click', '.acu-dash-avatar-manager-btn', function (this: any, e: any) {
       e.stopPropagation();
 
       try {
@@ -115,7 +117,7 @@ export function createBindEvents(deps: any) {
           return;
         }
 
-        const $currentRoot = $(this).closest<HTMLElement>(DICE_ROOT_SELECTOR);
+        const $currentRoot = $(this).closest(DICE_ROOT_SELECTOR);
         const refreshDashboardFromAvatarManager = () => {
           const $targetRoot = $currentRoot.length ? $currentRoot : $(DICE_ROOT_SELECTOR).last();
           const $panel = deps.getDataAreaForRoot($targetRoot);
@@ -149,7 +151,7 @@ export function createBindEvents(deps: any) {
       }
     });
     // 仪表盘模块标题点击跳转
-    $wrapper.off('click.acu_dash_table_link').on('click.acu_dash_table_link', '.acu-dash-table-link', function (e) {
+    $wrapper.off('click.acu_dash_table_link').on('click.acu_dash_table_link', '.acu-dash-table-link', function (this: any, e: any) {
       e.stopPropagation();
       e.preventDefault();
       const tableNameValue = $(this).data('table');
@@ -171,11 +173,11 @@ export function createBindEvents(deps: any) {
     // [修复] 阻止横向滑动冒泡到 SillyTavern，防止触发"滑动重新生成"
     $('.acu-panel-content')
       .off('touchstart.acu_swipe touchmove.acu_swipe')
-      .on('touchstart.acu_swipe', function (e) {
+      .on('touchstart.acu_swipe', function (this: any, e: any) {
         this._touchStartX = e.originalEvent.touches[0].clientX;
         this._touchStartY = e.originalEvent.touches[0].clientY;
       })
-      .on('touchmove.acu_swipe', function (e) {
+      .on('touchmove.acu_swipe', function (this: any, e: any) {
         if (!this._touchStartX) return;
         const deltaX = Math.abs(e.originalEvent.touches[0].clientX - this._touchStartX);
         const deltaY = Math.abs(e.originalEvent.touches[0].clientY - this._touchStartY);
@@ -187,7 +189,7 @@ export function createBindEvents(deps: any) {
 
     $('body')
       .off('click.acu_nav_toggle')
-      .on('click.acu_nav_toggle', '.acu-nav-toggle-btn', function (e) {
+      .on('click.acu_nav_toggle', '.acu-nav-toggle-btn', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         if (deps.getIsEditingOrder()) return;
@@ -199,7 +201,7 @@ export function createBindEvents(deps: any) {
     // [新增] 选项面板折叠事件绑定
     $('body')
       .off('click.acu_opt_toggle')
-      .on('click.acu_opt_toggle', '.acu-opt-header[data-action="toggle-options"]', function (e) {
+      .on('click.acu_opt_toggle', '.acu-opt-header[data-action="toggle-options"]', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         const currentState = deps.getOptionsCollapsedState();
@@ -210,8 +212,8 @@ export function createBindEvents(deps: any) {
     const $panel = $('.acu-panel-content');
     if ($panel.length) {
       // [优化] 滚动防抖，避免频繁写入硬盘导致卡顿
-      let scrollTimer = null;
-      $panel.off('scroll.acu_save').on('scroll.acu_save', function () {
+      let scrollTimer: any = null;
+      $panel.off('scroll.acu_save').on('scroll.acu_save', function (this: any) {
         const $this = $(this);
         if (scrollTimer) clearTimeout(scrollTimer);
         scrollTimer = setTimeout(() => {
@@ -228,7 +230,7 @@ export function createBindEvents(deps: any) {
 
     $('body')
       .off('click.acu_delegate')
-      .on('click.acu_delegate', DICE_ROOT_SELECTOR, function (e) {
+      .on('click.acu_delegate', DICE_ROOT_SELECTOR, function (this: any, e: any) {
         if (deps.getIsEditingOrder()) return;
         const $target = $(e.target);
 
@@ -281,7 +283,7 @@ export function createBindEvents(deps: any) {
 
               // 使用 switchPanel 实现平滑过渡
               deps.switchPanel(
-                $panel => {
+                ($panel: any) => {
                   const rawData = deps.getCachedRawData() || deps.getTableData();
                   const tables = deps.processJsonData(rawData || {});
                   $panel.html(deps.renderDashboard(tables));
@@ -318,7 +320,7 @@ export function createBindEvents(deps: any) {
 
               // 使用 switchPanel 实现平滑过渡
               deps.switchPanel(
-                $panel => {
+                ($panel: any) => {
                   const rawData = deps.getCachedRawData() || deps.getTableData();
                   $panel.html(deps.renderChangesPanel(rawData));
                   deps.bindChangesEvents();
@@ -351,7 +353,7 @@ export function createBindEvents(deps: any) {
 
               // 使用 switchPanel 实现平滑过渡
               deps.switchPanel(
-                async $panel => {
+                async ($panel: any) => {
                   $panel.html(await deps.renderFavoritesPanel());
                   deps.bindFavoritesEvents($panel);
                 },
@@ -380,7 +382,7 @@ export function createBindEvents(deps: any) {
               $navBtn.addClass('active');
 
               deps.switchPanel(
-                $panel => {
+                ($panel: any) => {
                   const rawData = deps.getCachedRawData() || deps.getTableData();
                   $panel.html(deps.renderGlobalInteractionsPanel(rawData));
                   deps.hydrateCustomTableNameIconsIn($panel);
@@ -414,7 +416,7 @@ export function createBindEvents(deps: any) {
 
               // 使用 switchPanel 实现平滑过渡
               deps.switchPanel(
-                $panel => {
+                ($panel: any) => {
                   try {
                     const panelHtml = deps.MvuModule.renderPanel();
                     $panel.html('<div class="acu-mvu-panel">' + panelHtml + '</div>');
@@ -425,14 +427,14 @@ export function createBindEvents(deps: any) {
 
                   // 可选：在后台尝试获取数据（不阻塞界面显示）
                   deps.MvuModule.getDataWithRetry(5, 800)
-                    .then(mvuData => {
+                    .then((mvuData: any) => {
                       // 如果获取到数据，刷新面板显示
                       if (mvuData && deps.canWriteMvuPanel()) {
                         $panel.html('<div class="acu-mvu-panel">' + deps.MvuModule.renderPanel() + '</div>');
                         deps.MvuModule.bindEvents($panel);
                       }
                     })
-                    .catch(err => {
+                    .catch((err: any) => {
                       console.error('[DICE]MvuModule Error getting data:', err);
                       if (deps.canWriteMvuPanel()) {
                         // 错误时也刷新面板，显示错误状态
@@ -509,7 +511,7 @@ export function createBindEvents(deps: any) {
     // [回归] 收起按钮逻辑
     $('#acu-btn-collapse')
       .off('click')
-      .on('click', e => {
+      .on('click', (e: any) => {
         e.stopPropagation();
         if (deps.getIsEditingOrder()) return;
         deps.saveCollapsedState(true);
@@ -519,7 +521,7 @@ export function createBindEvents(deps: any) {
     // 打开可视化表格编辑器按钮
     $('#acu-btn-open-visualizer')
       .off('click')
-      .on('click', e => {
+      .on('click', (e: any) => {
         e.stopPropagation();
         if (deps.getIsEditingOrder()) return;
         void deps.openDatabaseVisualizerInterface();
@@ -528,7 +530,7 @@ export function createBindEvents(deps: any) {
     // [修改] 将收起按钮改为手动更新按钮
     $('#acu-btn-force-update')
       .off('click')
-      .on('click', async e => {
+      .on('click', async (e: any) => {
         e.stopPropagation();
         if (deps.getIsEditingOrder()) return;
         const result = await deps.runDatabaseManualUpdate();
@@ -553,7 +555,7 @@ export function createBindEvents(deps: any) {
 
     $('body')
       .off('click.acu_settings')
-      .on('click.acu_settings', '#acu-btn-settings', function (e) {
+      .on('click.acu_settings', '#acu-btn-settings', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         if (deps.getIsEditingOrder()) return;
@@ -562,7 +564,7 @@ export function createBindEvents(deps: any) {
     // [新增] 导航栏掷骰按钮
     $('#acu-btn-dice-nav')
       .off('click')
-      .on('click', e => {
+      .on('click', (e: any) => {
         e.stopPropagation();
         if (deps.getIsEditingOrder()) return;
         deps.showDicePanel({
@@ -575,7 +577,7 @@ export function createBindEvents(deps: any) {
     // 打开数据库
     $('#acu-btn-open-editor')
       .off('click')
-      .on('click', e => {
+      .on('click', (e: any) => {
         e.stopPropagation();
         if (deps.getIsEditingOrder()) return;
         void deps.openDatabaseInterface();
@@ -584,7 +586,7 @@ export function createBindEvents(deps: any) {
     // 重新填表按钮
     $('#acu-btn-refill')
       .off('click')
-      .on('click', async e => {
+      .on('click', async (e: any) => {
         e.stopPropagation();
         if (deps.getIsEditingOrder()) return;
         const result = await deps.runDatabaseManualUpdate();
@@ -608,7 +610,7 @@ export function createBindEvents(deps: any) {
       });
     $('#acu-btn-save-global')
       .off('click')
-      .on('click', async function (e) {
+      .on('click', async function (this: any, e: any) {
         e.stopPropagation();
         if (deps.getIsEditingOrder()) return;
         let dataToSave = null;
@@ -627,7 +629,7 @@ export function createBindEvents(deps: any) {
           $('.acu-highlight-manual').removeClass('acu-highlight-manual');
 
           // 3. 清理内部的脏数据标记
-          if (window.acuModifiedSet) window.acuModifiedSet.clear();
+          if ((window as any).acuModifiedSet) (window as any).acuModifiedSet.clear();
           deps.setHasUnsavedChanges(false);
 
           // 4. 手动重置保存按钮的状态（去掉呼吸灯，变回灰色）
@@ -647,7 +649,7 @@ export function createBindEvents(deps: any) {
     if ($searchInput.length) {
       $('body')
       .off('click.acu_equipment_extra')
-      .on('click.acu_equipment_extra', '.acu-equipment-shop-btn, .acu-equipment-dismantle-btn', function (e) {
+      .on('click.acu_equipment_extra', '.acu-equipment-shop-btn, .acu-equipment-dismantle-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const $btn = $(this);
@@ -669,7 +671,7 @@ export function createBindEvents(deps: any) {
         { root: $searchInput },
         {
           delay: 300,
-          onCommit: ({ value, selectionStart, selectionEnd }) => {
+          onCommit: ({ value, selectionStart, selectionEnd }: any) => {
             const activeTab = deps.getActiveTabState();
             if (activeTab) {
               deps.getTableSearchStates()[activeTab] = value;
@@ -693,7 +695,7 @@ export function createBindEvents(deps: any) {
     // 人物关系图按钮
     $('#acu-btn-relation-graph')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
         const tableName = String($(this).data('table') || '');
@@ -733,14 +735,14 @@ export function createBindEvents(deps: any) {
     // 表格面板地图可视化按钮
     $('.acu-table-map-btn')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (e: any) {
         e.preventDefault();
         e.stopPropagation();
         deps.showMapVisualization();
       });
     $('.acu-table-inventory-btn')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
         const target = String($(this).data('inventory-target') || 'inventory') === 'equipment' ? 'equipment' : 'inventory';
@@ -748,7 +750,7 @@ export function createBindEvents(deps: any) {
       });
     $('.acu-gacha-open-btn')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (e: any) {
         e.preventDefault();
         e.stopPropagation();
         void deps.showGachaVisualization();
@@ -758,7 +760,7 @@ export function createBindEvents(deps: any) {
     // 1. 视图切换
     $('#acu-btn-switch-style')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
         const tableName = $(this).data('table');
@@ -772,25 +774,25 @@ export function createBindEvents(deps: any) {
     // 2. 高度拖拽
     $('.acu-height-drag-handle')
       .off('pointerdown')
-      .on('pointerdown', function (e) {
+      .on('pointerdown', function (this: any, e: any) {
         if (e.button !== 0) return;
         e.preventDefault();
         e.stopPropagation();
         const handle = this;
         handle.setPointerCapture(e.pointerId);
         $(handle).add($(handle).closest('.acu-height-control')).addClass('active');
-        const $currentRoot = $(handle).closest<HTMLElement>(DICE_ROOT_SELECTOR);
+        const $currentRoot = $(handle).closest(DICE_ROOT_SELECTOR);
         const $panel = deps.getDataAreaForRoot($currentRoot);
         const startHeight = deps.getPanelDragStartHeight($panel);
         let requestedHeight = startHeight;
         const startY = e.clientY;
         const tableName = $(handle).data('table');
 
-        handle.onpointermove = function (moveE) {
+        handle.onpointermove = function (moveE: any) {
           const dy = moveE.clientY - startY;
           requestedHeight = deps.setPanelRequestedHeight($panel, startHeight - dy) || requestedHeight;
         };
-        handle.onpointerup = function (upE) {
+        handle.onpointerup = function (upE: any) {
           $(handle).add($(handle).closest('.acu-height-control')).removeClass('active');
           handle.releasePointerCapture(upE.pointerId);
           handle.onpointermove = null;
@@ -804,18 +806,18 @@ export function createBindEvents(deps: any) {
     // 3. 双击重置高度 - 支持整个头部区域触发
     $('.acu-height-drag-handle')
       .off('dblclick')
-      .on('dblclick', function (e) {
+      .on('dblclick', function (this: any, e: any) {
         e.preventDefault();
         e.stopPropagation();
         const tableName = $(this).data('table');
         if (tableName) {
-          const $currentRoot = $(this).closest<HTMLElement>(DICE_ROOT_SELECTOR);
+          const $currentRoot = $(this).closest(DICE_ROOT_SELECTOR);
           deps.resetPanelRequestedHeight(deps.getDataAreaForRoot($currentRoot), tableName);
         }
       });
 
     // [新增] 倒序按钮点击事件
-    $wrapper.on('click', '.acu-reverse-btn', function (e) {
+    $wrapper.on('click', '.acu-reverse-btn', function (this: any, e: any) {
       e.stopPropagation();
       const tName = $(this).data('table');
       if (!tName) return;
@@ -828,13 +830,13 @@ export function createBindEvents(deps: any) {
     // [新增] 双击头部任意位置也可重置高度
     $('.acu-panel-header')
       .off('dblclick.acu')
-      .on('dblclick.acu', function (e) {
+      .on('dblclick.acu', function (this: any, e: any) {
         if ($(e.target).closest('.acu-search-input, .acu-close-btn, .acu-view-btn').length) return;
         e.preventDefault();
         e.stopPropagation();
         const tableName = deps.getActiveTabState();
         if (tableName) {
-          const $currentRoot = $(this).closest<HTMLElement>(DICE_ROOT_SELECTOR);
+          const $currentRoot = $(this).closest(DICE_ROOT_SELECTOR);
           deps.resetPanelRequestedHeight(deps.getDataAreaForRoot($currentRoot), tableName);
         }
       });
@@ -842,9 +844,9 @@ export function createBindEvents(deps: any) {
     $wrapper
       .find('.acu-close-btn')
       .off('click')
-      .on('click', function (e) {
+      .on('click', function (this: any, e: any) {
         e.stopPropagation();
-        const $currentRoot = $(this).closest<HTMLElement>(DICE_ROOT_SELECTOR);
+        const $currentRoot = $(this).closest(DICE_ROOT_SELECTOR);
         const $currentPanel = deps.getDataAreaForRoot($currentRoot);
         const $input = $currentPanel.find('.acu-search-input');
 
@@ -879,7 +881,7 @@ export function createBindEvents(deps: any) {
     // [新增] bookmark图标点击事件
     $('body')
       .off('click.acu_bookmark')
-      .on('click.acu_bookmark', '.acu-bookmark-icon', function (e) {
+      .on('click.acu_bookmark', '.acu-bookmark-icon', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
 
@@ -901,7 +903,7 @@ export function createBindEvents(deps: any) {
     // [新增] 动作按钮点击事件
     $('body')
       .off('click.acu_action')
-      .on('click.acu_action', '.acu-action-item', function (e) {
+      .on('click.acu_action', '.acu-action-item', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
 
@@ -931,7 +933,7 @@ export function createBindEvents(deps: any) {
     // [新增] 全局骰子按钮（面板右上角）
     $('body')
       .off('click.acu_global_dice')
-      .on('click.acu_global_dice', '#acu-btn-dice', function (e) {
+      .on('click.acu_global_dice', '#acu-btn-dice', function (e: any) {
         e.stopPropagation();
         deps.showDicePanel({
           targetValue: 50,
@@ -943,7 +945,7 @@ export function createBindEvents(deps: any) {
     // 仪表盘地点列表的展开/收起交互
     $('body')
       .off('click.acu_location_toggle')
-      .on('click.acu_location_toggle', '.acu-location-header', function (e) {
+      .on('click.acu_location_toggle', '.acu-location-header', function (this: any, e: any) {
         e.stopPropagation();
         const $group = $(this).closest('.acu-location-group');
         $group.toggleClass('expanded');
@@ -952,7 +954,7 @@ export function createBindEvents(deps: any) {
     // [新增] 仪表盘跳转功能：点击"查看全部"或地点项，跳转到对应表格
     $('body')
       .off('click.acu_dash_jump')
-      .on('click.acu_dash_jump', '.acu-dash-jump-link, .acu-dash-loc-item', function (e) {
+      .on('click.acu_dash_jump', '.acu-dash-jump-link, .acu-dash-loc-item', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const tableNameValue = $(this).data('table');
@@ -992,7 +994,7 @@ export function createBindEvents(deps: any) {
     // [新增] 表格卡片内联骰子图标点击事件
     $('body')
       .off('click.acu_inline_dice')
-      .on('click.acu_inline_dice', '.acu-inline-dice-btn', function (e) {
+      .on('click.acu_inline_dice', '.acu-inline-dice-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
 
@@ -1020,7 +1022,7 @@ export function createBindEvents(deps: any) {
     // [新增] 仪表盘骰子检定按钮
     $('body')
       .off('click.acu_dash_dice')
-      .on('click.acu_dash_dice', '.acu-dash-dice-btn', function (e) {
+      .on('click.acu_dash_dice', '.acu-dash-dice-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const targetValue = parseInt($(this).data('target'), 10) || 50;
@@ -1049,7 +1051,7 @@ export function createBindEvents(deps: any) {
     // [新增] 已知地区"前往"按钮
     $('body')
       .off('click.acu_dash_goto')
-      .on('click.acu_dash_goto', '.acu-dash-goto-btn', function (e) {
+      .on('click.acu_dash_goto', '.acu-dash-goto-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const locationName = $(this).data('location') || '未知地点';
@@ -1060,7 +1062,7 @@ export function createBindEvents(deps: any) {
     // [新增] 背包物品"使用"按钮
     $('body')
       .off('click.acu_dash_use_item')
-      .on('click.acu_dash_use_item', '.acu-dash-use-item-btn', function (e) {
+      .on('click.acu_dash_use_item', '.acu-dash-use-item-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const itemName = $(this).data('item') || '物品';
@@ -1076,7 +1078,7 @@ export function createBindEvents(deps: any) {
       },
       {
         delay: 140,
-        onCommit: ({ input, value, selectionStart }) => {
+        onCommit: ({ input, value, selectionStart }: any) => {
           const filterKey = String(input.dataset.filter || '');
           if (!filterKey) return;
           deps.saveInventoryFilters({ [filterKey]: value });
@@ -1086,7 +1088,7 @@ export function createBindEvents(deps: any) {
     );
     $('body')
       .off('click.acu_inventory_filter_collapse')
-      .on('click.acu_inventory_filter_collapse', '.acu-inventory-filter-collapse-btn', function (e) {
+      .on('click.acu_inventory_filter_collapse', '.acu-inventory-filter-collapse-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const $collapsible = $(this).closest('.acu-inventory-filter-collapsible');
@@ -1096,7 +1098,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_inventory_filter_btn')
-      .on('click.acu_inventory_filter_btn', '.acu-inventory-filter-btn', function (e) {
+      .on('click.acu_inventory_filter_btn', '.acu-inventory-filter-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const filterKey = String($(this).data('filter') || '');
@@ -1110,12 +1112,12 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_pool_btn')
-      .on('click.acu_gacha_pool_btn', '.acu-gacha-pool-btn', function (e) {
+      .on('click.acu_gacha_pool_btn', '.acu-gacha-pool-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const nextPoolTag = String($(this).data('pool-tag') || '').trim() as GachaPoolTag;
         try {
-          const visiblePoolIds = deps.getVisibleGachaPoolConfigDefinitions().map(pool => pool.id);
+          const visiblePoolIds = deps.getVisibleGachaPoolConfigDefinitions().map((pool: any) => pool.id);
           if (!visiblePoolIds.includes(nextPoolTag)) return;
           void deps.updateGachaPoolTag(nextPoolTag);
         } catch (error) {
@@ -1124,7 +1126,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_draw_btn')
-      .on('click.acu_gacha_draw_btn', '.acu-gacha-draw-btn', function (e) {
+      .on('click.acu_gacha_draw_btn', '.acu-gacha-draw-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const drawCount = Number.parseInt(String($(this).data('draw-count') || '1'), 10);
@@ -1132,35 +1134,35 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_fortune_clear')
-      .on('click.acu_gacha_fortune_clear', '.acu-gacha-fortune-clear', function (e) {
+      .on('click.acu_gacha_fortune_clear', '.acu-gacha-fortune-clear', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         void deps.clearGachaFortune();
       });
     $('body')
       .off('click.acu_gacha_shard_shop_open')
-      .on('click.acu_gacha_shard_shop_open', '.acu-gacha-shard-shop-open', function (e) {
+      .on('click.acu_gacha_shard_shop_open', '.acu-gacha-shard-shop-open', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         void deps.showGachaShardShop();
       });
     $('body')
       .off('click.acu_gacha_settings_open')
-      .on('click.acu_gacha_settings_open', '.acu-gacha-settings-open', function (e) {
+      .on('click.acu_gacha_settings_open', '.acu-gacha-settings-open', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         void deps.showGachaSettingsDialog();
       });
     $('body')
       .off('click.acu_gacha_shard_shop_close')
-      .on('click.acu_gacha_shard_shop_close', '.acu-gacha-shard-shop-close', function (e) {
+      .on('click.acu_gacha_shard_shop_close', '.acu-gacha-shard-shop-close', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         $('.acu-gacha-shard-shop-overlay').remove();
       });
     $('body')
       .off('click.acu_gacha_shard_tab')
-      .on('click.acu_gacha_shard_tab', '.acu-gacha-shard-tab', function (e) {
+      .on('click.acu_gacha_shard_tab', '.acu-gacha-shard-tab', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const rarity = String($(this).data('rarity') || '').trim() as GachaRarity;
@@ -1170,11 +1172,11 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_shard_pool_tab')
-      .on('click.acu_gacha_shard_pool_tab', '.acu-gacha-shard-pool-tab', function (e) {
+      .on('click.acu_gacha_shard_pool_tab', '.acu-gacha-shard-pool-tab', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const nextPoolTag = String($(this).data('pool-tag') || '').trim() as GachaPoolTag;
-        if (!deps.getVisibleGachaPoolConfigDefinitions().some(pool => pool.id === nextPoolTag)) return;
+        if (!deps.getVisibleGachaPoolConfigDefinitions().some((pool: any) => pool.id === nextPoolTag)) return;
         deps.updateGachaPoolTag(nextPoolTag);
       });
     const debugWindow = window as Window & { _acuGachaShardDebugBound?: boolean };
@@ -1200,7 +1202,7 @@ export function createBindEvents(deps: any) {
     }
     $('body')
       .off('click.acu_gacha_shard_exchange')
-      .on('click.acu_gacha_shard_exchange', '.acu-gacha-shard-buy-btn', function (e) {
+      .on('click.acu_gacha_shard_exchange', '.acu-gacha-shard-buy-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -1215,7 +1217,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_shard_detail')
-      .on('click.acu_gacha_shard_detail', '.acu-gacha-shard-detail-btn', function (e) {
+      .on('click.acu_gacha_shard_detail', '.acu-gacha-shard-detail-btn', function (this: any, e: any) {
         if ($(e.target).closest('.acu-gacha-shard-buy-btn').length) {
           console.debug('[ACU][GachaShard] detail handler skipped for buy button', {
             target: e.target,
@@ -1236,7 +1238,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_pickup_detail')
-      .on('click.acu_gacha_pickup_detail', '.acu-gacha-pickup-detail-btn', function (e) {
+      .on('click.acu_gacha_pickup_detail', '.acu-gacha-pickup-detail-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const itemId = String($(this).data('item-id') || '').trim();
@@ -1245,7 +1247,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_recent_detail')
-      .on('click.acu_gacha_recent_detail', '.acu-gacha-recent-detail-btn', function (e) {
+      .on('click.acu_gacha_recent_detail', '.acu-gacha-recent-detail-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const itemId = String($(this).data('item-id') || '').trim();
@@ -1255,21 +1257,21 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_open_btn')
-      .on('click.acu_gacha_open_btn', '.acu-gacha-open-btn', function (e) {
+      .on('click.acu_gacha_open_btn', '.acu-gacha-open-btn', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         void deps.showGachaVisualization();
       });
     $('body')
       .off('click.acu_gacha_inventory_open')
-      .on('click.acu_gacha_inventory_open', '.acu-gacha-inventory-open', function (e) {
+      .on('click.acu_gacha_inventory_open', '.acu-gacha-inventory-open', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         deps.showInventoryVisualization();
       });
     $('body')
       .off('click.acu_gacha_open_table')
-      .on('click.acu_gacha_open_table', '.acu-gacha-open-table', function (e) {
+      .on('click.acu_gacha_open_table', '.acu-gacha-open-table', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const tableNameValue = $(this).data('table');
@@ -1287,14 +1289,14 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_gacha_close')
-      .on('click.acu_gacha_close', '.acu-gacha-close', function (e) {
+      .on('click.acu_gacha_close', '.acu-gacha-close', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         deps.closeGachaVisualization();
       });
     $('body')
       .off('click.acu_inventory_tab')
-      .on('click.acu_inventory_tab', '.acu-inventory-tab', function (e) {
+      .on('click.acu_inventory_tab', '.acu-inventory-tab', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const target = String($(this).data('target') || 'inventory') === 'equipment' ? 'equipment' : 'inventory';
@@ -1303,7 +1305,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_inventory_card')
-      .on('click.acu_inventory_card', '.acu-inventory-card [data-action]', function (e) {
+      .on('click.acu_inventory_card', '.acu-inventory-card [data-action]', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const $card = $(this).closest('.acu-inventory-card');
@@ -1316,7 +1318,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_inventory_detail_menu')
-      .on('click.acu_inventory_detail_menu', '.acu-inventory-detail-menu-target', function (e) {
+      .on('click.acu_inventory_detail_menu', '.acu-inventory-detail-menu-target', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const $target = $(this);
@@ -1328,7 +1330,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_inventory_open_table')
-      .on('click.acu_inventory_open_table', '.acu-inventory-open-table', function (e) {
+      .on('click.acu_inventory_open_table', '.acu-inventory-open-table', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const tableNameValue = $(this).data('table');
@@ -1346,7 +1348,7 @@ export function createBindEvents(deps: any) {
       });
     $('body')
       .off('click.acu_inventory_close')
-      .on('click.acu_inventory_close', '.acu-inventory-close', function (e) {
+      .on('click.acu_inventory_close', '.acu-inventory-close', function (e: any) {
         e.stopPropagation();
         e.preventDefault();
         deps.closeInventoryVisualization();
@@ -1354,7 +1356,7 @@ export function createBindEvents(deps: any) {
     // [新增] 技能列表"使用"按钮 - 使用技能并进行检定
     $('body')
       .off('click.acu_dash_use_skill')
-      .on('click.acu_dash_use_skill', '.acu-dash-use-skill-btn', function (e) {
+      .on('click.acu_dash_use_skill', '.acu-dash-use-skill-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const skillName = $(this).data('skill') || '技能';
@@ -1371,10 +1373,10 @@ export function createBindEvents(deps: any) {
             if (sheet.name.includes('技能') || sheet.name.includes('能力')) {
               const headers = sheet.content[0] || [];
               // 动态查找列索引
-              const foundNameIdx = headers.findIndex(h => h && (h.includes('名称') || h.includes('技能名')));
+              const foundNameIdx = headers.findIndex((h: any) => h && (h.includes('名称') || h.includes('技能名')));
               const nameIdx = foundNameIdx >= 0 ? foundNameIdx : 1;
-              const attrValIdx = headers.findIndex(h => h && h.includes('属性值'));
-              const profIdx = headers.findIndex(h => h && (h.includes('熟练') || h.includes('等级')));
+              const attrValIdx = headers.findIndex((h: any) => h && h.includes('属性值'));
+              const profIdx = headers.findIndex((h: any) => h && (h.includes('熟练') || h.includes('等级')));
 
               for (let i = 1; i < sheet.content.length; i++) {
                 const row = sheet.content[i];
@@ -1423,7 +1425,7 @@ export function createBindEvents(deps: any) {
     // [新增] 进行中任务"追踪"按钮
     $('body')
       .off('click.acu_dash_track_task')
-      .on('click.acu_dash_track_task', '.acu-dash-track-task-btn', function (e) {
+      .on('click.acu_dash_track_task', '.acu-dash-track-task-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const taskName = $(this).data('task') || '任务';
@@ -1434,7 +1436,7 @@ export function createBindEvents(deps: any) {
     // [新增] 重要人物"发消息"按钮
     $('body')
       .off('click.acu_dash_msg')
-      .on('click.acu_dash_msg', '.acu-dash-msg-btn', function (e) {
+      .on('click.acu_dash_msg', '.acu-dash-msg-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const npcName = $(this).data('npc') || '对方';
@@ -1487,7 +1489,7 @@ export function createBindEvents(deps: any) {
         overlay.find('#acu-msg-send').click(sendMessage);
 
         // 回车发送
-        overlay.find('#acu-msg-input').on('keydown', function (ev) {
+        overlay.find('#acu-msg-input').on('keydown', function (ev: any) {
           if (ev.key === 'Enter') {
             ev.preventDefault();
             sendMessage();
@@ -1501,7 +1503,7 @@ export function createBindEvents(deps: any) {
     // [新增] NPC对抗检定按钮
     $('body')
       .off('click.acu_dash_contest')
-      .on('click.acu_dash_contest', '.acu-dash-contest-btn', function (e) {
+      .on('click.acu_dash_contest', '.acu-dash-contest-btn', function (this: any, e: any) {
         e.stopPropagation();
         e.preventDefault();
         const npcName = $(this).data('npc') || '';
@@ -1524,7 +1526,7 @@ export function createBindEvents(deps: any) {
     // 使用 $('body') 而非 $(document)，确保在 iframe 环境下正确工作
     $('body')
       .off('click.acu_preview_cell_menu')
-      .on('click.acu_preview_cell_menu', '.acu-preview-overlay .acu-cell', function (e) {
+      .on('click.acu_preview_cell_menu', '.acu-preview-overlay .acu-cell', function (this: any, e: any) {
         console.log('[DICE] preview cell click triggered', this, $(this).data());
         // 排除关闭按钮
         if ($(e.target).closest('.acu-preview-close').length) return;
@@ -1554,7 +1556,7 @@ export function createBindEvents(deps: any) {
     // [重构] 仪表盘预览功能：复用表格卡片渲染，完整功能
     $('body')
       .off('click.acu_dash_preview')
-      .on('click.acu_dash_preview', '.acu-dash-preview-trigger', function (e) {
+      .on('click.acu_dash_preview', '.acu-dash-preview-trigger', function (this: any, e: any) {
         e.stopPropagation();
 
         const tableKey = deps.safeDecodeURIComponent(String($(this).data('table-key') ?? ''));
@@ -1601,7 +1603,7 @@ export function createBindEvents(deps: any) {
 
         // 构建卡片内容（复用主表格的渲染逻辑）
         let cardBody = '';
-        rowData.forEach((cell, cIdx) => {
+        rowData.forEach((cell: any, cIdx: any) => {
           if (cIdx <= 0 || cIdx === titleColIndex) return;
           const currentHeader = headers[cIdx] || '';
           if (currentHeader.includes('交互')) return; // 隐藏交互选项列
@@ -1637,14 +1639,14 @@ export function createBindEvents(deps: any) {
         if (tableActions.length > 0) {
           const actionBtns = tableActions
             .map(
-              (act, actIdx) =>
+              (act: any, actIdx: any) =>
                 `<button class="acu-action-item ${act.type === 'check' ? 'check-type' : ''}" data-action-idx="${actIdx}" data-row="${realRowIdx}"><i class="fa-solid ${act.icon || 'fa-play'}"></i> ${deps.escapeHtml(act.label)}</button>`,
             )
             .join('');
           actionsHtml = `<div class="acu-card-actions">${actionBtns}</div>`;
         }
         if (previewType === 'equipment') {
-          const qualityColIdx = headers.findIndex(h => String(h || '').includes('品质'));
+          const qualityColIdx = headers.findIndex((h: any) => String(h || '').includes('品质'));
           const equipRarity = qualityColIdx >= 0 ? String(rowData[qualityColIdx] || '').trim() : '';
           const canDismantleEquip = deps.isGachaRarity(equipRarity);
           const equipActions = `
@@ -1693,7 +1695,7 @@ export function createBindEvents(deps: any) {
         // 关闭事件
         const $previewOverlay = $('.acu-preview-overlay');
         deps.setupOverlayClose($previewOverlay, 'acu-preview-overlay', () => $previewOverlay.remove());
-        $previewOverlay.on('click', function (ev) {
+        $previewOverlay.on('click', function (this: any, ev: any) {
           if ($(ev.target).closest('.acu-preview-close').length) {
             $(this).remove();
           }
@@ -1707,14 +1709,14 @@ export function createBindEvents(deps: any) {
       let touchStartY = 0;
 
       // 使用事件委托，监听整个 data-area
-      $doc.on('touchstart.acuSwipeFix', '#acu-data-area', function (e) {
+      $doc.on('touchstart.acuSwipeFix', '#acu-data-area', function (e: any) {
         if (e.originalEvent.touches.length === 1) {
           touchStartX = e.originalEvent.touches[0].clientX;
           touchStartY = e.originalEvent.touches[0].clientY;
         }
       });
 
-      $doc.on('touchmove.acuSwipeFix', '#acu-data-area', function (e) {
+      $doc.on('touchmove.acuSwipeFix', '#acu-data-area', function (e: any) {
         if (e.originalEvent.touches.length !== 1) return;
 
         const touch = e.originalEvent.touches[0];

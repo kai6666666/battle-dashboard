@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * restore-mutable-runtime-value.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
-export function createRestoreMutableRuntimeValue(deps: any) {
+export function createRestoreMutableRuntimeValue(_deps: any) {
   const restoreMutableRuntimeValue = (target: unknown, snapshot: unknown): void => {
     if (Array.isArray(target) && Array.isArray(snapshot)) {
       target.splice(0, target.length, ...snapshot);

@@ -1,8 +1,9 @@
-// @ts-nocheck
 /**
  * get-dice-config-backup-module-resource-shape-warnings.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+type DiceConfigBackupModuleId = string;
+
 export function createGetDiceConfigBackupModuleResourceShapeWarnings(deps: any) {
   const getDiceConfigBackupModuleResourceShapeWarnings = (
     moduleId: DiceConfigBackupModuleId,

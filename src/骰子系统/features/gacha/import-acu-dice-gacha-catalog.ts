@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * import-acu-dice-gacha-catalog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -28,7 +27,7 @@ export function createImportAcuDiceGachaCatalog(deps: any) {
 
     if (!stats) throw new Error('骰子商店目录导入失败');
     if (!options.silent && window.toastr) {
-      const title = stats.warnings.length > 0 ? '骰子商店导入完成，有部分跳过' : '骰子商店导入完成';
+      const title = (stats as any).warnings.length > 0 ? '骰子商店导入完成，有部分跳过' : '骰子商店导入完成';
       window.toastr.success(deps.formatGachaCatalogImportStatsText(stats), title);
     }
     const result = deps.cloneAcuDiceApiValue(stats);

@@ -1,8 +1,8 @@
-// @ts-nocheck
 /**
  * get-global-interaction-action-rule-groups.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
  */
+import type { GlobalInteractionActionRuleGroup } from '../../shared/index-local-types';
 export function createGetGlobalInteractionActionRuleGroups(deps: any) {
   const getGlobalInteractionActionRuleGroups = (): GlobalInteractionActionRuleGroup[] => {
     const config = deps.getGMConfig() as {

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * advanced-preset-manager-dialog.ts
  * Feature-Sliced 模块（工厂版，DI 注入依赖）。
@@ -119,7 +118,7 @@ export function createShowAdvancedPresetManager(deps: any) {
       overlay.find('#cfg-crazy-mode').val(selectValue);
 
       // 下拉选择事件
-      overlay.find('#cfg-crazy-mode').on('change', function () {
+      overlay.find('#cfg-crazy-mode').on('change', function (this: any) {
         const value = parseInt($(this).val() as string, 10);
         if (value === 0) {
           deps.saveCrazyModeConfig({ enabled: false, crazyLevel: 50 });
@@ -131,20 +130,20 @@ export function createShowAdvancedPresetManager(deps: any) {
     initCrazyModeUI();
 
     // 隐藏设置开关
-    overlay.find('#cfg-hide-dice-result').on('change', function () {
+    overlay.find('#cfg-hide-dice-result').on('change', function (this: any) {
       const hide = $(this).is(':checked');
       deps.saveDiceConfig({ hideDiceResultFromUser: hide });
       console.info('[DICE]应用投骰结果隐藏/显示设置(输入栏)...', hide);
       deps.hideDiceResultsInUserMessages();
     });
 
-    overlay.find('#cfg-overwrite-last-dice-result').on('change', function () {
+    overlay.find('#cfg-overwrite-last-dice-result').on('change', function (this: any) {
       const overwrite = $(this).is(':checked');
       deps.saveDiceConfig({ overwriteLastDiceResult: overwrite });
       console.info('[DICE]应用投骰结果覆盖设置...', overwrite);
     });
 
-    overlay.find('#cfg-hide-dice-result-chat').on('change', function () {
+    overlay.find('#cfg-hide-dice-result-chat').on('change', function (this: any) {
       const hide = $(this).is(':checked');
       deps.saveDiceConfig({ hideDiceResultInChat: hide });
       console.info('[DICE]应用投骰结果隐藏/显示设置(聊天记录)...', hide);

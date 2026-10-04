@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * features/gacha/gacha-state.ts
  * Feature-Sliced: features/gacha 域的状态"规范化/构造"助手（DI 注入配置依赖）。
