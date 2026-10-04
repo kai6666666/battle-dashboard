@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * 骰子系统拆解护栏（x1）
- *- 文件体积门：src/骰子系统 内 >100KB 的文件必须在 baseline-large-files.json 中，且不得再增长
+ * 战斗仪表盘拆解护栏（x1）
+ *- 文件体积门：src/战斗仪表盘 内 >100KB 的文件必须在 baseline-large-files.json 中，且不得再增长
  * - @ts-nocheck 冻结：只允许 baseline-ts-nocheck.json 中的存量文件，禁止新增
  */
 import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = process.cwd();
-const SRC_DIR = path.join(ROOT, 'src/骰子系统');
+const SRC_DIR = path.join(ROOT, 'src/战斗仪表盘');
 const LARGE_LIMIT = 100 * 1024;
 
 const readJson = p => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'));
@@ -26,7 +26,7 @@ const walk = dir => {
 };
 
 if (!fs.existsSync(SRC_DIR)) {
-  console.error('[guardrails] 未找到 src/骰子系统');
+  console.error('[guardrails] 未找到 src/战斗仪表盘');
   process.exit(1);
 }
 

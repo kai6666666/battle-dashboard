@@ -1,5 +1,5 @@
 /**
- * 骰子系统 test harness — JSDOM 沙盒加载器（x6-a）
+ * 战斗仪表盘 test harness — JSDOM 沙盒加载器（x6-a）
  * 用法: const { loadBundle } = require('./harness.js');
  *      const { win, bootError } = loadBundle('/path/to/stable.js');
  * 环境: 需要可解析到 jsdom 与 jquery；可用 JSDOM_PATH / TSBUILD 环境变量指定回退位置。

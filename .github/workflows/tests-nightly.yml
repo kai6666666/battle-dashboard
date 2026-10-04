@@ -31,6 +31,6 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Run test harness
-        run: node tests/run.js dist/骰子系统/stable.js
+        run: node tests/run.js dist/战斗仪表盘/stable.js
       - name: Guardrails
         run: node scripts/guardrails/check-guardrails.mjs

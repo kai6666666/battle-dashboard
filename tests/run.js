@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * 骰子系统 test harness runner（x6-b）
+ * 战斗仪表盘 test harness runner（x6-b）
  * 用法: node tests/run.js [bundle路径]
- * 默认 bundle: <repo>/dist/骰子系统/stable.js
+ * 默认 bundle: <repo>/dist/战斗仪表盘/stable.js
  * 说明: bundle 通过 getBundle() 惰性单例共享 —— 全部用例只加载一次。
  */
 const fs = require('fs');
 const path = require('path');
 
-const bundlePath = path.resolve(process.argv[2] || path.join(__dirname, '..', 'dist', '骰子系统', 'stable.js'));
+const bundlePath = path.resolve(process.argv[2] || path.join(__dirname, '..', 'dist', '战斗仪表盘', 'stable.js'));
 if (!fs.existsSync(bundlePath)) {
   console.error('[run] bundle not found: ' + bundlePath);
   process.exit(2);
