@@ -36,4 +36,5 @@
 
 - ✅ **b1 地基适配已完成**（2026-10-04）：dnd-core 6+1 模块 + `app/init.ts` 接线 + 产物重建
 - ✅ **b2 数据与模板已完成**（2026-10-04）：DataManager×4 / ItemManager / TemplateSync / 内置模板随包；notify + save-bridge
+- 🎨 外观统一策略已定档（2026-10-04）：脚本设置入口 / 变量表体系 / 骰子功能入口 **统一融入 DND 原版视觉**（详见 `D方案-目标架构图.md` §6.5）
 - 下一步：**b3 渲染工具**（UIRenderer / UIUtils / styles 拆 part-08-dnd-* / ThemeManager / StyleManager）
