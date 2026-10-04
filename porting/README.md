@@ -32,7 +32,7 @@
 | `DND仪表盘与骰子系统-功能重叠地图.md` | 重叠域分析与归属裁决 |
 | `骰子系统-分期拆解方案.md` | 基座拆解基线 |
 
-## 下一步（b1）
+## 进度
 
-**b1 地基适配**：Logger / Utils / SettingsManager / DBAdapter / TavernAPI / Config → 适配层
-（验收：新模块初始化成功、能读一条数据库设置）
+- ✅ **b1 地基适配已完成**（2026-10-04）：dnd-core 6+1 模块工厂化移植 + `app/init.ts` 接线 + 产物重建
+- 下一步：**b2 数据与模板**（DataManager 拆 4 块 / ItemManager / TemplateSync / TavernSettingsSync）

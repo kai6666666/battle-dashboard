@@ -17,12 +17,14 @@
 - [x] 给 BasedonST-main 打 tag（`port-baseline`）→ `bac92b25`（v2.0.5）｜DND_immersive_dashboard
 - [x] 建立新旧对照测试环境（旧版独立加载）→ 材料已备（自动更新版加载器）；酒馆侧配置待做
 
-### b1 地基适配（2-3 天）
-- [ ] Logger(2.3K)、Utils(1.4K)、SettingsManager(2.4K) → 适配层
-- [ ] DBAdapter(9.6K) → 对齐 AutoCardUpdater V2/legacy
-- [ ] TavernAPI(21.4K) → **保留关键词过滤**
-- [ ] Config(8.4K)
-- 验收：新模块初始化成功、能读一条数据库设置
+### b1 地基适配（2-3 天）— ✅ 已完成（2026-10-04）
+- [x] Logger(2.3K)、Utils(1.4K)、SettingsManager(2.4K) → 适配层（工厂+DI）
+- [x] DBAdapter(9.6K) → 对齐 AutoCardUpdater V2/legacy（IndexedDB + LocalStorage 兜底）
+- [x] TavernAPI(21.4K) → 保留关键词过滤（世界书四重保障）
+- [x] Config(8.4K)
+- [x] 附加：TavernSettingsSync(17K) 随 b1 附带移植（SettingsManager 依赖）
+- [x] S3 接线：`app/init.ts` 启动 dnd-core（幂等）
+- 验收：初始化成功（`[dnd-core] 就绪 ✅`）+ 读设置验收（`dnd_global_api_config`）
 
 ### b2 数据与模板（3-5 天）
 - [ ] DataManager(49.9K → 拆 4 块：表解析/队伍/技能专长/导入导出)

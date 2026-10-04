@@ -7,6 +7,7 @@ import { DICE_ROOT_SELECTOR } from '../shared/constants';
 import { setDatabaseToastMute } from '../shared/database-toast-mute';
 import { injectDatabaseStyles } from '../database-ui-override';
 import { createFontsList } from '../features/ui/fonts-list';
+import { createDndCore } from '../features/dnd-core';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -311,6 +312,18 @@ export function createInit(deps: any) {
       }
     };
     loop();
+
+    // [dnd-core · b1 接线（S3）] 初始化 DND 仪表盘地基模块（幂等：脚本重载不重复创建）
+    try {
+      const dndWindow = window as any;
+      if (!dndWindow.__dndCoreInstance) {
+        dndWindow.__dndCoreInstance = createDndCore();
+        void dndWindow.__dndCoreInstance.init();
+        console.info('[DICE]dnd-core（b1）已接线，初始化进行中…');
+      }
+    } catch (e) {
+      console.warn('[DICE]dnd-core 初始化失败（b1，忽略不影响主流程）:', e);
+    }
 
     // [新增] 监听用户发送消息 - 隐藏选项面板（选项已过时）
     const setupOptionHideListener = () => {
