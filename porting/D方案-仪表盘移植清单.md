@@ -55,9 +55,11 @@
 - [x] S3 接线：app/init.ts（core → theme → ui → hud → character 链）
 - 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（角色卡/创建向导/升级向导）
 
-### b6 物品（里程碑 M3，3-4 天）
-- [ ] UIItems(37.7K)
-- 验收：列表/详情/装备交互
+### b6 物品（里程碑 M3，3-4 天）— ✅ 已完成（2026-10-05）
+- [x] UIItems(37.7K → 拆 3 块：卡片 / 操作 / 面板)
+- [x] 跨域全局化（showItemDetailPopup / showQuestTooltip 转正；hud 调用自动命中）
+- [x] S3 接线：app/init.ts（… → items 链）
+- 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（列表 / 详情 / 装备交互）
 
 ### b7 战斗（里程碑 M4，4-6 天）
 - [ ] UICombat(29.8K) + 相关逻辑
