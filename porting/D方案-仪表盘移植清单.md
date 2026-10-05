@@ -106,6 +106,8 @@
 - 🔧 **b12.2 实测修复（2026-10-05）**：Mini HUD 渲染链修复 — hud 的 presetSwitcher/tableManager 改跨域桥代理（renderHUD 不再因 stub 缺方法中断）+ 防御包裹 → tag `v0.0.22-b12.2`
 - 🔧 **b12.3 实测修复（2026-10-05）**：Mini HUD 开关行为（logo 热区收窄 + 收起按钮）／数据库 AI 选项放宽 → tag `v0.0.23-b12.3`
 - 🔧 **b12.4 实测修复（2026-10-05）**：球点击逐级切换（collapsed→mini→full→mini）+ 连锁点击抑制 / 移除「−」按钮 → tag `v0.0.24-b12.4`
+- 🔧 **b12.5 实测修复（2026-10-05）**：悬浮球纯开关（点=开 Mini HUD / 再点=关 Mini HUD；主面板入口在小窗「D20」）→ tag `v0.0.25-b12.5`
+- 🔧 **b12.6 实测修复（2026-10-05）**：Mini HUD 点击链全修 —— ① 跨域方法缺失补齐（选项 fillChatInput / 队伍 showCharacterCard / 底栏 5 项 / 战斗单位）② 弹窗 × 按钮 inline onclick → 脚本绑定（detail-popup / quick-trigger / 队列 / NPC 卡 / 队伍按钮）③ 全局对象同步宿主顶层窗口兜底 → tag `v0.0.26-b12.6`
 
 ## 增补事项
 - [x] **悬浮球二合一**（✅ 2026-10-05 完成，v0.0.15-b10d）：唯一 D20 球（长按/双击开骰子面板）+ S1 桥 `__acuToggleDicePanel` + 触发器融合隐藏
