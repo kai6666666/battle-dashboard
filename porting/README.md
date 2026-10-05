@@ -46,4 +46,5 @@
 - ✅ **b7 战斗已完成**（2026-10-05）：UICombat×4 / 跨域全局化（4 处转正）→ tag `v0.0.9-b7`
 - ✅ **b8 地图已完成**（2026-10-05）：EMM×3 + UIMap×4 → tag `v0.0.10-b8`
 - ✅ **b9 骰子归一已完成**（2026-10-05）：UIDice×4（AcuDice 引擎优先）/ 骰子池退役 / 规则注入器保留 → tag `v0.0.11-b9`
-- 下一步：**b10 管理面板**（6-8 天）（UISettings / UITableManager / **外观统一收口** / **悬浮球二合一**（D20）/ 骰子功能入口汇总）
+- 🚧 **b10 进行中（拆分四子批）**：✅ b10a（UISettings + PresetSwitcher）→ `v0.0.12-b10a`；⬜ b10b UIPanels / b10c UITableManager / b10d 收口（外观统一+悬浮球二合一）
+- 下一步：**b10b UIPanels（63.3K → 拆块）**

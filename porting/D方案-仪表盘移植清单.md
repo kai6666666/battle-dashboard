@@ -80,10 +80,11 @@
 - [x] 附带修复：dnd-map 两处 saveData 接线（b8 遗漏项）
 - 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（投骰=AcuDice 结果、结果渲染统一、无双重骰子渲染）
 
-### b10 管理面板（5-7 天）
-- [ ] UISettings(69.4K)、UIPanels(63.3K)
-- [ ] UITableManager(44.1K)（划清与 `database-ui-override` 边界）
-- [ ] PresetSwitcher(5K)
+### b10 管理面板（5-7 天）— 🚧 进行中（拆分四子批）
+- [x] **b10a**（2026-10-05）：UISettings(69.4K 整文件搬运) + PresetSwitcher(5K) → tag `v0.0.12-b10a`（combat presetSwitcher 动态代理接真）
+- [ ] **b10b**：UIPanels(63.3K → 拆块)
+- [ ] **b10c**：UITableManager(44.1K → 拆块；划清与 `database-ui-override` 边界)
+- [ ] **b10d**：收口（外观统一②③ / 悬浮球二合一（D20）/ 骰子功能入口汇总）
 - 验收：设置全通、表格增删改正常
 
 ### b11 视觉完整（4-6 天）
