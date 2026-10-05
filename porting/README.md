@@ -44,4 +44,5 @@
 - ✅ **b5 角色/法术已完成**（2026-10-05）：UICharacter×7 / UISpells / 跨域全局化（+b4 补丁）→ tag `v0.0.7-b5`
 - ✅ **b6 物品已完成**（2026-10-05）：UIItems×3 / 跨域全局化 → tag `v0.0.8-b6`
 - ✅ **b7 战斗已完成**（2026-10-05）：UICombat×4 / 跨域全局化（4 处转正）→ tag `v0.0.9-b7`
-- 下一步：**b8 地图（里程碑 M5）**（ExplorationMapManager 22.2K + UIMap 43.9K；地图/迷雾/Token/瞄准/自动绘制）
+- ✅ **b8 地图已完成**（2026-10-05）：EMM×3 + UIMap×4 → tag `v0.0.10-b8`
+- 下一步：**b9 骰子归一（里程碑 M6）**（UIDice 30.8K → 改接 `AcuDice.roll/check`；DiceRulesInjector 保留；DiceManager 退役）

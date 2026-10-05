@@ -67,10 +67,11 @@
 - [x] S3 接线：app/init.ts（… → combat 链）
 - 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（回合 / 先攻 / 动作经济 / 法术位扣减）
 
-### b8 地图（里程碑 M5，5-7 天）
-- [ ] ExplorationMapManager(22.2K)
-- [ ] UIMap(43.9K)
-- 验收：地图/迷雾/Token/瞄准/自动绘制
+### b8 地图（里程碑 M5，5-7 天）— ✅ 已完成（2026-10-05）
+- [x] ExplorationMapManager(22.2K → 拆 3 块：AI层/探索核心/战斗地图；自引用形态保留)
+- [x] UIMap(43.9K → 拆 4 块：缩放·拖拽 / 迷你渲染 / 重绘 / 交互)
+- [x] S3 接线：app/init.ts（… → map 链）
+- 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（地图 / 迷雾 / Token / 瞄准 / 自动绘制）
 
 ### b9 骰子归一（里程碑 M6，4-6 天）
 - [ ] UIDice(30.8K → 改接 `AcuDice.roll/check`)
