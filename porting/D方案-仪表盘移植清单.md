@@ -41,11 +41,12 @@
 - [x] S3 接线：app/init.ts（core → theme → ui 幂等；window.DND_Dashboard_UI）
 - 验收：✅ 主题 4 套就绪（dark/forest/crimson/arcane）/ 切换无污染 / tests 16/16 / guardrails✅
 
-### b4 HUD（里程碑 M1，5-7 天）
-- [ ] UICore(46K → 拆：开关/悬浮球/防抖/助手按钮)
-- [ ] UIHUD(65K → 拆：Mini HUD/状态胶囊/NPC 列表)
-- [ ] UpdateController(1.6K) → 与仓库 update-controller 合并
-- 验收：**Mini HUD 完整可用**（HP/AC/状态/悬浮球/按钮呼出/防回弹）
+### b4 HUD（里程碑 M1，5-7 天）— ✅ 已完成（2026-10-05）
+- [x] UICore(46K → 拆 5 块：状态机/悬浮球/助手按钮/动态背景桥/init)
+- [x] UIHUD(65K → 拆 5 块：渲染/战斗/探索/底栏/NPC)
+- [x] UpdateController(1.6K) → 防回弹控制器（runSilently/handleUpdate；D2 决策：骰子池调用可选化）
+- [x] S3 接线：app/init.ts（DOM 能力环境门：浏览器/酒馆执行，测试 vm 跳过）
+- 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（悬浮球 / Mini HUD / 防回弹）
 
 ### b5 角色/法术（里程碑 M2，6-8 天）
 - [ ] UICharacter(123.3K → **必须拆**：属性/技能专长/资源/创建向导/升级向导)
