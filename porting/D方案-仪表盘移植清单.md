@@ -34,11 +34,12 @@
 - [x] 附加：notify 适配器 / save-bridge（api.importTableAsJson 主通道，b9 可升级为完整版）
 - 验收：读表验收钩子（`CHARACTER_Registry 行数`）+ 模板随包（sheet_quanjuzhuangtai ×7）+ guardrails✅ / tests 16/16✅
 
-### b3 渲染工具（3-4 天）
-- [ ] UIRenderer(1.9K)、UIUtils(30.7K)
-- [ ] styles.js(134.7K → 拆为 `part-08-dnd-*` 并入库)
-- [ ] ThemeManager(8.6K)、StyleManager(37.7K，先接最小默认主题)
-- 验收：主题应用正常、切换无污染
+### b3 渲染工具（3-4 天）— ✅ 已完成（2026-10-05）
+- [x] UIRenderer(1.9K)、UIUtils(30.7K) → features/dnd-ui/（4 文件）
+- [x] styles.js(134.7K → 拆为 `part-08-dnd-*` 5 块并入库 shared/styles)
+- [x] ThemeManager(8.6K)、StyleManager(37.7K → 先接最小默认主题 classic-dnd)
+- [x] S3 接线：app/init.ts（core → theme → ui 幂等；window.DND_Dashboard_UI）
+- 验收：✅ 主题 4 套就绪（dark/forest/crimson/arcane）/ 切换无污染 / tests 16/16 / guardrails✅
 
 ### b4 HUD（里程碑 M1，5-7 天）
 - [ ] UICore(46K → 拆：开关/悬浮球/防抖/助手按钮)
