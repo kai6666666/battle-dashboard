@@ -10,6 +10,7 @@ import { createFontsList } from '../features/ui/fonts-list';
 import { createDndCore } from '../features/dnd-core';
 import { createDndTheme } from '../features/dnd-theme';
 import { createDndUi } from '../features/dnd-ui';
+import { createDndHud } from '../features/dnd-hud';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -332,6 +333,27 @@ export function createInit(deps: any) {
               dndWindow.__dndUiInstance.init();
             }
             console.info('[DICE]dnd-theme / dnd-ui（b3）已接线');
+            // [dnd-hud · b4 接线（S3）] HUD（M1 里程碑：悬浮球 / Mini HUD / 状态胶囊）
+            try {
+              // 环境门：仅具备完整 DOM 能力的浏览器/酒馆环境自动构建 HUD（测试 vm 跳过）
+              const hudEnvOK = (() => {
+                try {
+                  const d: any = document;
+                  return !!(d && typeof d.elementFromPoint === 'function' && typeof d.createElement === 'function');
+                } catch { return false; }
+              })();
+              if (!hudEnvOK) {
+                console.info('[DICE]dnd-hud（b4）跳过自动接线（环境不具备完整 DOM）');
+              } else {
+                if (!dndWindow.__dndHudInstance) {
+                  dndWindow.__dndHudInstance = createDndHud({ core: dndWindow.__dndCoreInstance, ui: dndWindow.__dndUiInstance, theme: dndWindow.__dndThemeInstance });
+                  dndWindow.__dndHudInstance.init();
+                }
+                console.info('[DICE]dnd-hud（b4）已接线');
+              }
+            } catch (err2) {
+              console.warn('[DICE]dnd-hud（b4）接线失败（忽略不影响主流程）:', err2);
+            }
           } catch (err) {
             console.warn('[DICE]dnd b3 接线失败（忽略不影响主流程）:', err);
           }
