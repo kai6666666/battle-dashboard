@@ -52,4 +52,5 @@
 - ✅ **b10d 已完成**（2026-10-05）：S1桥 / 悬浮球二合一（D20）→ `v0.0.15-b10d`；**b10 管理面板全部完成**
 - 🚧 **b11 进行中（四子批）**：✅ b11a（12 风格入库）→ `v0.0.16-b11a`；⬜ b11b 特效/校验 / b11c 动态背景 / b11d 图标接真
 - ✅ **b11b 已完成**（2026-10-05）：StyleEffects + StyleValidator 接入 → `v0.0.17-b11b`
-- 下一步：**b11c DynamicBackground 接真**（设置面板效果列表 + UIRenderer 背景切换）
+- ✅ **b11c 已完成**（2026-10-05）：DynamicBackground 接真 → `v0.0.18-b11c`
+- 下一步：**b11d SVGIcons + icons 接真**（ICONS 全域名替换 iconProxy）

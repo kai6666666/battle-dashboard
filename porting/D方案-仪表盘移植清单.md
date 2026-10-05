@@ -91,7 +91,7 @@
 ### b11 视觉完整（4-6 天）— 🚧 进行中（拆分四子批）
 - [x] **b11a**（2026-10-05）：StylePresets(258.7K → 12 风格拆 13 文件 + dnd-theme 接入) → tag `v0.0.16-b11a`（单产物约束下"懒加载"= 静态打包 + 运行时懒校验）
 - [x] **b11b**（2026-10-05）：StyleEffects(47.2K) + StyleValidator(28.5K) 整文件工厂包裹接入（morphology→真实CSS规则 / 导入安全校验）→ tag `v0.0.17-b11b`
-- [ ] **b11c**：DynamicBackground(49.1K) 接真（设置面板效果列表 + UIRenderer 背景切换）
+- [x] **b11c**（2026-10-05）：DynamicBackground(49.1K) 入 dnd-theme + 六处接线（theme/ui/hud/settings/渲染器）；2D canvas 环境门（测试 vm 安全）→ tag `v0.0.18-b11c`
 - [ ] **b11d**：SVGIcons(6.1K) + icons(3.5K) 接真（ICONS 全域名替换 iconProxy）
 - 验收：全主题/特效/背景与 v2.0.4 一致
 
