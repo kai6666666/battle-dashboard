@@ -16,6 +16,7 @@ import { createDndItems } from '../features/dnd-items';
 import { createDndCombat } from '../features/dnd-combat';
 import { createDndMap } from '../features/dnd-map';
 import { createDndDice } from '../features/dnd-dice';
+import { createDndSettings } from '../features/dnd-settings';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -390,6 +391,16 @@ export function createInit(deps: any) {
                             dndWindow.__dndDiceInstance.init();
                           }
                           console.info('[DICE]dnd-dice（b9）已接线');
+                          // [dnd-settings · b10a 接线（S3）] 管理面板一
+                          try {
+                            if (!dndWindow.__dndSettingsInstance) {
+                              dndWindow.__dndSettingsInstance = createDndSettings({ core: dndWindow.__dndCoreInstance, ui: dndWindow.__dndUiInstance, theme: dndWindow.__dndThemeInstance, hud: dndWindow.__dndHudInstance, dice: dndWindow.__dndDiceInstance });
+                              dndWindow.__dndSettingsInstance.init();
+                            }
+                            console.info('[DICE]dnd-settings（b10a）已接线');
+                          } catch (err8) {
+                            console.warn('[DICE]dnd-settings（b10a）接线失败（忽略不影响主流程）:', err8);
+                          }
                         } catch (err7) {
                           console.warn('[DICE]dnd-dice（b9）接线失败（忽略不影响主流程）:', err7);
                         }

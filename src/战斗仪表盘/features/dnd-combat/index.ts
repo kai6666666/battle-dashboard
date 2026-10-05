@@ -27,8 +27,16 @@ export function createDndCombat(deps0: DndCombatDeps): DndCombat {
     utils: core.utils,
     dataManager: core.dataManager,
     notification: deps0.ui?.notification ?? emptyNotify,
-    // b10 接真（PresetSwitcher）
-    presetSwitcher: { showNotification: () => {} },
+    // b10a：PresetSwitcher 已上线（dnd-settings）；动态转发到全局实例（b7 原 stub 替换）
+    presetSwitcher: new Proxy({}, {
+      get: (_t: any, k: any) => {
+        try {
+          const g: any = (window as any).DND_Dashboard_UI;
+          if (g && typeof g[k] === 'function') return (g[k] as any).bind(g);
+        } catch (e) {}
+        return () => {};
+      },
+    }),
     icons: iconProxy,
   };
 
