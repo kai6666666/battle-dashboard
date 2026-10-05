@@ -11,6 +11,7 @@ import { STYLES_PART_04_VALIDATION } from './styles/part-04-validation';
 import { STYLES_PART_05_VALIDATION } from './styles/part-05-validation';
 import { STYLES_PART_06_INVENTORY } from './styles/part-06-inventory';
 import { STYLES_PART_07_BACKUP } from './styles/part-07-backup';
+import { STYLES_PART_08_DND } from './styles/part-08-theme';
 
 export const MAIN_STYLES = [
   STYLES_PART_01_THEME,
@@ -20,4 +21,5 @@ export const MAIN_STYLES = [
   STYLES_PART_05_VALIDATION,
   STYLES_PART_06_INVENTORY,
   STYLES_PART_07_BACKUP,
+  STYLES_PART_08_DND,
 ].join('');

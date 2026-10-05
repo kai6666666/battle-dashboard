@@ -8,6 +8,8 @@ import { setDatabaseToastMute } from '../shared/database-toast-mute';
 import { injectDatabaseStyles } from '../database-ui-override';
 import { createFontsList } from '../features/ui/fonts-list';
 import { createDndCore } from '../features/dnd-core';
+import { createDndTheme } from '../features/dnd-theme';
+import { createDndUi } from '../features/dnd-ui';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -318,7 +320,22 @@ export function createInit(deps: any) {
       const dndWindow = window as any;
       if (!dndWindow.__dndCoreInstance) {
         dndWindow.__dndCoreInstance = createDndCore();
-        void dndWindow.__dndCoreInstance.init();
+                void dndWindow.__dndCoreInstance.init().then(() => {
+          // [dnd-theme / dnd-ui · b3 接线（S3）] 主题与渲染工具（顺序：core → theme → ui；幂等）
+          try {
+            if (!dndWindow.__dndThemeInstance) {
+              dndWindow.__dndThemeInstance = createDndTheme({ core: dndWindow.__dndCoreInstance });
+              void dndWindow.__dndThemeInstance.init();
+            }
+            if (!dndWindow.__dndUiInstance) {
+              dndWindow.__dndUiInstance = createDndUi({ core: dndWindow.__dndCoreInstance, theme: dndWindow.__dndThemeInstance });
+              dndWindow.__dndUiInstance.init();
+            }
+            console.info('[DICE]dnd-theme / dnd-ui（b3）已接线');
+          } catch (err) {
+            console.warn('[DICE]dnd b3 接线失败（忽略不影响主流程）:', err);
+          }
+        });
         console.info('[DICE]dnd-core（b1）已接线，初始化进行中…');
       }
     } catch (e) {
