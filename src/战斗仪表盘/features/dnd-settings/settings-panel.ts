@@ -1139,9 +1139,9 @@ export function createSettingsPanelFragment(deps: any): any {
             
             // 3. 保存 API 配置
             const selectedProvider = $c.find('#dnd-ai-provider').val();
+            // [b12.3] 不再阻止保存：仅提示（检测可能受 iframe/插件版本影响）
             if (selectedProvider === 'database' && !deps.tavernApi.getDatabaseAIStatus().available) {
-                deps.notification.error('当前数据库插件未提供 callAI() 接口，请先更新数据库插件后再切换到神数据库 AI。');
-                return;
+                deps.notification.warning('未检测到 callAI() 接口；仍将保存该选项，请自行确认数据库插件版本。');
             }
 
             const newApiConfig = {

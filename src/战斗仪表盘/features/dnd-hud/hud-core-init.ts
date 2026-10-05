@@ -105,6 +105,9 @@ export function createHudCoreInitFragment(deps: any): any {
                     </div>
                     
                     <div style="display:flex;gap:5px;align-items:center;margin-left:10px;">
+                        <button class="dnd-hud-expand-btn" id="dnd-hud-collapse" title="收起 Mini HUD">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
                         <button class="dnd-hud-expand-btn" id="dnd-hud-theme" title="切换主题">
                             <i class="fa-solid fa-palette"></i>
                         </button>
@@ -392,17 +395,19 @@ export function createHudCoreInitFragment(deps: any): any {
 
         $('#dnd-close').on('click', () => this.setState('mini'));
         
-        // Logo 点击事件：切换完整面板
-        // [b12.2] 扩大热区：Mini HUD 头部整行可点（按钮除外）
-        $('#dnd-mini-hud .dnd-hud-header').on('click', (e) => {
-            if ($(e.target).closest('button').length) return;
+        // [b12.3] Logo 点击事件：切换完整面板（热区收窄为 Logo 本体，避免误触）
+        $('#dnd-logo-container').on('click', (e) => {
             e.stopPropagation();
-            // 简单的动画反馈
             const $logo = $('#dnd-logo-container');
             $logo.css('transform', 'scale(0.9)');
             setTimeout(() => $logo.css('transform', ''), 150);
-            
             this.setState('full');
+        });
+        // [b12.3] Mini HUD 收起按钮：一键关闭（回到悬浮球）
+        $('#dnd-hud-collapse').on('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.setState('collapsed');
         });
         
         
