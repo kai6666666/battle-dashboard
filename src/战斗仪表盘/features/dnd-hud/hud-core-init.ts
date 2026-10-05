@@ -456,13 +456,13 @@ export function createHudCoreInitFragment(deps: any): any {
             if (key === 'Escape' || keyCode === 27) {
                 // 优先关闭弹窗
                 if ($('#dnd-detail-popup-el').hasClass('visible')) {
-                    this.hideDetailPopup();
+                    ((window as any).DND_Dashboard_UI || this).hideDetailPopup?.();
                     e.preventDefault();
                     return;
                 }
                 // 其次关闭角色详情卡
                 if ($('#dnd-char-detail-card-el').hasClass('visible')) {
-                    this.hideCharacterCard();
+                    ((window as any).DND_Dashboard_UI || this).hideCharacterCard?.();
                     e.preventDefault();
                     return;
                 }
@@ -480,7 +480,7 @@ export function createHudCoreInitFragment(deps: any): any {
                 const party = deps.dataManager.getPartyData();
                 if (party && party[idx]) {
                     const { window: coreWin } = deps.utils.getCore();
-                    this.showCharacterCard(party[idx], { clientX: coreWin.innerWidth / 2, clientY: 100 });
+                    ((window as any).DND_Dashboard_UI || this).showCharacterCard?.(party[idx], { clientX: coreWin.innerWidth / 2, clientY: 100 });
                     e.preventDefault();
                     return;
                 }
@@ -521,7 +521,7 @@ export function createHudCoreInitFragment(deps: any): any {
                 });
 
                 if (matchedPartyMember) {
-                    this.showAvatarUploadDialog(matchedPartyMember, matchedPartyMember['姓名'] || charName);
+                    ((window as any).DND_Dashboard_UI || this).showAvatarUploadDialog?.(matchedPartyMember, matchedPartyMember['姓名'] || charName);
                 } else {
                     console.log('[DND Dashboard] 仅限修改主角或队友头像');
                     // 可以选择添加一个视觉反馈，比如 shake 动画

@@ -116,7 +116,7 @@ export function createHudRenderFragment(deps: any): any {
         this.renderMiniSpellSlots($body);
 
         // [优化] 渲染快捷物品栏 (替代原有的下拉列表)
-        this.renderQuickInventory($body);
+        ((window as any).DND_Dashboard_UI || this).renderQuickInventory?.($body);
 
         // 渲染常驻资源栏
         this.renderFooter($body);
@@ -148,7 +148,7 @@ export function createHudRenderFragment(deps: any): any {
             const $hud = $('#dnd-mini-hud');
             $hud.append($bar).append($trigger);
         }
-        this.renderQuickBar();
+        ((window as any).DND_Dashboard_UI || this).renderQuickBar?.();
         
         // 每次渲染后更新位置
         this.updateHUDPosition();

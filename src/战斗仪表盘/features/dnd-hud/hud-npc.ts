@@ -9,7 +9,7 @@ export function createHudNpcFragment(deps: any): any {
         const npcs = deps.dataManager.getTable('NPC_Registry');
         
         if (!npcs || npcs.length === 0) {
-            this.showItemDetailPopup(`<div style="text-align:center;color:#888;">${deps.icons.USERS} 暂无NPC数据</div>`, event.clientX, event.clientY);
+            ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.(`<div style="text-align:center;color:#888;">${deps.icons.USERS} 暂无NPC数据</div>`, event.clientX, event.clientY);
             return;
         }
         
@@ -75,7 +75,7 @@ export function createHudNpcFragment(deps: any): any {
         
         html += `</div>`;
         
-        this.showItemDetailPopup(html, event.clientX, event.clientY);
+        ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.(html, event.clientX, event.clientY);
     },
 
     // [新增] 过滤NPC列表
@@ -183,7 +183,7 @@ export function createHudNpcFragment(deps: any): any {
         // 阻止事件冒泡，避免触发父级的点击
         if (event) event.stopPropagation();
         
-        this.showItemDetailPopup(html, event.clientX, event.clientY);
+        ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.(html, event.clientX, event.clientY);
     },
 
     // [新增] 渲染迷你法术位

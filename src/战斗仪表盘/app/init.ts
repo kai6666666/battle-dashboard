@@ -11,6 +11,7 @@ import { createDndCore } from '../features/dnd-core';
 import { createDndTheme } from '../features/dnd-theme';
 import { createDndUi } from '../features/dnd-ui';
 import { createDndHud } from '../features/dnd-hud';
+import { createDndCharacter } from '../features/dnd-character';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -350,6 +351,16 @@ export function createInit(deps: any) {
                   dndWindow.__dndHudInstance.init();
                 }
                 console.info('[DICE]dnd-hud（b4）已接线');
+                // [dnd-character · b5 接线（S3）] 角色与法术（M2）
+                try {
+                  if (!dndWindow.__dndCharInstance) {
+                    dndWindow.__dndCharInstance = createDndCharacter({ core: dndWindow.__dndCoreInstance, ui: dndWindow.__dndUiInstance, theme: dndWindow.__dndThemeInstance, hud: dndWindow.__dndHudInstance });
+                    dndWindow.__dndCharInstance.init();
+                  }
+                  console.info('[DICE]dnd-character（b5）已接线');
+                } catch (err3) {
+                  console.warn('[DICE]dnd-character（b5）接线失败（忽略不影响主流程）:', err3);
+                }
               }
             } catch (err2) {
               console.warn('[DICE]dnd-hud（b4）接线失败（忽略不影响主流程）:', err2);

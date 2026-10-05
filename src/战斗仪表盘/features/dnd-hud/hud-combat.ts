@@ -18,7 +18,7 @@ export function createHudCombatFragment(deps: any): any {
         const activeChar = this.getControlledCharacter();
         const activeId = activeChar ? (activeChar['CHAR_ID'] || activeChar['PC_ID'] || activeChar['姓名']) : null;
         if (activeId && !this._turnResources[activeId]) {
-            this.resetActionEconomy(activeId);
+            ((window as any).DND_Dashboard_UI || this).resetActionEconomy?.(activeId);
         }
         
         // 左侧：迷你地图（根据设置决定是否显示）
@@ -104,12 +104,12 @@ export function createHudCombatFragment(deps: any): any {
                 
                 const charIdCombat = unit['单位名称'];
                 const avatarIdentity = partyData.find(p => p['姓名'] === unit['单位名称']) || { '单位名称': unit['单位名称'] };
-                const avatarInfo = this.resolveAvatarStorageKeys(avatarIdentity, unit['单位名称']);
-                const initialCombat = this.getNameInitial(unit['单位名称']);
+                const avatarInfo = ((window as any).DND_Dashboard_UI || this).resolveAvatarStorageKeys?.(avatarIdentity, unit['单位名称']);
+                const initialCombat = ((window as any).DND_Dashboard_UI || this).getNameInitial?.(unit['单位名称']);
                 const uid = `combat-avatar-${charIdCombat.replace(/[^a-zA-Z0-9]/g, '_')}-${Math.random().toString(36).substr(2,5)}`;
                 
                 // Trigger async load
-                setTimeout(() => this.loadAvatarAsync(avatarIdentity, uid, unit['单位名称']), 0);
+                setTimeout(() => ((window as any).DND_Dashboard_UI || this).loadAvatarAsync?.(avatarIdentity, uid, unit['单位名称']), 0);
                 
                 let nameColor = 'var(--dnd-text-main)';
                 if (isEnemy) nameColor = 'var(--dnd-accent-red)';
@@ -152,12 +152,12 @@ export function createHudCombatFragment(deps: any): any {
         });
 
         if (this.renderResourceConsumption) {
-            this.renderResourceConsumption($('#dnd-combat-resource-panel'));
+            ((window as any).DND_Dashboard_UI || this).renderResourceConsumption?.($('#dnd-combat-resource-panel'));
         }
 
         // 渲染地图（如果启用）
         if (showMiniMap) {
-            this.renderMiniMap($('#dnd-hud-minimap-content'));
+            ((window as any).DND_Dashboard_UI || this).renderMiniMap?.($('#dnd-hud-minimap-content'));
         }
     },
 
@@ -172,7 +172,7 @@ export function createHudCombatFragment(deps: any): any {
         const res = char;
         
         if (res && res['法术位']) {
-            const slotsHtml = this.formatSpellSlots(res['法术位'], true); // 启用 mini 模式
+            const slotsHtml = ((window as any).DND_Dashboard_UI || this).formatSpellSlots?.(res['法术位'], true); // 启用 mini 模式
             if (slotsHtml) {
                 const $el = $(`
                     <div style="padding:0 10px 5px 10px; border-bottom:1px solid rgba(255,255,255,0.05);">

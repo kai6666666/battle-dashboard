@@ -15,7 +15,7 @@ export function createHudExploreFragment(deps: any): any {
             $container.append($mapContainer);
             
             // 异步渲染地图
-            this.renderMiniMap($mapContainer);
+            ((window as any).DND_Dashboard_UI || this).renderMiniMap?.($mapContainer);
         }
         
         // 1. 渲染行动选项 (优先)
@@ -49,7 +49,7 @@ export function createHudExploreFragment(deps: any): any {
                 </div>
             `;
             const $el = $(qHtml);
-            $el.on('click', (e) => this.showQuestTooltip(activeQ, e.clientX, e.clientY));
+            $el.on('click', (e) => ((window as any).DND_Dashboard_UI || this).showQuestTooltip?.(activeQ, e.clientX, e.clientY));
             $container.append($el);
         }
     },
@@ -154,12 +154,12 @@ export function createHudExploreFragment(deps: any): any {
             
             const charId = char['PC_ID'] || char['CHAR_ID'] || char['姓名'];
             const avatarIdentity = char;
-            const avatarInfo = this.resolveAvatarStorageKeys(avatarIdentity, char['姓名']);
-            const initial = this.getNameInitial(char['姓名']);
+            const avatarInfo = ((window as any).DND_Dashboard_UI || this).resolveAvatarStorageKeys?.(avatarIdentity, char['姓名']);
+            const initial = ((window as any).DND_Dashboard_UI || this).getNameInitial?.(char['姓名']);
             const avatarUid = `party-avatar-${charId}-${idx}`;
             
             // 触发异步头像加载
-            setTimeout(() => this.loadAvatarAsync(avatarIdentity, avatarUid, char['姓名']), 0);
+            setTimeout(() => ((window as any).DND_Dashboard_UI || this).loadAvatarAsync?.(avatarIdentity, avatarUid, char['姓名']), 0);
             
             // [新增] 检查是否为当前操控角色
             const isControlled = (this._controlledCharId === charId);

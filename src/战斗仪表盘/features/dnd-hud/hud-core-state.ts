@@ -28,13 +28,13 @@ export function createHudCoreStateFragment(deps: any): any {
         
         // [修复] 切换角色时，通知战斗模块保存旧资源并加载/重置新角色资源
         if (typeof this.switchTurnContext === 'function') {
-            this.switchTurnContext(oldCharId, charId);
+            ((window as any).DND_Dashboard_UI || this).switchTurnContext?.(oldCharId, charId);
         } else if (typeof this.resetActionEconomy === 'function') {
             // 如果没有编写复杂的切换逻辑，至少要重置一次动作经济以刷新速度
-            this.resetActionEconomy();
+            ((window as any).DND_Dashboard_UI || this).resetActionEconomy?.();
         }
         
-        if (this.initResourceTracker) this.initResourceTracker();
+        if (this.initResourceTracker) ((window as any).DND_Dashboard_UI || this).initResourceTracker?.();
 
         //在数据库内切换主角
         if (charId && deps.dataManager.updateMainCharacterInDB) {
@@ -195,9 +195,9 @@ export function createHudCoreStateFragment(deps: any): any {
                 $full.addClass('visible');
                 const $active = $('.dnd-nav-item.active');
                 if ($active.length) {
-                    this.renderPanel($active.data('target'));
+                    ((window as any).DND_Dashboard_UI || this).renderPanel?.($active.data('target'));
                 } else {
-                    this.renderPanel('party');
+                    ((window as any).DND_Dashboard_UI || this).renderPanel?.('party');
                 }
                 // [新增] 初始化全屏界面动态背景
                 this._initDynamicBackground('full');
