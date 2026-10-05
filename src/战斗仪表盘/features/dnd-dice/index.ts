@@ -62,6 +62,17 @@ export function createDndDice(deps0: DndDiceDeps): DndDice {
           try { injector.init(); } catch (e) {}
         }, 1500);
       } catch (e) {}
+      // [b10d] 融合外观覆盖：隐藏骰子折叠触发器（入口统一：D20球长按/双击 + 仪表盘设置面板）
+      try {
+        const wAny: any = window as any;
+        if (!wAny.__dndDiceFusionStyleInjected) {
+          wAny.__dndDiceFusionStyleInjected = true;
+          const styleEl = document.createElement('style');
+          styleEl.id = 'dnd-fusion-dice-overrides';
+          styleEl.textContent = '.acu-collapse-floating{display:none !important}.acu-wrapper.acu-dice-ui-root .acu-col-floating{display:none !important}';
+          document.head.appendChild(styleEl);
+        }
+      } catch (errFusion) {}
       core.logger.info('[dnd-dice] 骰子归一就绪（M6）：投骰走 AcuDice / 规则注入器保留 / 骰子池已退役');
     } catch (e) {
       core.logger.warn('[dnd-dice] init 失败（忽略不影响主流程）：', e);

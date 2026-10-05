@@ -178,6 +178,10 @@ export function createHudCoreInitFragment(deps: any): any {
         let dragStartX = 0, dragStartY = 0;
         let btnStartX = 0, btnStartY = 0;
         const DRAG_THRESHOLD = 5; // 拖拽阈值（像素）
+        // [b10d] 长按/双击支持（打开骰子面板 S1桥）
+        let longPressTimer: any = null;
+        let longPressFired = false;
+        let lastTapTime = 0;
 
         // [优化] 使用原生 Pointer Events API 实现拖拽
         const handlePointerDown = (e) => {
@@ -195,6 +199,13 @@ export function createHudCoreInitFragment(deps: any): any {
             e.stopPropagation();
             
             isDragging = false;
+            // [b10d] 长按启动：600ms → 打开骰子面板（S1桥）
+            longPressFired = false;
+            if (longPressTimer) clearTimeout(longPressTimer);
+            longPressTimer = setTimeout(() => {
+                longPressFired = true;
+                try { const w: any = window; if (w.__acuToggleDicePanel) w.__acuToggleDicePanel('expand'); } catch (errLp) {}
+            }, 600);
             // [关键修改] 使用 screenX/Y 避免 iframe 坐标系问题
             dragStartX = e.screenX;
             dragStartY = e.screenY;
@@ -292,6 +303,9 @@ export function createHudCoreInitFragment(deps: any): any {
             win.removeEventListener('pointerup', handlePointerUp);
             win.removeEventListener('pointercancel', handlePointerUp);
             win.removeEventListener('blur', handlePointerUp);
+            // [b10d] 清理长按计时
+            if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+            if (e.type !== 'pointerup') longPressFired = false;
             
             if (btnDom.releasePointerCapture) {
                 try {
@@ -311,7 +325,21 @@ export function createHudCoreInitFragment(deps: any): any {
                 setTimeout(() => $btn.removeClass('is-dragging'), 50);
             } else if (e.type === 'pointerup') {
                 // 仅 pointerup 时触发点击（排除 cancel/blur）
-                this.toggleDashboard('floating-button');
+                if (longPressFired) {
+                    // [b10d] 长按：已打开骰子面板（不再切换 HUD）
+                    longPressFired = false;
+                } else {
+                    const nowTs = Date.now();
+                    if (nowTs - lastTapTime < 300) {
+                        // [b10d] 双击：抵消本次 HUD 切换 + 打开骰子面板
+                        lastTapTime = 0;
+                        try { const w: any = window; if (w.__acuToggleDicePanel) w.__acuToggleDicePanel('expand'); } catch (errDt) {}
+                        this.toggleDashboard('floating-button');
+                    } else {
+                        lastTapTime = nowTs;
+                        this.toggleDashboard('floating-button');
+                    }
+                }
             }
             
             isDragging = false;

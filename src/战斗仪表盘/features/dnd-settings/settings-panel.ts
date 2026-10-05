@@ -1184,6 +1184,20 @@ export function createSettingsPanelFragment(deps: any): any {
             }
         });
 
+        // [b10d] 骰子功能入口（汇总）：打开骰子面板（变量表 / 表格工具 / 快捷掷骰）
+        try {
+            const $jq: any = (window as any).jQuery || (window as any).$;
+            if ($jq && $c && $c.length) {
+                const $entry = $jq('<div style="margin-top:14px;padding:10px 12px;border:1px dashed var(--dnd-border-subtle);border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;">'
+                    + '<span style="font-size:12px;color:var(--dnd-text-dim);">🎲 骰子功能面板（变量表 / 表格工具 / 快捷掷骰）</span>'
+                    + '<button type="button" class="dnd-clickable" style="background:var(--dnd-bg-secondary);border:1px solid var(--dnd-border-inner);color:var(--dnd-text-main);border-radius:4px;padding:4px 10px;cursor:pointer;font-size:12px;white-space:nowrap;">打开</button>'
+                    + '</div>');
+                $entry.find('button').on('click', function () {
+                    try { const w: any = window; if (w.__acuToggleDicePanel) w.__acuToggleDicePanel('expand'); } catch (errEn) {}
+                });
+                $c.append($entry);
+            }
+        } catch (errEn2) {}
         // 清理预览背景 (当设置面板关闭时)
         // 注意: 这里假设面板关闭时会调用某种清理，否则可能需要额外机制
     }

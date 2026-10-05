@@ -414,6 +414,22 @@ export function createInit(deps: any) {
                                   dndWindow.__dndTableInstance.init();
                                 }
                                 console.info('[DICE]dnd-table（b10c）已接线');
+                                // [b10d · S1桥] D20球/设置面板 → 打开骰子面板（变量表 / 表格工具）
+                                try {
+                                  const $jq: any = (window as any).jQuery || (window as any).$;
+                                  if (!(window as any).__acuToggleDicePanel) {
+                                    (window as any).__acuToggleDicePanel = function (mode?: any) {
+                                      try {
+                                        const $exp = $jq ? $jq('#acu-btn-expand') : null;
+                                        if ($exp && $exp.length) { $exp.trigger('click'); return true; }
+                                        if (mode !== 'toggle') return true;
+                                        const $col = $jq ? $jq('#acu-btn-collapse') : null;
+                                        if ($col && $col.length) { $col.trigger('click'); return true; }
+                                        return true;
+                                      } catch (errBr) { return false; }
+                                    };
+                                  }
+                                } catch (errBr2) {}
                               } catch (err10) {
                                 console.warn('[DICE]dnd-table（b10c）接线失败（忽略不影响主流程）:', err10);
                               }
