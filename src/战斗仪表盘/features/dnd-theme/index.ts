@@ -4,6 +4,8 @@
 import { createDndThemeManager } from './theme-manager';
 import { createDndStyleManager } from './style-manager';
 import { getStyleList, getStylePreset, isBuiltinStyle } from './style-presets';
+import { createStyleEffects } from './style-effects';
+import { createStyleValidator } from './style-validator';
 
 export interface DndThemeDeps { core: any; }
 export interface DndTheme {
@@ -14,16 +16,13 @@ export interface DndTheme {
 
 /** b3 缺省降级实现（b11 接入完整 StylePresets / StyleValidator / StyleEffects 后替换） */
 // [b11a] 完整 StylePresets 已接入（12 风格）；原降级实现移除。
-const defaultStyleValidator = {
-  validate: (pack: any) => ({ valid: true, sanitized: pack, warnings: [], errors: [] }),
-};
-
-const defaultStyleEffects = {
-  apply: (_pack: any) => {
-    /* b11 接入 StyleEffects 后生效 */
-  },
-};
-
+// [b11b] StyleValidator / StyleEffects 完整实现已接入；原降级实现移除。
+function _createStyleValidatorImpl(core: any) {
+  return createStyleValidator({ logger: core.logger });
+}
+function _createStyleEffectsImpl(core: any) {
+  return createStyleEffects({ logger: core.logger, utils: core.utils });
+}
 export function createDndTheme(deps: DndThemeDeps): DndTheme {
   const { core } = deps;
 
@@ -39,8 +38,8 @@ export function createDndTheme(deps: DndThemeDeps): DndTheme {
     utils: core.utils,
     themeManager,
     stylePresets: { getStyleList, getStylePreset, isBuiltinStyle },
-    styleValidator: defaultStyleValidator,
-    styleEffects: defaultStyleEffects,
+    styleValidator: _createStyleValidatorImpl(core),
+    styleEffects: _createStyleEffectsImpl(core),
   });
 
   const init = async (): Promise<void> => {
