@@ -49,4 +49,5 @@
 - 🚧 **b10 进行中（拆分四子批）**：✅ b10a（UISettings + PresetSwitcher）→ `v0.0.12-b10a`；⬜ b10b UIPanels / b10c UITableManager / b10d 收口（外观统一+悬浮球二合一）
 - ✅ **b10b 已完成**（2026-10-05）：UIPanels 拆 7 块 → `v0.0.13-b10b`
 - ✅ **b10c 已完成**（2026-10-05）：UITableManager 拆 4 块 + 样式独立 → `v0.0.14-b10c`
-- 下一步：**b10d 收口**（外观统一②③ / 悬浮球二合一（D20）/ 骰子功能入口汇总）
+- ✅ **b10d 已完成**（2026-10-05）：S1桥 / 悬浮球二合一（D20）→ `v0.0.15-b10d`；**b10 管理面板全部完成**
+- 下一步：**b11 视觉完整**（StylePresets 258.7K 懒加载+校验 / StyleEffects 47.2K / StyleValidator 28.5K / DynamicBackground 49.1K / SVGIcons+icons）
