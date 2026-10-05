@@ -18,6 +18,7 @@ import { createDndMap } from '../features/dnd-map';
 import { createDndDice } from '../features/dnd-dice';
 import { createDndSettings } from '../features/dnd-settings';
 import { createDndPanels } from '../features/dnd-panels';
+import { createDndTable } from '../features/dnd-table';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -406,6 +407,16 @@ export function createInit(deps: any) {
                                 dndWindow.__dndPanelsInstance.init();
                               }
                               console.info('[DICE]dnd-panels（b10b）已接线');
+                              // [dnd-table · b10c 接线（S3）] 管理面板三
+                              try {
+                                if (!dndWindow.__dndTableInstance) {
+                                  dndWindow.__dndTableInstance = createDndTable({ core: dndWindow.__dndCoreInstance });
+                                  dndWindow.__dndTableInstance.init();
+                                }
+                                console.info('[DICE]dnd-table（b10c）已接线');
+                              } catch (err10) {
+                                console.warn('[DICE]dnd-table（b10c）接线失败（忽略不影响主流程）:', err10);
+                              }
                             } catch (err9) {
                               console.warn('[DICE]dnd-panels（b10b）接线失败（忽略不影响主流程）:', err9);
                             }
