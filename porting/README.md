@@ -47,4 +47,5 @@
 - ✅ **b8 地图已完成**（2026-10-05）：EMM×3 + UIMap×4 → tag `v0.0.10-b8`
 - ✅ **b9 骰子归一已完成**（2026-10-05）：UIDice×4（AcuDice 引擎优先）/ 骰子池退役 / 规则注入器保留 → tag `v0.0.11-b9`
 - 🚧 **b10 进行中（拆分四子批）**：✅ b10a（UISettings + PresetSwitcher）→ `v0.0.12-b10a`；⬜ b10b UIPanels / b10c UITableManager / b10d 收口（外观统一+悬浮球二合一）
-- 下一步：**b10b UIPanels（63.3K → 拆块）**
+- ✅ **b10b 已完成**（2026-10-05）：UIPanels 拆 7 块 → `v0.0.13-b10b`
+- 下一步：**b10c UITableManager（44.1K → 拆块）**
