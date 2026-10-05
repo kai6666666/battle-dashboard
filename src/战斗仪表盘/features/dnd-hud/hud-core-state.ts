@@ -151,13 +151,11 @@ export function createHudCoreStateFragment(deps: any): any {
         this._lastToggleTime = now;
         deps.logger.info(`[UICore] toggleDashboard 被调用 (${trigger})，当前状态:`, this.state);
         
-        // [b12.4] 点悬浮球：逐级切换 collapsed → mini → full → mini（球不直接关闭 Mini HUD）
+        // [b12.5] 点悬浮球：纯 Mini HUD 开关（collapsed ↔ mini；主面板入口在小窗「D20」上）
         if (this.state === 'collapsed') {
             this.setState('mini');
-        } else if (this.state === 'mini') {
-            this.setState('full');
         } else {
-            this.setState('mini');
+            this.setState('collapsed');
         }
 
         return true;
