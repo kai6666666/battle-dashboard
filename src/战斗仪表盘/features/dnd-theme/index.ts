@@ -3,6 +3,7 @@
 // 约定：工厂 + DI；外部（app/init.ts）只从这里取实例。
 import { createDndThemeManager } from './theme-manager';
 import { createDndStyleManager } from './style-manager';
+import { getStyleList, getStylePreset, isBuiltinStyle } from './style-presets';
 
 export interface DndThemeDeps { core: any; }
 export interface DndTheme {
@@ -12,30 +13,7 @@ export interface DndTheme {
 }
 
 /** b3 缺省降级实现（b11 接入完整 StylePresets / StyleValidator / StyleEffects 后替换） */
-const defaultStylePresets = {
-  getStyleList: () => [
-    {
-      id: 'classic-dnd',
-      name: '经典 DND（最小默认）',
-      icon: '<i class="fa-solid fa-dice-d20"></i>',
-      description: '最小默认风格；完整风格包将在 b11 接入',
-    },
-  ],
-  isBuiltinStyle: (id: string) => id === 'classic-dnd',
-  getStylePreset: (id: string) =>
-    id === 'classic-dnd'
-      ? {
-          meta: { id: 'classic-dnd', name: '经典 DND' },
-          colors: {},
-          dimensions: {},
-          typography: {},
-          animations: {},
-          morphology: {},
-          interactiveStates: {},
-        }
-      : null,
-};
-
+// [b11a] 完整 StylePresets 已接入（12 风格）；原降级实现移除。
 const defaultStyleValidator = {
   validate: (pack: any) => ({ valid: true, sanitized: pack, warnings: [], errors: [] }),
 };
@@ -60,7 +38,7 @@ export function createDndTheme(deps: DndThemeDeps): DndTheme {
     dbAdapter: core.dbAdapter,
     utils: core.utils,
     themeManager,
-    stylePresets: defaultStylePresets,
+    stylePresets: { getStyleList, getStylePreset, isBuiltinStyle },
     styleValidator: defaultStyleValidator,
     styleEffects: defaultStyleEffects,
   });
