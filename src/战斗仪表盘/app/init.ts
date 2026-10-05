@@ -13,6 +13,7 @@ import { createDndUi } from '../features/dnd-ui';
 import { createDndHud } from '../features/dnd-hud';
 import { createDndCharacter } from '../features/dnd-character';
 import { createDndItems } from '../features/dnd-items';
+import { createDndCombat } from '../features/dnd-combat';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -366,6 +367,16 @@ export function createInit(deps: any) {
                       dndWindow.__dndItemsInstance.init();
                     }
                     console.info('[DICE]dnd-items（b6）已接线');
+                    // [dnd-combat · b7 接线（S3）] 战斗（M4）
+                    try {
+                      if (!dndWindow.__dndCombatInstance) {
+                        dndWindow.__dndCombatInstance = createDndCombat({ core: dndWindow.__dndCoreInstance, ui: dndWindow.__dndUiInstance, theme: dndWindow.__dndThemeInstance, hud: dndWindow.__dndHudInstance });
+                        dndWindow.__dndCombatInstance.init();
+                      }
+                      console.info('[DICE]dnd-combat（b7）已接线');
+                    } catch (err5) {
+                      console.warn('[DICE]dnd-combat（b7）接线失败（忽略不影响主流程）:', err5);
+                    }
                   } catch (err4) {
                     console.warn('[DICE]dnd-items（b6）接线失败（忽略不影响主流程）:', err4);
                   }
