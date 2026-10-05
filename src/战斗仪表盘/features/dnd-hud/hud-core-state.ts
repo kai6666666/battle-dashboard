@@ -151,11 +151,13 @@ export function createHudCoreStateFragment(deps: any): any {
         this._lastToggleTime = now;
         deps.logger.info(`[UICore] toggleDashboard 被调用 (${trigger})，当前状态:`, this.state);
         
-        // [b12.2] 点悬浮球：非 full → 直接展开全屏主面板；full → 收起（mini 保留为「关闭面板」后的过渡态）
-        if (this.state === 'full') {
-            this.setState('collapsed');
-        } else {
+        // [b12.4] 点悬浮球：逐级切换 collapsed → mini → full → mini（球不直接关闭 Mini HUD）
+        if (this.state === 'collapsed') {
+            this.setState('mini');
+        } else if (this.state === 'mini') {
             this.setState('full');
+        } else {
+            this.setState('mini');
         }
 
         return true;

@@ -105,9 +105,6 @@ export function createHudCoreInitFragment(deps: any): any {
                     </div>
                     
                     <div style="display:flex;gap:5px;align-items:center;margin-left:10px;">
-                        <button class="dnd-hud-expand-btn" id="dnd-hud-collapse" title="收起 Mini HUD">
-                            <i class="fa-solid fa-minus"></i>
-                        </button>
                         <button class="dnd-hud-expand-btn" id="dnd-hud-theme" title="切换主题">
                             <i class="fa-solid fa-palette"></i>
                         </button>
@@ -327,6 +324,8 @@ export function createHudCoreInitFragment(deps: any): any {
                 this.updateHUDPosition();
                 setTimeout(() => $btn.removeClass('is-dragging'), 50);
             } else if (e.type === 'pointerup') {
+                // [b12.4] 连锁点击抑制：为紧随出现的 Mini HUD 设置 400ms 保护窗
+                try { this._suppressHudClickUntil = Date.now() + 400; } catch (eS) {}
                 // 仅 pointerup 时触发点击（排除 cancel/blur）
                 if (longPressFired) {
                     // [b10d] 长按：已打开骰子面板（不再切换 HUD）
@@ -395,19 +394,14 @@ export function createHudCoreInitFragment(deps: any): any {
 
         $('#dnd-close').on('click', () => this.setState('mini'));
         
-        // [b12.3] Logo 点击事件：切换完整面板（热区收窄为 Logo 本体，避免误触）
+        // [b12.4] Logo 点击：进入完整主面板（带 400ms 连锁抑制，防与悬浮球点击叠加）
         $('#dnd-logo-container').on('click', (e) => {
             e.stopPropagation();
+            if (Date.now() < (this._suppressHudClickUntil || 0)) return;
             const $logo = $('#dnd-logo-container');
             $logo.css('transform', 'scale(0.9)');
             setTimeout(() => $logo.css('transform', ''), 150);
             this.setState('full');
-        });
-        // [b12.3] Mini HUD 收起按钮：一键关闭（回到悬浮球）
-        $('#dnd-hud-collapse').on('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            this.setState('collapsed');
         });
         
         
