@@ -14,6 +14,7 @@ import { createDndHud } from '../features/dnd-hud';
 import { createDndCharacter } from '../features/dnd-character';
 import { createDndItems } from '../features/dnd-items';
 import { createDndCombat } from '../features/dnd-combat';
+import { createDndMap } from '../features/dnd-map';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -374,6 +375,16 @@ export function createInit(deps: any) {
                         dndWindow.__dndCombatInstance.init();
                       }
                       console.info('[DICE]dnd-combat（b7）已接线');
+                      // [dnd-map · b8 接线（S3）] 地图（M5）
+                      try {
+                        if (!dndWindow.__dndMapInstance) {
+                          dndWindow.__dndMapInstance = createDndMap({ core: dndWindow.__dndCoreInstance, ui: dndWindow.__dndUiInstance });
+                          dndWindow.__dndMapInstance.init();
+                        }
+                        console.info('[DICE]dnd-map（b8）已接线');
+                      } catch (err6) {
+                        console.warn('[DICE]dnd-map（b8）接线失败（忽略不影响主流程）:', err6);
+                      }
                     } catch (err5) {
                       console.warn('[DICE]dnd-combat（b7）接线失败（忽略不影响主流程）:', err5);
                     }
