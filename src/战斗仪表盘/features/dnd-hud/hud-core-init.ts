@@ -455,7 +455,8 @@ export function createHudCoreInitFragment(deps: any): any {
             $(this).addClass('active');
             const target = $(this).data('target');
             // 角色创建现在使用内置面板
-            self.renderPanel(target);
+            // [b12.1] 全局化：renderPanel 属 dnd-panels 域（经全局注册）
+            ((window as any).DND_Dashboard_UI || self).renderPanel?.(target);
         });
         
         $('#dnd-modal-overlay').on('click', function(e) {

@@ -32,30 +32,35 @@ export function createDndNotify(deps: DndNotifyDeps): DndNotify {
   const warn = (message: string, title = ''): void => logger.warn(`[notify]${title ? ' [' + title + ']' : ''} ${message}`);
   const error = (message: string, title = ''): void => logger.error(`[notify✗]${title ? ' [' + title + ']' : ''} ${message}`);
 
-  // 最小确认实现：优先 toastr（若宿主可用），否则 window.confirm
+  // [b12.1] 自建 DOM 对话框确认（去 toastr 依赖；宿主持久弹窗在某些环境会把 HTML 转义为纯文本）
   const confirm = async (message: string, options: DndNotifyConfirmOptions = {}): Promise<boolean> => {
     try {
-      const w = window as any;
-      if (w.toastr) {
-        const t = options.title || '确认';
-        return await new Promise<boolean>(resolve => {
-          w.toastr.info(`<div style="margin-bottom:6px;">${message.replace(/\n/g, '<br>')}</div>` +
-            `<div style="display:flex;gap:8px;justify-content:flex-end;">` +
-            `<button class="menu_button" data-dnd-confirm="1">${options.confirmText || '确定'}</button>` +
-            `<button class="menu_button" data-dnd-confirm="0">${options.cancelText || '取消'}</button></div>`,
-            t, { timeOut: 0, extendedTimeOut: 0, tapToDismiss: false, onShown: () => {
-              const $box = (window as any).$ ? (window as any).$('[data-dnd-confirm]') : null;
-              if ($box && $box.length) {
-                $box.off('click.dndConfirm').on('click.dndConfirm', function (this: any) {
-                  resolve(String((window as any).$(this).attr('data-dnd-confirm')) === '1');
-                  (window as any).toastr.clear();
-                });
-              }
-            } });
+      const title = options.title || '确认';
+      const overlay = document.createElement('div');
+      overlay.setAttribute('data-dnd-confirm-overlay', '1');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2147483000;display:flex;align-items:center;justify-content:center;';
+      const msgHtml = String(message).replace(/\n/g, '<br>');
+      overlay.innerHTML =
+        '<div style="max-width:440px;width:calc(100% - 40px);background:#23262d;color:#e8e3d5;border:1px solid rgba(200,180,120,.45);border-radius:10px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.5);font-size:13px;line-height:1.6;">'
+        + '<div style="font-weight:700;margin-bottom:10px;color:#ffdb85;">' + title + '</div>'
+        + '<div style="margin-bottom:14px;">' + msgHtml + '</div>'
+        + '<div style="display:flex;gap:8px;justify-content:flex-end;">'
+        + '<button type="button" data-dnd-cf-1="1" style="cursor:pointer;padding:6px 14px;border-radius:6px;border:1px solid rgba(200,180,120,.6);background:#3a3f4b;color:#ffe9b0;font-size:12px;">' + (options.confirmText || '确定') + '</button>'
+        + '<button type="button" data-dnd-cf-0="1" style="cursor:pointer;padding:6px 14px;border-radius:6px;border:1px solid rgba(120,120,120,.4);background:transparent;color:#cfc9ba;font-size:12px;">' + (options.cancelText || '取消') + '</button>'
+        + '</div></div>';
+      const cleanup = () => { try { overlay.remove(); } catch (e) {} };
+      const result = await new Promise<boolean>(resolve => {
+        overlay.addEventListener('click', (ev: any) => {
+          const el = ev.target;
+          if (el && el.getAttribute && el.getAttribute('data-dnd-cf-1')) { cleanup(); resolve(true); return; }
+          if (el && el.getAttribute && el.getAttribute('data-dnd-cf-0')) { cleanup(); resolve(false); return; }
+          if (ev.target === overlay) { cleanup(); resolve(false); }
         });
-      }
+        document.body.appendChild(overlay);
+      });
+      return result;
     } catch (e) {
-      logger.warn('[notify] toastr confirm 失败，降级原生 confirm:', e);
+      logger.warn('[notify] 自建 confirm 失败，降级原生 confirm:', e);
     }
     try {
       const text = `${options.title ? options.title + '\n\n' : ''}${message}`;
@@ -64,6 +69,5 @@ export function createDndNotify(deps: DndNotifyDeps): DndNotify {
       return false;
     }
   };
-
   return { info, success, error, warn, confirm };
 }
