@@ -50,4 +50,5 @@
 - ✅ **b10b 已完成**（2026-10-05）：UIPanels 拆 7 块 → `v0.0.13-b10b`
 - ✅ **b10c 已完成**（2026-10-05）：UITableManager 拆 4 块 + 样式独立 → `v0.0.14-b10c`
 - ✅ **b10d 已完成**（2026-10-05）：S1桥 / 悬浮球二合一（D20）→ `v0.0.15-b10d`；**b10 管理面板全部完成**
-- 下一步：**b11 视觉完整**（StylePresets 258.7K 懒加载+校验 / StyleEffects 47.2K / StyleValidator 28.5K / DynamicBackground 49.1K / SVGIcons+icons）
+- 🚧 **b11 进行中（四子批）**：✅ b11a（12 风格入库）→ `v0.0.16-b11a`；⬜ b11b 特效/校验 / b11c 动态背景 / b11d 图标接真
+- 下一步：**b11b StyleEffects + StyleValidator 接入**
