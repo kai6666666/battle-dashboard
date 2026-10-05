@@ -35,6 +35,18 @@ export function createDndHud(deps0: DndHudDeps): DndHud {
     try { const g: any = (window as any).DND_Dashboard_UI; return (g && g.ICONS && g.ICONS[k]) || ''; }
     catch (e) { return ''; }
   } });
+  // [b12.2] 跨域桥代理：运行时转发到全局实例（presetSwitcher / tableManager 等；未上线安全降级）
+  const bridgeProxy = (): any => new Proxy({}, {
+    get: (_t: any, k: any) => {
+      try {
+        const g: any = (window as any).DND_Dashboard_UI;
+        if (g && g[k] !== undefined) {
+          return typeof g[k] === 'function' ? (g[k] as any).bind(g) : g[k];
+        }
+      } catch (e) {}
+      return () => {};
+    },
+  });
   const deps: any = {
     logger: core.logger,
     dbAdapter: core.dbAdapter,
@@ -44,9 +56,9 @@ export function createDndHud(deps0: DndHudDeps): DndHud {
     themeManager: deps0.theme?.themeManager ?? { getCurrentVars: () => ({}), apply: noopFn, COLOR_VARS: {} },
     styleManager: deps0.theme?.styleManager ?? { apply: async () => false, currentStyleId: 'classic-dnd' },
     // —— 后续批次接入（缺省降级；b10/b11 接真）——
-    presetSwitcher: { switch: noopFn },
+    presetSwitcher: bridgeProxy(),
     dynamicBackground: deps0.theme?.dynamicBackground ?? { init: noopFn, destroyAll: noopFn },
-    tableManager: { hide: noopFn },
+    tableManager: bridgeProxy(),
     icons: iconProxy,
     // [b11d] 天气图标接真：运行时查全局 getWeatherIcon
     getWeatherIcon: (t: any) => { try { const g: any = (window as any).DND_Dashboard_UI; return (g && g.getWeatherIcon) ? g.getWeatherIcon(t) : ''; } catch (e) { return ''; } },

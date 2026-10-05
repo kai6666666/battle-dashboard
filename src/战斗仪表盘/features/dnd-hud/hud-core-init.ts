@@ -393,7 +393,9 @@ export function createHudCoreInitFragment(deps: any): any {
         $('#dnd-close').on('click', () => this.setState('mini'));
         
         // Logo 点击事件：切换完整面板
-        $('#dnd-logo-container').on('click', (e) => {
+        // [b12.2] 扩大热区：Mini HUD 头部整行可点（按钮除外）
+        $('#dnd-mini-hud .dnd-hud-header').on('click', (e) => {
+            if ($(e.target).closest('button').length) return;
             e.stopPropagation();
             // 简单的动画反馈
             const $logo = $('#dnd-logo-container');

@@ -151,10 +151,11 @@ export function createHudCoreStateFragment(deps: any): any {
         this._lastToggleTime = now;
         deps.logger.info(`[UICore] toggleDashboard 被调用 (${trigger})，当前状态:`, this.state);
         
-        if (this.state === 'collapsed') {
-            this.setState('mini');
-        } else {
+        // [b12.2] 点悬浮球：非 full → 直接展开全屏主面板；full → 收起（mini 保留为「关闭面板」后的过渡态）
+        if (this.state === 'full') {
             this.setState('collapsed');
+        } else {
+            this.setState('full');
         }
 
         return true;

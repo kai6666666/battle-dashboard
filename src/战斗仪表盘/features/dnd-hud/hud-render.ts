@@ -29,7 +29,8 @@ export function createHudRenderFragment(deps: any): any {
         const isCombat = gInfo['战斗模式'] === '战斗中';
         
         // [新增] 检测战斗状态变化并切换预设
-        deps.presetSwitcher.checkCombatStateChange(isCombat);
+        // [b12.2] 防御：预设切换器不可用时跳过（不阻断 HUD 渲染）
+        try { deps.presetSwitcher.checkCombatStateChange(isCombat); } catch (e) {}
 
         // 提取时间 (仅显示 HH:MM 或原始内容)
         const timeStr = gInfo['游戏时间'] && gInfo['游戏时间'].includes(' ') ? gInfo['游戏时间'].split(' ')[1] : gInfo['游戏时间'];
