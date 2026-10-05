@@ -41,4 +41,5 @@
 - ✅ **b3 渲染工具已完成**（2026-10-05）：part-08×5 样式入库（134KB 随包）/ dnd-theme（ThemeManager+StyleManager 最小默认）/ dnd-ui（UIRenderer+UIUtils）/ S3 接线 → tag `v0.0.5-b3`
 - ✅ **b4 HUD 已完成**（2026-10-05）：UICore×5 / UIHUD×5 / UpdateController 防回弹 / S3 接线（DOM 环境门）→ tag `v0.0.6-b4`
 - 🧩 悬浮球二合一（骰子折叠球 × D20 球）：挂后期（b10/b12；2026-10-05 拍板）
-- 下一步：**b5 角色/法术（里程碑 M2）**（UICharacter 123K 必须拆：属性/技能专长/资源/创建向导/升级向导；UISpells）
+- ✅ **b5 角色/法术已完成**（2026-10-05）：UICharacter×7 / UISpells / 跨域全局化（+b4 补丁）→ tag `v0.0.7-b5`
+- 下一步：**b6 物品（里程碑 M3）**（UIItems 37.7K；列表/详情/装备交互）

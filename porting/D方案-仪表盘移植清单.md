@@ -48,10 +48,12 @@
 - [x] S3 接线：app/init.ts（DOM 能力环境门：浏览器/酒馆执行，测试 vm 跳过）
 - 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（悬浮球 / Mini HUD / 防回弹）
 
-### b5 角色/法术（里程碑 M2，6-8 天）
-- [ ] UICharacter(123.3K → **必须拆**：属性/技能专长/资源/创建向导/升级向导)
-- [ ] UISpells(11.9K)
-- 验收：全 Tab 渲染 + 升级向导流程
+### b5 角色/法术（里程碑 M2，6-8 天）— ✅ 已完成（2026-10-05）
+- [x] UICharacter(123.3K → 拆 7 块：头像/角色卡/创建向导×3/升级向导 + prelude)
+- [x] UISpells(11.9K → character-spells：法术详情/法术位/法术书)
+- [x] 跨域 this 全局化（含 b4 HUD 17 处缺口补丁；未上线批次安全降级）
+- [x] S3 接线：app/init.ts（core → theme → ui → hud → character 链）
+- 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（角色卡/创建向导/升级向导）
 
 ### b6 物品（里程碑 M3，3-4 天）
 - [ ] UIItems(37.7K)
