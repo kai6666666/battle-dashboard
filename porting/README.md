@@ -53,4 +53,5 @@
 - 🚧 **b11 进行中（四子批）**：✅ b11a（12 风格入库）→ `v0.0.16-b11a`；⬜ b11b 特效/校验 / b11c 动态背景 / b11d 图标接真
 - ✅ **b11b 已完成**（2026-10-05）：StyleEffects + StyleValidator 接入 → `v0.0.17-b11b`
 - ✅ **b11c 已完成**（2026-10-05）：DynamicBackground 接真 → `v0.0.18-b11c`
-- 下一步：**b11d SVGIcons + icons 接真**（ICONS 全域名替换 iconProxy）
+- ✅ **b11d 已完成**（2026-10-05）：图标体系接真 → `v0.0.19-b11d`；**b11 视觉完整全部完成**
+- 下一步：**b12 发布整合**（index.js 装配重写 / header.js / 清 feature flag / 单产物发布）
