@@ -70,7 +70,7 @@ export function createMapExplorationCoreFragment(deps: any): any {
             sheet.content.push(newRow);
         }
 
-        await deps.diceManager.saveData(rawData);
+        await deps.saveData(rawData);
     },
 
     // 3. Generate SVG (Step 2)

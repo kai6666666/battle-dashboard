@@ -35,7 +35,7 @@ export function createDndMap(deps0: DndMapDeps): DndMap {
     tavernApi: core.tavernApi,
     tavernSettingsSync: core.settingsSync,
     // b9 接真（DiceManager 退役批次）
-    diceManager: {},
+    saveData: (core.saveBridge && typeof core.saveBridge.saveData === 'function') ? core.saveBridge.saveData : async () => {},
     icons: iconProxy,
     // 域内：先占位，创建后回填
     explorationMapManager: null,

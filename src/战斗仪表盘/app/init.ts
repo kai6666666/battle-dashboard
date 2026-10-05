@@ -15,6 +15,7 @@ import { createDndCharacter } from '../features/dnd-character';
 import { createDndItems } from '../features/dnd-items';
 import { createDndCombat } from '../features/dnd-combat';
 import { createDndMap } from '../features/dnd-map';
+import { createDndDice } from '../features/dnd-dice';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -382,6 +383,16 @@ export function createInit(deps: any) {
                           dndWindow.__dndMapInstance.init();
                         }
                         console.info('[DICE]dnd-map（b8）已接线');
+                        // [dnd-dice · b9 接线（S3）] 骰子归一（M6）
+                        try {
+                          if (!dndWindow.__dndDiceInstance) {
+                            dndWindow.__dndDiceInstance = createDndDice({ core: dndWindow.__dndCoreInstance, ui: dndWindow.__dndUiInstance });
+                            dndWindow.__dndDiceInstance.init();
+                          }
+                          console.info('[DICE]dnd-dice（b9）已接线');
+                        } catch (err7) {
+                          console.warn('[DICE]dnd-dice（b9）接线失败（忽略不影响主流程）:', err7);
+                        }
                       } catch (err6) {
                         console.warn('[DICE]dnd-map（b8）接线失败（忽略不影响主流程）:', err6);
                       }

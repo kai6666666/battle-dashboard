@@ -49,7 +49,7 @@ export function createMapBattleFragment(deps: any): any {
             sheet.content.push(newRow);
         }
 
-        await deps.diceManager.saveData(rawData);
+        await deps.saveData(rawData);
     },
 
     // [New] Generate Battle Map
