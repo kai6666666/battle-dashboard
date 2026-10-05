@@ -48,4 +48,5 @@
 - ✅ **b9 骰子归一已完成**（2026-10-05）：UIDice×4（AcuDice 引擎优先）/ 骰子池退役 / 规则注入器保留 → tag `v0.0.11-b9`
 - 🚧 **b10 进行中（拆分四子批）**：✅ b10a（UISettings + PresetSwitcher）→ `v0.0.12-b10a`；⬜ b10b UIPanels / b10c UITableManager / b10d 收口（外观统一+悬浮球二合一）
 - ✅ **b10b 已完成**（2026-10-05）：UIPanels 拆 7 块 → `v0.0.13-b10b`
-- 下一步：**b10c UITableManager（44.1K → 拆块）**
+- ✅ **b10c 已完成**（2026-10-05）：UITableManager 拆 4 块 + 样式独立 → `v0.0.14-b10c`
+- 下一步：**b10d 收口**（外观统一②③ / 悬浮球二合一（D20）/ 骰子功能入口汇总）

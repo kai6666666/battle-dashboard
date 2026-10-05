@@ -83,7 +83,7 @@
 ### b10 管理面板（5-7 天）— 🚧 进行中（拆分四子批）
 - [x] **b10a**（2026-10-05）：UISettings(69.4K 整文件搬运) + PresetSwitcher(5K) → tag `v0.0.12-b10a`（combat presetSwitcher 动态代理接真）
 - [x] **b10b**（2026-10-05）：UIPanels(63.3K → 拆 7 块：主入口/队伍/背包/NPC/档案×3；UICharacter 动态代理) → tag `v0.0.13-b10b`
-- [ ] **b10c**：UITableManager(44.1K → 拆块；划清与 `database-ui-override` 边界)
+- [x] **b10c**（2026-10-05）：UITableManager(44.1K → 拆 4 块 + 样式独立 559 行；与骰子侧编辑器边界注释、b12 收口) → tag `v0.0.14-b10c`
 - [ ] **b10d**：收口（外观统一②③ / 悬浮球二合一（D20）/ 骰子功能入口汇总）
 - 验收：设置全通、表格增删改正常
 
