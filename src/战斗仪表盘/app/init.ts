@@ -19,6 +19,7 @@ import { createDndDice } from '../features/dnd-dice';
 import { createDndSettings } from '../features/dnd-settings';
 import { createDndPanels } from '../features/dnd-panels';
 import { createDndTable } from '../features/dnd-table';
+import { DND_CONFIG as DND_CONFIG_REF } from '../features/dnd-core';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
 declare function enqueueMessageMutation(...args: any[]): any;
@@ -430,6 +431,66 @@ export function createInit(deps: any) {
                                     };
                                   }
                                 } catch (errBr2) {}
+                                // [b12 · 发布整合] DND 源 index.js 初始化项对齐（点击动效 / 预设配置加载 / 通知回调 / 模板同步）
+                                try {
+                                  const $jq12: any = (window as any).jQuery || (window as any).$;
+                                  if ($jq12 && !(window as any).__dndB12Wired) {
+                                    (window as any).__dndB12Wired = true;
+                                    // ① 全局点击动效（DND 原版）
+                                    $jq12(document).off('mousedown.dndClick').on('mousedown.dndClick', '.dnd-clickable, .dnd-btn, button, .dnd-nav-item, .dnd-char-card, .dnd-item-card, .dnd-mini-char', function (this: any) {
+                                      const $el = $jq12(this);
+                                      $el.removeClass('dnd-clicking');
+                                      const node: any = $el[0];
+                                      if (node && node.offsetWidth !== undefined) { void node.offsetWidth; }
+                                      $el.addClass('dnd-clicking');
+                                    }).on('animationend', '.dnd-clicking', function (this: any) { $jq12(this).removeClass('dnd-clicking'); });
+                                    $jq12(document).off('animationend.dndEntry').on('animationend.dndEntry', '.dnd-anim-entry', function (this: any, e: any) {
+                                      if (e.originalEvent && e.originalEvent.animationName === 'dnd-slide-up-fade') { $jq12(this).addClass('dnd-anim-done').css('opacity', '1'); }
+                                    });
+                                    // ② 预设配置启动加载 + 战斗状态初检
+                                    try {
+                                      const core12: any = dndWindow.__dndCoreInstance;
+                                      const settings12: any = dndWindow.__dndSettingsInstance;
+                                      if (core12 && core12.dbAdapter) {
+                                        core12.dbAdapter.getSetting('dnd_preset_config').then((saved: any) => {
+                                          if (!saved) return;
+                                          try {
+                                            const parsed = typeof saved === 'string' ? JSON.parse(saved) : saved;
+                                            if (DND_CONFIG_REF && DND_CONFIG_REF.PRESET_SWITCHING) Object.assign(DND_CONFIG_REF.PRESET_SWITCHING, parsed);
+                                            const ps = settings12 && settings12.presetSwitcher;
+                                            const global12 = core12.dataManager ? core12.dataManager.getTable('SYS_GlobalState') : null;
+                                            if (ps && typeof ps.checkCombatStateChange === 'function' && global12 && global12[0]) {
+                                              ps.checkCombatStateChange(global12[0]['战斗模式'] === '战斗中');
+                                            }
+                                          } catch (e12a) {}
+                                        }).catch(() => {});
+                                      }
+                                    } catch (e12b) {}
+                                    // ③ 设置同步通知回调（映射到 DND 通知系统）
+                                    try {
+                                      const core12c: any = dndWindow.__dndCoreInstance;
+                                      if (core12c && core12c.settingsSync && typeof core12c.settingsSync.setNotifyCallback === 'function') {
+                                        core12c.settingsSync.setNotifyCallback((type: any, message: any, title: any) => {
+                                          try {
+                                            const nt = (dndWindow.__dndUiInstance && dndWindow.__dndUiInstance.notification) || null;
+                                            const method = (nt && typeof nt[type] === 'function') ? type : 'info';
+                                            if (nt) nt[method](message, title);
+                                          } catch (e12c) {}
+                                        });
+                                      }
+                                    } catch (e12d) {}
+                                    // ④ 模板同步初始化（首次运行 / 版本升级导入内置模板）
+                                    try {
+                                      const core12e: any = dndWindow.__dndCoreInstance;
+                                      if (core12e && core12e.templateSync && typeof core12e.templateSync.init === 'function') {
+                                        void Promise.resolve(core12e.templateSync.init()).catch(() => {});
+                                      }
+                                    } catch (e12f) {}
+                                  }
+                                  console.info('[DICE]b12 收口已接线（动效 / 预设配置 / 通知回调 / 模板同步）');
+                                } catch (err12) {
+                                  console.warn('[DICE]b12 收口失败（忽略不影响主流程）:', err12);
+                                }
                               } catch (err10) {
                                 console.warn('[DICE]dnd-table（b10c）接线失败（忽略不影响主流程）:', err10);
                               }

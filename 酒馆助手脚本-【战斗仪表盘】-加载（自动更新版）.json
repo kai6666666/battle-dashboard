@@ -1,0 +1,17 @@
+{
+  "type": "script",
+  "enabled": true,
+  "name": "【战斗仪表盘】-加载（自动更新版）",
+  "id": "09712992-e31e-412d-973e-b3d164b37aef",
+  "content": "async function getImportUrl() {\n  const repoBase = 'https://gcore.jsdelivr.net/gh/kai6666666/battle-dashboard';\n  try {\n    const response = await fetch('https://api.github.com/repos/kai6666666/battle-dashboard/commits/main');\n    if (!response.ok) throw new Error('HTTP ' + response.status);\n    const data = await response.json();\n    const ref = data?.sha || 'main';\n    return repoBase + '@' + ref + '/dist/战斗仪表盘/stable.js';\n  } catch {\n    return repoBase + '@main/dist/战斗仪表盘/stable.js?t=' + Date.now();\n  }\n}\n\nconst importUrl = await getImportUrl();\nawait import(importUrl);",
+  "info": "战斗仪表盘（battle-dashboard）加载器 · 自动更新版\n优先按 main 最新 commit SHA 加载（避免 CDN 缓存不刷新）；失败时回退 @main + 时间戳。\n仓库：kai6666666/battle-dashboard\n加载：dist/战斗仪表盘/stable.js（融合版 v0.0.20-b12：骰子基座 × DND 仪表盘全量移植）",
+  "button": {
+    "enabled": false,
+    "buttons": []
+  },
+  "data": {},
+  "export_with": {
+    "data": true,
+    "button": true
+  }
+}
