@@ -14,7 +14,11 @@ export interface DndCharacter { character: any; init(): void; }
 
 export function createDndCharacter(deps0: DndCharacterDeps): DndCharacter {
   const core = deps0.core;
-  const iconProxy: any = new Proxy({}, { get: () => '' });
+  // [b11d] 图标接真：运行时查全局 ICONS（dnd-ui 注册；未注册时安全降级为空）
+  const iconProxy: any = new Proxy({}, { get: (_t: any, k: any) => {
+    try { const g: any = (window as any).DND_Dashboard_UI; return (g && g.ICONS && g.ICONS[k]) || ''; }
+    catch (e) { return ''; }
+  } });
   const emptyNotify = {
     notify: () => Promise.resolve(),
     success: () => {},

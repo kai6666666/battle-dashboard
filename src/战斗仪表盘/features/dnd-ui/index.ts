@@ -4,6 +4,7 @@
 import { createDndNotificationSystem } from './ui-utils-notification';
 import { createDndUiUtilsCore } from './ui-utils-core';
 import { createDndUiRenderer } from './ui-renderer';
+import { ICONS, getWeatherIcon } from './svg-icons';
 
 export interface DndUiDeps {
   core: any;
@@ -45,6 +46,12 @@ export function createDndUi(deps: DndUiDeps): DndUi {
     // 全局暴露（兼容生成 HTML 中的 onclick 调用：window.DND_Dashboard_UI.xxx）
     try {
       (window as any).DND_Dashboard_UI = uiRenderer;
+      // [b11d] 图标接真：ICONS 注册全局（各域 iconProxy 运行时读取；getWeatherIcon 同步暴露）
+      try {
+        const g: any = (window as any).DND_Dashboard_UI;
+        if (g) { g.ICONS = ICONS; g.getWeatherIcon = getWeatherIcon; }
+      } catch (e) {}
+
       core.logger.info('[dnd-ui] 渲染工具就绪：UIRenderer → window.DND_Dashboard_UI');
       core.logger.info('[dnd-ui] 验收：NotificationSystem =', typeof notification?.notify, '｜UIEffects =', typeof uiEffects?.addRippleEffect);
     } catch (e) {

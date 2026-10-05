@@ -30,7 +30,11 @@ const emptyNotify = {
 
 export function createDndHud(deps0: DndHudDeps): DndHud {
   const core = deps0.core;
-  const iconProxy: any = new Proxy({}, { get: () => '' });
+  // [b11d] 图标接真：运行时查全局 ICONS（dnd-ui 注册；未注册时安全降级为空）
+  const iconProxy: any = new Proxy({}, { get: (_t: any, k: any) => {
+    try { const g: any = (window as any).DND_Dashboard_UI; return (g && g.ICONS && g.ICONS[k]) || ''; }
+    catch (e) { return ''; }
+  } });
   const deps: any = {
     logger: core.logger,
     dbAdapter: core.dbAdapter,
@@ -44,7 +48,8 @@ export function createDndHud(deps0: DndHudDeps): DndHud {
     dynamicBackground: deps0.theme?.dynamicBackground ?? { init: noopFn, destroyAll: noopFn },
     tableManager: { hide: noopFn },
     icons: iconProxy,
-    getWeatherIcon: () => '',
+    // [b11d] 天气图标接真：运行时查全局 getWeatherIcon
+    getWeatherIcon: (t: any) => { try { const g: any = (window as any).DND_Dashboard_UI; return (g && g.getWeatherIcon) ? g.getWeatherIcon(t) : ''; } catch (e) { return ''; } },
     // —— 回填 / 联动 ——
     hudCore: null,
     uiRenderer: deps0.ui?.uiRenderer ?? null,
