@@ -129,8 +129,8 @@ export function createHudRenderFragment(deps: any): any {
                     <div style="background:var(--dnd-bg-secondary);padding:5px 10px;font-weight:bold;color:var(--dnd-text-highlight);display:flex;justify-content:space-between;align-items:center;">
                         <span><i class="fa-solid fa-hourglass-half"></i> 待执行行动 (${this._actionQueue.length})</span>
                         <div style="display:flex;gap:5px;">
-                            <button class="dnd-clickable" onclick="window.DND_Dashboard_UI.commitActions()" style="background:var(--dnd-accent-green);border:none;color:var(--dnd-btn-text);padding:2px 8px;border-radius:3px;cursor:pointer;"><i class="fa-solid fa-check"></i> 执行</button>
-                            <button class="dnd-clickable" onclick="window.DND_Dashboard_UI.clearActions()" style="background:var(--dnd-accent-red);border:none;color:var(--dnd-btn-text);padding:2px 8px;border-radius:3px;cursor:pointer;"><i class="fa-solid fa-times"></i> 清空</button>
+                            <button class="dnd-clickable dnd-queue-act" data-dnd-act="commit" style="background:var(--dnd-accent-green);border:none;color:var(--dnd-btn-text);padding:2px 8px;border-radius:3px;cursor:pointer;"><i class="fa-solid fa-check"></i> 执行</button>
+                            <button class="dnd-clickable dnd-queue-act" data-dnd-act="clear" style="background:var(--dnd-accent-red);border:none;color:var(--dnd-btn-text);padding:2px 8px;border-radius:3px;cursor:pointer;"><i class="fa-solid fa-times"></i> 清空</button>
                         </div>
                     </div>
                     <div style="padding:5px 10px;font-size:12px;color:var(--dnd-text-dim);">
@@ -139,15 +139,24 @@ export function createHudRenderFragment(deps: any): any {
                 </div>
             `);
             $body.append($queuePanel);
+            // [b12.6] 队列按钮：脚本绑定（替代 inline onclick）
+            $queuePanel.find('.dnd-queue-act').off('click.dndQueue').on('click.dndQueue', function() {
+                const g: any = ((window as any).DND_Dashboard_UI || {});
+                const act = $(this).data('dnd-act');
+                if (act === 'commit') g.commitActions?.();
+                else g.clearActions?.();
+            });
         }
 
         // [新增] 渲染快捷栏 (Quick Bar) - 附着在 HUD 右侧
         if ($('#dnd-quick-bar').length === 0) {
             const $bar = $(`<div id="dnd-quick-bar" class="dnd-quick-bar"></div>`);
-            const $trigger = $(`<div id="dnd-quick-trigger" class="dnd-quick-trigger" onclick="window.DND_Dashboard_UI.toggleQuickBar()"><i class="fa-solid fa-chevron-right"></i></div>`);
+            const $trigger = $(`<div id="dnd-quick-trigger" class="dnd-quick-trigger"><i class="fa-solid fa-chevron-right"></i></div>`);
             
             const $hud = $('#dnd-mini-hud');
             $hud.append($bar).append($trigger);
+            // [b12.6] 快捷栏触发器：脚本绑定（替代 inline onclick）
+            $trigger.off('click.dndQuick').on('click.dndQuick', () => ((window as any).DND_Dashboard_UI || this).toggleQuickBar?.());
         }
         ((window as any).DND_Dashboard_UI || this).renderQuickBar?.();
         

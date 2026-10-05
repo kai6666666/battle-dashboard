@@ -110,7 +110,7 @@ export function createHudExploreFragment(deps: any): any {
         const self = this;
         $el.find('.dnd-action-btn').on('click', function() {
             const text = $(this).data('text');
-            self.fillChatInput(text);
+            ((window as any).DND_Dashboard_UI || self).fillChatInput?.(text);
         });
         
         $container.append($el);
@@ -195,14 +195,14 @@ export function createHudExploreFragment(deps: any): any {
                         <div class="party-lvl-badge">Lv.${level}</div>
                         <!-- [新增] 操控切换按钮 -->
                         <div class="party-control-btn ${isControlled ? 'active' : ''}"
-                                onclick="event.stopPropagation(); window.DND_Dashboard_UI.setControlledCharacter('${charId}')"
+                                data-party-ctl="${charId}"
                                 title="切换操控此角色">
                             <i class="fa-solid fa-gamepad"></i>
                         </div>
                         <!-- [新增] 升级按钮 -->
                         ${canLevelUp ? `
                         <div class="party-levelup-btn"
-                                onclick="event.stopPropagation(); window.DND_Dashboard_UI.startLevelUp('${charId}')"
+                                data-party-lvl="${charId}"
                                 title="经验值已满，点击升级！">
                             <i class="fa-solid fa-arrow-up dnd-icon-bounce"></i>
                         </div>` : ''}
@@ -236,10 +236,19 @@ export function createHudExploreFragment(deps: any): any {
             const idx = $(this).data('idx');
             const char = party[idx];
             if (char) {
-                self.showCharacterCard(char, e);
+                ((window as any).DND_Dashboard_UI || self).showCharacterCard?.(char, e);
             } else {
                 deps.logger.error('[PartyBar] Character data not found for index', idx);
             }
+        });
+        // [b12.6] 操控切换/升级按钮：脚本绑定（替代 inline onclick）
+        $el.find('.party-control-btn').off('click.dndCtl').on('click.dndCtl', function(e) {
+            e.stopPropagation();
+            ((window as any).DND_Dashboard_UI || self).setControlledCharacter?.($(this).attr('data-party-ctl'));
+        });
+        $el.find('.party-levelup-btn').off('click.dndLvl').on('click.dndLvl', function(e) {
+            e.stopPropagation();
+            ((window as any).DND_Dashboard_UI || self).startLevelUp?.($(this).attr('data-party-lvl'));
         });
 
         $container.append($el);

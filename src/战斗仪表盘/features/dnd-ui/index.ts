@@ -46,6 +46,13 @@ export function createDndUi(deps: DndUiDeps): DndUi {
     // 全局暴露（兼容生成 HTML 中的 onclick 调用：window.DND_Dashboard_UI.xxx）
     try {
       (window as any).DND_Dashboard_UI = uiRenderer;
+      // [b12.6] 同步到宿主顶层窗口（getCore 的 DOM 位于 top；兼容 top document 中的 inline onclick）
+      try {
+        const coreWin: any = core?.utils?.getCore?.()?.window;
+        if (coreWin && coreWin !== (window as any) && !coreWin.DND_Dashboard_UI) {
+          coreWin.DND_Dashboard_UI = (window as any).DND_Dashboard_UI;
+        }
+      } catch (e) {}
       // [b11d] 图标接真：ICONS 注册全局（各域 iconProxy 运行时读取；getWeatherIcon 同步暴露）
       try {
         const g: any = (window as any).DND_Dashboard_UI;

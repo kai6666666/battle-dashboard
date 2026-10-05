@@ -52,7 +52,7 @@ export function createHudNpcFragment(deps: any): any {
                     style="padding:8px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--dnd-border-inner);border-radius:6px;cursor:pointer;"
                     onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.borderColor='var(--dnd-border-gold)'"
                     onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='var(--dnd-border-inner)'"
-                    onclick="window.DND_Dashboard_UI.showNPCDetail('${safeId}', event)">
+                    data-npc-id="${safeId}">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
                         <span style="font-weight:bold;color:var(--dnd-text-main);">${npc['姓名'] || '未知'}</span>
                         <span style="font-size:11px;">
@@ -76,6 +76,13 @@ export function createHudNpcFragment(deps: any): any {
         html += `</div>`;
         
         ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.(html, event.clientX, event.clientY);
+        // [b12.6] NPC 项点击：脚本绑定（替代 inline onclick）
+        const { $: $$ } = deps.utils.getCore();
+        const self2: any = this;
+        $$('#dnd-detail-popup-el .dnd-npc-list-item').off('click.dndNpcItem').on('click.dndNpcItem', function(e) {
+            e.stopPropagation();
+            self2.showNPCDetail?.($$(this).attr('data-npc-id'), e);
+        });
     },
 
     // [新增] 过滤NPC列表

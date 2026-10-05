@@ -47,7 +47,7 @@ export function createCharacterCardFragment(deps: any): any {
                 // 其他情况关闭卡片和悬浮窗
                 if ($card.hasClass('visible')) {
                     self.hideCharacterCard();
-                    self.hideDetailPopup();
+                    ((window as any).DND_Dashboard_UI || self).hideDetailPopup?.();
                     $(document).off('click.dndCharCard');
                 }
             });

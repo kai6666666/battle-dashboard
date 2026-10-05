@@ -198,12 +198,12 @@ async function invokeManualUpdate(event) {
             deps.logger.debug('Footer button clicked:', action);
             
             switch(action) {
-                case 'inventory': self.showInventoryPanel(e); break;
-                case 'equipment': self.showEquipmentPanel(e); break;
-                case 'faction': self.showFactionPanel(e); break;
-                case 'spellbook': self.showSpellBook(e); break;
+                case 'inventory': ((window as any).DND_Dashboard_UI || self).showInventoryPanel?.(e); break;
+                case 'equipment': ((window as any).DND_Dashboard_UI || self).showEquipmentPanel?.(e); break;
+                case 'faction': ((window as any).DND_Dashboard_UI || self).showFactionPanel?.(e); break;
+                case 'spellbook': ((window as any).DND_Dashboard_UI || self).showSpellBook?.(e); break;
                 case 'npclist': self.showNPCListPanel(e); break;
-                case 'dice': self.showQuickDice(e); break;
+                case 'dice': ((window as any).DND_Dashboard_UI || self).showQuickDice?.(e); break;
                 case 'manual-update': void invokeManualUpdate(e); break;
                 case 'settings':
                     // 切换到完整面板并打开设置页

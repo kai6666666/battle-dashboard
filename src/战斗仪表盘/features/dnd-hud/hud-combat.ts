@@ -147,7 +147,7 @@ export function createHudCombatFragment(deps: any): any {
             const name = $(this).attr('title');
             const unit = encounters.find(u => u['单位名称'] === name);
             if (unit) {
-                self.showCombatUnitDetail(unit, e);
+                ((window as any).DND_Dashboard_UI || self).showCombatUnitDetail?.(unit, e);
             }
         });
 
