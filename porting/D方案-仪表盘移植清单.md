@@ -61,9 +61,11 @@
 - [x] S3 接线：app/init.ts（… → items 链）
 - 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（列表 / 详情 / 装备交互）
 
-### b7 战斗（里程碑 M4，4-6 天）
-- [ ] UICombat(29.8K) + 相关逻辑
-- 验收：回合/先攻/动作经济/法术位扣减
+### b7 战斗（里程碑 M4，4-6 天）— ✅ 已完成（2026-10-05）
+- [x] UICombat(29.8K → 拆 4 块：状态·行动经济 / 施法·瞄准 / 动作队列 / 战斗面板)
+- [x] 跨域全局化（resetActionEconomy / initResourceTracker / renderResourceConsumption 等 4 处转正）
+- [x] S3 接线：app/init.ts（… → combat 链）
+- 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（回合 / 先攻 / 动作经济 / 法术位扣减）
 
 ### b8 地图（里程碑 M5，5-7 天）
 - [ ] ExplorationMapManager(22.2K)
