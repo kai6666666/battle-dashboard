@@ -38,6 +38,7 @@ export function createDndUi(deps: DndUiDeps): DndUi {
     notification,
     uiEffects,
     extraModules: deps.extraModules,
+    dynamicBackground: deps.theme?.dynamicBackground,
   });
 
   const init = (): void => {

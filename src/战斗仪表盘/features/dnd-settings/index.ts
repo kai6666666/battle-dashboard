@@ -37,7 +37,7 @@ export function createDndSettings(deps0: DndSettingsDeps): DndSettings {
     // b9 规则注入器实例（设置面板的"骰子规则注入"开关）
     diceRulesInjector: deps0.dice?.injector,
     // b11 接真（DynamicBackground）
-    dynamicBackground: { getAvailableEffects: () => [] as any[] },
+    dynamicBackground: deps0.theme?.dynamicBackground ?? { getAvailableEffects: () => [] as any[] },
     presetSwitcher: null,
     icons: iconProxy,
   };

@@ -6,10 +6,12 @@ import { createDndStyleManager } from './style-manager';
 import { getStyleList, getStylePreset, isBuiltinStyle } from './style-presets';
 import { createStyleEffects } from './style-effects';
 import { createStyleValidator } from './style-validator';
+import { createDynamicBackground } from './dynamic-background';
 
 export interface DndThemeDeps { core: any; }
 export interface DndTheme {
   themeManager: any;
+  dynamicBackground: any;
   styleManager: any;
   init(): Promise<void>;
 }
@@ -25,6 +27,7 @@ function _createStyleEffectsImpl(core: any) {
 }
 export function createDndTheme(deps: DndThemeDeps): DndTheme {
   const { core } = deps;
+  const dynamicBackground = createDynamicBackground({ logger: core.logger, utils: core.utils });
 
   const themeManager = createDndThemeManager({
     logger: core.logger,
@@ -67,7 +70,7 @@ export function createDndTheme(deps: DndThemeDeps): DndTheme {
     core.logger.info('[dnd-theme] 就绪 ✅（ThemeManager + StyleManager 最小默认；part-08 样式随包）');
   };
 
-  return { themeManager, styleManager, init };
+  return { themeManager, styleManager, dynamicBackground, init };
 }
 
 export { createDndThemeManager } from './theme-manager';

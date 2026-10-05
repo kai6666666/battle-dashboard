@@ -41,7 +41,7 @@ export function createDndHud(deps0: DndHudDeps): DndHud {
     styleManager: deps0.theme?.styleManager ?? { apply: async () => false, currentStyleId: 'classic-dnd' },
     // —— 后续批次接入（缺省降级；b10/b11 接真）——
     presetSwitcher: { switch: noopFn },
-    dynamicBackground: { init: noopFn, destroyAll: noopFn },
+    dynamicBackground: deps0.theme?.dynamicBackground ?? { init: noopFn, destroyAll: noopFn },
     tableManager: { hide: noopFn },
     icons: iconProxy,
     getWeatherIcon: () => '',

@@ -4,6 +4,7 @@
 //   b3 = UIUtils（本批）；b4~b10 各域通过 extraModules / register 挂入。
 export interface DndUiRendererDeps {
   uiUtils: any;
+  dynamicBackground?: any;
   notification?: any;
   uiEffects?: any;
   extraModules?: Record<string, any>;
@@ -19,7 +20,13 @@ export function createDndUiRenderer(deps: DndUiRendererDeps): any {
        */
       updateDynamicBackground: (config: any) => {
         if (!config) return;
-        /* b11: DynamicBackground.destroyAll(); DynamicBackground.init(document.body, config.type, config); */
+        // [b11c] 环境门：无 2D canvas 能力（如测试 vm）时跳过，避免残留 DOM
+        let _has2d = false;
+        try { const _c = document.createElement('canvas'); _has2d = !!(_c.getContext && _c.getContext('2d')); } catch (_e) { _has2d = false; }
+        if (!_has2d) return;
+        const bg = (deps as any).dynamicBackground;
+        if (bg && typeof bg.destroyAll === 'function') { try { bg.destroyAll(); } catch (e) {} }
+        if (bg && typeof bg.init === 'function') { try { bg.init(document.body, config.type, config); } catch (e) { try { if (typeof bg.destroyAll === 'function') bg.destroyAll(); } catch (e2) {} } }
       },
     },
     deps.uiUtils,
