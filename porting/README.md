@@ -45,4 +45,5 @@
 - ✅ **b6 物品已完成**（2026-10-05）：UIItems×3 / 跨域全局化 → tag `v0.0.8-b6`
 - ✅ **b7 战斗已完成**（2026-10-05）：UICombat×4 / 跨域全局化（4 处转正）→ tag `v0.0.9-b7`
 - ✅ **b8 地图已完成**（2026-10-05）：EMM×3 + UIMap×4 → tag `v0.0.10-b8`
-- 下一步：**b9 骰子归一（里程碑 M6）**（UIDice 30.8K → 改接 `AcuDice.roll/check`；DiceRulesInjector 保留；DiceManager 退役）
+- ✅ **b9 骰子归一已完成**（2026-10-05）：UIDice×4（AcuDice 引擎优先）/ 骰子池退役 / 规则注入器保留 → tag `v0.0.11-b9`
+- 下一步：**b10 管理面板**（6-8 天）（UISettings / UITableManager / **外观统一收口** / **悬浮球二合一**（D20）/ 骰子功能入口汇总）

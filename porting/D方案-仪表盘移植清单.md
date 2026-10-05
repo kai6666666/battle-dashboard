@@ -73,11 +73,12 @@
 - [x] S3 接线：app/init.ts（… → map 链）
 - 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（地图 / 迷雾 / Token / 瞄准 / 自动绘制）
 
-### b9 骰子归一（里程碑 M6，4-6 天）
-- [ ] UIDice(30.8K → 改接 `AcuDice.roll/check`)
-- [ ] DiceRulesInjector(7K) 保留
-- [ ] DiceManager(8K → **退役**；🟡 2026-10-04 决策：骰子池移除、投骰统一走 AcuDice。原"预生成池保留为提示词层兜底"表述作废)
-- 验收：投骰=AcuDice 结果、结果渲染统一、无双重骰子渲染
+### b9 骰子归一（里程碑 M6，4-6 天）— ✅ 已完成（2026-10-05）
+- [x] UIDice(30.8K → 拆 4 块：面板 / 投骰 / 快捷栏×2；**引擎优先改接 `window.AcuDice.roll`**（不可用时本地回退）)
+- [x] DiceRulesInjector(7K → 移植保留；世界书 JSON 内联，延迟初始化)
+- [x] DiceManager(8K → **退役**：saveData 调用链路统一走 SaveBridge（dnd-core）; 骰子池可视化 → 引擎状态展示)
+- [x] 附带修复：dnd-map 两处 saveData 接线（b8 遗漏项）
+- 验收：✅ 构建 / tests 16/16 / guardrails；酒馆侧待实测（投骰=AcuDice 结果、结果渲染统一、无双重骰子渲染）
 
 ### b10 管理面板（5-7 天）
 - [ ] UISettings(69.4K)、UIPanels(63.3K)
