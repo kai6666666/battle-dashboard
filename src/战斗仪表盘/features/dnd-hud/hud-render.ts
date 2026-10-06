@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.55-b13.2.14 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.56-b13.2.15 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -24,16 +24,30 @@ export function createHudRenderFragment(deps: any): any {
                         if (c.indexOf('dnd-z-lowered') >= 0) return; // [b13.2.14] 弹窗期间被主动降级的元素不再提升
                         if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
                         else if (c.indexOf('overlay') >= 0 || c.indexOf('acu-cell-menu') >= 0) el.style.setProperty('z-index', '2147483647', 'important');
+                        // [b13.2.15] 移到父节点末尾（DOM 顺序最后 = 同 z 时在上，修复编辑弹窗被面板弹窗盖）
+                        try { const _p = el.parentNode; if (_p && _p.appendChild && _p.lastElementChild !== el) _p.appendChild(el); } catch (e) {}
                     } catch (e) {}
                 };
                 const sweep = () => {
                     try {
                         const doc: any = document;
-                        const list = doc.querySelectorAll('[class*="overlay"][class*="acu-"], .acu-cell-menu, .acu-menu-backdrop');
-                        for (let i = 0; i < list.length; i++) boostEl(list[i]);
-                        const bds = doc.querySelectorAll('.acu-menu-backdrop');
-                        if (bds.length > 0 && doc.querySelectorAll('.acu-cell-menu').length === 0) {
-                            for (let i = 0; i < bds.length; i++) { try { bds[i].remove(); } catch (e) {} }
+                        // [b13.2.15] 多文档扫描（脚本 doc + parent 链）：编辑弹窗可能在 coreWin 等其他文档
+                        const _docsZ: any[] = [];
+                        try { _docsZ.push(document); } catch (e) {}
+                        try {
+                            let _wz: any = window; let _ggz = 0;
+                            while (_wz && _wz.parent && _wz.parent !== _wz && _ggz++ < 6) { _wz = _wz.parent; try { if (_wz.document) _docsZ.push(_wz.document); } catch (e) {} }
+                        } catch (e) {}
+                        for (let _dz = 0; _dz < _docsZ.length; _dz++) {
+                            const _dzz: any = _docsZ[_dz];
+                            try {
+                                const _list = _dzz.querySelectorAll('[class*="overlay"][class*="acu-"], .acu-cell-menu, .acu-menu-backdrop');
+                                for (let i = 0; i < _list.length; i++) boostEl(_list[i]);
+                                const _bds = _dzz.querySelectorAll('.acu-menu-backdrop');
+                                if (_bds.length > 0 && _dzz.querySelectorAll('.acu-cell-menu').length === 0) {
+                                    for (let i = 0; i < _bds.length; i++) { try { _bds[i].remove(); } catch (e) {} }
+                                }
+                            } catch (e) {}
                         }
                         const tst = doc.querySelectorAll('#toast-container, .toast');
                         for (let i = 0; i < tst.length; i++) { try { tst[i].style.setProperty('z-index', '2147483647', 'important'); } catch (e) {} }
@@ -219,16 +233,30 @@ export function createHudRenderFragment(deps: any): any {
                         if (c.indexOf('dnd-z-lowered') >= 0) return; // [b13.2.14] 弹窗期间被主动降级的元素不再提升
                         if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
                         else if (c.indexOf('overlay') >= 0 || c.indexOf('acu-cell-menu') >= 0) el.style.setProperty('z-index', '2147483647', 'important');
+                        // [b13.2.15] 移到父节点末尾（DOM 顺序最后 = 同 z 时在上，修复编辑弹窗被面板弹窗盖）
+                        try { const _p = el.parentNode; if (_p && _p.appendChild && _p.lastElementChild !== el) _p.appendChild(el); } catch (e) {}
                     } catch (e) {}
                 };
                 const sweep = () => {
                     try {
                         const doc: any = document;
-                        const list = doc.querySelectorAll('[class*="overlay"][class*="acu-"], .acu-cell-menu, .acu-menu-backdrop');
-                        for (let i = 0; i < list.length; i++) boostEl(list[i]);
-                        const bds = doc.querySelectorAll('.acu-menu-backdrop');
-                        if (bds.length > 0 && doc.querySelectorAll('.acu-cell-menu').length === 0) {
-                            for (let i = 0; i < bds.length; i++) { try { bds[i].remove(); } catch (e) {} }
+                        // [b13.2.15] 多文档扫描（脚本 doc + parent 链）：编辑弹窗可能在 coreWin 等其他文档
+                        const _docsZ: any[] = [];
+                        try { _docsZ.push(document); } catch (e) {}
+                        try {
+                            let _wz: any = window; let _ggz = 0;
+                            while (_wz && _wz.parent && _wz.parent !== _wz && _ggz++ < 6) { _wz = _wz.parent; try { if (_wz.document) _docsZ.push(_wz.document); } catch (e) {} }
+                        } catch (e) {}
+                        for (let _dz = 0; _dz < _docsZ.length; _dz++) {
+                            const _dzz: any = _docsZ[_dz];
+                            try {
+                                const _list = _dzz.querySelectorAll('[class*="overlay"][class*="acu-"], .acu-cell-menu, .acu-menu-backdrop');
+                                for (let i = 0; i < _list.length; i++) boostEl(_list[i]);
+                                const _bds = _dzz.querySelectorAll('.acu-menu-backdrop');
+                                if (_bds.length > 0 && _dzz.querySelectorAll('.acu-cell-menu').length === 0) {
+                                    for (let i = 0; i < _bds.length; i++) { try { _bds[i].remove(); } catch (e) {} }
+                                }
+                            } catch (e) {}
                         }
                         // toast 层级保障（toastr 提示防被盖）
                         const tst = doc.querySelectorAll('#toast-container, .toast');
@@ -403,6 +431,8 @@ export function createHudRenderFragment(deps: any): any {
                         }
                     } catch (e) {}
                     const $body = $pop.find('.dnd-acu-view-body');
+                    // [b13.2.15] 数据预热：保证骰子缓存就绪（顶部按钮操作依赖）
+                    try { if (g && typeof g.ensureAcuCachedData === 'function') g.ensureAcuCachedData(); } catch (e) {}
                     if (tab === 'mvu') {
                         // [b13.2.5] 变量面板：直接渲染 + 绑定（可编辑，不再依赖骰子面板）
                         let okMvu = false;
@@ -417,6 +447,8 @@ export function createHudRenderFragment(deps: any): any {
                             // [b13.2.5] 收藏夹 / 审核：绑定交互（编辑菜单等）
                             try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($body[0]); } catch (e) {}
                             try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                            // [b13.2.15] 教程按钮（?）绑定：原骰子面板顶部按钮在 DND 弹窗里补绑
+                            try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($body[0]); } catch (e) {}
                         } else { $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
                     }
                     // [b13.2.7] 弹窗诊断日志（rect + 文档身份）
@@ -583,6 +615,20 @@ export function createHudRenderFragment(deps: any): any {
                             }
                         } catch (e) {}
                     };
+                    // [b13.2.15] 拦截原骰子面板的 × 关闭按钮：关闭整个 DND 弹窗（而不是清空容器）
+                    try {
+                        $pop[0].addEventListener('click', function(ev: any) {
+                            try {
+                                const t = ev.target;
+                                if (t && t.closest && t.closest('.acu-close-btn')) {
+                                    ev.stopPropagation();
+                                    ev.preventDefault();
+                                    try { _restoreZ(); } catch (e) {}
+                                    $pop.remove();
+                                }
+                            } catch (e) {}
+                        }, true);
+                    } catch (e) {}
                     $pop.find('.dnd-acu-view-close').on('click', function() { _restoreZ(); $pop.remove(); });
                     $pop.on('click', function(ev) { if (ev.target === $pop[0]) { _restoreZ(); $pop.remove(); } });
                     return;

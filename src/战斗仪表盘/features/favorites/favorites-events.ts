@@ -158,8 +158,10 @@ export function createBindFavoritesEvents(deps: any) {
     });
 
     // 搜索
-    $panel.find('#acu-fav-search').on(
+    // [b13.2.15] 搜索改事件委托（重渲染后不丢绑定）
+    $panel.on(
       'input.favEvents',
+      '#acu-fav-search',
       _.debounce(function (this: any) {
         const searchTerm = ($(this).val() as string).toLowerCase().trim();
         $panel.find('.acu-fav-card').each(function () {

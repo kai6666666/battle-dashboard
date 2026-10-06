@@ -1641,6 +1641,15 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           return true;
         } catch (e) { console.warn('[AcuDice] bindFavoritesEventsForDnd 失败', e); return false; }
       },
+      // [b13.2.15] 教程按钮（?）绑定：DND 弹窗里的原骰子面板教程按钮
+      bindTutorialButtonsInForDnd: (containerEl: any) => {
+        try {
+          const jq: any = (window as any).jQuery || (window as any).$;
+          if (!jq || !containerEl) return false;
+          bindTutorialButtonsIn(jq(containerEl));
+          return true;
+        } catch (e) { return false; }
+      },
       bindChangesEventsForDnd: () => {
         try { bindChangesEvents(); return true; } catch (e) { console.warn('[AcuDice] bindChangesEventsForDnd 失败', e); return false; }
       },
