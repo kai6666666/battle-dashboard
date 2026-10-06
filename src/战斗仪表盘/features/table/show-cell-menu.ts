@@ -38,8 +38,10 @@ export function createShowCellMenu(deps: any) {
     const isModified = (window as any).acuModifiedSet.has(cellId);
 
     // 计算锁定状态
-    const headers = deps.getCachedRawData()?.[tableKey]?.content?.[0] || [];
-    const rowData = deps.getCachedRawData()?.[tableKey]?.content?.[rowIdx + 1] || [];
+    // [b13.2.4] 缓存回退：cachedRawData 为空时用实时数据（否则 rowKey=null 导致锁定/收藏静默失败）
+    const _cachedData = deps.getCachedRawData() || deps.getTableData();
+    const headers = _cachedData?.[tableKey]?.content?.[0] || [];
+    const rowData = _cachedData?.[tableKey]?.content?.[rowIdx + 1] || [];
     const lockRowKey = getRowKey(tableName, rowData, headers);
     const currentHeader = headers[colIdx] || '';
 
@@ -324,7 +326,7 @@ export function createShowCellMenu(deps: any) {
     menu.find('#act-favorite').click(async () => {
       try {
         // 获取当前行的完整数据
-        const tableData = deps.getCachedRawData()?.[tableKey];
+        const tableData = (deps.getCachedRawData() || deps.getTableData())?.[tableKey];
         if (!tableData || !tableData.content) {
           showActionableErrorToast('无法获取表格数据', { suggestion: 'table' });
           closeAll();

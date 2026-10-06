@@ -1647,6 +1647,36 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           };
           boost();
           try { setTimeout(boost, 50); } catch (e2) {}
+          // [b13.2.4] 弹层跟踪：菜单激活后 2.5s 内持续提升所有子弹窗（编辑/整体编辑/标签输入等），双窗口（当前+顶层）
+          try {
+            const _t0 = Date.now();
+            const _track = () => {
+              try {
+                const _sel = '.acu-cell-menu, .acu-menu-backdrop, [class*="acu-"][class*="-overlay"]';
+                const _boostIn = (doc: any) => {
+                  try {
+                    const list = doc.querySelectorAll(_sel);
+                    for (let i = 0; i < list.length; i++) {
+                      const el: any = list[i];
+                      try {
+                        const c = String(el.className || '');
+                        if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
+                        else el.style.setProperty('z-index', '2147483647', 'important');
+                      } catch (e3) {}
+                    }
+                  } catch (e3) {}
+                };
+                _boostIn((cellEl && cellEl.ownerDocument) || document);
+                try {
+                  let tw: any = window;
+                  while (tw.parent && tw.parent !== tw) tw = tw.parent;
+                  if (tw && tw !== (window as any) && tw.document) _boostIn(tw.document);
+                } catch (e3) {}
+              } catch (e3) {}
+              if (Date.now() - _t0 < 2500) { try { setTimeout(_track, 120); } catch (e3) {} }
+            };
+            _track();
+          } catch (e2) {}
           return true;
         } catch (e) { console.warn('[AcuDice] showCellMenuForDnd 失败', e); return false; }
       },
