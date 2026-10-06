@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.62-b13.2.21 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.63-b13.2.22 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -438,7 +438,7 @@ export function createHudRenderFragment(deps: any): any {
                             (window as any).__dndInlineScrollFix = true;
                             const _st = document.createElement('style');
                             _st.id = 'dnd-inline-scroll-fix';
-                            _st.textContent = '.dnd-acu-view-inline .acu-fav-wrapper,.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content,.dnd-acu-view-inline .acu-mvu-panel,.dnd-acu-view-inline .acu-panel-content{max-height:none !important;height:auto !important;overflow:visible !important;}';
+                            _st.textContent = '.dnd-acu-view-inline .acu-fav-wrapper,.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content,.dnd-acu-view-inline .acu-mvu-panel,.dnd-acu-view-inline .acu-panel-content{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{max-width:120px !important;min-width:64px !important;flex:0 1 auto !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}';
                             try { (document.head || document.documentElement).appendChild(_st); } catch (e) {}
                         }
                     } catch (e) {}
@@ -487,6 +487,7 @@ export function createHudRenderFragment(deps: any): any {
                     // [b13.2.18] 模式切换类按钮的本地重渲染（沿用）
                     try {
                         const _rerenderLocal3 = function() {
+                            [200, 600].forEach(function(_delayR3) {
                             setTimeout(function() {
                                 try {
                                     if (tab === 'mvu') {
@@ -509,10 +510,14 @@ export function createHudRenderFragment(deps: any): any {
                                         _do3();
                                     }
                                 } catch (e) {}
-                            }, 200);
+                            }, _delayR3);
+                            });
                         };
                         $view.on('click.dndAcuRerender', '.acu-simple-mode-toggle', _rerenderLocal3);
                         $view.on('click.dndAcuRerender', '.mvu-btn-numeric-mode', _rerenderLocal3);
+                        // [b13.2.22] 内层双层绑定：即使子级 handler stopPropagation，同元素上的委托仍会触发
+                        $bodyEl3.on('click.dndAcuRerender2', '.acu-simple-mode-toggle', _rerenderLocal3);
+                        $bodyEl3.on('click.dndAcuRerender2', '.mvu-btn-numeric-mode', _rerenderLocal3);
                     } catch (e) {}
                     // [b13.2.16→b13.2.19] 编辑弹窗保顶（宿主文档级观察，保留）
                     try {
@@ -521,7 +526,7 @@ export function createHudRenderFragment(deps: any): any {
                             try {
                                 const c3x = String(el3x.className || '');
                                 if (c3x.indexOf('dnd-z-lowered') >= 0) return;
-                                if (c3x.indexOf('acu-edit-overlay') >= 0 || c3x.indexOf('acu-dialog') >= 0 || c3x.indexOf('tutorial') >= 0 || (c3x.indexOf('overlay') >= 0 && c3x.indexOf('acu-') >= 0)) {
+                                if (c3x.indexOf('acu-edit-overlay') >= 0 || c3x.indexOf('acu-dialog') >= 0 || (c3x.indexOf('tutorial') >= 0 && c3x.indexOf('overlay') >= 0 && c3x.indexOf('-btn') < 0) || (c3x.indexOf('overlay') >= 0 && c3x.indexOf('acu-') >= 0 && c3x.indexOf('-btn') < 0)) {
                                     el3x.style.setProperty('z-index', '2147483647', 'important');
                                     if (!el3x.getAttribute('data-dnd-tail-done')) {
                                         el3x.setAttribute('data-dnd-tail-done', '1');
@@ -531,7 +536,7 @@ export function createHudRenderFragment(deps: any): any {
                             } catch (e) {}
                         };
                         try {
-                            const l3x = _hostDoc3.querySelectorAll('.acu-edit-overlay:not([data-dnd-tail-done]), .acu-dialog:not([data-dnd-tail-done]), [class*="tutorial"]:not([data-dnd-tail-done]), [class*="overlay"][class*="acu-"]:not([data-dnd-tail-done])');
+                            const l3x = _hostDoc3.querySelectorAll('.acu-edit-overlay:not([data-dnd-tail-done]):not([class*="-btn"]), .acu-dialog:not([data-dnd-tail-done]):not([class*="-btn"]), [class*="tutorial"][class*="overlay"]:not([data-dnd-tail-done]):not([class*="-btn"]), [class*="overlay"][class*="acu-"]:not([data-dnd-tail-done]):not([class*="-btn"])');
                             for (let i3x = 0; i3x < l3x.length; i3x++) _boost3(l3x[i3x]);
                         } catch (e) {}
                         try {
@@ -545,7 +550,7 @@ export function createHudRenderFragment(deps: any): any {
                                             const n3x: any = a3x[ai3x];
                                             if (!n3x || n3x.nodeType !== 1) continue;
                                             const c3y = String(n3x.className || '');
-                                            if (c3y.indexOf('acu-edit-overlay') >= 0 || c3y.indexOf('acu-dialog') >= 0 || c3y.indexOf('tutorial') >= 0 || (c3y.indexOf('overlay') >= 0 && c3y.indexOf('acu-') >= 0)) _boost3(n3x);
+                                            if (c3y.indexOf('acu-edit-overlay') >= 0 || c3y.indexOf('acu-dialog') >= 0 || (c3y.indexOf('tutorial') >= 0 && c3y.indexOf('overlay') >= 0 && c3y.indexOf('-btn') < 0) || (c3y.indexOf('overlay') >= 0 && c3y.indexOf('acu-') >= 0 && c3y.indexOf('-btn') < 0)) _boost3(n3x);
                                         }
                                     }
                                 });
