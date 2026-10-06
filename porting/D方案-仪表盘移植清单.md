@@ -123,6 +123,7 @@
 - 🚀 **b13.1 表格宿主嵌入（2026-10-06）**：融合方案 §4.1/§5 首批——① 桥新增 `renderTableHostForDnd`（渲染直调 `renderTableContent`）+ `dndTableOp`（search/page/reverse）+ `getAcuThemeClass` ② Mini HUD「▼」点击表 → **内嵌完整表格视图**（不再弹窗/不打开骰子面板）：返回条 + `.dnd-acu-table-host`（骰子主题类）+ 搜索（防抖300ms+焦点恢复）/ 分页 / 倒序 / 关闭→返回列表 ③ 骰子样式为裸类选择器（全局生效），嵌入后样式原样可用 → tag `v0.0.40-b13.1`
 - 🚀 **b13.2 事件多宿主（2026-10-06）**：DND 事件层——① 单元格点击 → **全功能菜单**（编辑内容/整体编辑/表尾新增行/复制/收藏此行/撤销修改/删除整行/锁定，`showCellMenuForDnd` 伪事件直调 `showCellMenu`，菜单内部自带全部 handler）② 书签（`toggleBookmarkForDnd` + 拦截防双触）③ 交互动作按钮（`runCardActionForDnd` 复刻 DOM→getInteractOptionsForRow→executeTableInteractionAction）→ tag `v0.0.41-b13.2`
 - 🔧 **b13.2.1/b13.2.2 菜单层级修复（2026-10-06）**：单元格菜单被 Mini HUD 浮层遮盖——**真因**：菜单 CSS 为 `z-index:31111 !important`（部分为 31266），inline 非 important 提升无效；**修复**：`setProperty('z-index','2147483647','important')`（inline important 击败样式表 important）+ backdrop 同步提升 + 50ms 双保险 → tag `v0.0.42-b13.2.1` / `v0.0.43-b13.2.2`；另确认 b12.8 overlay 守护（`features/dnd-ui/index.ts`，规则 `acu-*-overlay` 提升至 2147483647）覆盖编辑弹窗等所有骰子 overlay
+- 🔧 **b13.2.3 三项实测修复（2026-10-06）**：① 编辑/整体编辑/收藏弹层防盖——DND 侧新增**强力层级守护**（MutationObserver：任何新增含 `acu-`/`toast` 节点 → sweep 提升所有 overlay/菜单/toast 至 2147483647）② **backdrop 逃逸清理**（backdrop 存在但菜单不存在 → 自动移除，治锁定后 UI 无响应）③ `ensureAcuCachedData` 桥（打开表时保障 cachedRawData 就绪，修编辑/锁定/收藏依赖）④ 移除「← 返回表格列表」条，关闭统一走表格右上角 × → tag `v0.0.44-b13.2.3`
 
 ## 增补事项
 - [x] **悬浮球二合一**（✅ 2026-10-05 完成，v0.0.15-b10d）：唯一 D20 球（长按/双击开骰子面板）+ S1 桥 `__acuToggleDicePanel` + 触发器融合隐藏
