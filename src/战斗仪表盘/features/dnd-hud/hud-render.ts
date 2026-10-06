@@ -67,18 +67,22 @@ export function createHudRenderFragment(deps: any): any {
             );
             
             const self = this;
-            // [b12.16] 表格管理收口：▼ → 打开骰子面板（表格管理界面 = 导航盘）
-            $toggleBar.on('click', function() {
-                try {
-                    const _toggle: any = (window as any).__acuToggleDicePanel;
-                    if (typeof _toggle === 'function') {
-                        _toggle();
-                    } else {
-                        const acuUI: any = (window as any).__acuUI;
-                        if (acuUI && typeof acuUI.openDicePanelTab === 'function') { acuUI.openDicePanelTab(); }
-                        else { try { deps.notification.warning('骰子面板不可用：桥未就绪'); } catch (e2) {} }
-                    }
-                } catch (err) { deps.logger.warn('[DND] 打开骰子表格管理失败', err); }
+            // [b12.17] 表格管理镜像：▼ 展开 → 内嵌骰子导航盘镜像（表格入口总览）
+            $toggleBar.on('click', async function() {
+                const $hudBody = $('#dnd-hud-body');
+                let $tm = $('#dnd-table-manager-container');
+                if ($tm.length === 0) {
+                    $tm = $('<div id="dnd-table-manager-container" style="display:none;border-bottom:1px solid var(--dnd-border-gold);"></div>');
+                    $tm.insertBefore($hudBody);
+                }
+                if ($tm.is(':visible')) {
+                    $tm.slideUp(200);
+                    $(this).text('▼').attr('title', '展开表格管理');
+                } else {
+                    $tm.slideDown(200);
+                    $(this).text('▲').attr('title', '收起表格管理');
+                    try { await (self as any).renderTableNavMirror($tm); } catch (e) {}
+                }
             });
             
             // 插入到 Header 和 Body 之间
@@ -155,6 +159,42 @@ export function createHudRenderFragment(deps: any): any {
         
         // [新增] 初始化独立拖拽功能（隐藏球模式下使用）
         this.initIndependentDrag();
+    },
+
+    // [b12.17] 表格管理镜像：内嵌骰子导航盘（表格入口总览）——点击经骰子面板中转
+    async renderTableNavMirror($container) {
+        const { $ } = deps.utils.getCore();
+        const g: any = (window as any).__acuUI;
+        $container.empty();
+        let items: any[] = [];
+        try { if (g && typeof g.getTableNavItems === 'function') items = g.getTableNavItems() || []; } catch (e) {}
+        const specials = [
+            { tab: 'changes', icon: 'fa-code-compare', label: '审核' },
+            { tab: 'mvu', icon: 'fa-code-branch', label: '变量' },
+            { tab: 'favorites', icon: 'fa-star', label: '收藏夹' },
+            { tab: 'global-interactions', icon: 'fa-hand-pointer', label: '交互总览' },
+        ];
+        const btnStyle = 'display:flex;align-items:center;gap:5px;padding:7px 6px;background:linear-gradient(to bottom, var(--dnd-bg-tertiary), var(--dnd-bg-secondary));border:1px solid var(--dnd-border-inner);border-radius:5px;color:var(--dnd-text-main);font-size:12px;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all 0.2s;';
+        let html = `<div style="padding:10px;max-height:380px;overflow-y:auto;">`;
+        html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">`;
+        specials.forEach(s2 => { html += `<button class="dnd-tnav-btn dnd-clickable" data-tab="${s2.tab}" style="${btnStyle}"><i class="fa-solid ${s2.icon}" style="color:var(--dnd-text-highlight);"></i>${s2.label}</button>`; });
+        html += `</div>`;
+        html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">`;
+        items.forEach(it => {
+            const iconHtml = (it.icon && String(it.icon).indexOf('fa') === 0) ? `<i class="fa-solid ${String(it.icon)}" style="color:var(--dnd-text-dim);"></i>` : '';
+            html += `<button class="dnd-tnav-btn dnd-clickable" data-table="${String(it.key).replace(/"/g, '')}" style="${btnStyle}">${iconHtml}${String(it.name || '')}</button>`;
+        });
+        html += `</div></div>`;
+        const $el = $(html);
+        $el.find('.dnd-tnav-btn').on('click', function() {
+            const tab = $(this).attr('data-tab');
+            const table = $(this).attr('data-table');
+            try {
+                if (tab) { if (g && typeof g.openDicePanelTab === 'function') { g.openDicePanelTab(tab); return; } }
+                if (table) { if (g && typeof g.openDicePanelTable === 'function') { g.openDicePanelTable(table); return; } }
+            } catch (e) { deps.logger.warn('[DND] 表格导航失败', e); }
+        });
+        $container.append($el);
     },
 
         // [新增] 更新 HUD 位置使其跟随悬浮球

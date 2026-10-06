@@ -1547,6 +1547,40 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       showDicePanelForDnd: (opts?: any) => {
         try { (showDicePanel as any)(opts || {}); } catch (e) { console.warn('[AcuDice] showDicePanelForDnd 失败', e); }
       },
+      // [b12.17] 表格管理镜像：骰子导航盘的表项 + 特殊入口
+      getTableNavItems: () => {
+        try {
+          const rawData = getTableData();
+          const allTables: any = processJsonData(rawData || {});
+          const items: any[] = [];
+          Object.keys(allTables).forEach((k) => {
+            const t: any = allTables[k];
+            const name = (t && t.name) || k;
+            let icon = ''; try { icon = getIconForTableName(name) || ''; } catch (e) {}
+            let hidden = false; try { hidden = (getHiddenTables() || []).indexOf(k) >= 0; } catch (e) {}
+            if (hidden) return;
+            items.push({ key: k, name: String(name), icon: String(icon || '') });
+          });
+          return items;
+        } catch (e) { return []; }
+      },
+      openDicePanelTable: (tableKey: string) => {
+        try {
+          const _toggle = (window as any).__acuToggleDicePanel;
+          if (typeof _toggle === 'function') { try { _toggle(); } catch (e) {} }
+          const _try = (attempt: number) => {
+            try {
+              const jq: any = (window as any).jQuery || (window as any).$;
+              if (!jq) return;
+              const key = String(tableKey || '').replace(/"/g, '');
+              const $b = jq('.acu-nav-table-btn[data-table="' + key + '"]');
+              if ($b && $b.length) { $b.trigger('click'); return; }
+            } catch (e) {}
+            if (attempt < 5) setTimeout(() => _try(attempt + 1), 300);
+          };
+          setTimeout(() => _try(0), 200);
+        } catch (e) { console.warn('[AcuDice] openDicePanelTable 失败', e); }
+      },
       // [b12.9] 打开骰子面板并切换到指定 tab（供 DND 主面板导航 / Mini HUD 更多菜单调用）
       openDicePanelTab: (tab?: string) => {
         try {
