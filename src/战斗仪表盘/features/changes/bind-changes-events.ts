@@ -536,6 +536,7 @@ export function createBindChangesEvents(deps: any) {
 
         handle.onpointermove = function (moveE: any) {
           const dy = moveE.clientY - startY;
+          try { if (!(handle as any)._dndMoveLogged) { (handle as any)._dndMoveLogged = 1; console.info('[DICE]审核高度 move开始 dy=' + dy + ' panel=' + ($panel && $panel.length)); } } catch (e2x) {}
           requestedHeight = deps.setPanelRequestedHeight($panel, startHeight - dy) || requestedHeight;
         };
         handle.onpointerup = function (upE: any) {
@@ -544,6 +545,7 @@ export function createBindChangesEvents(deps: any) {
           handle.onpointermove = null;
           handle.onpointerup = null;
           // 保存高度
+          try { console.info('[DICE]审核高度 up h=' + requestedHeight + ' panel=' + ($panel && $panel.length)); } catch (e2x) {}
           deps.savePanelRequestedHeight(tableName, requestedHeight);
         };
       })
