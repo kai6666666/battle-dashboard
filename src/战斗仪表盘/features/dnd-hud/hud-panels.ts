@@ -197,6 +197,18 @@ async function invokeManualUpdate(event) {
             </div>
         `;
         
+        // [b12.7] 打开数据库（骰子系统）
+        html += `
+            <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="acu-open-db" style="cursor:pointer;" title="打开数据库">
+                <span class="dnd-res-icon" style="font-size:16px;color:var(--dnd-text-main)"><i class="fa-solid fa-database"></i></span>
+            </div>
+        `;
+        // [b12.7] 可视化表格编辑（骰子系统）
+        html += `
+            <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="acu-visualizer" style="cursor:pointer;" title="可视化表格编辑">
+                <span class="dnd-res-icon" style="font-size:16px;color:var(--dnd-text-dim)"><i class="fa-solid fa-table-columns"></i></span>
+            </div>
+        `;
         // [新增] 手动更新数据按钮
         html += `
             <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="manual-update" style="cursor:pointer;" title="手动刷新数据">
@@ -211,18 +223,6 @@ async function invokeManualUpdate(event) {
             </div>
         `;
         
-        // [b12.7] 打开数据库（骰子系统）
-        html += `
-            <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="acu-open-db" style="cursor:pointer;" title="打开数据库">
-                <span class="dnd-res-icon" style="font-size:16px;color:var(--dnd-text-main)"><i class="fa-solid fa-database"></i></span>
-            </div>
-        `;
-        // [b12.7] 可视化表格编辑（骰子系统）
-        html += `
-            <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="acu-visualizer" style="cursor:pointer;" title="可视化表格编辑">
-                <span class="dnd-res-icon" style="font-size:16px;color:var(--dnd-text-dim)"><i class="fa-solid fa-table-columns"></i></span>
-            </div>
-        `;
         html += `</div></div>`; // End buttons & footer
         
         const $footerEl = $(html);

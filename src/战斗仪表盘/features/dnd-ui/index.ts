@@ -59,6 +59,43 @@ export function createDndUi(deps: DndUiDeps): DndUi {
         if (g) { g.ICONS = ICONS; g.getWeatherIcon = getWeatherIcon; }
       } catch (e) {}
 
+      // [b12.8] 骰子弹窗层级守护：确保骰子 overlay 弹窗始终盖过 DND HUD
+      // （Mini HUD=2147483640 / 角色卡=2147483643 / 详情弹窗=2147483645 → 骰子弹窗提升至 2147483647）
+      try {
+        const _zKey = '__dndAcuZGuard';
+        const _topWin: any = (() => { try { return core?.utils?.getCore?.()?.window || (window as any); } catch (e) { return window as any; } })();
+        if (_topWin && !_topWin[_zKey]) {
+          _topWin[_zKey] = true;
+          const _Z = '2147483647';
+          const _isAcuOverlay = (cls: string) => /(^|\s)acu-[a-z0-9-]*-overlay(\s|$)/.test(cls);
+          const _mark = (el: any) => {
+            try {
+              if (!el || el.nodeType !== 1) return;
+              if (_isAcuOverlay(String(el.className || ''))) el.style.setProperty('z-index', _Z, 'important');
+              const subs = el.querySelectorAll ? el.querySelectorAll('[class*="acu-"][class*="-overlay"]') : [];
+              for (let i = 0; i < subs.length; i++) {
+                const k: any = subs[i];
+                if (_isAcuOverlay(String(k.className || ''))) k.style.setProperty('z-index', _Z, 'important');
+              }
+            } catch (e) {}
+          };
+          const _doc: any = _topWin.document || document;
+          try { _doc.querySelectorAll('[class*="acu-"][class*="-overlay"]').forEach((el: any) => _mark(el)); } catch (e) {}
+          const _obs = new MutationObserver((muts: any[]) => {
+            for (const m of muts) {
+              const added = m.addedNodes;
+              if (!added) continue;
+              for (let i = 0; i < added.length; i++) {
+                const n: any = added[i];
+                if (n && n.nodeType === 1) _mark(n);
+              }
+            }
+          });
+          const _startZ = () => { try { _obs.observe(_doc.documentElement || _doc.body, { childList: true, subtree: true }); } catch (e) {} };
+          if (_doc.readyState === 'loading') _doc.addEventListener('DOMContentLoaded', _startZ); else _startZ();
+        }
+      } catch (e) {}
+
       core.logger.info('[dnd-ui] 渲染工具就绪：UIRenderer → window.DND_Dashboard_UI');
       core.logger.info('[dnd-ui] 验收：NotificationSystem =', typeof notification?.notify, '｜UIEffects =', typeof uiEffects?.addRippleEffect);
     } catch (e) {
