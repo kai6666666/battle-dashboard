@@ -59,7 +59,7 @@ export function createHudRenderFragment(deps: any): any {
         
         // 添加展开按钮 (如果尚未存在)
         if ($('#dnd-hud-toggle-bar').length === 0) {
-            const $toggleBar = $(`<div id="dnd-hud-toggle-bar" style="height:12px;background:var(--dnd-bg-tertiary);border-bottom:1px solid var(--dnd-border-inner);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--dnd-text-dim);font-size:8px;transition:all 0.2s;" title="展开/收起表格管理">▼</div>`);
+            const $toggleBar = $(`<div id="dnd-hud-toggle-bar" style="height:12px;background:var(--dnd-bg-tertiary);border-bottom:1px solid var(--dnd-border-inner);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--dnd-text-dim);font-size:8px;transition:all 0.2s;" title="打开表格编辑器（骰子）">▼</div>`);
             
             $toggleBar.hover(
                 function() { $(this).css({color: 'var(--dnd-text-highlight)', background: 'var(--dnd-selected-bg)'}); },
@@ -67,28 +67,16 @@ export function createHudRenderFragment(deps: any): any {
             );
             
             const self = this;
-            $toggleBar.on('click', async function() {
-                // [修改] 切换表格管理模块
-                const $hudBody = $('#dnd-hud-body');
-                const $tmContainer = $('#dnd-table-manager-container');
-                
-                // 确保容器存在
-                if ($tmContainer.length === 0) {
-                     $('<div id="dnd-table-manager-container" style="display:none;border-bottom:1px solid var(--dnd-border-gold);"></div>').insertBefore($hudBody);
-                }
-                
-                const $tm = $('#dnd-table-manager-container');
-                
-                if ($tm.is(':visible')) {
-                    $tm.slideUp(200);
-                    $(this).text('▼').attr('title', '展开表格管理');
-                    deps.tableManager.state.isExpanded = false;
-                } else {
-                    $tm.slideDown(200);
-                    $(this).text('▲').attr('title', '收起表格管理');
-                    deps.tableManager.state.isExpanded = true;
-                    await deps.tableManager.render($tm);
-                }
+            // [b12.15] 表格编辑收口：▼ → 打开骰子侧表格编辑器（B 唯一编辑）
+            $toggleBar.on('click', function() {
+                try {
+                    const acuUI: any = (window as any).__acuUI;
+                    if (acuUI && typeof acuUI.openDatabaseVisualizerInterface === 'function') {
+                        acuUI.openDatabaseVisualizerInterface();
+                    } else {
+                        try { deps.notification.warning('表格编辑器不可用：骰子桥未就绪'); } catch (e2) {}
+                    }
+                } catch (err) { deps.logger.warn('[DND] 打开骰子表格编辑器失败', err); }
             });
             
             // 插入到 Header 和 Body 之间

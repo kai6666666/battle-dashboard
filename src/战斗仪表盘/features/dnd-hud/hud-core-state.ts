@@ -208,26 +208,19 @@ export function createHudCoreStateFragment(deps: any): any {
 
     // [新增] 初始化动态背景
     _hideTableManager() {
+        // [b12.15] 表格编辑收口：编辑器 A 已移除，仅清理历史残留容器
         const { $ } = deps.utils.getCore();
-        
-        // 隐藏表格管理器容器
-        const $tmContainer = $('#dnd-table-manager-container');
-        if ($tmContainer.length && $tmContainer.is(':visible')) {
-            $tmContainer.hide();
-            
-            // 重置展开/收起按钮状态
-            const $toggleBar = $('#dnd-hud-toggle-bar');
-            if ($toggleBar.length) {
-                $toggleBar.text('▼').attr('title', '展开表格管理');
+        try {
+            const $tmContainer = $('#dnd-table-manager-container');
+            if ($tmContainer.length && $tmContainer.is(':visible')) {
+                $tmContainer.hide();
+                const $toggleBar = $('#dnd-hud-toggle-bar');
+                if ($toggleBar.length) {
+                    $toggleBar.text('▼').attr('title', '打开表格编辑器（骰子）');
+                }
+                deps.logger.debug('[UICore] 表格残留容器已清理');
             }
-            
-            // 重置 UITableManager 状态
-            if (UITableManager && deps.tableManager.state) {
-                deps.tableManager.state.isExpanded = false;
-            }
-            
-            deps.logger.debug('[UICore] 表格管理器已隐藏');
-        }
+        } catch (e) {}
     },
 
     // [新增] 切换动态背景效果 (保留用于独立切换效果)

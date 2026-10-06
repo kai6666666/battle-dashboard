@@ -55,60 +55,82 @@ export function createHudExploreFragment(deps: any): any {
     },
 
     // [新增] 渲染行动选项
+    // [b12.15] 深化：DND A-D 选项（带前缀）+ 骰子其他选项表（转置扫描，无前缀）+ 检定建议按钮 + 字号同步
     async renderActionOptions($container) {
         const { $ } = deps.utils.getCore();
-        const optionsTable = deps.dataManager.getTable('UI_ActionOptions');
-        if (!optionsTable || optionsTable.length === 0) return;
-        
-        const opts = optionsTable[0]; // 取第一行
-        const validOpts = [];
-        
-        // 检查 A-D 选项
-        ['选项A', '选项B', '选项C', '选项D'].forEach(key => {
-            if (opts[key] && opts[key].trim()) {
-                validOpts.push({ key: key.replace('选项',''), text: opts[key] });
+        const g: any = (window as any).__acuUI;
+        const validOpts: any[] = [];
+        const extraOpts: any[] = [];
+        const checkItems: any[] = [];
+        // 1) DND A-D 选项（原能力）
+        try {
+            const optionsTable = deps.dataManager.getTable('UI_ActionOptions');
+            if (optionsTable && optionsTable.length > 0) {
+                const opts = optionsTable[0];
+                ['选项A', '选项B', '选项C', '选项D'].forEach(key => {
+                    if (opts[key] && String(opts[key]).trim()) {
+                        validOpts.push({ key: key.replace('选项', ''), text: opts[key] });
+                    }
+                });
             }
-        });
-        
-        if (validOpts.length === 0) return;
-        
-        // 读取选项换行设置
+        } catch (e) {}
+        // 2) 骰子其他选项表（转置扫描；去重 DND 表）
+        try {
+            if (g && typeof g.getExtraOptionItems === 'function') {
+                (g.getExtraOptionItems() || []).forEach((it: any) => { if (it && it.text) extraOpts.push(it); });
+            }
+        } catch (e) {}
+        // 3) 检定建议（项存在时显示）
+        try {
+            if (g && typeof g.getCheckSuggestionItems === 'function') {
+                (g.getCheckSuggestionItems() || []).forEach((it: any) => { if (it && it.displayText) checkItems.push(it); });
+            }
+        } catch (e) {}
+        if (validOpts.length === 0 && extraOpts.length === 0 && checkItems.length === 0) return;
+        // 换行设置（DND）+ 字号（骰子 optionFontSize 同步）
         const optionWrap = await deps.dbAdapter.getSetting(DND_CONFIG.STORAGE_KEYS.OPTION_WRAP);
         const enableWrap = optionWrap === true || optionWrap === 'true';
-        
-        // 根据换行设置决定样式
+        let optFontSize = 12;
+        try { if (g && typeof g.getOptionFontSize === 'function') { const fs = g.getOptionFontSize(); if (fs) optFontSize = parseInt(fs) || 12; } } catch (e) {}
         const wrapStyle = enableWrap
             ? 'white-space: normal; word-break: break-word; min-height: 40px;'
             : 'white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
-        
+        const baseStyle = (delay: any) => `animation-delay:${delay}s;background: linear-gradient(to bottom, var(--dnd-bg-tertiary), var(--dnd-bg-secondary));border: 1px solid var(--dnd-border-inner);color: var(--dnd-text-main);padding: 8px 5px;border-radius: 4px;cursor: pointer;font-size: ${optFontSize}px;text-align: left;${wrapStyle}transition: all 0.2s;`;
         let html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">`;
-        
+        // A-D（带前缀，DND 原样）
         validOpts.forEach((opt, idx) => {
             html += `
-                <button class="dnd-action-btn dnd-clickable dnd-hud-entry dnd-hover-lift" data-text="${opt.text}" style="animation-delay:${idx * 0.05}s;
-                    background: linear-gradient(to bottom, var(--dnd-bg-tertiary), var(--dnd-bg-secondary));
-                    border: 1px solid var(--dnd-border-inner);
-                    color: var(--dnd-text-main);
-                    padding: 8px 5px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-size: 12px;
-                    text-align: left;
-                    ${wrapStyle}
-                    transition: all 0.2s;
-                " onmouseover="this.style.borderColor='var(--dnd-text-highlight)';this.style.color='var(--dnd-text-highlight)'"
+                <button class="dnd-action-btn dnd-clickable dnd-hud-entry dnd-hover-lift" data-text="${String(opt.text).replace(/"/g, '&quot;')}" style="${baseStyle(idx * 0.05)}"
+                onmouseover="this.style.borderColor='var(--dnd-text-highlight)';this.style.color='var(--dnd-text-highlight)'"
                 onmouseout="this.style.borderColor='var(--dnd-border-inner)';this.style.color='var(--dnd-text-main)'">
                     <span style="color:var(--dnd-border-gold);font-weight:bold;margin-right:4px;">${opt.key}.</span> ${opt.text}
                 </button>
             `;
         });
-        
+        // 骰子其他选项表（无前缀，带小圆点标记）
+        extraOpts.forEach((opt, idx) => {
+            html += `
+                <button class="dnd-action-btn dnd-clickable dnd-hud-entry dnd-hover-lift" data-text="${String(opt.text).replace(/"/g, '&quot;')}" style="${baseStyle(0.2 + idx * 0.05)}"
+                onmouseover="this.style.borderColor='var(--dnd-text-highlight)';this.style.color='var(--dnd-text-highlight)'"
+                onmouseout="this.style.borderColor='var(--dnd-border-inner)';this.style.color='var(--dnd-text-main)'">
+                    <span style="color:var(--dnd-accent-green);font-weight:bold;margin-right:4px;">•</span> ${opt.text}
+                </button>
+            `;
+        });
+        // 检定建议（带骰子图标标记）
+        checkItems.forEach((it, idx) => {
+            html += `
+                <button class="dnd-action-check-suggestion dnd-clickable dnd-hud-entry dnd-hover-lift" data-display="${String(it.displayText).replace(/"/g, '&quot;')}" data-command="${String(it.commandText || '').replace(/"/g, '&quot;')}" style="${baseStyle(0.4 + idx * 0.05)}border-color:var(--dnd-border-gold);"
+                onmouseover="this.style.borderColor='var(--dnd-text-highlight)';this.style.color='var(--dnd-text-highlight)'"
+                onmouseout="this.style.borderColor='var(--dnd-border-gold)';this.style.color='var(--dnd-text-main)'">
+                    <i class="fa-solid fa-dice-d20" style="color:var(--dnd-border-gold);margin-right:4px;"></i>${it.displayText}
+                </button>
+            `;
+        });
         html += `</div>`;
         const $el = $(html);
-        
-        // 绑定点击事件 (填入聊天框)
         const self = this;
-        // [b12.14] 骰子同款能力 + DND 原能力：自动发送（跟随骰子 clickOptionToAutoSend 设置）/ 未开启时保持填入输入框
+        // 普通选项点击（含骰子其他选项）：自动发送 / 填入输入框
         $el.find('.dnd-action-btn').on('click', async function() {
             const text = $(this).data('text');
             const _g: any = (window as any).__acuUI;
@@ -124,7 +146,19 @@ export function createHudExploreFragment(deps: any): any {
             }
             ((window as any).DND_Dashboard_UI || self).fillChatInput?.(text);
         });
-        
+        // 检定建议点击：执行命令（失败回退填入显示文本）
+        $el.find('.dnd-action-check-suggestion').on('click', async function() {
+            const display = $(this).attr('data-display') || '';
+            const command = $(this).attr('data-command') || '';
+            try {
+                const _g: any = (window as any).__acuUI;
+                if (_g && typeof _g.executeCheckSuggestion === 'function') {
+                    const ok = await _g.executeCheckSuggestion(display, command);
+                    if (ok) { return; }
+                }
+            } catch (e) { deps.logger.warn('[DND] 检定建议执行失败，回退填入', e); }
+            ((window as any).DND_Dashboard_UI || self).fillChatInput?.(display);
+        });
         $container.append($el);
     },
 

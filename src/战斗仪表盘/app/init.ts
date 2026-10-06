@@ -18,7 +18,6 @@ import { createDndMap } from '../features/dnd-map';
 import { createDndDice } from '../features/dnd-dice';
 import { createDndSettings } from '../features/dnd-settings';
 import { createDndPanels } from '../features/dnd-panels';
-import { createDndTable } from '../features/dnd-table';
 import { DND_CONFIG as DND_CONFIG_REF } from '../features/dnd-core';
 declare function abortAllPendingRequests(): void;
 declare function processPendingEffectRuns(...args: any[]): any;
@@ -408,13 +407,8 @@ export function createInit(deps: any) {
                                 dndWindow.__dndPanelsInstance.init();
                               }
                               console.info('[DICE]dnd-panels（b10b）已接线');
-                              // [dnd-table · b10c 接线（S3）] 管理面板三
+                              // [b12.15] 表格编辑收口：编辑器 A（dnd-table）已移除，唯一编辑权归骰子系统（B）
                               try {
-                                if (!dndWindow.__dndTableInstance) {
-                                  dndWindow.__dndTableInstance = createDndTable({ core: dndWindow.__dndCoreInstance });
-                                  dndWindow.__dndTableInstance.init();
-                                }
-                                console.info('[DICE]dnd-table（b10c）已接线');
                                 // [b10d · S1桥] D20球/设置面板 → 打开骰子面板（变量表 / 表格工具）
                                 try {
                                   const $jq: any = (window as any).jQuery || (window as any).$;
@@ -492,7 +486,7 @@ export function createInit(deps: any) {
                                   console.warn('[DICE]b12 收口失败（忽略不影响主流程）:', err12);
                                 }
                               } catch (err10) {
-                                console.warn('[DICE]dnd-table（b10c）接线失败（忽略不影响主流程）:', err10);
+                                console.warn('[DICE]（b10d/b12 收口段）接线失败（忽略不影响主流程）:', err10);
                               }
                             } catch (err9) {
                               console.warn('[DICE]dnd-panels（b10b）接线失败（忽略不影响主流程）:', err9);

@@ -1500,6 +1500,42 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           (showAvatarManager as any)(nodeArr);
         } catch (e) { console.warn('[AcuDice] showAvatarManagerForDnd 失败', e); }
       },
+      // [b12.15] 选项深化：其他选项表（转置扫描）+ 检定建议 + 字号
+      getExtraOptionItems: () => {
+        try {
+          const rawData = getTableData();
+          const allTables: any = processJsonData(rawData || {});
+          const out: any[] = [];
+          Object.keys(allTables).forEach((k) => {
+            const t: any = allTables[k];
+            const name = (t && t.name) || k;
+            try { if (!isOptionTableName(name)) return; } catch (e) { return; }
+            if (String(name).indexOf('行动选项') >= 0) return; // DND 自有表已单独渲染（去重）
+            try { (getOptionItemsFromTable(t) || []).forEach((it: any) => { if (it && it.text) out.push({ text: String(it.text) }); }); } catch (e) {}
+          });
+          return out;
+        } catch (e) { return []; }
+      },
+      getCheckSuggestionItems: () => {
+        try {
+          const rawData = getTableData();
+          const allTables: any = processJsonData(rawData || {});
+          const out: any[] = [];
+          Object.keys(allTables).forEach((k) => {
+            const t: any = allTables[k];
+            const name = (t && t.name) || k;
+            try { if (!isCheckSuggestionTableName(name)) return; } catch (e) { return; }
+            try { (getCheckSuggestionItemsFromTable(t) || []).forEach((it: any) => { if (it && it.displayText) out.push({ displayText: String(it.displayText || ''), commandText: String(it.commandText || '') }); }); } catch (e) {}
+          });
+          return out;
+        } catch (e) { return []; }
+      },
+      executeCheckSuggestion: (displayText: string, commandText: string) => {
+        try { return executeCheckSuggestionCommand(displayText, commandText); } catch (e) { console.warn('[AcuDice] executeCheckSuggestion 失败', e); return false; }
+      },
+      getOptionFontSize: () => {
+        try { return (getConfig && getConfig().optionFontSize) || null; } catch (e) { return null; }
+      },
       // [b12.14] 选项面板能力桥：骰子同款（自动发送 / 读取自动发送设置）
       smartSendText: (text: string) => {
         try { return sendChatTextAndTrigger(text); } catch (e) { console.warn('[AcuDice] smartSendText 失败', e); return null; }
