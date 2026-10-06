@@ -79,15 +79,22 @@ export function createDiceRollFragment(deps: any): any {
             } catch (e) {}
             return;
         }
-        // [b12.12] 结果展示（稳健版）：无 JS 透明初始态，CSS 动画类（动画失败也直接可见）
+        // [b12.13] 结果展示（原生 DOM 版）：强制非透明 + 诊断日志
         try {
-            // 移除之前的结果
             $popup.find('.dnd-roll-result').remove();
-            const $result = $(`<div class="dnd-roll-result dnd-roll-pop ${specialClass}" style="margin-bottom:10px;background:linear-gradient(135deg, var(--dnd-bg-secondary), var(--dnd-bg-tertiary));border-radius:8px;border:1px solid var(--dnd-border-gold);box-shadow:0 4px 12px var(--dnd-border-inner), inset 0 1px 0 var(--dnd-border-gold);">${resultHtml}</div>`);
-            // 插入到内容容器开头（第二个子元素=内容容器；找不到则退化为 append）
-            const $content = $popup.children().eq(1);
-            if ($content.length) { $content.prepend($result); } else { $popup.append($result); }
-        } catch (e) { console.warn('[DND] 投骰结果卡片渲染失败', e); }
+            const _resEl = document.createElement('div');
+            _resEl.className = 'dnd-roll-result ' + (specialClass || '');
+            _resEl.setAttribute('style', 'margin-bottom:10px;background:linear-gradient(135deg, var(--dnd-bg-secondary), var(--dnd-bg-tertiary));border-radius:8px;border:1px solid var(--dnd-border-gold);box-shadow:0 4px 12px var(--dnd-border-inner), inset 0 1px 0 var(--dnd-border-gold);opacity:1;visibility:visible;display:block;');
+            _resEl.innerHTML = resultHtml;
+            const _popupEl: any = $popup[0];
+            const _contentEl: any = (_popupEl && _popupEl.children && _popupEl.children.length > 1) ? _popupEl.children[1] : _popupEl;
+            if (_contentEl) {
+                _contentEl.insertBefore(_resEl, _contentEl.firstChild);
+                console.log('[DND] 投骰结果已插入:', _resEl.outerHTML.slice(0, 260));
+            } else {
+                console.warn('[DND] 投骰结果：找不到内容容器');
+            }
+        } catch (e) { console.error('[DND] 投骰结果卡片渲染失败', e); }
     },
 
     // 自定义骰子表达式投掷
@@ -160,13 +167,22 @@ export function createDiceRollFragment(deps: any): any {
                 } catch (e) {}
                 return;
             }
-            // [b12.12] 结果展示（稳健版）
+            // [b12.13] 结果展示（原生 DOM 版）
             try {
                 $popup.find('.dnd-roll-result').remove();
-                const $result = $(`<div class="dnd-roll-result dnd-roll-pop" style="margin-bottom:10px;background:var(--dnd-bg-secondary);border-radius:6px;border:1px solid var(--dnd-border-gold);">${resultHtml}</div>`);
-                const $content = $popup.children().eq(1);
-                if ($content.length) { $content.prepend($result); } else { $popup.append($result); }
-            } catch (e) { console.warn('[DND] 自定义投骰结果渲染失败', e); }
+                const _resEl2 = document.createElement('div');
+                _resEl2.className = 'dnd-roll-result';
+                _resEl2.setAttribute('style', 'margin-bottom:10px;background:var(--dnd-bg-secondary);border-radius:6px;border:1px solid var(--dnd-border-gold);opacity:1;visibility:visible;display:block;');
+                _resEl2.innerHTML = resultHtml;
+                const _popupEl2: any = $popup[0];
+                const _contentEl2: any = (_popupEl2 && _popupEl2.children && _popupEl2.children.length > 1) ? _popupEl2.children[1] : _popupEl2;
+                if (_contentEl2) {
+                    _contentEl2.insertBefore(_resEl2, _contentEl2.firstChild);
+                    console.log('[DND] 自定义投骰结果已插入:', _resEl2.outerHTML.slice(0, 260));
+                } else {
+                    console.warn('[DND] 自定义投骰结果：找不到内容容器');
+                }
+            } catch (e) { console.error('[DND] 自定义投骰结果渲染失败', e); }
         } catch(e) {
             deps.notification.error('投掷失败: ' + e.message);
         }
