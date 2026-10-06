@@ -1551,11 +1551,12 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       renderTableDetailHtml: (tableKey: string) => {
         try {
           const rawData: any = getTableData();
-          const sheet: any = rawData && rawData[String(tableKey)];
-          if (!sheet || !sheet.content) return '';
-          const content = sheet.content;
-          const headers = content[0] || [];
-          const rows = content.slice(1);
+          if (!rawData) return '';
+          const allTables: any = processJsonData(rawData);
+          const sheet: any = allTables[String(tableKey)];
+          if (!sheet) return '';
+          const headers = sheet.headers || [];
+          const rows = sheet.rows || [];
           let html = '<div style="max-height:55vh;overflow-y:auto;">';
           html += '<div style="font-weight:bold;color:var(--dnd-text-highlight);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:5px;margin-bottom:8px;">' + escapeHtml(String(sheet.name || tableKey)) + '（' + rows.length + ' 行）</div>';
           html += '<table class="dnd-table" style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr>';
