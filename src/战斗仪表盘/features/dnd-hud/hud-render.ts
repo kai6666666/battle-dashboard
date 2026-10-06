@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.71-b13.2.30 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.72-b13.2.31 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -425,7 +425,7 @@ export function createHudRenderFragment(deps: any): any {
                         const tName = String($(this).attr('data-table') || table);
                         try { if (g && typeof g.toggleTableStyleForDnd === 'function') g.toggleTableStyleForDnd(tName); } catch (e2) {}
                         refresh();
-                        setTimeout(function() { try { const b: any = $view.find('.acu-card-body').get(0); console.info('[DND]布局切换诊断 body=' + (b ? String(b.className).slice(0, 60) : 'none') + ' display=' + (b ? getComputedStyle(b).display : '?') + ' cols=' + (b ? getComputedStyle(b).gridTemplateColumns : '?')); } catch (e2) {} }, 350);
+                        setTimeout(function() { try { const b: any = $view.find('.acu-card-body').get(0); const _w: any = (b && b.ownerDocument && b.ownerDocument.defaultView) || window; const _stx: any = document.getElementById('dnd-inline-scroll-fix'); console.info('[DND]布局切换诊断 body=' + (b ? String(b.className).slice(0, 60) : 'none') + ' display=' + (b ? _w.getComputedStyle(b).display : '?') + ' cols=' + (b ? _w.getComputedStyle(b).gridTemplateColumns : '?') + ' viewCls=' + String($view.attr('class') || '') + ' inDom=' + (b ? (b.ownerDocument === document) : '?') + ' styleEl=' + (_stx ? 'yes:' + String((_stx.sheet && _stx.sheet.cssRules) ? _stx.sheet.cssRules.length : 0) : 'no')); } catch (e2) {} }, 350);
                     });
                     // [b13.2.27→b13.2.28] 表格高度拖动（原生捕获阶段，防被其他 handler 拦截）
                     try {
@@ -446,12 +446,14 @@ export function createHudRenderFragment(deps: any): any {
                                     try {
                                         const dh = (mv.clientY - startY);
                                         let nh = Math.max(160, Math.min(window.innerHeight * 0.85, startH - dh));
+                                        try { if (!(move as any)._lg) { (move as any)._lg = 1; console.info('[DND]表格高度 move dy=' + Math.round(dh) + ' nh=' + Math.round(nh)); } } catch (e2) {}
                                         $view[0].style.setProperty('max-height', nh + 'px', 'important');
                                         $view[0].style.setProperty('height', nh + 'px', 'important');
                                     } catch (e) {}
                                 };
                                 const _doc2: any = ($view[0] && $view[0].ownerDocument) || document;
                                 const up = function() {
+                                    try { console.info('[DND]表格高度 up h=' + String($view[0].style.height || '?')); } catch (e2) {}
                                     try { document.removeEventListener('pointermove', move, true); document.removeEventListener('pointerup', up, true); } catch (e) {}
                                     try { _doc2.removeEventListener('pointermove', move, true); _doc2.removeEventListener('pointerup', up, true); } catch (e) {}
                                 };

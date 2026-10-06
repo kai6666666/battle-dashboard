@@ -545,7 +545,7 @@ export function createBindChangesEvents(deps: any) {
           handle.onpointermove = null;
           handle.onpointerup = null;
           // 保存高度
-          try { console.info('[DICE]审核高度 up h=' + requestedHeight + ' panel=' + ($panel && $panel.length)); } catch (e2x) {}
+          try { const _pe: any = ($panel && $panel[0]) || null; const _w2: any = (_pe && _pe.ownerDocument && _pe.ownerDocument.defaultView) || window; console.info('[DICE]审核高度 up h=' + requestedHeight + ' panel=' + ($panel && $panel.length) + ' cls=' + (_pe ? String(_pe.className).slice(0, 50) : '-') + ' ch=' + (_pe ? _w2.getComputedStyle(_pe).height : '-') + ' mh=' + (_pe ? _w2.getComputedStyle(_pe).maxHeight : '-')); } catch (e2x) {}
           deps.savePanelRequestedHeight(tableName, requestedHeight);
         };
       })
