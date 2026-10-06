@@ -14,9 +14,16 @@ export function createDicePanelFragment(deps: any): any {
             </div>
             
             <!-- [b9 骰子归一] 引擎状态（原骰子池区块已退役） -->
-            <div style="background:var(--dnd-bg-tertiary);padding:8px;border-radius:4px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="background:var(--dnd-bg-tertiary);padding:8px;border-radius:4px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
                 <span style="font-size:11px;color:var(--dnd-text-dim);">投骰引擎：AcuDice（统一）</span>
                 <span onclick="window.DND_Dashboard_UI.refreshDicePool()" style="cursor:pointer;color:var(--dnd-text-highlight);font-size:11px;">${deps.icons.SYNC} 状态</span>
+            </div>
+            
+            <!-- [b12.11] 完整投骰面板入口（骰子系统：规则 / 预设 / 成功标准切换） -->
+            <div style="margin-bottom:12px;">
+                <button type="button" class="dnd-dice-open-full-panel" style="width:100%;background:linear-gradient(135deg, rgba(155,89,182,0.22), rgba(52,152,219,0.22));border:1px solid var(--dnd-border-gold);color:var(--dnd-text-highlight);padding:9px 10px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:6px;">
+                    <i class="fa-solid fa-dice-d20"></i> 完整投骰面板（可切换规则 / 预设 / 成功标准）
+                </button>
             </div>
             
             <!-- 快速投掷按钮 -->
@@ -57,6 +64,18 @@ export function createDicePanelFragment(deps: any): any {
             </div>
         `;
         ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.( html, event.clientX, event.clientY);
+        // [b12.11] 完整投骰面板入口：脚本绑定
+        {
+            const { $: _$d } = deps.utils.getCore();
+            _$d('#dnd-detail-popup-el .dnd-dice-open-full-panel').off('click.dndFullDice').on('click.dndFullDice', function(e) {
+                e.stopPropagation();
+                try {
+                    const acuUI: any = (window as any).__acuUI;
+                    if (acuUI && typeof acuUI.showDicePanelForDnd === 'function') { acuUI.showDicePanelForDnd(); }
+                    else { deps.notification.warning('完整投骰面板不可用：桥未就绪'); }
+                } catch (err) { deps.logger.warn('[DND] 打开完整投骰面板失败', err); }
+            });
+        }
     },
 
     // 获取骰子池数据

@@ -1500,6 +1500,10 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           (showAvatarManager as any)(nodeArr);
         } catch (e) { console.warn('[AcuDice] showAvatarManagerForDnd 失败', e); }
       },
+      // [b12.11] 打开骰子系统的完整投骰面板（规则 / 预设 / 成功标准切换）
+      showDicePanelForDnd: (opts?: any) => {
+        try { (showDicePanel as any)(opts || {}); } catch (e) { console.warn('[AcuDice] showDicePanelForDnd 失败', e); }
+      },
       // [b12.9] 打开骰子面板并切换到指定 tab（供 DND 主面板导航 / Mini HUD 更多菜单调用）
       openDicePanelTab: (tab?: string) => {
         try {

@@ -71,6 +71,14 @@ export function createDiceRollFragment(deps: any): any {
         
         // 更新弹窗内容而不是 alert
         const $popup = $('#dnd-detail-popup-el');
+        // [b12.11] 弹窗不存在时自动新开，保证结果特效始终可见
+        if (!$popup.length) {
+            try {
+                const _pos = (event && event.clientX !== undefined) ? { x: event.clientX, y: event.clientY } : { x: (window.innerWidth || 800) / 2, y: (window.innerHeight || 600) / 2 };
+                ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.(`<div style="text-align:center;font-size:12px;color:var(--dnd-text-dim);padding:4px 0;">${deps.icons.DICE} 快速投掷</div>` + resultHtml, _pos.x, _pos.y);
+            } catch (e) {}
+            return;
+        }
         if ($popup.length) {
             // 在现有内容前插入结果
             const $result = $(`<div class="dnd-roll-result ${specialClass}" style="margin-bottom:10px;background:linear-gradient(135deg, var(--dnd-bg-secondary), var(--dnd-bg-tertiary));border-radius:8px;border:1px solid var(--dnd-border-gold);box-shadow:0 4px 12px var(--dnd-border-inner), inset 0 1px 0 var(--dnd-border-gold);">${resultHtml}</div>`);
@@ -78,8 +86,8 @@ export function createDiceRollFragment(deps: any): any {
             // 移除之前的结果
             $popup.find('.dnd-roll-result').remove();
             
-            // 在标题后插入
-            $popup.find('> div').first().after($result);
+            // 在标题后插入（[b12.11] children 显式 API，兼容旧版 jQuery）
+            $popup.children('div').first().after($result);
             
             // [美化] 增强入场动画效果
             $result.css({ opacity: 0, transform: 'scale(0.5) rotateX(-20deg)', transformOrigin: 'center center' });
@@ -155,10 +163,18 @@ export function createDiceRollFragment(deps: any): any {
             </div>`;
             
             const $popup = $('#dnd-detail-popup-el');
+            // [b12.11] 弹窗不存在时自动新开，保证结果始终可见
+            if (!$popup.length) {
+                try {
+                    const _pos2 = { x: (window.innerWidth || 800) / 2, y: (window.innerHeight || 600) / 2 };
+                    ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.(`<div style="text-align:center;font-size:12px;color:var(--dnd-text-dim);padding:4px 0;">${deps.icons.DICE} 自定义投掷</div>` + resultHtml, _pos2.x, _pos2.y);
+                } catch (e) {}
+                return;
+            }
             if ($popup.length) {
                 $popup.find('.dnd-roll-result').remove();
                 const $result = $(`<div class="dnd-roll-result" style="margin-bottom:10px;background:var(--dnd-bg-secondary);border-radius:6px;border:1px solid var(--dnd-border-gold);">${resultHtml}</div>`);
-                $popup.find('> div').first().after($result);
+                $popup.children('div').first().after($result);
                 $result.css({ opacity: 0, transform: 'scale(0.8)' });
                 setTimeout(() => {
                     $result.css({ opacity: 1, transform: 'scale(1)', transition: 'all 0.3s ease-out' });
