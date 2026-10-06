@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.69-b13.2.28 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.70-b13.2.29 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -447,11 +447,13 @@ export function createHudRenderFragment(deps: any): any {
                                         $view[0].style.setProperty('height', nh + 'px', 'important');
                                     } catch (e) {}
                                 };
+                                const _doc2: any = ($view[0] && $view[0].ownerDocument) || document;
                                 const up = function() {
                                     try { document.removeEventListener('pointermove', move, true); document.removeEventListener('pointerup', up, true); } catch (e) {}
+                                    try { _doc2.removeEventListener('pointermove', move, true); _doc2.removeEventListener('pointerup', up, true); } catch (e) {}
                                 };
-                                document.addEventListener('pointermove', move, true);
-                                document.addEventListener('pointerup', up, true);
+                                try { document.addEventListener('pointermove', move, true); document.addEventListener('pointerup', up, true); } catch (e) {}
+                                try { if (_doc2 !== document) { _doc2.addEventListener('pointermove', move, true); _doc2.addEventListener('pointerup', up, true); } } catch (e) {}
                             } catch (e) {}
                         }, true);
                         $view.on('dblclick.dndHeight', '.acu-height-drag-handle', function() {
@@ -493,12 +495,12 @@ export function createHudRenderFragment(deps: any): any {
                     } catch (e) {}
                     // [b13.2.20] 内嵌滚动修正：解除骰子内容高度限制，滚动交给外层容器
                     try {
-                        if (!(window as any).__dndInlineScrollFix_v5) {
-                            (window as any).__dndInlineScrollFix_v5 = true;
+                        if (!(window as any).__dndInlineScrollFix_v6) {
+                            (window as any).__dndInlineScrollFix_v6 = true;
                             try { const _oldSt = document.getElementById('dnd-inline-scroll-fix'); if (_oldSt && _oldSt.parentNode) _oldSt.parentNode.removeChild(_oldSt); } catch (e2) {}
                             const _st = document.createElement('style');
                             _st.id = 'dnd-inline-scroll-fix';
-                            _st.textContent = '.dnd-acu-view-inline .acu-fav-wrapper,.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content,.dnd-acu-view-inline .acu-mvu-panel,.dnd-acu-view-inline .acu-panel-content{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{width:96px !important;max-width:96px !important;min-width:64px !important;flex:0 0 96px !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
+                            _st.textContent = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{width:96px !important;max-width:96px !important;min-width:64px !important;flex:0 0 96px !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
                             try { (document.head || document.documentElement).appendChild(_st); } catch (e) {}
                         }
                     } catch (e) {}

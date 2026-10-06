@@ -521,6 +521,7 @@ export function createBindChangesEvents(deps: any) {
       .find('.acu-height-drag-handle')
       .off('pointerdown')
       .on('pointerdown', function (this: any, e: any) {
+        try { console.info('[DICE]审核高度拖动开始'); } catch (e2x) {}
         if (e.button !== 0) return;
         e.preventDefault();
         e.stopPropagation();
