@@ -1580,6 +1580,41 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           return null;
         } catch (e) { console.warn('[AcuDice] renderAcuViewHtml 失败', e); return null; }
       },
+      // [b13.1] DND 表格宿主：渲染完整表格视图 + 基础操作（搜索/分页/倒序）
+      renderTableHostForDnd: (tableName: string) => {
+        try {
+          const rawData = getTableData();
+          if (!rawData) return '';
+          const allTables: any = processJsonData(rawData);
+          const t: any = allTables[String(tableName)];
+          if (!t) return '';
+          return renderTableContent(t, tableName);
+        } catch (e) { console.warn('[AcuDice] renderTableHostForDnd 失败', e); return ''; }
+      },
+      dndTableOp: (op: string, tableName: string, payload?: any) => {
+        try {
+          if (op === 'search') {
+            const st: any = tableSearchStates_ACC.v || {};
+            st[tableName] = String(payload || '');
+            tableSearchStates_ACC.v = st;
+            const ps: any = tablePageStates_ACC.v || {};
+            ps[tableName] = 1;
+            tablePageStates_ACC.v = ps;
+            return true;
+          }
+          if (op === 'page') {
+            const ps: any = tablePageStates_ACC.v || {};
+            ps[tableName] = Number(payload) || 1;
+            tablePageStates_ACC.v = ps;
+            return true;
+          }
+          if (op === 'reverse') { try { toggleTableReverse(tableName); } catch (e) {} return true; }
+          return false;
+        } catch (e) { console.warn('[AcuDice] dndTableOp 失败', e); return false; }
+      },
+      getAcuThemeClass: () => {
+        try { return 'acu-theme-' + (getConfig().theme || 'dark'); } catch (e) { return 'acu-theme-dark'; }
+      },
       // [b12.17] 表格管理镜像：骰子导航盘的表项 + 特殊入口
       getTableNavItems: () => {
         try {

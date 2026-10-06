@@ -175,7 +175,7 @@ export function createHudRenderFragment(deps: any): any {
             { tab: 'global-interactions', icon: 'fa-hand-pointer', label: '交互总览' },
         ];
         const btnStyle = 'display:flex;align-items:center;gap:5px;padding:7px 6px;background:linear-gradient(to bottom, var(--dnd-bg-tertiary), var(--dnd-bg-secondary));border:1px solid var(--dnd-border-inner);border-radius:5px;color:var(--dnd-text-main);font-size:12px;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all 0.2s;';
-        let html = `<div style="padding:10px;max-height:380px;overflow-y:auto;">`;
+        let html = `<div class="dnd-tnav-list" style="padding:10px;max-height:380px;overflow-y:auto;">`;
         html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">`;
         specials.forEach(s2 => { html += `<button class="dnd-tnav-btn dnd-clickable" data-tab="${s2.tab}" style="${btnStyle}"><i class="fa-solid ${s2.icon}" style="color:var(--dnd-text-highlight);"></i>${s2.label}</button>`; });
         html += `</div>`;
@@ -193,12 +193,49 @@ export function createHudRenderFragment(deps: any): any {
             const label = $(this).text();
             try {
                 if (table) {
-                    let html2 = '';
-                    try { if (g && typeof g.renderTableDetailHtml === 'function') html2 = g.renderTableDetailHtml(table); } catch (e) {}
-                    if (!html2) html2 = '<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">无法读取该表数据（可能尚未加载）</div>';
-                    const rect = this.getBoundingClientRect ? this.getBoundingClientRect() : { left: 100, top: 100, width: 0, height: 0 };
-                    const _dui: any = (window as any).DND_Dashboard_UI;
-                    if (_dui && typeof _dui.showItemDetailPopup === 'function') { _dui.showItemDetailPopup(html2, rect.left + rect.width / 2, rect.top + rect.height); }
+                    // [b13.1] 内嵌完整表格视图（不弹窗、不打开骰子面板）
+                    const $list = $container.find('.dnd-tnav-list');
+                    $container.find('.dnd-acu-table-view').remove();
+                    let tableHtml = '';
+                    try { if (g && typeof g.renderTableHostForDnd === 'function') tableHtml = g.renderTableHostForDnd(table); } catch (e) {}
+                    if (!tableHtml) tableHtml = '<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">无法读取该表数据（可能尚未加载）</div>';
+                    const themeCls = (g && typeof g.getAcuThemeClass === 'function') ? String(g.getAcuThemeClass()) : 'acu-theme-dark';
+                    const $view = $(`<div class="dnd-acu-table-view" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-table-back dnd-clickable" style="padding:6px 10px;border-bottom:1px solid var(--dnd-border-inner);cursor:pointer;color:var(--dnd-text-highlight);font-size:12px;position:sticky;top:0;background:var(--dnd-bg-panel);z-index:2;">← 返回表格列表</div><div class="dnd-acu-table-host ${themeCls}" style="padding:2px 6px 6px;"></div></div>`);
+                    $view.find('.dnd-acu-table-host').html(tableHtml);
+                    $list.hide();
+                    $container.append($view);
+                    const refresh = () => {
+                        let h = '';
+                        try { if (g && typeof g.renderTableHostForDnd === 'function') h = g.renderTableHostForDnd(table); } catch (e) {}
+                        if (h) $view.find('.dnd-acu-table-host').html(h);
+                    };
+                    $view.find('.dnd-acu-table-back').on('click', function() { $view.remove(); $list.show(); });
+                    // 搜索（防抖 300ms）
+                    let searchTimer: any = null;
+                    $view.on('input', '.acu-search-input', function() {
+                        const val = String($(this).val() || '');
+                        if (searchTimer) clearTimeout(searchTimer);
+                        searchTimer = setTimeout(() => {
+                            try { if (g && typeof g.dndTableOp === 'function') g.dndTableOp('search', table, val); } catch (e) {}
+                            refresh();
+                            const el: any = $view.find('.acu-search-input')[0];
+                            if (el) { try { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } catch (e2) {} }
+                        }, 300);
+                    });
+                    // 分页
+                    $view.on('click', '.acu-page-btn', function() {
+                        if ($(this).hasClass('disabled') || $(this).hasClass('active')) return;
+                        const p = parseInt($(this).attr('data-page') || '1', 10) || 1;
+                        try { if (g && typeof g.dndTableOp === 'function') g.dndTableOp('page', table, p); } catch (e) {}
+                        refresh();
+                    });
+                    // 倒序
+                    $view.on('click', '.acu-reverse-btn', function() {
+                        try { if (g && typeof g.dndTableOp === 'function') g.dndTableOp('reverse', table); } catch (e) {}
+                        refresh();
+                    });
+                    // 关闭按钮 → 返回列表
+                    $view.on('click', '.acu-close-btn', function(e) { e.stopPropagation(); $view.remove(); $list.show(); });
                     return;
                 }
                 if (tab) {
