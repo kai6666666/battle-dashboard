@@ -1621,14 +1621,25 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           if (!cellEl) return false;
           const evt: any = { clientX: clientX, clientY: clientY, preventDefault: function () {}, stopPropagation: function () {} };
           showCellMenu(evt, cellEl);
-          // [b13.2.1] 提升菜单层级（防被 DND Mini HUD 浮层遮盖）
-          try {
-            const jq: any = (window as any).jQuery || (window as any).$;
-            if (jq) {
-              jq('.acu-cell-menu').css('z-index', '2147483647');
-              jq('.acu-menu-backdrop').css('z-index', '2147483646');
-            }
-          } catch (e2) {}
+          // [b13.2.2] 提升菜单层级（inline + !important，击败 css 的 z-index:31111 !important）
+          const boost = () => {
+            try {
+              const doc: any = (cellEl && cellEl.ownerDocument) || document;
+              const menus = doc.querySelectorAll('.acu-cell-menu, .acu-menu-backdrop');
+              for (let i = 0; i < menus.length; i++) {
+                const el: any = menus[i];
+                try {
+                  if (el.classList && el.classList.contains('acu-menu-backdrop')) {
+                    el.style.setProperty('z-index', '2147483646', 'important');
+                  } else {
+                    el.style.setProperty('z-index', '2147483647', 'important');
+                  }
+                } catch (e3) {}
+              }
+            } catch (e2) {}
+          };
+          boost();
+          try { setTimeout(boost, 50); } catch (e2) {}
           return true;
         } catch (e) { console.warn('[AcuDice] showCellMenuForDnd 失败', e); return false; }
       },
