@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.66-b13.2.25 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.67-b13.2.26 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -332,7 +332,7 @@ export function createHudRenderFragment(deps: any): any {
                     // [b13.2.21] 注入骰子绑定所需容器身份（仅 id；不加 acu-data-display 类以免 absolute 定位塌陷）
                     try {
                         try { const _oldIds = document.querySelectorAll('#acu-data-area'); for (let _oi = 0; _oi < _oldIds.length; _oi++) { try { _oldIds[_oi].removeAttribute('id'); } catch (e) {} } } catch (e) {}
-                        $view.find('.dnd-acu-table-host').attr('id', 'acu-data-area');
+                        $view.find('.dnd-acu-table-host').attr('id', 'acu-data-area').addClass('visible');
                     } catch (e) {}
                     $view.find('.dnd-acu-table-host').html(tableHtml);
                     $list.hide();
@@ -358,14 +358,24 @@ export function createHudRenderFragment(deps: any): any {
                         }, 300);
                     });
                     // 分页
-                    $view.on('click', '.acu-page-btn', function(e: any) {
-                        e.stopPropagation();
-                        try { console.info('[DND]分页点击(收到) disabled=' + $(this).hasClass('disabled') + ' active=' + $(this).hasClass('active') + ' page=' + String($(this).attr('data-page')) + ' table=' + table); } catch (e2) {}
-                        if ($(this).hasClass('disabled') || $(this).hasClass('active')) return;
-                        const p = parseInt($(this).attr('data-page') || '1', 10) || 1;
-                        try { if (g && typeof g.dndTableOp === 'function') g.dndTableOp('page', table, p); } catch (e) {}
-                        refresh();
-                    });
+                    // [b13.2.26] 分页改用捕获阶段（防被其他 handler 拦截导致事件到不了）
+                    try {
+                        $view[0].addEventListener('click', function(ev: any) {
+                            try {
+                                const t2: any = ev.target;
+                                if (!t2 || !t2.closest) return;
+                                const elBtn: any = t2.closest('.acu-page-btn');
+                                if (!elBtn) return;
+                                ev.stopPropagation();
+                                const $btn = $(elBtn);
+                                try { console.info('[DND]分页点击(捕获) disabled=' + $btn.hasClass('disabled') + ' active=' + $btn.hasClass('active') + ' page=' + String($btn.attr('data-page')) + ' table=' + table); } catch (e2) {}
+                                if ($btn.hasClass('disabled') || $btn.hasClass('active')) return;
+                                const p = parseInt(String($btn.attr('data-page') || '1'), 10) || 1;
+                                try { if (g && typeof g.dndTableOp === 'function') g.dndTableOp('page', table, p); } catch (e) {}
+                                refresh();
+                            } catch (e) {}
+                        }, true);
+                    } catch (e) {}
                     // 倒序
                     $view.on('click', '.acu-reverse-btn', function(e: any) {
                         e.stopPropagation();
@@ -439,6 +449,7 @@ export function createHudRenderFragment(deps: any): any {
                     try {
                         try { const _oldIds = document.querySelectorAll('#acu-data-area'); for (let _oi = 0; _oi < _oldIds.length; _oi++) { try { _oldIds[_oi].removeAttribute('id'); } catch (e) {} } } catch (e) {}
                         $bodyEl3.attr('id', 'acu-data-area');
+                        $bodyEl3.addClass('visible');
                         // [b13.2.21] 不加 acu-data-display 类（其 CSS 为 absolute 向上弹出定位，会导致内嵌布局塌陷）
                     } catch (e) {}
                     // [b13.2.20] 内嵌滚动修正：解除骰子内容高度限制，滚动交给外层容器
@@ -487,6 +498,8 @@ export function createHudRenderFragment(deps: any): any {
                     } catch (e) {}
                     // [b13.2.21] 诊断日志
                     try { console.info('[DND]内嵌视图已展开 tab=' + tab + ' | bodyLen=' + String($bodyEl3.html() || '').length + ' | listVisible=' + $list.is(':visible')); } catch (e) {}
+                    // [b13.2.26] 滚动诊断：外层容器是否可滚
+                    try { setTimeout(function() { try { console.info('[DND]滚动诊断 tab=' + tab + ' scrollH=' + $view[0].scrollHeight + ' clientH=' + $view[0].clientHeight + ' canScroll=' + ($view[0].scrollHeight > $view[0].clientHeight)); } catch (e) {} }, 600); } catch (e) {}
                     // [b13.2.21] 阻止本次点击继续冒泡（防止刚绑定的 document 级监听被本次事件触发）
                     try { if (e && e.stopPropagation) e.stopPropagation(); } catch (e2) {}
                     // 关闭按钮（.acu-close-btn）→ 关闭内嵌、返回列表
