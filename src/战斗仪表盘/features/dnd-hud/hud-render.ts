@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.53-b13.2.12 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.54-b13.2.13 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -466,11 +466,39 @@ export function createHudRenderFragment(deps: any): any {
                         };
                         const _hud = _findHud();
                         let _migrated = 'no';
-                        if (_hud && _hud.doc && _hud.doc !== (($pop[0] && $pop[0].ownerDocument) || document) && _hud.doc.body) {
-                            _hud.doc.body.appendChild($pop[0]);
-                            _migrated = 'yes(at=' + _hud.at + ')';
-                        }
-                        try { $pop[0].style.setProperty('z-index', '2147483647', 'important'); } catch (e) {}
+                        // [b13.2.13] 优先迁移到真·顶层文档（fixed 居中且滚动不影响）；失败回退 HUD 所在文档
+                        try {
+                            const _curDoc: any = ($pop[0] && $pop[0].ownerDocument) || document;
+                            let _topDoc: any = null;
+                            try {
+                                let w: any = window;
+                                let g2 = 0;
+                                while (w && w.parent && w.parent !== w && g2++ < 6) { w = w.parent; }
+                                if (w && w.document && w.document.body) _topDoc = w.document;
+                            } catch (e) {}
+                            const _target: any = _topDoc ? _topDoc : (_hud && _hud.doc && _hud.doc.body ? _hud.doc : null);
+                            if (_target && _target.body && _target !== _curDoc) {
+                                _target.body.appendChild($pop[0]);
+                                _migrated = (_topDoc && _target === _topDoc) ? 'top' : ('hud@' + (_hud ? _hud.at : '?'));
+                            }
+                        } catch (e) {}
+                        // 迁移后强制重设全量固定定位（fixed + 全屏 + 居中 + 最高层）
+                        try {
+                            const _de: any = $pop[0];
+                            if (_de) {
+                                _de.style.setProperty('position', 'fixed', 'important');
+                                _de.style.setProperty('top', '0', 'important');
+                                _de.style.setProperty('left', '0', 'important');
+                                _de.style.setProperty('right', '0', 'important');
+                                _de.style.setProperty('bottom', '0', 'important');
+                                _de.style.setProperty('width', '100vw', 'important');
+                                _de.style.setProperty('height', '100vh', 'important');
+                                _de.style.setProperty('z-index', '2147483647', 'important');
+                                _de.style.setProperty('display', 'flex', 'important');
+                                _de.style.setProperty('align-items', 'center', 'important');
+                                _de.style.setProperty('justify-content', 'center', 'important');
+                            }
+                        } catch (e) {}
                         const _od2: any = ($pop[0] && $pop[0].ownerDocument) || document;
                         const _ow2: any = _od2.defaultView || window;
                         const _hx2 = Math.round((_ow2.innerWidth || _od2.documentElement.clientWidth) / 2);
