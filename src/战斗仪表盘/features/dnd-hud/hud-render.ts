@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.65-b13.2.24 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.66-b13.2.25 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -360,9 +360,9 @@ export function createHudRenderFragment(deps: any): any {
                     // 分页
                     $view.on('click', '.acu-page-btn', function(e: any) {
                         e.stopPropagation();
+                        try { console.info('[DND]分页点击(收到) disabled=' + $(this).hasClass('disabled') + ' active=' + $(this).hasClass('active') + ' page=' + String($(this).attr('data-page')) + ' table=' + table); } catch (e2) {}
                         if ($(this).hasClass('disabled') || $(this).hasClass('active')) return;
                         const p = parseInt($(this).attr('data-page') || '1', 10) || 1;
-                        try { console.info('[DND]表格分页点击 page=' + p + ' | table=' + table); } catch (e2) {}
                         try { if (g && typeof g.dndTableOp === 'function') g.dndTableOp('page', table, p); } catch (e) {}
                         refresh();
                     });
@@ -420,6 +420,8 @@ export function createHudRenderFragment(deps: any): any {
                     $view.on('click', '.acu-close-btn', function(e) { e.stopPropagation(); $view.remove(); $list.show(); });
                     // [b13.2.24] 表格教程按钮绑定（原骰子面板教程按钮在 DND 表格视图里补绑）
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($view[0]); } catch (e3) {}
+                    // [b13.2.25] 表格教程点击诊断
+                    try { $view.on('click.dndTutDiag', '.acu-panel-tutorial-btn', function() { try { console.info('[DND]表格教程点击 scope=' + String($(this).attr('data-tutorial-scope'))); } catch (e4) {} }); } catch (e3) {}
                     // [b13.2.21] 阻止本次点击继续冒泡
                     try { if (e && e.stopPropagation) e.stopPropagation(); } catch (e2) {}
                     return;
@@ -441,12 +443,12 @@ export function createHudRenderFragment(deps: any): any {
                     } catch (e) {}
                     // [b13.2.20] 内嵌滚动修正：解除骰子内容高度限制，滚动交给外层容器
                     try {
-                        if (!(window as any).__dndInlineScrollFix_v3) {
-                            (window as any).__dndInlineScrollFix_v3 = true;
+                        if (!(window as any).__dndInlineScrollFix_v4) {
+                            (window as any).__dndInlineScrollFix_v4 = true;
                             try { const _oldSt = document.getElementById('dnd-inline-scroll-fix'); if (_oldSt && _oldSt.parentNode) _oldSt.parentNode.removeChild(_oldSt); } catch (e2) {}
                             const _st = document.createElement('style');
                             _st.id = 'dnd-inline-scroll-fix';
-                            _st.textContent = '.dnd-acu-view-inline .acu-fav-wrapper,.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content,.dnd-acu-view-inline .acu-mvu-panel,.dnd-acu-view-inline .acu-panel-content{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{max-width:120px !important;min-width:64px !important;flex:0 1 auto !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}';
+                            _st.textContent = '.dnd-acu-view-inline .acu-fav-wrapper,.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content,.dnd-acu-view-inline .acu-mvu-panel,.dnd-acu-view-inline .acu-panel-content{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{width:96px !important;max-width:96px !important;min-width:64px !important;flex:0 0 96px !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}';
                             try { (document.head || document.documentElement).appendChild(_st); } catch (e) {}
                         }
                     } catch (e) {}
@@ -463,7 +465,7 @@ export function createHudRenderFragment(deps: any): any {
                             $bodyEl3.html(String(h3));
                             try { if (tab === 'changes') { const _s3 = String(h3); console.info('[DND]changes首次渲染 mode=' + (_s3.indexOf('acu-simple-mode-toggle active') >= 0 ? 'validation' : 'full') + ' len=' + _s3.length); } } catch (e3) {}
                             try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
-                            try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                            // [b13.2.25] changes 的绑定移至 append 后（游离 DOM 时全局选择器找不到按钮，导致首次点击无 handler）
                         } else { $bodyEl3.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
                     }
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
@@ -474,6 +476,14 @@ export function createHudRenderFragment(deps: any): any {
                         if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') {
                             (function($be: any) { setTimeout(function() { try { g.bindInteractionEventsForDnd($be); } catch (e) {} }, 350); })($bodyEl3[0]);
                         }
+                    } catch (e) {}
+                    // [b13.2.25] append 后绑定 changes（此时按钮已在 DOM，全局选择器可命中）
+                    try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                    // [b13.2.25] 阻止触摸事件冒泡到外层（防酒馆 swipe 拦截导致内嵌滚动失效）
+                    try {
+                        $view[0].addEventListener('touchstart', function(ev: any) { try { ev.stopPropagation(); } catch (e) {} }, false);
+                        $view[0].addEventListener('touchmove', function(ev: any) { try { ev.stopPropagation(); } catch (e) {} }, false);
+                        $view[0].addEventListener('touchend', function(ev: any) { try { ev.stopPropagation(); } catch (e) {} }, false);
                     } catch (e) {}
                     // [b13.2.21] 诊断日志
                     try { console.info('[DND]内嵌视图已展开 tab=' + tab + ' | bodyLen=' + String($bodyEl3.html() || '').length + ' | listVisible=' + $list.is(':visible')); } catch (e) {}
