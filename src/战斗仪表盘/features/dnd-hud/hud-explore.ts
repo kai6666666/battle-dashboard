@@ -108,8 +108,20 @@ export function createHudExploreFragment(deps: any): any {
         
         // 绑定点击事件 (填入聊天框)
         const self = this;
-        $el.find('.dnd-action-btn').on('click', function() {
+        // [b12.14] 骰子同款能力 + DND 原能力：自动发送（跟随骰子 clickOptionToAutoSend 设置）/ 未开启时保持填入输入框
+        $el.find('.dnd-action-btn').on('click', async function() {
             const text = $(this).data('text');
+            const _g: any = (window as any).__acuUI;
+            let _auto = false;
+            try { if (_g && typeof _g.getClickOptionToAutoSend === 'function') _auto = !!_g.getClickOptionToAutoSend(); } catch (e) {}
+            if (_auto) {
+                try {
+                    if (_g && typeof _g.smartSendText === 'function') {
+                        const _mode = await _g.smartSendText(text);
+                        if (_mode) { return; }
+                    }
+                } catch (e) { deps.logger.warn('[DND] 选项自动发送失败，回退填入输入框', e); }
+            }
             ((window as any).DND_Dashboard_UI || self).fillChatInput?.(text);
         });
         

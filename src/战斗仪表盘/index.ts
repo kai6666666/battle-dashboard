@@ -1500,6 +1500,13 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           (showAvatarManager as any)(nodeArr);
         } catch (e) { console.warn('[AcuDice] showAvatarManagerForDnd 失败', e); }
       },
+      // [b12.14] 选项面板能力桥：骰子同款（自动发送 / 读取自动发送设置）
+      smartSendText: (text: string) => {
+        try { return sendChatTextAndTrigger(text); } catch (e) { console.warn('[AcuDice] smartSendText 失败', e); return null; }
+      },
+      getClickOptionToAutoSend: () => {
+        try { return !!(getConfig && getConfig().clickOptionToAutoSend); } catch (e) { return false; }
+      },
       // [b12.11] 打开骰子系统的完整投骰面板（规则 / 预设 / 成功标准切换）
       showDicePanelForDnd: (opts?: any) => {
         try { (showDicePanel as any)(opts || {}); } catch (e) { console.warn('[AcuDice] showDicePanelForDnd 失败', e); }
