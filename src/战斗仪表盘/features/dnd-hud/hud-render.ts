@@ -4,7 +4,7 @@
 import { DND_CONFIG } from '../dnd-core';
 
 // [b13.2.32] DND 内联样式表（per-doc 注入用）
-const __DND_CSS_V9 = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{width:96px !important;max-width:96px !important;min-width:0 !important;flex:0 0 96px !important;box-sizing:border-box !important;overflow:hidden !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
+const __DND_CSS_V9 = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{width:96px !important;max-width:96px !important;min-width:0 !important;flex:0 0 96px !important;box-sizing:border-box !important;overflow:hidden !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-btn-dozed{pointer-events:none !important;opacity:.3 !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
 
 export function createHudRenderFragment(deps: any): any {
   return {
@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.74-b13.2.33 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.75-b13.2.34 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -341,6 +341,9 @@ export function createHudRenderFragment(deps: any): any {
                     $view.find('.dnd-acu-table-host').html(tableHtml);
                     try { console.info('[DND]表格视图已渲染 table=' + table + ' len=' + String(tableHtml || '').length); } catch (eC2) {}
                     $list.hide();
+                    $container.append($view);
+                    // [b13.2.34] 悬浮球休眠（视图打开期间防误触）
+                    try { const _fbT1: any = document.getElementById('dnd-toggle-btn'); if (_fbT1) _fbT1.classList.add('dnd-btn-dozed'); } catch (e1z) {}
                     // [b13.2.32] per-doc 样式注入（表格视图所在文档）+ 触摸高度拖动
                     try {
                         const _cssA9 = String(((window as any).__dndInlineCssV8) || __DND_CSS_V9 || '');
@@ -380,6 +383,7 @@ export function createHudRenderFragment(deps: any): any {
                                         const curY9 = me.touches[0].clientY;
                                         const stepY9 = curY9 - lastY9;
                                         lastY9 = curY9;
+                                        try { if (!(mv9 as any)._lg2) { (mv9 as any)._lg2 = 1; console.info('[DND]表格高度 move首帧 step=' + Math.round(stepY9)); } } catch (eLg9) {}
                                         const curH9 = $view[0].getBoundingClientRect().height || 400;
                                         const nh9 = Math.max(120, Math.min(window.innerHeight * 0.85, curH9 - stepY9));
                                         $view[0].style.setProperty('max-height', nh9 + 'px', 'important');
@@ -535,7 +539,7 @@ export function createHudRenderFragment(deps: any): any {
                         });
                     } catch (e) {}
                     // 关闭按钮 → 返回列表
-                    $view.on('click', '.acu-close-btn', function(e) { e.stopPropagation(); $view.remove(); $list.show(); });
+                    $view.on('click', '.acu-close-btn', function(e) { e.stopPropagation(); $view.remove(); $list.show(); try { const _fbT2: any = document.getElementById('dnd-toggle-btn'); if (_fbT2) _fbT2.classList.remove('dnd-btn-dozed'); } catch (e2z) {} });
                     // [b13.2.24] 表格教程按钮绑定（原骰子面板教程按钮在 DND 表格视图里补绑）
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($view[0]); } catch (e3) {}
                     // [b13.2.25] 表格教程点击诊断
@@ -608,6 +612,8 @@ export function createHudRenderFragment(deps: any): any {
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
                     $list.hide();
                     $container.append($view);
+                    // [b13.2.34] 悬浮球休眠
+                    try { const _fbT3: any = document.getElementById('dnd-toggle-btn'); if (_fbT3) _fbT3.classList.add('dnd-btn-dozed'); } catch (e3z) {}
                     // [b13.2.32] per-doc 样式注入 + 触摸高度拖动（内嵌视图）
                     try {
                         const _cssB = String((window as any).__dndInlineCssV8 || __DND_CSS_V9 || '');
@@ -643,6 +649,7 @@ export function createHudRenderFragment(deps: any): any {
                                         const curY = me.touches[0].clientY;
                                         const stepY = curY - lastYB;
                                         lastYB = curY;
+                                        try { if (!(mvB as any)._lg2) { (mvB as any)._lg2 = 1; console.info('[DND]内嵌高度 move首帧 step=' + Math.round(stepY)); } } catch (eLg) {}
                                         const curH = $view[0].getBoundingClientRect().height || 400;
                                         const nhB = Math.max(120, Math.min(window.innerHeight * 0.85, curH - stepY));
                                         $view[0].style.setProperty('max-height', nhB + 'px', 'important');
@@ -692,6 +699,7 @@ export function createHudRenderFragment(deps: any): any {
                                     ev.preventDefault();
                                     $view.remove();
                                     $list.show();
+                                    try { const _fbT4: any = document.getElementById('dnd-toggle-btn'); if (_fbT4) _fbT4.classList.remove('dnd-btn-dozed'); } catch (e4z) {}
                                 }
                             } catch (e) {}
                         }, true);
