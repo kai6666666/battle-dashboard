@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.61-b13.2.20 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.62-b13.2.21 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -329,6 +329,11 @@ export function createHudRenderFragment(deps: any): any {
                     if (!tableHtml) tableHtml = '<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">无法读取该表数据（可能尚未加载）</div>';
                     const themeCls = (g && typeof g.getAcuThemeClass === 'function') ? String(g.getAcuThemeClass()) : 'acu-theme-dark';
                     const $view = $(`<div class="dnd-acu-table-view" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-table-host ${themeCls}" style="padding:2px 6px 6px;"></div></div>`);
+                    // [b13.2.21] 注入骰子绑定所需容器身份（仅 id；不加 acu-data-display 类以免 absolute 定位塌陷）
+                    try {
+                        try { const _oldIds = document.querySelectorAll('#acu-data-area'); for (let _oi = 0; _oi < _oldIds.length; _oi++) { try { _oldIds[_oi].removeAttribute('id'); } catch (e) {} } } catch (e) {}
+                        $view.find('.dnd-acu-table-host').attr('id', 'acu-data-area');
+                    } catch (e) {}
                     $view.find('.dnd-acu-table-host').html(tableHtml);
                     $list.hide();
                     $container.append($view);
@@ -408,6 +413,8 @@ export function createHudRenderFragment(deps: any): any {
                     });
                     // 关闭按钮 → 返回列表
                     $view.on('click', '.acu-close-btn', function(e) { e.stopPropagation(); $view.remove(); $list.show(); });
+                    // [b13.2.21] 阻止本次点击继续冒泡
+                    try { if (e && e.stopPropagation) e.stopPropagation(); } catch (e2) {}
                     return;
                 }
                 if (tab) {
@@ -423,7 +430,7 @@ export function createHudRenderFragment(deps: any): any {
                     try {
                         try { const _oldIds = document.querySelectorAll('#acu-data-area'); for (let _oi = 0; _oi < _oldIds.length; _oi++) { try { _oldIds[_oi].removeAttribute('id'); } catch (e) {} } } catch (e) {}
                         $bodyEl3.attr('id', 'acu-data-area');
-                        $bodyEl3.addClass('acu-data-display');
+                        // [b13.2.21] 不加 acu-data-display 类（其 CSS 为 absolute 向上弹出定位，会导致内嵌布局塌陷）
                     } catch (e) {}
                     // [b13.2.20] 内嵌滚动修正：解除骰子内容高度限制，滚动交给外层容器
                     try {
@@ -448,12 +455,21 @@ export function createHudRenderFragment(deps: any): any {
                             $bodyEl3.html(String(h3));
                             try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
                             try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
-                            try { if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') g.bindInteractionEventsForDnd($bodyEl3[0]); } catch (e) {}
                         } else { $bodyEl3.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
                     }
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
                     $list.hide();
                     $container.append($view);
+                    // [b13.2.21] 延迟绑定交互事件（避免注册的 document 级监听被本次点击冒泡触发）
+                    try {
+                        if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') {
+                            (function($be: any) { setTimeout(function() { try { g.bindInteractionEventsForDnd($be); } catch (e) {} }, 350); })($bodyEl3[0]);
+                        }
+                    } catch (e) {}
+                    // [b13.2.21] 诊断日志
+                    try { console.info('[DND]内嵌视图已展开 tab=' + tab + ' | bodyLen=' + String($bodyEl3.html() || '').length + ' | listVisible=' + $list.is(':visible')); } catch (e) {}
+                    // [b13.2.21] 阻止本次点击继续冒泡（防止刚绑定的 document 级监听被本次事件触发）
+                    try { if (e && e.stopPropagation) e.stopPropagation(); } catch (e2) {}
                     // 关闭按钮（.acu-close-btn）→ 关闭内嵌、返回列表
                     try {
                         $view[0].addEventListener('click', function(ev: any) {
@@ -485,7 +501,7 @@ export function createHudRenderFragment(deps: any): any {
                                                     $bodyEl3.html(String(_h3));
                                                     try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
                                                     try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
-                                                    try { if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') g.bindInteractionEventsForDnd($bodyEl3[0]); } catch (e) {}
+                                                    try { if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') { (function($be: any) { setTimeout(function() { try { g.bindInteractionEventsForDnd($be); } catch (e) {} }, 350); })($bodyEl3[0]); } } catch (e) {}
                                                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
                                                 }
                                             } catch (e) {}
