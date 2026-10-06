@@ -305,6 +305,23 @@ export function createHudRenderFragment(deps: any): any {
                     $('#dnd-acu-view-popup').remove();
                     const $pop = $(`<div id="dnd-acu-view-popup" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2147483646;display:flex;align-items:center;justify-content:center;"><div style="background:var(--dnd-bg-popup,#222);border:1px solid var(--dnd-border-gold);border-radius:8px;max-width:92vw;width:660px;max-height:82vh;overflow:auto;padding:14px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b style="color:var(--dnd-text-highlight);font-size:14px;">${label}</b><span class="dnd-acu-view-close" style="cursor:pointer;color:var(--dnd-text-dim);font-size:16px;padding:0 4px;">✕</span></div><div class="dnd-acu-view-body" style="font-size:12px;color:var(--dnd-text-main);"></div></div></div>`);
                     $('body').append($pop);
+                    // [b13.2.6] JS 强制定位（inset 兼容性兜底）+ 拉满层级
+                    try {
+                        const _de: any = $pop[0];
+                        if (_de) {
+                            _de.style.position = 'fixed';
+                            _de.style.top = '0';
+                            _de.style.left = '0';
+                            _de.style.right = '0';
+                            _de.style.bottom = '0';
+                            _de.style.width = '100vw';
+                            _de.style.height = '100vh';
+                            _de.style.zIndex = '2147483647';
+                            _de.style.display = 'flex';
+                            _de.style.alignItems = 'center';
+                            _de.style.justifyContent = 'center';
+                        }
+                    } catch (e) {}
                     const $body = $pop.find('.dnd-acu-view-body');
                     if (tab === 'mvu') {
                         // [b13.2.5] 变量面板：直接渲染 + 绑定（可编辑，不再依赖骰子面板）
