@@ -59,7 +59,7 @@ export function createHudRenderFragment(deps: any): any {
         
         // 添加展开按钮 (如果尚未存在)
         if ($('#dnd-hud-toggle-bar').length === 0) {
-            const $toggleBar = $(`<div id="dnd-hud-toggle-bar" style="height:12px;background:var(--dnd-bg-tertiary);border-bottom:1px solid var(--dnd-border-inner);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--dnd-text-dim);font-size:8px;transition:all 0.2s;" title="打开表格编辑器（骰子）">▼</div>`);
+            const $toggleBar = $(`<div id="dnd-hud-toggle-bar" style="height:12px;background:var(--dnd-bg-tertiary);border-bottom:1px solid var(--dnd-border-inner);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--dnd-text-dim);font-size:8px;transition:all 0.2s;" title="打开表格管理（骰子面板）">▼</div>`);
             
             $toggleBar.hover(
                 function() { $(this).css({color: 'var(--dnd-text-highlight)', background: 'var(--dnd-selected-bg)'}); },
@@ -67,16 +67,18 @@ export function createHudRenderFragment(deps: any): any {
             );
             
             const self = this;
-            // [b12.15] 表格编辑收口：▼ → 打开骰子侧表格编辑器（B 唯一编辑）
+            // [b12.16] 表格管理收口：▼ → 打开骰子面板（表格管理界面 = 导航盘）
             $toggleBar.on('click', function() {
                 try {
-                    const acuUI: any = (window as any).__acuUI;
-                    if (acuUI && typeof acuUI.openDatabaseVisualizerInterface === 'function') {
-                        acuUI.openDatabaseVisualizerInterface();
+                    const _toggle: any = (window as any).__acuToggleDicePanel;
+                    if (typeof _toggle === 'function') {
+                        _toggle();
                     } else {
-                        try { deps.notification.warning('表格编辑器不可用：骰子桥未就绪'); } catch (e2) {}
+                        const acuUI: any = (window as any).__acuUI;
+                        if (acuUI && typeof acuUI.openDicePanelTab === 'function') { acuUI.openDicePanelTab(); }
+                        else { try { deps.notification.warning('骰子面板不可用：桥未就绪'); } catch (e2) {} }
                     }
-                } catch (err) { deps.logger.warn('[DND] 打开骰子表格编辑器失败', err); }
+                } catch (err) { deps.logger.warn('[DND] 打开骰子表格管理失败', err); }
             });
             
             // 插入到 Header 和 Body 之间

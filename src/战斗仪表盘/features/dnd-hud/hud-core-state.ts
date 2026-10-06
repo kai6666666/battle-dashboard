@@ -216,7 +216,7 @@ export function createHudCoreStateFragment(deps: any): any {
                 $tmContainer.hide();
                 const $toggleBar = $('#dnd-hud-toggle-bar');
                 if ($toggleBar.length) {
-                    $toggleBar.text('▼').attr('title', '打开表格编辑器（骰子）');
+                    $toggleBar.text('▼').attr('title', '打开表格管理（骰子面板）');
                 }
                 deps.logger.debug('[UICore] 表格残留容器已清理');
             }
