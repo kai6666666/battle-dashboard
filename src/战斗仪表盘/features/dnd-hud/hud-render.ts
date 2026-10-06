@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.57-b13.2.16 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.58-b13.2.17 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -24,8 +24,8 @@ export function createHudRenderFragment(deps: any): any {
                         if (c.indexOf('dnd-z-lowered') >= 0) return; // [b13.2.14] 弹窗期间被主动降级的元素不再提升
                         if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
                         else if (c.indexOf('overlay') >= 0 || c.indexOf('acu-cell-menu') >= 0) el.style.setProperty('z-index', '2147483647', 'important');
-                        // [b13.2.15] 移到父节点末尾（DOM 顺序最后 = 同 z 时在上，修复编辑弹窗被面板弹窗盖）
-                        try { const _p = el.parentNode; if (_p && _p.appendChild && _p.lastElementChild !== el) _p.appendChild(el); } catch (e) {}
+                        // [b13.2.15→b13.2.17] 移到父节点末尾（一次性+标记，防 MutationObserver 循环）
+                        try { const _p = el.parentNode; if (_p && _p.appendChild && !el.getAttribute('data-dnd-tail-done')) { el.setAttribute('data-dnd-tail-done', '1'); if (_p.lastElementChild !== el) _p.appendChild(el); } } catch (e) {}
                     } catch (e) {}
                 };
                 const sweep = () => {
@@ -64,7 +64,7 @@ export function createHudRenderFragment(deps: any): any {
                             try { const _c = String(n.className || ''); if (_c.indexOf('acu-') >= 0 || _c.indexOf('toast') >= 0) { hit = true; break; } } catch (e) {}
                         }
                     }
-                    if (hit) { sweep(); try { setTimeout(sweep, 60); } catch (e) {} }
+                    if (hit && !(window as any).__dndSweepT) { (window as any).__dndSweepT = setTimeout(function() { (window as any).__dndSweepT = null; sweep(); }, 120); }
                 });
                 try { obs.observe(document.documentElement || document.body, { childList: true, subtree: true }); } catch (e) {}
                 sweep();
@@ -233,8 +233,8 @@ export function createHudRenderFragment(deps: any): any {
                         if (c.indexOf('dnd-z-lowered') >= 0) return; // [b13.2.14] 弹窗期间被主动降级的元素不再提升
                         if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
                         else if (c.indexOf('overlay') >= 0 || c.indexOf('acu-cell-menu') >= 0) el.style.setProperty('z-index', '2147483647', 'important');
-                        // [b13.2.15] 移到父节点末尾（DOM 顺序最后 = 同 z 时在上，修复编辑弹窗被面板弹窗盖）
-                        try { const _p = el.parentNode; if (_p && _p.appendChild && _p.lastElementChild !== el) _p.appendChild(el); } catch (e) {}
+                        // [b13.2.15→b13.2.17] 移到父节点末尾（一次性+标记，防 MutationObserver 循环）
+                        try { const _p = el.parentNode; if (_p && _p.appendChild && !el.getAttribute('data-dnd-tail-done')) { el.setAttribute('data-dnd-tail-done', '1'); if (_p.lastElementChild !== el) _p.appendChild(el); } } catch (e) {}
                     } catch (e) {}
                 };
                 const sweep = () => {
@@ -274,7 +274,7 @@ export function createHudRenderFragment(deps: any): any {
                             try { const _c = String(n.className || ''); if (_c.indexOf('acu-') >= 0 || _c.indexOf('toast') >= 0) { hit = true; break; } } catch (e) {}
                         }
                     }
-                    if (hit) { sweep(); try { setTimeout(sweep, 60); } catch (e) {} }
+                    if (hit && !(window as any).__dndSweepT) { (window as any).__dndSweepT = setTimeout(function() { (window as any).__dndSweepT = null; sweep(); }, 120); }
                 });
                 try { obs.observe(document.documentElement || document.body, { childList: true, subtree: true }); } catch (e) {}
             }
@@ -540,35 +540,36 @@ export function createHudRenderFragment(deps: any): any {
                                 try {
                                     const c2 = String(el2.className || '');
                                     if (c2.indexOf('dnd-z-lowered') >= 0) return;
-                                    if (c2.indexOf('acu-edit-overlay') >= 0 || c2.indexOf('acu-dialog') >= 0 || c2.indexOf('overlay') >= 0) {
+                                    if (c2.indexOf('acu-edit-overlay') >= 0 || c2.indexOf('acu-dialog') >= 0) {
                                         el2.style.setProperty('z-index', '2147483647', 'important');
-                                        try { const p2 = el2.parentNode; if (p2 && p2.appendChild && p2.lastElementChild !== el2) p2.appendChild(el2); } catch (e) {}
+                                        // [b13.2.17] 一次性+标记，防 MutationObserver 循环
+                                        if (!el2.getAttribute('data-dnd-tail-done')) {
+                                            el2.setAttribute('data-dnd-tail-done', '1');
+                                            try { const p2 = el2.parentNode; if (p2 && p2.appendChild && p2.lastElementChild !== el2) p2.appendChild(el2); } catch (e) {}
+                                        }
                                     }
                                 } catch (e) {}
                             };
-                            const _scan2 = () => {
-                                try {
-                                    const l2 = _hostDoc.querySelectorAll('.acu-edit-overlay, .acu-dialog, [class*="acu-"][class*="overlay"]');
-                                    for (let i2 = 0; i2 < l2.length; i2++) _boost2(l2[i2]);
-                                } catch (e) {}
-                            };
-                            _scan2();
+                            // 首次扫描（处理已存在的编辑弹窗）
+                            try {
+                                const l2 = _hostDoc.querySelectorAll('.acu-edit-overlay:not([data-dnd-tail-done]), .acu-dialog:not([data-dnd-tail-done])');
+                                for (let i2 = 0; i2 < l2.length; i2++) _boost2(l2[i2]);
+                            } catch (e) {}
                             try {
                                 if (!(window as any).__dndAcuEditGuard) {
                                     (window as any).__dndAcuEditGuard = true;
                                     const _obs2 = new MutationObserver((ms2: any[]) => {
-                                        let h2 = false;
-                                        for (let mi2 = 0; mi2 < ms2.length && !h2; mi2++) {
+                                        // [b13.2.17] 只处理本次新增节点（不全文档扫描、不循环）
+                                        for (let mi2 = 0; mi2 < ms2.length; mi2++) {
                                             const a2 = ms2[mi2].addedNodes;
                                             if (!a2) continue;
                                             for (let ai = 0; ai < a2.length; ai++) {
                                                 const n2: any = a2[ai];
                                                 if (!n2 || n2.nodeType !== 1) continue;
                                                 const c3 = String(n2.className || '');
-                                                if (c3.indexOf('edit') >= 0 || c3.indexOf('overlay') >= 0 || c3.indexOf('dialog') >= 0) { h2 = true; break; }
+                                                if (c3.indexOf('acu-edit-overlay') >= 0 || c3.indexOf('acu-dialog') >= 0) _boost2(n2);
                                             }
                                         }
-                                        if (h2) { _scan2(); try { setTimeout(_scan2, 60); } catch (e) {} }
                                     });
                                     try { _obs2.observe(_hostDoc.documentElement || _hostDoc.body, { childList: true, subtree: true }); } catch (e) {}
                                 }
