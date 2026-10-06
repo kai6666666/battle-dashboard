@@ -14,13 +14,14 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.54-b13.2.13 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.55-b13.2.14 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
                 const boostEl = (el: any) => {
                     try {
                         const c = String(el.className || '');
+                        if (c.indexOf('dnd-z-lowered') >= 0) return; // [b13.2.14] 弹窗期间被主动降级的元素不再提升
                         if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
                         else if (c.indexOf('overlay') >= 0 || c.indexOf('acu-cell-menu') >= 0) el.style.setProperty('z-index', '2147483647', 'important');
                     } catch (e) {}
@@ -215,6 +216,7 @@ export function createHudRenderFragment(deps: any): any {
                 const boostEl = (el: any) => {
                     try {
                         const c = String(el.className || '');
+                        if (c.indexOf('dnd-z-lowered') >= 0) return; // [b13.2.14] 弹窗期间被主动降级的元素不再提升
                         if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
                         else if (c.indexOf('overlay') >= 0 || c.indexOf('acu-cell-menu') >= 0) el.style.setProperty('z-index', '2147483647', 'important');
                     } catch (e) {}
@@ -499,6 +501,45 @@ export function createHudRenderFragment(deps: any): any {
                                 _de.style.setProperty('justify-content', 'center', 'important');
                             }
                         } catch (e) {}
+                        // [b13.2.14] 弹窗期间：降级所有可达文档中 DND 浮层（确保弹窗在最上）；关闭时恢复
+                        let _zPairs: any[] = [];
+                        try {
+                            const _docs3: any[] = [];
+                            try { _docs3.push(document); } catch (e) {}
+                            try {
+                                let w3: any = window;
+                                let g3 = 0;
+                                while (w3 && w3.parent && w3.parent !== w3 && g3++ < 6) {
+                                    w3 = w3.parent;
+                                    try { if (w3.document && _docs3.indexOf(w3.document) === -1) _docs3.push(w3.document); } catch (e) {}
+                                }
+                            } catch (e) {}
+                            // 弹窗移到所在 body 末尾（DOM 顺序最后 = 同层最上）
+                            try {
+                                const _bd: any = ($pop[0] && $pop[0].ownerDocument && $pop[0].ownerDocument.body) || null;
+                                if (_bd && _bd.lastChild !== $pop[0]) _bd.appendChild($pop[0]);
+                            } catch (e) {}
+                            for (let di = 0; di < _docs3.length; di++) {
+                                const d3: any = _docs3[di];
+                                const sels3 = ['#dnd-mini-hud', '#dnd-notification-container', '#dnd-quick-bar', '#dnd-toggle-btn'];
+                                for (let si = 0; si < sels3.length; si++) {
+                                    try {
+                                        const els3 = d3.querySelectorAll(sels3[si]);
+                                        for (let ei = 0; ei < els3.length; ei++) {
+                                            const el3: any = els3[ei];
+                                            if (el3 === $pop[0] || ($pop[0].contains && $pop[0].contains(el3))) continue;
+                                            if (el3.getAttribute('data-dnd-prev-z') === null) {
+                                                const pv3 = (el3.style && el3.style.zIndex) || '';
+                                                el3.setAttribute('data-dnd-prev-z', pv3);
+                                            }
+                                            try { el3.classList.add('dnd-z-lowered'); } catch (e) {}
+                                            el3.style.setProperty('z-index', '3640', 'important');
+                                            _zPairs.push(el3);
+                                        }
+                                    } catch (e) {}
+                                }
+                            }
+                        } catch (e) {}
                         const _od2: any = ($pop[0] && $pop[0].ownerDocument) || document;
                         const _ow2: any = _od2.defaultView || window;
                         const _hx2 = Math.round((_ow2.innerWidth || _od2.documentElement.clientWidth) / 2);
@@ -507,10 +548,43 @@ export function createHudRenderFragment(deps: any): any {
                         let _hit2Desc = 'none';
                         if (_hit2) { _hit2Desc = (_hit2.tagName || '?') + '#' + (_hit2.id || '') + '.' + String(_hit2.className || '').slice(0, 60); }
                         const _inside2 = !!(_hit2 && $pop[0].contains(_hit2));
+                        try {
+                            const _odX: any = ($pop[0] && $pop[0].ownerDocument) || document;
+                            let _popIdx = -1; const _counts: string[] = [];
+                            const _chain: any[] = [];
+                            try { _chain.push(document); } catch (e) {}
+                            try {
+                                let ww: any = window; let g4 = 0;
+                                while (ww && ww.parent && ww.parent !== ww && g4++ < 6) { ww = ww.parent; try { if (ww.document) _chain.push(ww.document); } catch (e) {} }
+                            } catch (e) {}
+                            for (let di = 0; di < _chain.length; di++) {
+                                try {
+                                    if (_chain[di] === _odX) _popIdx = di;
+                                    const cnt = _chain[di].querySelectorAll ? _chain[di].querySelectorAll('#dnd-mini-hud').length : 0;
+                                    _counts.push(String(cnt));
+                                } catch (e) { _counts.push('x'); }
+                            }
+                            console.info('[DND]弹窗诊断v4 popupAt=' + _popIdx + ' | hudCounts=' + _counts.join(',') + ' | lowered=' + _zPairs.length);
+                        } catch (e) {}
                         console.info('[DND]弹窗诊断v3 hud=' + (_hud ? ('found@' + _hud.at) : 'notfound') + ' | migrated=' + _migrated + ' | hit=' + _hit2Desc + ' | inside=' + _inside2 + ' | popupAtTop=' + (_od2 === document ? 'script' : 'other'));
                     } catch (e) {}
-                    $pop.find('.dnd-acu-view-close').on('click', function() { $pop.remove(); });
-                    $pop.on('click', function(ev) { if (ev.target === $pop[0]) $pop.remove(); });
+                    const _restoreZ = function() {
+                        try {
+                            for (const el of _zPairs) {
+                                try {
+                                    const pv = el.getAttribute('data-dnd-prev-z');
+                                    if (pv !== null) {
+                                        if (pv) el.style.setProperty('z-index', pv, 'important');
+                                        else el.style.removeProperty('z-index');
+                                        el.removeAttribute('data-dnd-prev-z');
+                                    }
+                                    try { el.classList.remove('dnd-z-lowered'); } catch (e) {}
+                                } catch (e) {}
+                            }
+                        } catch (e) {}
+                    };
+                    $pop.find('.dnd-acu-view-close').on('click', function() { _restoreZ(); $pop.remove(); });
+                    $pop.on('click', function(ev) { if (ev.target === $pop[0]) { _restoreZ(); $pop.remove(); } });
                     return;
                 }
             } catch (e) { deps.logger.warn('[DND] 内容弹窗失败', e); }
