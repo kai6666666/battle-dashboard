@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.59-b13.2.18 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.60-b13.2.19 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -323,6 +323,7 @@ export function createHudRenderFragment(deps: any): any {
                     try { if (g && typeof g.ensureAcuCachedData === 'function') g.ensureAcuCachedData(); } catch (e) {}
                     const $list = $container.find('.dnd-tnav-list');
                     $container.find('.dnd-acu-table-view').remove();
+                    $container.find('.dnd-acu-view-inline').remove(); // [b13.2.19] 清理特殊入口内嵌视图
                     let tableHtml = '';
                     try { if (g && typeof g.renderTableHostForDnd === 'function') tableHtml = g.renderTableHostForDnd(table); } catch (e) {}
                     if (!tableHtml) tableHtml = '<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">无法读取该表数据（可能尚未加载）</div>';
@@ -410,298 +411,114 @@ export function createHudRenderFragment(deps: any): any {
                     return;
                 }
                 if (tab) {
-                    $('#dnd-acu-view-popup').remove();
-                    const $pop = $(`<div id="dnd-acu-view-popup" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2147483646;display:flex;align-items:center;justify-content:center;"><div style="background:var(--dnd-bg-popup,#222);border:1px solid var(--dnd-border-gold);border-radius:8px;max-width:92vw;width:660px;max-height:82vh;overflow:auto;padding:14px;"><div class="dnd-acu-view-body" style="font-size:12px;color:var(--dnd-text-main);"></div></div></div>`);
-                    $('body').append($pop);
-                    // [b13.2.6] JS 强制定位（inset 兼容性兜底）+ 拉满层级
-                    try {
-                        const _de: any = $pop[0];
-                        if (_de) {
-                            _de.style.position = 'fixed';
-                            _de.style.top = '0';
-                            _de.style.left = '0';
-                            _de.style.right = '0';
-                            _de.style.bottom = '0';
-                            _de.style.width = '100vw';
-                            _de.style.height = '100vh';
-                            _de.style.zIndex = '2147483647';
-                            _de.style.display = 'flex';
-                            _de.style.alignItems = 'center';
-                            _de.style.justifyContent = 'center';
-                        }
-                    } catch (e) {}
-                    const $body = $pop.find('.dnd-acu-view-body');
-                    // [b13.2.15] 数据预热：保证骰子缓存就绪（顶部按钮操作依赖）
+                    // [b13.2.19] 特殊入口 → 内嵌视图（与表格一致；不再使用弹窗）
                     try { if (g && typeof g.ensureAcuCachedData === 'function') g.ensureAcuCachedData(); } catch (e) {}
+                    const $list = $container.find('.dnd-tnav-list');
+                    $container.find('.dnd-acu-view-inline').remove();
+                    $container.find('.dnd-acu-table-view').remove();
+                    const themeCls3 = (g && typeof g.getAcuThemeClass === 'function') ? String(g.getAcuThemeClass()) : 'acu-theme-dark';
+                    const $view = $(`<div class="dnd-acu-view-inline" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-view-inline-body ${themeCls3}" style="padding:2px 6px 6px;"></div></div>`);
+                    const $bodyEl3 = $view.find('.dnd-acu-view-inline-body');
+                    // 渲染内容（沿用弹窗时代的渲染与绑定链路）
                     if (tab === 'mvu') {
-                        // [b13.2.5] 变量面板：直接渲染 + 绑定（可编辑，不再依赖骰子面板）
                         let okMvu = false;
-                        try { if (g && typeof g.renderMvuPanelForDnd === 'function') okMvu = g.renderMvuPanelForDnd($body[0]); } catch (e) {}
-                        if (!okMvu) { $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
+                        try { if (g && typeof g.renderMvuPanelForDnd === 'function') okMvu = g.renderMvuPanelForDnd($bodyEl3[0]); } catch (e) {}
+                        if (!okMvu) { $bodyEl3.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">变量面板暂不可用</div>'); }
                     } else {
                         let h3: any = null;
                         try { if (g && typeof g.renderAcuViewHtml === 'function') h3 = g.renderAcuViewHtml(tab); } catch (e) {}
                         if (h3 && typeof h3.then === 'function') { try { h3 = await h3; } catch (e) { h3 = null; } }
                         if (h3) {
-                            $body.html(String(h3));
-                            // [b13.2.5] 收藏夹 / 审核：绑定交互（编辑菜单等）
-                            try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($body[0]); } catch (e) {}
+                            $bodyEl3.html(String(h3));
+                            try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
                             try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
-                            // [b13.2.15] 教程按钮（?）绑定：原骰子面板顶部按钮在 DND 弹窗里补绑
-                            try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($body[0]); } catch (e) {}
-                        } else { $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
+                        } else { $bodyEl3.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
                     }
-                    // [b13.2.7] 弹窗诊断日志（rect + 文档身份）
+                    try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
+                    $list.hide();
+                    $container.append($view);
+                    // 关闭按钮（.acu-close-btn）→ 关闭内嵌、返回列表
                     try {
-                        const _r: any = $pop[0].getBoundingClientRect();
-                        let _docId = 'current';
-                        try { _docId = (document === (((window as any).parent || {}).document)) ? 'top' : 'iframe'; } catch (e) { _docId = 'cross-origin'; }
-                        console.info('[DND]视图弹窗已打开 rect=' + JSON.stringify({ t: Math.round(_r.top), l: Math.round(_r.left), w: Math.round(_r.width), h: Math.round(_r.height) }) + ' | doc=' + _docId + ' | ' + label);
-                    } catch (e) {}
-                    // [b13.2.8] 凶手探测器：命中测试 + 确保弹窗在 body 最后
-                    try {
-                        if ($pop[0] && $pop[0].parentNode && $pop[0].parentNode.appendChild) { $pop[0].parentNode.appendChild($pop[0]); }
-                        const _w: any = window;
-                        const _hx = Math.round((_w.innerWidth || document.documentElement.clientWidth) / 2);
-                        const _hy = Math.round((_w.innerHeight || document.documentElement.clientHeight) / 2);
-                        const _hit: any = document.elementFromPoint(_hx, _hy);
-                        let _hitDesc = 'none';
-                        if (_hit) {
-                            _hitDesc = (_hit.tagName || '?') + '#' + (_hit.id || '') + '.' + String(_hit.className || '').slice(0, 60);
-                        }
-                        const _inside = !!(_hit && $pop[0].contains(_hit));
-                        let _zi = '?';
-                        try { _zi = window.getComputedStyle($pop[0]).zIndex || '?'; } catch (e) {}
-                        console.info('[DND]弹窗层级诊断 z=' + _zi + ' | hit=' + _hitDesc + ' | inside=' + _inside);
-                    } catch (e) {}
-                    // [b13.2.10] 诊断 v3：跨窗口逐层搜索 HUD 并迁移弹窗（层级同场竞技）
-                    try {
-                        const _findHud = () => {
-                            const docs: any[] = [];
-                            try { docs.push(document); } catch (e) {}
-                            try {
-                                let w: any = window;
-                                let guard = 0;
-                                while (w && w.parent && w.parent !== w && guard++ < 6) {
-                                    w = w.parent;
-                                    try { if (w.document) docs.push(w.document); } catch (e) {}
-                                }
-                            } catch (e) {}
-                            for (let i = 0; i < docs.length; i++) {
-                                try {
-                                    const d = docs[i];
-                                    const el = d.getElementById && d.getElementById('dnd-mini-hud');
-                                    if (el) return { el: el, doc: d, at: i };
-                                    const el2 = d.querySelector && (d.querySelector('#dnd-toggle-btn') || d.querySelector('.dnd-mini-hud') || d.querySelector('.dnd-ball'));
-                                    if (el2) return { el: el2, doc: d, at: i };
-                                } catch (e) {}
-                            }
-                            return null;
-                        };
-                        const _hud = _findHud();
-                        let _migrated = 'no';
-                        // [b13.2.13] 优先迁移到真·顶层文档（fixed 居中且滚动不影响）；失败回退 HUD 所在文档
-                        try {
-                            const _curDoc: any = ($pop[0] && $pop[0].ownerDocument) || document;
-                            let _topDoc: any = null;
-                            try {
-                                let w: any = window;
-                                let g2 = 0;
-                                while (w && w.parent && w.parent !== w && g2++ < 6) { w = w.parent; }
-                                if (w && w.document && w.document.body) _topDoc = w.document;
-                            } catch (e) {}
-                            const _target: any = _topDoc ? _topDoc : (_hud && _hud.doc && _hud.doc.body ? _hud.doc : null);
-                            if (_target && _target.body && _target !== _curDoc) {
-                                _target.body.appendChild($pop[0]);
-                                _migrated = (_topDoc && _target === _topDoc) ? 'top' : ('hud@' + (_hud ? _hud.at : '?'));
-                            }
-                        } catch (e) {}
-                        // 迁移后强制重设全量固定定位（fixed + 全屏 + 居中 + 最高层）
-                        try {
-                            const _de: any = $pop[0];
-                            if (_de) {
-                                _de.style.setProperty('position', 'fixed', 'important');
-                                _de.style.setProperty('top', '0', 'important');
-                                _de.style.setProperty('left', '0', 'important');
-                                _de.style.setProperty('right', '0', 'important');
-                                _de.style.setProperty('bottom', '0', 'important');
-                                _de.style.setProperty('width', '100vw', 'important');
-                                _de.style.setProperty('height', '100vh', 'important');
-                                _de.style.setProperty('z-index', '2147483647', 'important');
-                                _de.style.setProperty('display', 'flex', 'important');
-                                _de.style.setProperty('align-items', 'center', 'important');
-                                _de.style.setProperty('justify-content', 'center', 'important');
-                            }
-                        } catch (e) {}
-                        // [b13.2.16] 编辑弹窗保顶：观察宿主文档中新增的编辑/对话框，提层并移到末尾（DND 弹窗存在期间持续生效）
-                        try {
-                            const _hostDoc: any = (($pop[0] && $pop[0].ownerDocument) || document);
-                            const _boost2 = (el2: any) => {
-                                try {
-                                    const c2 = String(el2.className || '');
-                                    if (c2.indexOf('dnd-z-lowered') >= 0) return;
-                                    if (c2.indexOf('acu-edit-overlay') >= 0 || c2.indexOf('acu-dialog') >= 0) {
-                                        el2.style.setProperty('z-index', '2147483647', 'important');
-                                        // [b13.2.17] 一次性+标记，防 MutationObserver 循环
-                                        if (!el2.getAttribute('data-dnd-tail-done')) {
-                                            el2.setAttribute('data-dnd-tail-done', '1');
-                                            try { const p2 = el2.parentNode; if (p2 && p2.appendChild && p2.lastElementChild !== el2) p2.appendChild(el2); } catch (e) {}
-                                        }
-                                    }
-                                } catch (e) {}
-                            };
-                            // 首次扫描（处理已存在的编辑弹窗）
-                            try {
-                                const l2 = _hostDoc.querySelectorAll('.acu-edit-overlay:not([data-dnd-tail-done]), .acu-dialog:not([data-dnd-tail-done])');
-                                for (let i2 = 0; i2 < l2.length; i2++) _boost2(l2[i2]);
-                            } catch (e) {}
-                            try {
-                                if (!(window as any).__dndAcuEditGuard) {
-                                    (window as any).__dndAcuEditGuard = true;
-                                    const _obs2 = new MutationObserver((ms2: any[]) => {
-                                        // [b13.2.17] 只处理本次新增节点（不全文档扫描、不循环）
-                                        for (let mi2 = 0; mi2 < ms2.length; mi2++) {
-                                            const a2 = ms2[mi2].addedNodes;
-                                            if (!a2) continue;
-                                            for (let ai = 0; ai < a2.length; ai++) {
-                                                const n2: any = a2[ai];
-                                                if (!n2 || n2.nodeType !== 1) continue;
-                                                const c3 = String(n2.className || '');
-                                                if (c3.indexOf('acu-edit-overlay') >= 0 || c3.indexOf('acu-dialog') >= 0) _boost2(n2);
-                                            }
-                                        }
-                                    });
-                                    try { _obs2.observe(_hostDoc.documentElement || _hostDoc.body, { childList: true, subtree: true }); } catch (e) {}
-                                }
-                            } catch (e) {}
-                        } catch (e) {}
-                        // [b13.2.14] 弹窗期间：降级所有可达文档中 DND 浮层（确保弹窗在最上）；关闭时恢复
-                        let _zPairs: any[] = [];
-                        try {
-                            const _docs3: any[] = [];
-                            try { _docs3.push(document); } catch (e) {}
-                            try {
-                                let w3: any = window;
-                                let g3 = 0;
-                                while (w3 && w3.parent && w3.parent !== w3 && g3++ < 6) {
-                                    w3 = w3.parent;
-                                    try { if (w3.document && _docs3.indexOf(w3.document) === -1) _docs3.push(w3.document); } catch (e) {}
-                                }
-                            } catch (e) {}
-                            // 弹窗移到所在 body 末尾（DOM 顺序最后 = 同层最上）
-                            try {
-                                const _bd: any = ($pop[0] && $pop[0].ownerDocument && $pop[0].ownerDocument.body) || null;
-                                if (_bd && _bd.lastChild !== $pop[0]) _bd.appendChild($pop[0]);
-                            } catch (e) {}
-                            for (let di = 0; di < _docs3.length; di++) {
-                                const d3: any = _docs3[di];
-                                const sels3 = ['#dnd-mini-hud', '#dnd-notification-container', '#dnd-quick-bar', '#dnd-toggle-btn'];
-                                for (let si = 0; si < sels3.length; si++) {
-                                    try {
-                                        const els3 = d3.querySelectorAll(sels3[si]);
-                                        for (let ei = 0; ei < els3.length; ei++) {
-                                            const el3: any = els3[ei];
-                                            if (el3 === $pop[0] || ($pop[0].contains && $pop[0].contains(el3))) continue;
-                                            if (el3.getAttribute('data-dnd-prev-z') === null) {
-                                                const pv3 = (el3.style && el3.style.zIndex) || '';
-                                                el3.setAttribute('data-dnd-prev-z', pv3);
-                                            }
-                                            try { el3.classList.add('dnd-z-lowered'); } catch (e) {}
-                                            el3.style.setProperty('z-index', '3640', 'important');
-                                            _zPairs.push(el3);
-                                        }
-                                    } catch (e) {}
-                                }
-                            }
-                        } catch (e) {}
-                        const _od2: any = ($pop[0] && $pop[0].ownerDocument) || document;
-                        const _ow2: any = _od2.defaultView || window;
-                        const _hx2 = Math.round((_ow2.innerWidth || _od2.documentElement.clientWidth) / 2);
-                        const _hy2 = Math.round((_ow2.innerHeight || _od2.documentElement.clientHeight) / 2);
-                        const _hit2: any = _od2.elementFromPoint ? _od2.elementFromPoint(_hx2, _hy2) : null;
-                        let _hit2Desc = 'none';
-                        if (_hit2) { _hit2Desc = (_hit2.tagName || '?') + '#' + (_hit2.id || '') + '.' + String(_hit2.className || '').slice(0, 60); }
-                        const _inside2 = !!(_hit2 && $pop[0].contains(_hit2));
-                        try {
-                            const _odX: any = ($pop[0] && $pop[0].ownerDocument) || document;
-                            let _popIdx = -1; const _counts: string[] = [];
-                            const _chain: any[] = [];
-                            try { _chain.push(document); } catch (e) {}
-                            try {
-                                let ww: any = window; let g4 = 0;
-                                while (ww && ww.parent && ww.parent !== ww && g4++ < 6) { ww = ww.parent; try { if (ww.document) _chain.push(ww.document); } catch (e) {} }
-                            } catch (e) {}
-                            for (let di = 0; di < _chain.length; di++) {
-                                try {
-                                    if (_chain[di] === _odX) _popIdx = di;
-                                    const cnt = _chain[di].querySelectorAll ? _chain[di].querySelectorAll('#dnd-mini-hud').length : 0;
-                                    _counts.push(String(cnt));
-                                } catch (e) { _counts.push('x'); }
-                            }
-                            console.info('[DND]弹窗诊断v4 popupAt=' + _popIdx + ' | hudCounts=' + _counts.join(',') + ' | lowered=' + _zPairs.length);
-                        } catch (e) {}
-                        console.info('[DND]弹窗诊断v3 hud=' + (_hud ? ('found@' + _hud.at) : 'notfound') + ' | migrated=' + _migrated + ' | hit=' + _hit2Desc + ' | inside=' + _inside2 + ' | popupAtTop=' + (_od2 === document ? 'script' : 'other'));
-                    } catch (e) {}
-                    const _restoreZ = function() {
-                        try {
-                            for (const el of _zPairs) {
-                                try {
-                                    const pv = el.getAttribute('data-dnd-prev-z');
-                                    if (pv !== null) {
-                                        if (pv) el.style.setProperty('z-index', pv, 'important');
-                                        else el.style.removeProperty('z-index');
-                                        el.removeAttribute('data-dnd-prev-z');
-                                    }
-                                    try { el.classList.remove('dnd-z-lowered'); } catch (e) {}
-                                } catch (e) {}
-                            }
-                        } catch (e) {}
-                    };
-                    // [b13.2.18] 模式切换类按钮的 DND 重渲染适配（原 handler 重渲染目标为骰子面板容器，DND 环境需本地重渲染）
-                    try {
-                        const _rerenderLocal = function() {
-                            setTimeout(function() {
-                                try {
-                                    if (tab === 'mvu') {
-                                        try { if (g && typeof g.renderMvuPanelForDnd === 'function') g.renderMvuPanelForDnd($body[0]); } catch (e) {}
-                                    } else {
-                                        const _do = async function() {
-                                            try {
-                                                let _h: any = null;
-                                                try { if (g && typeof g.renderAcuViewHtml === 'function') _h = g.renderAcuViewHtml(tab); } catch (e) {}
-                                                if (_h && typeof _h.then === 'function') { try { _h = await _h; } catch (e) { _h = null; } }
-                                                if (_h) {
-                                                    $body.html(String(_h));
-                                                    try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($body[0]); } catch (e) {}
-                                                    try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
-                                                    try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($body[0]); } catch (e) {}
-                                                }
-                                            } catch (e) {}
-                                        };
-                                        _do();
-                                    }
-                                } catch (e) {}
-                            }, 200);
-                        };
-                        $body.on('click.dndAcuRerender', '.acu-simple-mode-toggle', _rerenderLocal);
-                        $body.on('click.dndAcuRerender', '.mvu-btn-numeric-mode', _rerenderLocal);
-                    } catch (e) {}
-                    // [b13.2.15] 拦截原骰子面板的 × 关闭按钮：关闭整个 DND 弹窗（而不是清空容器）
-                    try {
-                        $pop[0].addEventListener('click', function(ev: any) {
+                        $view[0].addEventListener('click', function(ev: any) {
                             try {
                                 const t = ev.target;
                                 if (t && t.closest && t.closest('.acu-close-btn')) {
                                     ev.stopPropagation();
                                     ev.preventDefault();
-                                    try { _restoreZ(); } catch (e) {}
-                                    $pop.remove();
+                                    $view.remove();
+                                    $list.show();
                                 }
                             } catch (e) {}
                         }, true);
                     } catch (e) {}
-                    $pop.find('.dnd-acu-view-close').on('click', function() { _restoreZ(); $pop.remove(); });
-                    $pop.on('click', function(ev) { if (ev.target === $pop[0]) { _restoreZ(); $pop.remove(); } });
+                    // [b13.2.18] 模式切换类按钮的本地重渲染（沿用）
+                    try {
+                        const _rerenderLocal3 = function() {
+                            setTimeout(function() {
+                                try {
+                                    if (tab === 'mvu') {
+                                        try { if (g && typeof g.renderMvuPanelForDnd === 'function') g.renderMvuPanelForDnd($bodyEl3[0]); } catch (e) {}
+                                    } else {
+                                        const _do3 = async function() {
+                                            try {
+                                                let _h3: any = null;
+                                                try { if (g && typeof g.renderAcuViewHtml === 'function') _h3 = g.renderAcuViewHtml(tab); } catch (e) {}
+                                                if (_h3 && typeof _h3.then === 'function') { try { _h3 = await _h3; } catch (e) { _h3 = null; } }
+                                                if (_h3) {
+                                                    $bodyEl3.html(String(_h3));
+                                                    try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
+                                                    try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                                                    try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
+                                                }
+                                            } catch (e) {}
+                                        };
+                                        _do3();
+                                    }
+                                } catch (e) {}
+                            }, 200);
+                        };
+                        $view.on('click.dndAcuRerender', '.acu-simple-mode-toggle', _rerenderLocal3);
+                        $view.on('click.dndAcuRerender', '.mvu-btn-numeric-mode', _rerenderLocal3);
+                    } catch (e) {}
+                    // [b13.2.16→b13.2.19] 编辑弹窗保顶（宿主文档级观察，保留）
+                    try {
+                        const _hostDoc3: any = (($view[0] && $view[0].ownerDocument) || document);
+                        const _boost3 = (el3x: any) => {
+                            try {
+                                const c3x = String(el3x.className || '');
+                                if (c3x.indexOf('dnd-z-lowered') >= 0) return;
+                                if (c3x.indexOf('acu-edit-overlay') >= 0 || c3x.indexOf('acu-dialog') >= 0) {
+                                    el3x.style.setProperty('z-index', '2147483647', 'important');
+                                    if (!el3x.getAttribute('data-dnd-tail-done')) {
+                                        el3x.setAttribute('data-dnd-tail-done', '1');
+                                        try { const p3x = el3x.parentNode; if (p3x && p3x.appendChild && p3x.lastElementChild !== el3x) p3x.appendChild(el3x); } catch (e) {}
+                                    }
+                                }
+                            } catch (e) {}
+                        };
+                        try {
+                            const l3x = _hostDoc3.querySelectorAll('.acu-edit-overlay:not([data-dnd-tail-done]), .acu-dialog:not([data-dnd-tail-done])');
+                            for (let i3x = 0; i3x < l3x.length; i3x++) _boost3(l3x[i3x]);
+                        } catch (e) {}
+                        try {
+                            if (!(window as any).__dndAcuEditGuard) {
+                                (window as any).__dndAcuEditGuard = true;
+                                const _obs3x = new MutationObserver((ms3x: any[]) => {
+                                    for (let mi3x = 0; mi3x < ms3x.length; mi3x++) {
+                                        const a3x = ms3x[mi3x].addedNodes;
+                                        if (!a3x) continue;
+                                        for (let ai3x = 0; ai3x < a3x.length; ai3x++) {
+                                            const n3x: any = a3x[ai3x];
+                                            if (!n3x || n3x.nodeType !== 1) continue;
+                                            const c3y = String(n3x.className || '');
+                                            if (c3y.indexOf('acu-edit-overlay') >= 0 || c3y.indexOf('acu-dialog') >= 0) _boost3(n3x);
+                                        }
+                                    }
+                                });
+                                try { _obs3x.observe(_hostDoc3.documentElement || _hostDoc3.body, { childList: true, subtree: true }); } catch (e) {}
+                            }
+                        } catch (e) {}
+                    } catch (e) {}
                     return;
                 }
             } catch (e) { deps.logger.warn('[DND] 内容弹窗失败', e); }
