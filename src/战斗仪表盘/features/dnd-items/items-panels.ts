@@ -28,6 +28,15 @@ export function createItemsPanelsFragment(deps: any): any {
             <span style="font-size:11px;color:var(--dnd-text-dim);">${backpackItems.length} 件</span>
         </div>`;
 
+        // [b12.7] 骰子入口：商店 / 物品栏可视化 / 装备栏可视化
+        html += `
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                <button type="button" class="dnd-inv-entry dnd-clickable" data-entry="gacha" style="flex:1;min-width:80px;background:rgba(155,89,182,0.15);border:1px solid rgba(155,89,182,0.6);border-radius:4px;color:var(--dnd-text-main);padding:6px 8px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;"><i class="fa-solid fa-store"></i> 骰子商店</button>
+                <button type="button" class="dnd-inv-entry dnd-clickable" data-entry="inventory" style="flex:1;min-width:80px;background:rgba(52,152,219,0.15);border:1px solid rgba(52,152,219,0.6);border-radius:4px;color:var(--dnd-text-main);padding:6px 8px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;"><i class="fa-solid fa-box-open"></i> 物品栏</button>
+                <button type="button" class="dnd-inv-entry dnd-clickable" data-entry="equipment" style="flex:1;min-width:80px;background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.6);border-radius:4px;color:var(--dnd-text-main);padding:6px 8px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;"><i class="fa-solid fa-shield-halved"></i> 装备栏</button>
+            </div>
+        `;
+
         // 搜索和筛选
         html += `
             <div style="display:flex;gap:5px;margin-bottom:10px;">
@@ -65,6 +74,20 @@ export function createItemsPanelsFragment(deps: any): any {
         html += `</div>`;
         
         this.showItemDetailPopup(html, event.clientX, event.clientY);
+        // [b12.7] 背包内骰子入口：脚本绑定
+        {
+            const { $: _$i } = deps.utils.getCore();
+            _$i('#dnd-detail-popup-el .dnd-inv-entry').off('click.dndInvEntry').on('click.dndInvEntry', function(e) {
+                e.stopPropagation();
+                const entry = _$i(this).attr('data-entry');
+                try {
+                    const acuUI: any = (window as any).__acuUI;
+                    if (entry === 'gacha') acuUI?.showGachaVisualization?.();
+                    else if (entry === 'inventory') acuUI?.showInventoryVisualization?.('inventory');
+                    else if (entry === 'equipment') acuUI?.showInventoryVisualization?.('equipment');
+                } catch (err) { deps.logger.warn('[DND] 骰子入口调用失败', err); }
+            });
+        }
     },
 
     // [新增] 过滤物品列表

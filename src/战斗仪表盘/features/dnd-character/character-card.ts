@@ -114,7 +114,11 @@ export function createCharacterCardFragment(deps: any): any {
                         <div class="dnd-detail-sub">${char['种族/性别/年龄'] || '未知'} | ${char['职业'] || '无职业'}</div>
                     </div>
                 </div>
-                <div class="dnd-detail-close" id="dnd-card-close"><i class="fa-solid fa-times"></i></div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    <div class="dnd-card-acu-btn" id="dnd-card-relation-graph" title="人物关系图" style="cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--dnd-text-dim);"><i class="fa-solid fa-project-diagram"></i></div>
+                    <div class="dnd-card-acu-btn" id="dnd-card-avatar-manager" title="角色头像预设" style="cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--dnd-text-dim);"><i class="fa-solid fa-user-circle"></i></div>
+                    <div class="dnd-detail-close" id="dnd-card-close"><i class="fa-solid fa-times"></i></div>
+                </div>
             </div>
             
             <div class="dnd-detail-body">
@@ -193,6 +197,15 @@ export function createCharacterCardFragment(deps: any): any {
         $card.find('#dnd-card-close').on('click', () => {
             this.hideCharacterCard();
             ((window as any).DND_Dashboard_UI || this).hideDetailPopup?.( );
+        });
+        // [b12.7] 角色卡 → 骰子：人物关系图 / 角色头像预设
+        $card.find('#dnd-card-relation-graph').off('click.dndAcuRel').on('click.dndAcuRel', (e) => {
+            e.stopPropagation();
+            try { const acuUI: any = (window as any).__acuUI; acuUI?.showRelationshipGraphForDnd?.(); } catch (err) { console.warn('[DND] 关系图调用失败', err); }
+        });
+        $card.find('#dnd-card-avatar-manager').off('click.dndAcuAva').on('click.dndAcuAva', (e) => {
+            e.stopPropagation();
+            try { const acuUI: any = (window as any).__acuUI; acuUI?.showAvatarManagerForDnd?.(); } catch (err) { console.warn('[DND] 头像预设调用失败', err); }
         });
         
         $card.find('#dnd-bio-toggle').on('click', function() {

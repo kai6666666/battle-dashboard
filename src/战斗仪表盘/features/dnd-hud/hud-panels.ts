@@ -5,6 +5,31 @@ import { DND_CONFIG } from '../dnd-core';
 
 export function createHudPanelsFragment(deps: any): any {
 async function invokeManualUpdate(event) {
+    // [b12.7] 优先走骰子系统的完整手动更新（runDatabaseManualUpdate：新版填表工作台 + 旧版 API 双通道）
+    try {
+        const acuUI: any = (window as any).__acuUI;
+        if (acuUI && typeof acuUI.runDatabaseManualUpdate === 'function') {
+            const { $: _$0 } = deps.utils.getCore();
+            const $btn0 = event ? _$0(event.currentTarget).closest('.dnd-footer-btn') : _$0();
+            const $icon0 = $btn0.find('.dnd-refresh-icon i');
+            $btn0.css({ pointerEvents: 'none', opacity: '0.7' });
+            $icon0.removeClass('fa-sync').addClass('fa-spinner fa-spin');
+            try {
+                const r: any = await acuUI.runDatabaseManualUpdate();
+                if (r && r.status === 'updated') { deps.notification.success('已触发数据库手动更新'); return true; }
+                if (r && r.status === 'failed') {
+                    deps.logger.error('[UIHUD] 骰子手动更新失败:', r.error);
+                    deps.notification.error('手动更新失败：' + ((r.error && (r.error.message || r.error)) || '未知错误'));
+                    return false;
+                }
+                deps.notification.warning('后端未提供 manualUpdate 接口，请更新后端脚本');
+                return false;
+            } finally {
+                $btn0.css({ pointerEvents: '', opacity: '' });
+                $icon0.removeClass('fa-spinner fa-spin').addClass('fa-sync');
+            }
+        }
+    } catch (e) { deps.logger.warn('[UIHUD] 骰子手动更新不可用，回退内置逻辑：', e); }
     const { $, getDB } = deps.utils.getCore();
     const $btn = event ? $(event.currentTarget).closest('.dnd-footer-btn') : $();
     const $icon = $btn.find('.dnd-refresh-icon i');
@@ -186,6 +211,18 @@ async function invokeManualUpdate(event) {
             </div>
         `;
         
+        // [b12.7] 打开数据库（骰子系统）
+        html += `
+            <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="acu-open-db" style="cursor:pointer;" title="打开数据库">
+                <span class="dnd-res-icon" style="font-size:16px;color:var(--dnd-text-main)"><i class="fa-solid fa-database"></i></span>
+            </div>
+        `;
+        // [b12.7] 可视化表格编辑（骰子系统）
+        html += `
+            <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="acu-visualizer" style="cursor:pointer;" title="可视化表格编辑">
+                <span class="dnd-res-icon" style="font-size:16px;color:var(--dnd-text-dim)"><i class="fa-solid fa-table-columns"></i></span>
+            </div>
+        `;
         html += `</div></div>`; // End buttons & footer
         
         const $footerEl = $(html);
@@ -211,6 +248,16 @@ async function invokeManualUpdate(event) {
                     $('.dnd-nav-item[data-target="settings"]').addClass('active');
                     deps.hudCore.setState('full');
                     break;
+                case 'acu-open-db': {
+                    // [b12.7] 骰子：打开数据库（原骰子面板底栏按钮）
+                    try { const acuUI: any = (window as any).__acuUI; acuUI?.openDatabaseInterface?.(); } catch (err) { deps.logger.warn('[UIHUD] openDatabaseInterface 失败', err); }
+                    break;
+                }
+                case 'acu-visualizer': {
+                    // [b12.7] 骰子：可视化表格编辑（原骰子面板底栏按钮）
+                    try { const acuUI: any = (window as any).__acuUI; acuUI?.openDatabaseVisualizerInterface?.(); } catch (err) { deps.logger.warn('[UIHUD] openDatabaseVisualizerInterface 失败', err); }
+                    break;
+                }
             }
         });
         
