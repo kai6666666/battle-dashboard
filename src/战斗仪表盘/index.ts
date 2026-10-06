@@ -1615,6 +1615,13 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       getAcuThemeClass: () => {
         try { return 'acu-theme-' + (getConfig().theme || 'dark'); } catch (e) { return 'acu-theme-dark'; }
       },
+      // [b13.2.3] 保障骰子缓存数据就绪（编辑/锁定/收藏等操作依赖 cachedRawData）
+      ensureAcuCachedData: () => {
+        try {
+          if (!cachedRawData_ACC.v) { cachedRawData_ACC.v = getTableData(); }
+          return true;
+        } catch (e) { return false; }
+      },
       // [b13.2a] DND 事件层：单元格菜单 / 书签 / 动作按钮
       showCellMenuForDnd: (clientX: number, clientY: number, cellEl: any) => {
         try {

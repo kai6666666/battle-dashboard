@@ -165,6 +165,47 @@ export function createHudRenderFragment(deps: any): any {
     async renderTableNavMirror($container) {
         const { $ } = deps.utils.getCore();
         const g: any = (window as any).__acuUI;
+        // [b13.2.3] 强力层级守护（冗余保障）：骰子弹层（overlay/菜单）自动提升 + backdrop 逃逸清理
+        try {
+            if (!(window as any).__dndAcuZGuardX) {
+                (window as any).__dndAcuZGuardX = true;
+                const boostEl = (el: any) => {
+                    try {
+                        const c = String(el.className || '');
+                        if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
+                        else if (c.indexOf('overlay') >= 0 || c.indexOf('acu-cell-menu') >= 0) el.style.setProperty('z-index', '2147483647', 'important');
+                    } catch (e) {}
+                };
+                const sweep = () => {
+                    try {
+                        const doc: any = document;
+                        const list = doc.querySelectorAll('[class*="overlay"][class*="acu-"], .acu-cell-menu, .acu-menu-backdrop');
+                        for (let i = 0; i < list.length; i++) boostEl(list[i]);
+                        const bds = doc.querySelectorAll('.acu-menu-backdrop');
+                        if (bds.length > 0 && doc.querySelectorAll('.acu-cell-menu').length === 0) {
+                            for (let i = 0; i < bds.length; i++) { try { bds[i].remove(); } catch (e) {} }
+                        }
+                        // toast 层级保障（toastr 提示防被盖）
+                        const tst = doc.querySelectorAll('#toast-container, .toast');
+                        for (let i = 0; i < tst.length; i++) { try { tst[i].style.setProperty('z-index', '2147483647', 'important'); } catch (e) {} }
+                    } catch (e) {}
+                };
+                const obs = new MutationObserver((muts: any[]) => {
+                    let hit = false;
+                    for (let mi = 0; mi < muts.length && !hit; mi++) {
+                        const added = muts[mi].addedNodes;
+                        if (!added) continue;
+                        for (let i = 0; i < added.length; i++) {
+                            const n: any = added[i];
+                            if (!n || n.nodeType !== 1) continue;
+                            try { const _c = String(n.className || ''); if (_c.indexOf('acu-') >= 0 || _c.indexOf('toast') >= 0) { hit = true; break; } } catch (e) {}
+                        }
+                    }
+                    if (hit) { sweep(); try { setTimeout(sweep, 60); } catch (e) {} }
+                });
+                try { obs.observe(document.documentElement || document.body, { childList: true, subtree: true }); } catch (e) {}
+            }
+        } catch (e) {}
         $container.empty();
         let items: any[] = [];
         try { if (g && typeof g.getTableNavItems === 'function') items = g.getTableNavItems() || []; } catch (e) {}
@@ -194,13 +235,14 @@ export function createHudRenderFragment(deps: any): any {
             try {
                 if (table) {
                     // [b13.1] 内嵌完整表格视图（不弹窗、不打开骰子面板）
+                    try { if (g && typeof g.ensureAcuCachedData === 'function') g.ensureAcuCachedData(); } catch (e) {}
                     const $list = $container.find('.dnd-tnav-list');
                     $container.find('.dnd-acu-table-view').remove();
                     let tableHtml = '';
                     try { if (g && typeof g.renderTableHostForDnd === 'function') tableHtml = g.renderTableHostForDnd(table); } catch (e) {}
                     if (!tableHtml) tableHtml = '<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">无法读取该表数据（可能尚未加载）</div>';
                     const themeCls = (g && typeof g.getAcuThemeClass === 'function') ? String(g.getAcuThemeClass()) : 'acu-theme-dark';
-                    const $view = $(`<div class="dnd-acu-table-view" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-table-back dnd-clickable" style="padding:6px 10px;border-bottom:1px solid var(--dnd-border-inner);cursor:pointer;color:var(--dnd-text-highlight);font-size:12px;position:sticky;top:0;background:var(--dnd-bg-panel);z-index:2;">← 返回表格列表</div><div class="dnd-acu-table-host ${themeCls}" style="padding:2px 6px 6px;"></div></div>`);
+                    const $view = $(`<div class="dnd-acu-table-view" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-table-host ${themeCls}" style="padding:2px 6px 6px;"></div></div>`);
                     $view.find('.dnd-acu-table-host').html(tableHtml);
                     $list.hide();
                     $container.append($view);
@@ -209,7 +251,6 @@ export function createHudRenderFragment(deps: any): any {
                         try { if (g && typeof g.renderTableHostForDnd === 'function') h = g.renderTableHostForDnd(table); } catch (e) {}
                         if (h) $view.find('.dnd-acu-table-host').html(h);
                     };
-                    $view.find('.dnd-acu-table-back').on('click', function() { $view.remove(); $list.show(); });
                     // 搜索（防抖 300ms）
                     let searchTimer: any = null;
                     $view.on('input', '.acu-search-input', function() {
