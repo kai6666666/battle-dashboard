@@ -170,6 +170,16 @@ export const STYLES_PART_08D_DND_ANIMATIONS = `/* ==============================
             transition: all 0.1s !important;
         }
         
+        /* [b12.12] 投骰结果卡入场（无 fill-mode：动画失败也直接可见） */
+        @keyframes dnd-roll-pop-in {
+            0% { opacity: 0; transform: translateY(-18px) scale(0.6) rotateX(-25deg); }
+            60% { opacity: 1; transform: translateY(4px) scale(1.06) rotateX(5deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+        }
+        .dnd-roll-pop {
+            animation: dnd-roll-pop-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
         /* 骰子滚动动画 */
         @keyframes dnd-dice-roll {
             0% { transform: rotateY(0deg) rotateX(0deg); }
