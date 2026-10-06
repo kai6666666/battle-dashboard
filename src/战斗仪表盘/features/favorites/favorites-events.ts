@@ -187,6 +187,11 @@ export function createBindFavoritesEvents(deps: any) {
         </div>
       `);
       $('body').append(menu);
+      // [b13.2.11] 直接提升层级（防被 DND HUD 遮盖，不依赖守护时机）
+      try {
+        if (menu[0]) menu[0].style.setProperty('z-index', '2147483647', 'important');
+        if (backdrop[0]) backdrop[0].style.setProperty('z-index', '2147483646', 'important');
+      } catch (e) {}
 
       // 定位菜单
       const winWidth = $(window).width() || 800;
