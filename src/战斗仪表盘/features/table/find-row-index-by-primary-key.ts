@@ -23,6 +23,24 @@ export function createFindRowIndexByPrimaryKey(deps: any) {
         return primaryKeyValue === '_row_0' ? 0 : null;
       }
 
+      // [b13.2.5] fallback：表不在 PRIMARY_KEYS 映射（如 DND 融合表）时，从 "字段名=值" 解析字段自行定位
+      if (pkField === undefined) {
+        const eq0 = primaryKeyValue.indexOf('=');
+        if (eq0 !== -1) {
+          const fieldName = primaryKeyValue.substring(0, eq0);
+          const idx0 = headers.indexOf(fieldName);
+          if (idx0 !== -1) {
+            const actualValue0 = primaryKeyValue.substring(eq0 + 1);
+            for (let i = 1; i < sheet.content.length; i++) {
+              const row = sheet.content[i];
+              if (row && String(row[idx0]) === String(actualValue0)) {
+                return i - 1;
+              }
+            }
+          }
+        }
+        return null;
+      }
       if (!pkField) return null;
 
       const pkIndex = headers.indexOf(pkField);

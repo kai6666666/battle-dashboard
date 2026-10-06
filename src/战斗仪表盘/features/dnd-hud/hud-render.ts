@@ -306,15 +306,22 @@ export function createHudRenderFragment(deps: any): any {
                     const $pop = $(`<div id="dnd-acu-view-popup" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2147483646;display:flex;align-items:center;justify-content:center;"><div style="background:var(--dnd-bg-popup,#222);border:1px solid var(--dnd-border-gold);border-radius:8px;max-width:92vw;width:660px;max-height:82vh;overflow:auto;padding:14px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b style="color:var(--dnd-text-highlight);font-size:14px;">${label}</b><span class="dnd-acu-view-close" style="cursor:pointer;color:var(--dnd-text-dim);font-size:16px;padding:0 4px;">✕</span></div><div class="dnd-acu-view-body" style="font-size:12px;color:var(--dnd-text-main);"></div></div></div>`);
                     $('body').append($pop);
                     const $body = $pop.find('.dnd-acu-view-body');
-                    let h3: any = null;
-                    try { if (g && typeof g.renderAcuViewHtml === 'function') h3 = g.renderAcuViewHtml(tab); } catch (e) {}
-                    if (h3 && typeof h3.then === 'function') { try { h3 = await h3; } catch (e) { h3 = null; } }
-                    if (h3) { $body.html(String(h3)); }
-                    else if (tab === 'mvu') {
-                        $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">变量面板需要在骰子面板中查看：<br><br><button class="dnd-acu-open-panel dnd-clickable" style="padding:7px 14px;background:linear-gradient(to bottom, var(--dnd-bg-tertiary), var(--dnd-bg-secondary));border:1px solid var(--dnd-border-gold);border-radius:5px;color:var(--dnd-text-highlight);cursor:pointer;font-size:12px;">打开骰子面板</button></div>');
-                        $body.find('.dnd-acu-open-panel').on('click', function() { try { if (g && typeof g.openDicePanelTab === 'function') g.openDicePanelTab('mvu'); } catch (e) {} $pop.remove(); });
+                    if (tab === 'mvu') {
+                        // [b13.2.5] 变量面板：直接渲染 + 绑定（可编辑，不再依赖骰子面板）
+                        let okMvu = false;
+                        try { if (g && typeof g.renderMvuPanelForDnd === 'function') okMvu = g.renderMvuPanelForDnd($body[0]); } catch (e) {}
+                        if (!okMvu) { $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
+                    } else {
+                        let h3: any = null;
+                        try { if (g && typeof g.renderAcuViewHtml === 'function') h3 = g.renderAcuViewHtml(tab); } catch (e) {}
+                        if (h3 && typeof h3.then === 'function') { try { h3 = await h3; } catch (e) { h3 = null; } }
+                        if (h3) {
+                            $body.html(String(h3));
+                            // [b13.2.5] 收藏夹 / 审核：绑定交互（编辑菜单等）
+                            try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($body[0]); } catch (e) {}
+                            try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                        } else { $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
                     }
-                    else { $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
                     $pop.find('.dnd-acu-view-close').on('click', function() { $pop.remove(); });
                     $pop.on('click', function(ev) { if (ev.target === $pop[0]) $pop.remove(); });
                     return;

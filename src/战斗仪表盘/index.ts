@@ -1622,6 +1622,28 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           return true;
         } catch (e) { return false; }
       },
+      // [b13.2.5] DND 视图可编辑化：变量面板直接渲染+绑定 / 收藏夹绑定 / 审核绑定
+      renderMvuPanelForDnd: (containerEl: any) => {
+        try {
+          const jq: any = (window as any).jQuery || (window as any).$;
+          if (!jq || !containerEl) return false;
+          const $c = jq(containerEl);
+          $c.html('<div class="acu-mvu-panel">' + MvuModule.renderPanel() + '</div>');
+          try { MvuModule.bindEvents($c); } catch (e) {}
+          return true;
+        } catch (e) { console.warn('[AcuDice] renderMvuPanelForDnd 失败', e); return false; }
+      },
+      bindFavoritesEventsForDnd: (containerEl: any) => {
+        try {
+          const jq: any = (window as any).jQuery || (window as any).$;
+          if (!jq || !containerEl) return false;
+          bindFavoritesEvents(jq(containerEl));
+          return true;
+        } catch (e) { console.warn('[AcuDice] bindFavoritesEventsForDnd 失败', e); return false; }
+      },
+      bindChangesEventsForDnd: () => {
+        try { bindChangesEvents(); return true; } catch (e) { console.warn('[AcuDice] bindChangesEventsForDnd 失败', e); return false; }
+      },
       // [b13.2a] DND 事件层：单元格菜单 / 书签 / 动作按钮
       showCellMenuForDnd: (clientX: number, clientY: number, cellEl: any) => {
         try {
