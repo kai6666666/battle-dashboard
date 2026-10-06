@@ -118,6 +118,7 @@
 - 🚀 **b12.14 Mini HUD 选项升级（2026-10-06）**：骰子同款能力 + DND 原能力融合——点击选项：若骰子设置 `clickOptionToAutoSend` 开启 → **自动发送**（`smartSendText` 桥，多通道兼容）；否则/失败 → 回退 **填入输入框**（DND 原行为）；不加标题栏保持简洁 → tag `v0.0.34-b12.14`
 - 🚀 **b12.15 选项深化 + 表格收口（2026-10-06）**：① 选项深化——接入骰子其他选项表（`isOptionTableName` 转置扫描，去重 DND 表，无前缀 • 标记）+ **检定建议按钮**（`executeCheckSuggestion`）+ **字号同步**（`optionFontSize`）；保留 A-D 原渲染 ② 表格编辑收口（按决策 §6.2-7）——**移除编辑器 A（dnd-table 域全删）**，Mini HUD「▼」栏改为**跳转骰子侧表格编辑器**（`openDatabaseVisualizerInterface`，B 唯一编辑权）→ tag `v0.0.35-b12.15`
 - 🔧 **b12.16 ▼行为修正（2026-10-06）**：根据实测截图澄清——「表格管理界面」= **骰子面板的导航盘**（表格总览），非数据库可视化编辑器；▼ 点击改为 **`__acuToggleDicePanel()` 打开骰子面板**（显示全部表格入口导航盘）→ tag `v0.0.36-b12.16`
+- 🚀 **b12.17 表格管理镜像内嵌（2026-10-06）**：▼ 展开行为恢复——在**原编辑器 A 的区域**（`#dnd-table-manager-container`）**内嵌骰子导航盘镜像**：特殊入口 4 枚（审核/变量/收藏夹/交互总览）+ 全部表格入口（`getTableNavItems` 含隐藏过滤/图标）；点击经 `openDicePanelTab` / `openDicePanelTable` 由骰子面板中转（编辑在骰子侧）→ tag `v0.0.37-b12.17`
 
 ## 增补事项
 - [x] **悬浮球二合一**（✅ 2026-10-05 完成，v0.0.15-b10d）：唯一 D20 球（长按/双击开骰子面板）+ S1 桥 `__acuToggleDicePanel` + 触发器融合隐藏
