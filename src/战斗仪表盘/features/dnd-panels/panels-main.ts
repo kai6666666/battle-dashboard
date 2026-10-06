@@ -49,6 +49,17 @@ export function createPanelsMainFragment(deps: any): any {
             case 'settings':
                 ((window as any).DND_Dashboard_UI || this).renderSettingsPanel?.( $content);
                 break;
+            case 'acu-changes':
+            case 'acu-mvu':
+            case 'acu-favorites':
+            case 'acu-global-interactions': {
+                // [b12.9] 骰子面板四大功能入口：转发到骰子面板对应 tab
+                const tabMap: any = { 'acu-changes': 'changes', 'acu-mvu': 'mvu', 'acu-favorites': 'favorites', 'acu-global-interactions': 'global-interactions' };
+                const tab = tabMap[panelName];
+                $content.html('<div style="padding:40px 20px;text-align:center;color:var(--dnd-text-dim);font-size:13px;"><i class="fa-solid fa-dice-d20" style="font-size:22px;opacity:.6;"></i><br><br>已转发到骰子面板，请在屏幕上方的骰子面板中操作。</div>');
+                try { const acuUI: any = (window as any).__acuUI; acuUI?.openDicePanelTab?.(tab); } catch (e) { console.warn('[DND] openDicePanelTab 失败', e); }
+                break;
+            }
             default:
                 $content.html('<div style="padding:20px">开发中...</div>');
         }

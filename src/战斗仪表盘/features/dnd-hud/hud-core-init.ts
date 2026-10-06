@@ -81,6 +81,11 @@ export function createHudCoreInitFragment(deps: any): any {
                         <div class="dnd-nav-item" data-target="world"><i class="fa-solid fa-globe"></i> 世界信息</div>
                         <div class="dnd-nav-item" data-target="logs"><i class="fa-solid fa-book"></i> 历史记录</div>
                         <div class="dnd-nav-item" data-target="archives"><i class="fa-solid fa-database"></i> 数据归档</div>
+                        <!-- [b12.9] 骰子面板四大功能入口（主面板导航） -->
+                        <div class="dnd-nav-item" data-target="acu-changes"><i class="fa-solid fa-code-compare"></i> 数据审核</div>
+                        <div class="dnd-nav-item" data-target="acu-mvu"><i class="fa-solid fa-code-branch"></i> 变量管理</div>
+                        <div class="dnd-nav-item" data-target="acu-favorites"><i class="fa-solid fa-star"></i> 收藏夹</div>
+                        <div class="dnd-nav-item" data-target="acu-global-interactions"><i class="fa-solid fa-hand-pointer"></i> 交互总览</div>
                         <div class="dnd-nav-item" data-target="settings"><i class="fa-solid fa-cog"></i> 设置</div>
                     </div>
                     <div class="dnd-content-area" id="dnd-content">

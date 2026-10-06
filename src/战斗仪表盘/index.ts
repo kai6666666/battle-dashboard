@@ -1500,6 +1500,34 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           (showAvatarManager as any)(nodeArr);
         } catch (e) { console.warn('[AcuDice] showAvatarManagerForDnd 失败', e); }
       },
+      // [b12.9] 打开骰子面板并切换到指定 tab（供 DND 主面板导航 / Mini HUD 更多菜单调用）
+      openDicePanelTab: (tab?: string) => {
+        try {
+          const _toggle = (window as any).__acuToggleDicePanel;
+          if (typeof _toggle === 'function') { try { _toggle(); } catch (e) {} }
+          const _doc: any = (() => { try { return (core?.utils?.getCore?.()?.window || (window as any)).document || document; } catch (e) { return document; } })();
+          const _raise = () => {
+            try {
+              const el: any = _doc.querySelector('.acu-wrapper.acu-dice-ui-root') || _doc.querySelector('#acu-dice-ui-root') || _doc.querySelector('.acu-wrapper');
+              if (el) el.style.setProperty('z-index', '2147483646', 'important');
+            } catch (e) {}
+          };
+          const _tabMap: any = { changes: '#acu-btn-changes', mvu: '#acu-btn-mvu', favorites: '#acu-btn-favorites', 'global-interactions': '#acu-btn-global-interactions', dashboard: '#acu-btn-dashboard', dice: '#acu-btn-dice-nav' };
+          const _sel = tab ? _tabMap[tab] : null;
+          const _tryClick = (attempt: number) => {
+            try {
+              _raise();
+              if (!_sel) return;
+              const jq: any = (window as any).jQuery || (window as any).$;
+              if (!jq) return;
+              const $b = jq(_sel);
+              if ($b && $b.length) { $b.trigger('click'); return; }
+            } catch (e) {}
+            if (attempt < 5) setTimeout(() => _tryClick(attempt + 1), 300);
+          };
+          setTimeout(() => _tryClick(0), 200);
+        } catch (e) { console.warn('[AcuDice] openDicePanelTab 失败', e); }
+      },
     };
     const _w: any = window as any;
     _w.__acuUI = Object.assign(_w.__acuUI || {}, _acuUIBridge);

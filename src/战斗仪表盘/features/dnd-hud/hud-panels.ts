@@ -223,6 +223,12 @@ async function invokeManualUpdate(event) {
             </div>
         `;
         
+        // [b12.9] 更多（审核 / 变量 / 收藏夹）
+        html += `
+            <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="acu-more" style="cursor:pointer;" title="更多（审核/变量/收藏夹）">
+                <span class="dnd-res-icon" style="font-size:16px;color:var(--dnd-text-dim)"><i class="fa-solid fa-ellipsis"></i></span>
+            </div>
+        `;
         html += `</div></div>`; // End buttons & footer
         
         const $footerEl = $(html);
@@ -240,7 +246,17 @@ async function invokeManualUpdate(event) {
                 case 'faction': ((window as any).DND_Dashboard_UI || self).showFactionPanel?.(e); break;
                 case 'spellbook': ((window as any).DND_Dashboard_UI || self).showSpellBook?.(e); break;
                 case 'npclist': self.showNPCListPanel(e); break;
-                case 'dice': ((window as any).DND_Dashboard_UI || self).showQuickDice?.(e); break;
+                case 'dice': {
+                    const gAny: any = (window as any).DND_Dashboard_UI || self;
+                    const fn = (gAny && typeof gAny.showQuickDice === 'function') ? gAny.showQuickDice : (typeof (self as any).showQuickDice === 'function' ? (self as any).showQuickDice : null);
+                    if (fn) {
+                        try { fn.call(gAny, e); } catch (err) { deps.logger.error('[UIHUD] showQuickDice 调用失败:', err); }
+                    } else {
+                        deps.logger.warn('[UIHUD] showQuickDice 不可用（全局/本地均缺失）');
+                        try { deps.notification.warning('快速投掷不可用（组件未就绪）'); } catch (e2) {}
+                    }
+                    break;
+                }
                 case 'manual-update': void invokeManualUpdate(e); break;
                 case 'settings':
                     // 切换到完整面板并打开设置页
@@ -258,10 +274,50 @@ async function invokeManualUpdate(event) {
                     try { const acuUI: any = (window as any).__acuUI; acuUI?.openDatabaseVisualizerInterface?.(); } catch (err) { deps.logger.warn('[UIHUD] openDatabaseVisualizerInterface 失败', err); }
                     break;
                 }
+                case 'acu-more': {
+                    // [b12.9] 更多菜单（审核 / 变量 / 收藏夹）
+                    self.showAcuMoreMenu(e);
+                    break;
+                }
             }
         });
         
         $container.append($footerEl);
+    },
+
+    // [b12.9] 更多菜单（审核 / 变量 / 收藏夹）：点击弹出小菜单，转发到骰子面板
+    showAcuMoreMenu(event) {
+        const { $ } = deps.utils.getCore();
+        $('#dnd-acu-more-menu').remove();
+        let anchor: any = null;
+        try { anchor = event && event.currentTarget ? event.currentTarget.getBoundingClientRect() : null; } catch (e) {}
+        const left = anchor ? Math.max(8, Math.min(anchor.left - 40, (window.innerWidth || 400) - 160)) : 100;
+        const top = anchor ? Math.max(8, anchor.top - 6) : 100;
+        const items = [
+            { key: 'changes', icon: 'fa-code-compare', label: '数据审核' },
+            { key: 'mvu', icon: 'fa-code-branch', label: '变量管理' },
+            { key: 'favorites', icon: 'fa-star', label: '收藏夹' },
+        ];
+        let html = `<div id="dnd-acu-more-menu" style="position:fixed;left:${left}px;top:${top}px;transform:translateY(-100%);background:var(--dnd-bg-popup,#222);border:1px solid var(--dnd-border-gold);border-radius:6px;padding:4px;z-index:2147483646;box-shadow:0 4px 16px rgba(0,0,0,.6);min-width:130px;">`;
+        items.forEach((it) => { html += `<div class="dnd-acu-more-item" data-tab="${it.key}" style="padding:7px 10px;cursor:pointer;font-size:12px;color:var(--dnd-text-main);display:flex;align-items:center;gap:6px;border-radius:4px;"><i class="fa-solid ${it.icon}"></i>${it.label}</div>`; });
+        html += `</div>`;
+        const $menu = $(html);
+        $('body').append($menu);
+        $menu.find('.dnd-acu-more-item').on('mouseenter', function() { $(this).css({ background: 'var(--dnd-bg-tertiary)' }); }).on('mouseleave', function() { $(this).css({ background: 'transparent' }); });
+        $menu.find('.dnd-acu-more-item').on('click', function() {
+            const tab = $(this).attr('data-tab');
+            $('#dnd-acu-more-menu').remove();
+            $(document).off('click.dndAcuMore');
+            try { const acuUI: any = (window as any).__acuUI; acuUI?.openDicePanelTab?.(tab); } catch (err) { deps.logger.warn('[UIHUD] openDicePanelTab 失败', err); }
+        });
+        setTimeout(() => {
+            $(document).off('click.dndAcuMore').on('click.dndAcuMore', (ev) => {
+                if (!$(ev.target).closest('#dnd-acu-more-menu').length) {
+                    $('#dnd-acu-more-menu').remove();
+                    $(document).off('click.dndAcuMore');
+                }
+            });
+        }, 60);
     },
 
     //原作者: disocrd类脑 Niccole @niccole0414
