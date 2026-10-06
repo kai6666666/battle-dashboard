@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.56-b13.2.15 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.57-b13.2.16 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -411,7 +411,7 @@ export function createHudRenderFragment(deps: any): any {
                 }
                 if (tab) {
                     $('#dnd-acu-view-popup').remove();
-                    const $pop = $(`<div id="dnd-acu-view-popup" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2147483646;display:flex;align-items:center;justify-content:center;"><div style="background:var(--dnd-bg-popup,#222);border:1px solid var(--dnd-border-gold);border-radius:8px;max-width:92vw;width:660px;max-height:82vh;overflow:auto;padding:14px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b style="color:var(--dnd-text-highlight);font-size:14px;">${label}</b><span class="dnd-acu-view-close" style="cursor:pointer;color:var(--dnd-text-dim);font-size:16px;padding:0 4px;">✕</span></div><div class="dnd-acu-view-body" style="font-size:12px;color:var(--dnd-text-main);"></div></div></div>`);
+                    const $pop = $(`<div id="dnd-acu-view-popup" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2147483646;display:flex;align-items:center;justify-content:center;"><div style="background:var(--dnd-bg-popup,#222);border:1px solid var(--dnd-border-gold);border-radius:8px;max-width:92vw;width:660px;max-height:82vh;overflow:auto;padding:14px;"><div class="dnd-acu-view-body" style="font-size:12px;color:var(--dnd-text-main);"></div></div></div>`);
                     $('body').append($pop);
                     // [b13.2.6] JS 强制定位（inset 兼容性兜底）+ 拉满层级
                     try {
@@ -532,6 +532,47 @@ export function createHudRenderFragment(deps: any): any {
                                 _de.style.setProperty('align-items', 'center', 'important');
                                 _de.style.setProperty('justify-content', 'center', 'important');
                             }
+                        } catch (e) {}
+                        // [b13.2.16] 编辑弹窗保顶：观察宿主文档中新增的编辑/对话框，提层并移到末尾（DND 弹窗存在期间持续生效）
+                        try {
+                            const _hostDoc: any = (($pop[0] && $pop[0].ownerDocument) || document);
+                            const _boost2 = (el2: any) => {
+                                try {
+                                    const c2 = String(el2.className || '');
+                                    if (c2.indexOf('dnd-z-lowered') >= 0) return;
+                                    if (c2.indexOf('acu-edit-overlay') >= 0 || c2.indexOf('acu-dialog') >= 0 || c2.indexOf('overlay') >= 0) {
+                                        el2.style.setProperty('z-index', '2147483647', 'important');
+                                        try { const p2 = el2.parentNode; if (p2 && p2.appendChild && p2.lastElementChild !== el2) p2.appendChild(el2); } catch (e) {}
+                                    }
+                                } catch (e) {}
+                            };
+                            const _scan2 = () => {
+                                try {
+                                    const l2 = _hostDoc.querySelectorAll('.acu-edit-overlay, .acu-dialog, [class*="acu-"][class*="overlay"]');
+                                    for (let i2 = 0; i2 < l2.length; i2++) _boost2(l2[i2]);
+                                } catch (e) {}
+                            };
+                            _scan2();
+                            try {
+                                if (!(window as any).__dndAcuEditGuard) {
+                                    (window as any).__dndAcuEditGuard = true;
+                                    const _obs2 = new MutationObserver((ms2: any[]) => {
+                                        let h2 = false;
+                                        for (let mi2 = 0; mi2 < ms2.length && !h2; mi2++) {
+                                            const a2 = ms2[mi2].addedNodes;
+                                            if (!a2) continue;
+                                            for (let ai = 0; ai < a2.length; ai++) {
+                                                const n2: any = a2[ai];
+                                                if (!n2 || n2.nodeType !== 1) continue;
+                                                const c3 = String(n2.className || '');
+                                                if (c3.indexOf('edit') >= 0 || c3.indexOf('overlay') >= 0 || c3.indexOf('dialog') >= 0) { h2 = true; break; }
+                                            }
+                                        }
+                                        if (h2) { _scan2(); try { setTimeout(_scan2, 60); } catch (e) {} }
+                                    });
+                                    try { _obs2.observe(_hostDoc.documentElement || _hostDoc.body, { childList: true, subtree: true }); } catch (e) {}
+                                }
+                            } catch (e) {}
                         } catch (e) {}
                         // [b13.2.14] 弹窗期间：降级所有可达文档中 DND 浮层（确保弹窗在最上）；关闭时恢复
                         let _zPairs: any[] = [];
