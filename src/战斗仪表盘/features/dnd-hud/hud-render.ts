@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.50-b13.2.9 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.51-b13.2.10 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -405,22 +405,37 @@ export function createHudRenderFragment(deps: any): any {
                         try { _zi = window.getComputedStyle($pop[0]).zIndex || '?'; } catch (e) {}
                         console.info('[DND]弹窗层级诊断 z=' + _zi + ' | hit=' + _hitDesc + ' | inside=' + _inside);
                     } catch (e) {}
-                    // [b13.2.9] 诊断 v2：跨文档对齐 + ownerDocument 命中测试
+                    // [b13.2.10] 诊断 v3：跨窗口逐层搜索 HUD 并迁移弹窗（层级同场竞技）
                     try {
-                        const _od: any = ($pop[0] && $pop[0].ownerDocument) || document;
-                        const _ow: any = _od.defaultView || window;
-                        let _hudDocTag = 'notfound';
-                        let _hudEl: any = null;
-                        try { _hudEl = document.getElementById('dnd-mini-hud'); } catch (e) {}
-                        if (!_hudEl) { try { _hudEl = document.querySelector('#dnd-toggle-btn, .dnd-ball'); } catch (e) {} }
-                        if (_hudEl) {
-                            _hudDocTag = (_hudEl.ownerDocument === _od) ? 'same-as-popup' : 'DIFFERENT';
-                            // 弹窗与 HUD 不同文档时：把弹窗迁移到 HUD 的文档（层级可比）
-                            if (_hudEl.ownerDocument !== _od && _hudEl.ownerDocument.body) {
-                                _hudEl.ownerDocument.body.appendChild($pop[0]);
-                                _hudDocTag += '->migrated';
+                        const _findHud = () => {
+                            const docs: any[] = [];
+                            try { docs.push(document); } catch (e) {}
+                            try {
+                                let w: any = window;
+                                let guard = 0;
+                                while (w && w.parent && w.parent !== w && guard++ < 6) {
+                                    w = w.parent;
+                                    try { if (w.document) docs.push(w.document); } catch (e) {}
+                                }
+                            } catch (e) {}
+                            for (let i = 0; i < docs.length; i++) {
+                                try {
+                                    const d = docs[i];
+                                    const el = d.getElementById && d.getElementById('dnd-mini-hud');
+                                    if (el) return { el: el, doc: d, at: i };
+                                    const el2 = d.querySelector && (d.querySelector('#dnd-toggle-btn') || d.querySelector('.dnd-mini-hud') || d.querySelector('.dnd-ball'));
+                                    if (el2) return { el: el2, doc: d, at: i };
+                                } catch (e) {}
                             }
+                            return null;
+                        };
+                        const _hud = _findHud();
+                        let _migrated = 'no';
+                        if (_hud && _hud.doc && _hud.doc !== (($pop[0] && $pop[0].ownerDocument) || document) && _hud.doc.body) {
+                            _hud.doc.body.appendChild($pop[0]);
+                            _migrated = 'yes(at=' + _hud.at + ')';
                         }
+                        try { $pop[0].style.setProperty('z-index', '2147483647', 'important'); } catch (e) {}
                         const _od2: any = ($pop[0] && $pop[0].ownerDocument) || document;
                         const _ow2: any = _od2.defaultView || window;
                         const _hx2 = Math.round((_ow2.innerWidth || _od2.documentElement.clientWidth) / 2);
@@ -429,9 +444,7 @@ export function createHudRenderFragment(deps: any): any {
                         let _hit2Desc = 'none';
                         if (_hit2) { _hit2Desc = (_hit2.tagName || '?') + '#' + (_hit2.id || '') + '.' + String(_hit2.className || '').slice(0, 60); }
                         const _inside2 = !!(_hit2 && $pop[0].contains(_hit2));
-                        console.info('[DND]弹窗诊断v2 popupDoc=' + (_od2 === document ? 'script' : 'other') + ' | hudDoc=' + _hudDocTag + ' | hit=' + _hit2Desc + ' | inside=' + _inside2);
-                        // 迁移后再次拉满层级
-                        try { $pop[0].style.setProperty('z-index', '2147483647', 'important'); } catch (e) {}
+                        console.info('[DND]弹窗诊断v3 hud=' + (_hud ? ('found@' + _hud.at) : 'notfound') + ' | migrated=' + _migrated + ' | hit=' + _hit2Desc + ' | inside=' + _inside2 + ' | popupAtTop=' + (_od2 === document ? 'script' : 'other'));
                     } catch (e) {}
                     $pop.find('.dnd-acu-view-close').on('click', function() { $pop.remove(); });
                     $pop.on('click', function(ev) { if (ev.target === $pop[0]) $pop.remove(); });
