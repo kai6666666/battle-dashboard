@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.48-b13.2.7 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.50-b13.2.9 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -404,6 +404,34 @@ export function createHudRenderFragment(deps: any): any {
                         let _zi = '?';
                         try { _zi = window.getComputedStyle($pop[0]).zIndex || '?'; } catch (e) {}
                         console.info('[DND]弹窗层级诊断 z=' + _zi + ' | hit=' + _hitDesc + ' | inside=' + _inside);
+                    } catch (e) {}
+                    // [b13.2.9] 诊断 v2：跨文档对齐 + ownerDocument 命中测试
+                    try {
+                        const _od: any = ($pop[0] && $pop[0].ownerDocument) || document;
+                        const _ow: any = _od.defaultView || window;
+                        let _hudDocTag = 'notfound';
+                        let _hudEl: any = null;
+                        try { _hudEl = document.getElementById('dnd-mini-hud'); } catch (e) {}
+                        if (!_hudEl) { try { _hudEl = document.querySelector('#dnd-toggle-btn, .dnd-ball'); } catch (e) {} }
+                        if (_hudEl) {
+                            _hudDocTag = (_hudEl.ownerDocument === _od) ? 'same-as-popup' : 'DIFFERENT';
+                            // 弹窗与 HUD 不同文档时：把弹窗迁移到 HUD 的文档（层级可比）
+                            if (_hudEl.ownerDocument !== _od && _hudEl.ownerDocument.body) {
+                                _hudEl.ownerDocument.body.appendChild($pop[0]);
+                                _hudDocTag += '->migrated';
+                            }
+                        }
+                        const _od2: any = ($pop[0] && $pop[0].ownerDocument) || document;
+                        const _ow2: any = _od2.defaultView || window;
+                        const _hx2 = Math.round((_ow2.innerWidth || _od2.documentElement.clientWidth) / 2);
+                        const _hy2 = Math.round((_ow2.innerHeight || _od2.documentElement.clientHeight) / 2);
+                        const _hit2: any = _od2.elementFromPoint ? _od2.elementFromPoint(_hx2, _hy2) : null;
+                        let _hit2Desc = 'none';
+                        if (_hit2) { _hit2Desc = (_hit2.tagName || '?') + '#' + (_hit2.id || '') + '.' + String(_hit2.className || '').slice(0, 60); }
+                        const _inside2 = !!(_hit2 && $pop[0].contains(_hit2));
+                        console.info('[DND]弹窗诊断v2 popupDoc=' + (_od2 === document ? 'script' : 'other') + ' | hudDoc=' + _hudDocTag + ' | hit=' + _hit2Desc + ' | inside=' + _inside2);
+                        // 迁移后再次拉满层级
+                        try { $pop[0].style.setProperty('z-index', '2147483647', 'important'); } catch (e) {}
                     } catch (e) {}
                     $pop.find('.dnd-acu-view-close').on('click', function() { $pop.remove(); });
                     $pop.on('click', function(ev) { if (ev.target === $pop[0]) $pop.remove(); });
