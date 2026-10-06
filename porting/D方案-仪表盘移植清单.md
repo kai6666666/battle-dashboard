@@ -135,6 +135,7 @@
 - 🔧 **b13.2.17 卡死紧急修复（2026-10-06）**：运行几分钟后全界面卡死——真因：MutationObserver「移末尾」操作与 observer 自身形成**死循环**（DOM 移动 → mutation → 再移动）；修复：① 所有移位一次性+`data-dnd-tail-done` 标记防重复 ② observer 只处理**本次新增**节点（不全文档扫描）③ 移动范围收窄至 `acu-edit-overlay/acu-dialog` ④ sweep 触发节流 120ms → tag v0.0.58-b13.2.17
 - 🔧 **b13.2.18 模式切换按钮刷新（2026-10-06）**：审核「数据验证」/变量「数值模式」按钮点击后需重开才生效——真因：原 handler 重渲染目标为**骰子面板容器**（DND 环境找不到）→ 状态已变但 UI 不刷新；修复：DND 弹窗内对 `.acu-simple-mode-toggle` / `.mvu-btn-numeric-mode` 加本地重渲染委托（200ms 后重渲染当前 tab）→ tag v0.0.59-b13.2.18
 - 🚀 **b13.2.19 特殊入口内嵌化（2026-10-06）**：Mini HUD 的审核/变量/收藏夹/交互总览从**弹窗**改为**内嵌视图**（`.dnd-acu-view-inline`，与表格同形态）——点击特殊入口→就地展开（58vh 滚动）、镜像盘列表隐藏、`.acu-close-btn` 关闭返回列表；弹窗代码（`#dnd-acu-view-popup`）整体移除（-183 行）；保留编辑弹窗保顶/模式切换刷新能力 → tag v0.0.60-b13.2.19
+- 🔧 **b13.2.20 内嵌按钮修复包（2026-10-06）**：① **容器身份注入**——内嵌视图渲染时清理旧 id、给容器设 `#acu-data-area`+`.acu-data-display`（骰子 64 处绑定与 getter 全部命中，修复审核/变量/表格的按钮绑定落空）② 交互总览绑定桥 `bindInteractionEventsForDnd`（bindGlobalInteractionEvents 接通）③ 教程弹窗提层（tutorial/overlay+acu- 类纳入保顶观察）④ 内嵌滚动修正（`#dnd-inline-scroll-fix` 样式：解除骰子内容高度限制，滚动交由外层）→ tag v0.0.61-b13.2.20
 
 ## 增补事项
 - [x] **悬浮球二合一**（✅ 2026-10-05 完成，v0.0.15-b10d）：唯一 D20 球（长按/双击开骰子面板）+ S1 桥 `__acuToggleDicePanel` + 触发器融合隐藏
