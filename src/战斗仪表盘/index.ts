@@ -1615,6 +1615,40 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       getAcuThemeClass: () => {
         try { return 'acu-theme-' + (getConfig().theme || 'dark'); } catch (e) { return 'acu-theme-dark'; }
       },
+      // [b13.2a] DND 事件层：单元格菜单 / 书签 / 动作按钮
+      showCellMenuForDnd: (clientX: number, clientY: number, cellEl: any) => {
+        try {
+          if (!cellEl) return false;
+          const evt: any = { clientX: clientX, clientY: clientY, preventDefault: function () {}, stopPropagation: function () {} };
+          showCellMenu(evt, cellEl);
+          return true;
+        } catch (e) { console.warn('[AcuDice] showCellMenuForDnd 失败', e); return false; }
+      },
+      toggleBookmarkForDnd: (tableName: string, rowKey: string) => {
+        try { BookmarkManager.toggleBookmark(tableName, rowKey); return true; } catch (e) { return false; }
+      },
+      runCardActionForDnd: (btnEl: any) => {
+        try {
+          if (!btnEl) return false;
+          const jq: any = (window as any).jQuery || (window as any).$;
+          if (!jq) return false;
+          const $btn = jq(btnEl);
+          const rowIdx = parseInt($btn.data('row'), 10);
+          const actionIdx = parseInt($btn.data('action-idx'), 10);
+          const $card = $btn.closest('.acu-data-card');
+          const $title = $card.find('.acu-editable-title');
+          const tableKey = $title.data('key');
+          const tableName = $title.data('tname') || '';
+          const rawData: any = getTableData();
+          if (!rawData || !rawData[tableKey]) return false;
+          const headers = rawData[tableKey].content[0] || [];
+          const rowData = rawData[tableKey].content[rowIdx + 1] || [];
+          const actions = getInteractOptionsForRow(tableName, headers, rowData);
+          const action = actions[actionIdx];
+          executeTableInteractionAction(action, headers, rowData);
+          return true;
+        } catch (e) { console.warn('[AcuDice] runCardActionForDnd 失败', e); return false; }
+      },
       // [b12.17] 表格管理镜像：骰子导航盘的表项 + 特殊入口
       getTableNavItems: () => {
         try {

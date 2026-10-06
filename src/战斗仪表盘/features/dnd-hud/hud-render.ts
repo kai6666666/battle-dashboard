@@ -234,6 +234,28 @@ export function createHudRenderFragment(deps: any): any {
                         try { if (g && typeof g.dndTableOp === 'function') g.dndTableOp('reverse', table); } catch (e) {}
                         refresh();
                     });
+                    // [b13.2a] 单元格菜单（点击单元格/标题 → 编辑/删除/插入/复制/收藏 全功能菜单）
+                    $view.on('click', '.acu-cell', function(e) {
+                        if ($(e.target).closest('.acu-bookmark-icon, .acu-action-item, .acu-inline-dice-btn').length) return;
+                        e.stopPropagation();
+                        try { if (g && typeof g.showCellMenuForDnd === 'function') g.showCellMenuForDnd(e.clientX, e.clientY, this); } catch (e2) {}
+                    });
+                    // [b13.2a] 书签（拦截并走 DND 刷新，避免双触发）
+                    $view.on('click', '.acu-bookmark-icon', function(e) {
+                        e.stopPropagation(); e.preventDefault();
+                        const $icon = $(this);
+                        const tName = $icon.data('table');
+                        const rKey = $icon.data('row-key');
+                        if (!tName || !rKey) return;
+                        try { if (g && typeof g.toggleBookmarkForDnd === 'function') g.toggleBookmarkForDnd(String(tName), String(rKey)); } catch (e2) {}
+                        refresh();
+                    });
+                    // [b13.2a] 交互动作按钮（执行交互并刷新）
+                    $view.on('click', '.acu-action-item', function(e) {
+                        e.stopPropagation(); e.preventDefault();
+                        try { if (g && typeof g.runCardActionForDnd === 'function') g.runCardActionForDnd(this); } catch (e2) {}
+                        refresh();
+                    });
                     // 关闭按钮 → 返回列表
                     $view.on('click', '.acu-close-btn', function(e) { e.stopPropagation(); $view.remove(); $list.show(); });
                     return;
