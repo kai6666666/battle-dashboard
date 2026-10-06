@@ -3,6 +3,9 @@
 // 工厂 + DI；与同域其它 fragment 经 index.ts 合并为同一对象（this 跨块可用）。
 import { DND_CONFIG } from '../dnd-core';
 
+// [b13.2.32] DND 内联样式表（per-doc 注入用）
+const __DND_CSS_V9 = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{width:96px !important;max-width:96px !important;min-width:64px !important;flex:0 0 96px !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
+
 export function createHudRenderFragment(deps: any): any {
   return {
     async renderHUD() {
@@ -14,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.72-b13.2.31 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.73-b13.2.32 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -336,7 +339,58 @@ export function createHudRenderFragment(deps: any): any {
                     } catch (e) {}
                     $view.find('.dnd-acu-table-host').html(tableHtml);
                     $list.hide();
-                    $container.append($view);
+                    // [b13.2.32] per-doc 样式注入（表格视图所在文档）+ 触摸高度拖动
+                    try {
+                        const _cssA9 = String(((window as any).__dndInlineCssV8) || __DND_CSS_V9 || '');
+                        const _docB9: any = ($view[0] && $view[0].ownerDocument) || document;
+                        const _ensure9 = function(_d: any, _css: string) {
+                            try {
+                                if (!_d || !_css) return;
+                                const _head9 = _d.head || _d.documentElement;
+                                if (!_head9) return;
+                                let _el9: any = null;
+                                try { _el9 = _d.getElementById ? _d.getElementById('dnd-inline-scroll-fix') : null; } catch (a9) {}
+                                if (!_el9) { _el9 = _d.createElement('style'); _el9.id = 'dnd-inline-scroll-fix'; _head9.appendChild(_el9); }
+                                if (_el9.getAttribute('data-v') !== 'v9') { _el9.textContent = _css; _el9.setAttribute('data-v', 'v9'); }
+                            } catch (b9) {}
+                        };
+                        _ensure9(_docB9, _cssA9);
+                        if (_docB9 !== document) _ensure9(document, _cssA9);
+                    } catch (c9) {}
+                    try {
+                        const _root9: any = document.createElement('div'); // 占位
+                    } catch (c9b) {}
+                    try {
+                        // 触摸高度拖动（capture，拦截滚动）
+                        $view[0].addEventListener('touchstart', function(ev: any) {
+                            try {
+                                if (!ev.touches || !ev.touches.length) return;
+                                const t9: any = ev.target;
+                                if (!t9 || !t9.closest || !t9.closest('.acu-height-drag-handle')) return;
+                                if (ev.cancelable) ev.preventDefault();
+                                try { console.info('[DND]表格高度拖动开始(touch)'); } catch (t9e) {}
+                                const startY9 = ev.touches[0].clientY;
+                                const startH9 = $view[0].getBoundingClientRect().height || 400;
+                                const _docT9: any = ($view[0] && $view[0].ownerDocument) || document;
+                                const mv9 = function(me: any) {
+                                    try {
+                                        if (!me.touches || !me.touches.length) return;
+                                        if (me.cancelable) me.preventDefault();
+                                        const dy9 = me.touches[0].clientY - startY9;
+                                        const nh9 = Math.max(120, Math.min(window.innerHeight * 0.85, startH9 - dy9));
+                                        $view[0].style.setProperty('max-height', nh9 + 'px', 'important');
+                                        $view[0].style.setProperty('height', nh9 + 'px', 'important');
+                                    } catch (m9) {}
+                                };
+                                const en9 = function() {
+                                    try { console.info('[DND]表格高度 up(touch) h=' + String($view[0].style.height || '?')); } catch (e9) {}
+                                    try { _docT9.removeEventListener('touchmove', mv9, true); _docT9.removeEventListener('touchend', en9, true); } catch (e9b) {}
+                                };
+                                _docT9.addEventListener('touchmove', mv9, { passive: false, capture: true });
+                                _docT9.addEventListener('touchend', en9, { passive: false, capture: true });
+                            } catch (tz9) {}
+                        }, { passive: false, capture: true });
+                    } catch (d9) {}
                     const refresh = () => {
                         let h = '';
                         try { if (g && typeof g.renderTableHostForDnd === 'function') h = g.renderTableHostForDnd(table); } catch (e) {}
@@ -500,13 +554,31 @@ export function createHudRenderFragment(deps: any): any {
                     } catch (e) {}
                     // [b13.2.20] 内嵌滚动修正：解除骰子内容高度限制，滚动交给外层容器
                     try {
-                        if (!(window as any).__dndInlineScrollFix_v7) {
-                            (window as any).__dndInlineScrollFix_v7 = true;
+                        if (!(window as any).__dndInlineScrollFix_v8) {
+                            (window as any).__dndInlineScrollFix_v8 = true;
                             try { const _oldSt = document.getElementById('dnd-inline-scroll-fix'); if (_oldSt && _oldSt.parentNode) _oldSt.parentNode.removeChild(_oldSt); } catch (e2) {}
                             const _st = document.createElement('style');
                             _st.id = 'dnd-inline-scroll-fix';
-                            _st.textContent = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{width:96px !important;max-width:96px !important;min-width:64px !important;flex:0 0 96px !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
-                            try { (document.head || document.documentElement).appendChild(_st); } catch (e) {}
+                            _st.textContent = __DND_CSS_V9;
+                            try { (window as any).__dndInlineCssV8 = String(_st.textContent || ''); } catch (e2c) {};
+                            // [b13.2.32] per-doc 注入：同时注入脚本文档与视图所在文档（修复 iframe 场景）
+                            try {
+                                const _docA: any = ($view[0] && $view[0].ownerDocument) || document;
+                                const _cssTxt = String(_st.textContent || '');
+                                const _ensure = function(_d: any) {
+                                    try {
+                                        if (!_d) return;
+                                        const _head = _d.head || _d.documentElement;
+                                        if (!_head) return;
+                                        let _el: any = null;
+                                        try { _el = _d.getElementById ? _d.getElementById('dnd-inline-scroll-fix') : null; } catch (e3a) {}
+                                        if (!_el) { try { _el = _d.createElement('style'); _el.id = 'dnd-inline-scroll-fix'; _head.appendChild(_el); } catch (e3b) { return; } }
+                                        if (_el.getAttribute && _el.getAttribute('data-v') !== 'v9') { _el.textContent = _cssTxt; try { _el.setAttribute('data-v', 'v9'); } catch (e3c) {} }
+                                    } catch (e3) {}
+                                };
+                                _ensure(_docA);
+                                if (_docA !== document) _ensure(document);
+                            } catch (e) {}
                         }
                     } catch (e) {}
                     // 渲染内容（沿用弹窗时代的渲染与绑定链路）
@@ -528,6 +600,54 @@ export function createHudRenderFragment(deps: any): any {
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
                     $list.hide();
                     $container.append($view);
+                    // [b13.2.32] per-doc 样式注入 + 触摸高度拖动（内嵌视图）
+                    try {
+                        const _cssB = String((window as any).__dndInlineCssV8 || __DND_CSS_V9 || '');
+                        const _docB2: any = ($view[0] && $view[0].ownerDocument) || document;
+                        const _ensB = function(_d: any, _css: string) {
+                            try {
+                                if (!_d || !_css) return;
+                                const _hB = _d.head || _d.documentElement;
+                                if (!_hB) return;
+                                let _eB: any = null;
+                                try { _eB = _d.getElementById ? _d.getElementById('dnd-inline-scroll-fix') : null; } catch (aB) {}
+                                if (!_eB) { _eB = _d.createElement('style'); _eB.id = 'dnd-inline-scroll-fix'; _hB.appendChild(_eB); }
+                                if (_eB.getAttribute('data-v') !== 'v9') { _eB.textContent = _css; _eB.setAttribute('data-v', 'v9'); }
+                            } catch (bB) {}
+                        };
+                        _ensB(_docB2, _cssB);
+                        if (_docB2 !== document) _ensB(document, _cssB);
+                    } catch (cB) {}
+                    try {
+                        $view[0].addEventListener('touchstart', function(ev: any) {
+                            try {
+                                if (!ev.touches || !ev.touches.length) return;
+                                const tB: any = ev.target;
+                                if (!tB || !tB.closest || !tB.closest('.acu-height-drag-handle')) return;
+                                if (ev.cancelable) ev.preventDefault();
+                                try { console.info('[DND]内嵌高度拖动开始(touch) tab=' + tab); } catch (tBe) {}
+                                const startYB = ev.touches[0].clientY;
+                                const startHB = $view[0].getBoundingClientRect().height || 400;
+                                const _docTB: any = ($view[0] && $view[0].ownerDocument) || document;
+                                const mvB = function(me: any) {
+                                    try {
+                                        if (!me.touches || !me.touches.length) return;
+                                        if (me.cancelable) me.preventDefault();
+                                        const dyB = me.touches[0].clientY - startYB;
+                                        const nhB = Math.max(120, Math.min(window.innerHeight * 0.85, startHB - dyB));
+                                        $view[0].style.setProperty('max-height', nhB + 'px', 'important');
+                                        $view[0].style.setProperty('height', nhB + 'px', 'important');
+                                    } catch (mB) {}
+                                };
+                                const enB = function() {
+                                    try { console.info('[DND]内嵌高度 up(touch) h=' + String($view[0].style.height || '?')); } catch (eB) {}
+                                    try { _docTB.removeEventListener('touchmove', mvB, true); _docTB.removeEventListener('touchend', enB, true); } catch (eBb) {}
+                                };
+                                _docTB.addEventListener('touchmove', mvB, { passive: false, capture: true });
+                                _docTB.addEventListener('touchend', enB, { passive: false, capture: true });
+                            } catch (tzB) {}
+                        }, { passive: false, capture: true });
+                    } catch (dB) {}
                     // [b13.2.21] 延迟绑定交互事件（避免注册的 document 级监听被本次点击冒泡触发）
                     try {
                         if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') {
