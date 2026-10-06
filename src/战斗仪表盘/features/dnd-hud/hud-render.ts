@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.52-b13.2.11 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.53-b13.2.12 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -250,6 +250,18 @@ export function createHudRenderFragment(deps: any): any {
             }
         } catch (e) {}
         $container.empty();
+        // [b13.3] 全局写操作监听：菜单项/弹窗按钮点击 → 延迟刷新 DND 表
+        try {
+            if (!(window as any).__dndWriteWatch) {
+                (window as any).__dndWriteWatch = true;
+                $(document).on('click.dndWriteWatch', '.acu-cell-menu-item, .acu-dialog-btn, .acu-settings-content .acu-dialog-btn', function() {
+                    setTimeout(function() { try { if ((window as any).__dndTableRefresh) (window as any).__dndTableRefresh(); } catch (e) {} }, 450);
+                });
+                $(document).on('click.dndWriteWatch2', '.acu-menu-backdrop', function() {
+                    setTimeout(function() { try { if ((window as any).__dndTableRefresh) (window as any).__dndTableRefresh(); } catch (e) {} }, 300);
+                });
+            }
+        } catch (e) {}
         let items: any[] = [];
         try { if (g && typeof g.getTableNavItems === 'function') items = g.getTableNavItems() || []; } catch (e) {}
         const specials = [
@@ -294,6 +306,8 @@ export function createHudRenderFragment(deps: any): any {
                         try { if (g && typeof g.renderTableHostForDnd === 'function') h = g.renderTableHostForDnd(table); } catch (e) {}
                         if (h) $view.find('.dnd-acu-table-host').html(h);
                     };
+                    // [b13.3] 注册全局刷新回调（供写操作后自动刷新）
+                    try { (window as any).__dndTableRefresh = function() { try { refresh(); } catch (e) {} }; } catch (e) {}
                     // 搜索（防抖 300ms）
                     let searchTimer: any = null;
                     $view.on('input', '.acu-search-input', function() {
@@ -338,6 +352,27 @@ export function createHudRenderFragment(deps: any): any {
                     $view.on('click', '.acu-action-item', function(e) {
                         e.stopPropagation(); e.preventDefault();
                         try { if (g && typeof g.runCardActionForDnd === 'function') g.runCardActionForDnd(this); } catch (e2) {}
+                        refresh();
+                    });
+                    // [b13.3] 专属按钮：关系图 / 地图 / 库存 / 视图切换
+                    $view.on('click', '#acu-btn-relation-graph', function(e) {
+                        e.stopPropagation(); e.preventDefault();
+                        const tName = String($(this).attr('data-table') || table);
+                        try { if (g && typeof g.openRelationGraphForDnd === 'function') g.openRelationGraphForDnd(tName); } catch (e2) {}
+                    });
+                    $view.on('click', '.acu-table-map-btn', function(e) {
+                        e.stopPropagation(); e.preventDefault();
+                        try { if (g && typeof g.openMapForDnd === 'function') g.openMapForDnd(); } catch (e2) {}
+                    });
+                    $view.on('click', '.acu-table-inventory-btn', function(e) {
+                        e.stopPropagation(); e.preventDefault();
+                        const target = String($(this).attr('data-inventory-target') || 'inventory');
+                        try { if (g && typeof g.openInventoryForDnd === 'function') g.openInventoryForDnd(target); } catch (e2) {}
+                    });
+                    $view.on('click', '#acu-btn-switch-style', function(e) {
+                        e.stopPropagation(); e.preventDefault();
+                        const tName = String($(this).attr('data-table') || table);
+                        try { if (g && typeof g.toggleTableStyleForDnd === 'function') g.toggleTableStyleForDnd(tName); } catch (e2) {}
                         refresh();
                     });
                     // 关闭按钮 → 返回列表

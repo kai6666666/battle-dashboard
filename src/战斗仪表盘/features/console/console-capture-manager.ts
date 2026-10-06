@@ -13,11 +13,11 @@ export const ConsoleCaptureManager = {
     enabled: false, // 默认关闭，需要手动开启或错误时自动开启
 
     restore() {
-      // 从 localStorage 恢复状态
-      const saved = localStorage.getItem('acu_console_capture_enabled');
-      if (saved === 'true') {
-        this.enable();
-      }
+      // [b13.2.12] 不再自动恢复抓取（修复“切换版本/重开后自动打开”问题）
+      // 清理历史遗留标记，避免旧的开启状态被反复恢复
+      try { localStorage.removeItem('acu_console_capture_enabled'); } catch (e) {}
+      try { localStorage.removeItem('acu_script_error_detected'); } catch (e) {}
+      this.enabled = false;
     },
 
     enable() {

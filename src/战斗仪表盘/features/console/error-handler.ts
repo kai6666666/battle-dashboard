@@ -82,12 +82,8 @@ export function createErrorHandler(deps: any) {
     // 触发致命错误处理
     triggerFatalError() {
       try {
-        // 自动开启 console 抓取
-        if (!deps.getConsoleCaptureManager().enabled) {
-          deps.getConsoleCaptureManager().enable();
-        }
-
-        // 设置错误标志
+        // [b13.2.12] 不再自动开启抓取（避免“重开后自动打开”）；仅提示紧急入口按钮
+        // 设置错误标志（仅用于展示紧急按钮，不再触发自动抓取）
         localStorage.setItem('acu_script_error_detected', 'true');
 
         // 显示紧急入口按钮
@@ -167,11 +163,7 @@ export function createErrorHandler(deps: any) {
       try {
         const errorDetected = localStorage.getItem('acu_script_error_detected') === 'true';
         if (errorDetected) {
-          // 自动开启 console 抓取（仅本次会话）
-          if (!deps.getConsoleCaptureManager().enabled) {
-            deps.getConsoleCaptureManager().enable();
-          }
-          // 显示紧急入口按钮
+          // [b13.2.12] 不再自动开启抓取；仅显示紧急入口按钮（用户点击后可手动开启）
           this.showEmergencyButton();
         }
       } catch (e) {

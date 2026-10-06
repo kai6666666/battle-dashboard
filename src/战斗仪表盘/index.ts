@@ -1644,6 +1644,37 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       bindChangesEventsForDnd: () => {
         try { bindChangesEvents(); return true; } catch (e) { console.warn('[AcuDice] bindChangesEventsForDnd 失败', e); return false; }
       },
+      // [b13.3] 专属按钮桥：关系图 / 地图 / 库存 / 视图切换
+      openRelationGraphForDnd: (tableName: string) => {
+        try {
+          const rawData: any = getTableData();
+          if (!rawData) return false;
+          const allTables: any = processJsonData(rawData);
+          const graphSources = getActiveDashboardRelationshipGraphSources();
+          if (graphSources && graphSources.length > 0) {
+            const graphTable = buildRelationshipGraphTableFromPreset(allTables, graphSources, { tableName });
+            if (graphTable) { showRelationshipGraph(graphTable, { includePlayerRelations: false }); return true; }
+          }
+          const currentTable = allTables[tableName];
+          if (currentTable) { showRelationshipGraph(currentTable, (graphSources && graphSources.length > 0) ? { includePlayerRelations: false } : {}); return true; }
+          return false;
+        } catch (e) { console.warn('[AcuDice] openRelationGraphForDnd 失败', e); return false; }
+      },
+      openMapForDnd: () => {
+        try { showMapVisualization(); return true; } catch (e) { console.warn('[AcuDice] openMapForDnd 失败', e); return false; }
+      },
+      openInventoryForDnd: (target: string) => {
+        try { showInventoryVisualization(target === 'equipment' ? 'equipment' : 'inventory'); return true; } catch (e) { console.warn('[AcuDice] openInventoryForDnd 失败', e); return false; }
+      },
+      toggleTableStyleForDnd: (tableName: string) => {
+        try {
+          const styles: any = getTableStyles() || {};
+          const current = styles[tableName] || 'list';
+          styles[tableName] = current === 'grid' ? 'list' : 'grid';
+          saveTableStyles(styles);
+          return true;
+        } catch (e) { console.warn('[AcuDice] toggleTableStyleForDnd 失败', e); return false; }
+      },
       // [b13.2a] DND 事件层：单元格菜单 / 书签 / 动作按钮
       showCellMenuForDnd: (clientX: number, clientY: number, cellEl: any) => {
         try {
