@@ -13,6 +13,49 @@ export function createHudRenderFragment(deps: any): any {
         
         if (!$hud.length) return;
         
+        // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
+        try { console.info('[DND]融合版构建 v0.0.48-b13.2.7 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try {
+            if (!(window as any).__dndAcuZGuardX) {
+                (window as any).__dndAcuZGuardX = true;
+                const boostEl = (el: any) => {
+                    try {
+                        const c = String(el.className || '');
+                        if (c.indexOf('acu-menu-backdrop') >= 0) el.style.setProperty('z-index', '2147483646', 'important');
+                        else if (c.indexOf('overlay') >= 0 || c.indexOf('acu-cell-menu') >= 0) el.style.setProperty('z-index', '2147483647', 'important');
+                    } catch (e) {}
+                };
+                const sweep = () => {
+                    try {
+                        const doc: any = document;
+                        const list = doc.querySelectorAll('[class*="overlay"][class*="acu-"], .acu-cell-menu, .acu-menu-backdrop');
+                        for (let i = 0; i < list.length; i++) boostEl(list[i]);
+                        const bds = doc.querySelectorAll('.acu-menu-backdrop');
+                        if (bds.length > 0 && doc.querySelectorAll('.acu-cell-menu').length === 0) {
+                            for (let i = 0; i < bds.length; i++) { try { bds[i].remove(); } catch (e) {} }
+                        }
+                        const tst = doc.querySelectorAll('#toast-container, .toast');
+                        for (let i = 0; i < tst.length; i++) { try { tst[i].style.setProperty('z-index', '2147483647', 'important'); } catch (e) {} }
+                    } catch (e) {}
+                };
+                const obs = new MutationObserver((muts: any[]) => {
+                    let hit = false;
+                    for (let mi = 0; mi < muts.length && !hit; mi++) {
+                        const added = muts[mi].addedNodes;
+                        if (!added) continue;
+                        for (let i = 0; i < added.length; i++) {
+                            const n: any = added[i];
+                            if (!n || n.nodeType !== 1) continue;
+                            try { const _c = String(n.className || ''); if (_c.indexOf('acu-') >= 0 || _c.indexOf('toast') >= 0) { hit = true; break; } } catch (e) {}
+                        }
+                    }
+                    if (hit) { sweep(); try { setTimeout(sweep, 60); } catch (e) {} }
+                });
+                try { obs.observe(document.documentElement || document.body, { childList: true, subtree: true }); } catch (e) {}
+                sweep();
+            }
+        } catch (e) {}
+        
         // 仅在 mini 状态下渲染
         if (this.state !== 'mini') return;
 
@@ -339,6 +382,13 @@ export function createHudRenderFragment(deps: any): any {
                             try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
                         } else { $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
                     }
+                    // [b13.2.7] 弹窗诊断日志（rect + 文档身份）
+                    try {
+                        const _r: any = $pop[0].getBoundingClientRect();
+                        let _docId = 'current';
+                        try { _docId = (document === (((window as any).parent || {}).document)) ? 'top' : 'iframe'; } catch (e) { _docId = 'cross-origin'; }
+                        console.info('[DND]视图弹窗已打开 rect=' + JSON.stringify({ t: Math.round(_r.top), l: Math.round(_r.left), w: Math.round(_r.width), h: Math.round(_r.height) }) + ' | doc=' + _docId + ' | ' + label);
+                    } catch (e) {}
                     $pop.find('.dnd-acu-view-close').on('click', function() { $pop.remove(); });
                     $pop.on('click', function(ev) { if (ev.target === $pop[0]) $pop.remove(); });
                     return;
