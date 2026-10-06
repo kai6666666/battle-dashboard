@@ -126,6 +126,7 @@
 - 🔧 **b13.2.3 三项实测修复（2026-10-06）**：① 编辑/整体编辑/收藏弹层防盖——DND 侧新增**强力层级守护**（MutationObserver：任何新增含 `acu-`/`toast` 节点 → sweep 提升所有 overlay/菜单/toast 至 2147483647）② **backdrop 逃逸清理**（backdrop 存在但菜单不存在 → 自动移除，治锁定后 UI 无响应）③ `ensureAcuCachedData` 桥（打开表时保障 cachedRawData 就绪，修编辑/锁定/收藏依赖）④ 移除「← 返回表格列表」条，关闭统一走表格右上角 × → tag `v0.0.44-b13.2.3`
 - 🔧 **b13.2.4（2026-10-06）**：① `show-cell-menu` 缓存回退（cachedRawData 为空改用实时 getTableData，锁定/收藏不再静默失败）② 菜单激活后 **2.5s 弹层跟踪轮询**（每 120ms 提升所有子弹窗，双窗口覆盖）→ tag `v0.0.45-b13.2.4`
 - 🚀 **b13.2.5 锁定真因修复 + 视图可编辑化（2026-10-06）**：① **锁定真因**（日志铁证：「找不到表格的 rowIndex」）= `PRIMARY_KEYS` 仅含 14 张旧模板表，DND 融合表（中文名前缀）不在映射 → `findRowIndexByPrimaryKey` 返回 null → 锁定条件短路（骰子面板+Mini HUD 同步失效）；修复 = **fallback**（表不在映射时从 `字段名=值` 解析字段自行定位行）② **变量面板**：DND 弹窗直接 `MvuModule.renderPanel()+bindEvents`（可编辑，不再跳骰子面板）③ **收藏夹**：DND 弹窗绑定 `bindFavoritesEvents`（编辑菜单可用）④ **审核**：DND 弹窗调用 `bindChangesEvents`（应用/回滚/编辑按钮可用）→ tag `v0.0.46-b13.2.5`
+- 🔧 **b13.2.6 视图弹窗定位修复（2026-10-06）**：收藏夹/审核/变量弹窗显示在 Mini HUD 下方——真因：弹窗容器用 `inset:0`（旧内核兼容性问题，定位失效落在页面流中）+ z-index 未拉满；修复：**JS 强制定位**（top/left/right/bottom + 100vw/100vh + flex 居中 + z-index 2147483647 全量 JS 设置，不依赖 CSS 解析）→ tag `v0.0.47-b13.2.6`
 
 ## 增补事项
 - [x] **悬浮球二合一**（✅ 2026-10-05 完成，v0.0.15-b10d）：唯一 D20 球（长按/双击开骰子面板）+ S1 桥 `__acuToggleDicePanel` + 触发器融合隐藏
