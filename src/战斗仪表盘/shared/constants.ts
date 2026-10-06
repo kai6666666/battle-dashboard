@@ -39,7 +39,7 @@ export const PRIMARY_KEYS = {
 // 预设格式版本号（全局共享，用于数据验证规则、管理属性规则等）
 export const PRESET_FORMAT_VERSION = '1.8.4';
 // 脚本版本号
-export const SCRIPT_VERSION = 'v0.0.68-b13.2.27';
+export const SCRIPT_VERSION = 'v0.0.69-b13.2.28';
 
 // ========================================
 // 纯逻辑工具（无副作用）

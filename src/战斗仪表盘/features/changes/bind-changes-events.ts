@@ -517,7 +517,7 @@ export function createBindChangesEvents(deps: any) {
 
     // === 高度拖动调节 ===
     $('.acu-changes-content')
-      .closest('.acu-data-display')
+      .closest('.acu-data-display, .dnd-acu-view-inline-body, .dnd-acu-view-inline')
       .find('.acu-height-drag-handle')
       .off('pointerdown')
       .on('pointerdown', function (this: any, e: any) {
