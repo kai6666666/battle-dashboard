@@ -186,13 +186,40 @@ export function createHudRenderFragment(deps: any): any {
         });
         html += `</div></div>`;
         const $el = $(html);
-        $el.find('.dnd-tnav-btn').on('click', function() {
+        // [b12.18] 点击项 → 打开对应内容弹窗（不打开骰子面板）
+        $el.find('.dnd-tnav-btn').on('click', async function() {
             const tab = $(this).attr('data-tab');
             const table = $(this).attr('data-table');
+            const label = $(this).text();
             try {
-                if (tab) { if (g && typeof g.openDicePanelTab === 'function') { g.openDicePanelTab(tab); return; } }
-                if (table) { if (g && typeof g.openDicePanelTable === 'function') { g.openDicePanelTable(table); return; } }
-            } catch (e) { deps.logger.warn('[DND] 表格导航失败', e); }
+                if (table) {
+                    let html2 = '';
+                    try { if (g && typeof g.renderTableDetailHtml === 'function') html2 = g.renderTableDetailHtml(table); } catch (e) {}
+                    if (!html2) html2 = '<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">无法读取该表数据（可能尚未加载）</div>';
+                    const rect = this.getBoundingClientRect ? this.getBoundingClientRect() : { left: 100, top: 100, width: 0, height: 0 };
+                    const _dui: any = (window as any).DND_Dashboard_UI;
+                    if (_dui && typeof _dui.showItemDetailPopup === 'function') { _dui.showItemDetailPopup(html2, rect.left + rect.width / 2, rect.top + rect.height); }
+                    return;
+                }
+                if (tab) {
+                    $('#dnd-acu-view-popup').remove();
+                    const $pop = $(`<div id="dnd-acu-view-popup" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2147483646;display:flex;align-items:center;justify-content:center;"><div style="background:var(--dnd-bg-popup,#222);border:1px solid var(--dnd-border-gold);border-radius:8px;max-width:92vw;width:660px;max-height:82vh;overflow:auto;padding:14px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b style="color:var(--dnd-text-highlight);font-size:14px;">${label}</b><span class="dnd-acu-view-close" style="cursor:pointer;color:var(--dnd-text-dim);font-size:16px;padding:0 4px;">✕</span></div><div class="dnd-acu-view-body" style="font-size:12px;color:var(--dnd-text-main);"></div></div></div>`);
+                    $('body').append($pop);
+                    const $body = $pop.find('.dnd-acu-view-body');
+                    let h3: any = null;
+                    try { if (g && typeof g.renderAcuViewHtml === 'function') h3 = g.renderAcuViewHtml(tab); } catch (e) {}
+                    if (h3 && typeof h3.then === 'function') { try { h3 = await h3; } catch (e) { h3 = null; } }
+                    if (h3) { $body.html(String(h3)); }
+                    else if (tab === 'mvu') {
+                        $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">变量面板需要在骰子面板中查看：<br><br><button class="dnd-acu-open-panel dnd-clickable" style="padding:7px 14px;background:linear-gradient(to bottom, var(--dnd-bg-tertiary), var(--dnd-bg-secondary));border:1px solid var(--dnd-border-gold);border-radius:5px;color:var(--dnd-text-highlight);cursor:pointer;font-size:12px;">打开骰子面板</button></div>');
+                        $body.find('.dnd-acu-open-panel').on('click', function() { try { if (g && typeof g.openDicePanelTab === 'function') g.openDicePanelTab('mvu'); } catch (e) {} $pop.remove(); });
+                    }
+                    else { $body.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
+                    $pop.find('.dnd-acu-view-close').on('click', function() { $pop.remove(); });
+                    $pop.on('click', function(ev) { if (ev.target === $pop[0]) $pop.remove(); });
+                    return;
+                }
+            } catch (e) { deps.logger.warn('[DND] 内容弹窗失败', e); }
         });
         $container.append($el);
     },

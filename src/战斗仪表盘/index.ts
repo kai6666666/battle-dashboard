@@ -1547,6 +1547,38 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       showDicePanelForDnd: (opts?: any) => {
         try { (showDicePanel as any)(opts || {}); } catch (e) { console.warn('[AcuDice] showDicePanelForDnd 失败', e); }
       },
+      // [b12.18] 内容弹窗：表详情 HTML + 骰子视图 HTML（changes/favorites/global-interactions）
+      renderTableDetailHtml: (tableKey: string) => {
+        try {
+          const rawData: any = getTableData();
+          const sheet: any = rawData && rawData[String(tableKey)];
+          if (!sheet || !sheet.content) return '';
+          const content = sheet.content;
+          const headers = content[0] || [];
+          const rows = content.slice(1);
+          let html = '<div style="max-height:55vh;overflow-y:auto;">';
+          html += '<div style="font-weight:bold;color:var(--dnd-text-highlight);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:5px;margin-bottom:8px;">' + escapeHtml(String(sheet.name || tableKey)) + '（' + rows.length + ' 行）</div>';
+          html += '<table class="dnd-table" style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr>';
+          headers.forEach((h: any) => { html += '<th style="text-align:left;padding:4px 6px;border-bottom:1px solid var(--dnd-border-inner);color:var(--dnd-text-dim);white-space:nowrap;">' + escapeHtml(String(h ?? '')) + '</th>'; });
+          html += '</tr></thead><tbody>';
+          rows.forEach((row: any) => {
+            html += '<tr>';
+            (row || []).forEach((cell: any) => { html += '<td style="padding:4px 6px;border-bottom:1px dashed var(--dnd-border-subtle);color:var(--dnd-text-main);word-break:break-all;">' + escapeHtml(String(cell ?? '')) + '</td>'; });
+            html += '</tr>';
+          });
+          html += '</tbody></table></div>';
+          return html;
+        } catch (e) { return ''; }
+      },
+      renderAcuViewHtml: (view: string) => {
+        try {
+          const rawData = getTableData();
+          if (view === 'changes') return renderChangesPanel(rawData);
+          if (view === 'global-interactions') return renderGlobalInteractionsPanel(rawData);
+          if (view === 'favorites') { try { return renderFavoritesPanel(); } catch (e) { return null; } }
+          return null;
+        } catch (e) { console.warn('[AcuDice] renderAcuViewHtml 失败', e); return null; }
+      },
       // [b12.17] 表格管理镜像：骰子导航盘的表项 + 特殊入口
       getTableNavItems: () => {
         try {
