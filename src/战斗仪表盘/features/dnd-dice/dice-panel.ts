@@ -16,7 +16,7 @@ export function createDicePanelFragment(deps: any): any {
             <!-- [b9 骰子归一] 引擎状态（原骰子池区块已退役） -->
             <div style="background:var(--dnd-bg-tertiary);padding:8px;border-radius:4px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
                 <span style="font-size:11px;color:var(--dnd-text-dim);">投骰引擎：AcuDice（统一）</span>
-                <span onclick="window.DND_Dashboard_UI.refreshDicePool()" style="cursor:pointer;color:var(--dnd-text-highlight);font-size:11px;">${ICONS.SYNC} 状态</span>
+                <span onclick="window.DND_Dashboard_UI.refreshDicePool()" style="cursor:pointer;color:var(--dnd-text-highlight);font-size:11px;">${deps.icons.SYNC} 状态</span>
             </div>
             
             <!-- 快速投掷按钮 -->

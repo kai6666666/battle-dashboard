@@ -250,7 +250,7 @@ async function invokeManualUpdate(event) {
                     const gAny: any = (window as any).DND_Dashboard_UI || self;
                     const fn = (gAny && typeof gAny.showQuickDice === 'function') ? gAny.showQuickDice : (typeof (self as any).showQuickDice === 'function' ? (self as any).showQuickDice : null);
                     if (fn) {
-                        try { fn.call(gAny, e); } catch (err) { deps.logger.error('[UIHUD] showQuickDice 调用失败:', err); }
+                        try { fn.call(gAny, e); } catch (err) { deps.logger.error('[UIHUD] showQuickDice 调用失败:', (err && ((err as any).message || (err as any).stack)) || String(err)); }
                     } else {
                         deps.logger.warn('[UIHUD] showQuickDice 不可用（全局/本地均缺失）');
                         try { deps.notification.warning('快速投掷不可用（组件未就绪）'); } catch (e2) {}
