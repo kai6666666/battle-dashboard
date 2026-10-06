@@ -1621,6 +1621,14 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           if (!cellEl) return false;
           const evt: any = { clientX: clientX, clientY: clientY, preventDefault: function () {}, stopPropagation: function () {} };
           showCellMenu(evt, cellEl);
+          // [b13.2.1] 提升菜单层级（防被 DND Mini HUD 浮层遮盖）
+          try {
+            const jq: any = (window as any).jQuery || (window as any).$;
+            if (jq) {
+              jq('.acu-cell-menu').css('z-index', '2147483647');
+              jq('.acu-menu-backdrop').css('z-index', '2147483646');
+            }
+          } catch (e2) {}
           return true;
         } catch (e) { console.warn('[AcuDice] showCellMenuForDnd 失败', e); return false; }
       },
