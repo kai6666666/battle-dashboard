@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.58-b13.2.17 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.59-b13.2.18 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -657,6 +657,35 @@ export function createHudRenderFragment(deps: any): any {
                             }
                         } catch (e) {}
                     };
+                    // [b13.2.18] 模式切换类按钮的 DND 重渲染适配（原 handler 重渲染目标为骰子面板容器，DND 环境需本地重渲染）
+                    try {
+                        const _rerenderLocal = function() {
+                            setTimeout(function() {
+                                try {
+                                    if (tab === 'mvu') {
+                                        try { if (g && typeof g.renderMvuPanelForDnd === 'function') g.renderMvuPanelForDnd($body[0]); } catch (e) {}
+                                    } else {
+                                        const _do = async function() {
+                                            try {
+                                                let _h: any = null;
+                                                try { if (g && typeof g.renderAcuViewHtml === 'function') _h = g.renderAcuViewHtml(tab); } catch (e) {}
+                                                if (_h && typeof _h.then === 'function') { try { _h = await _h; } catch (e) { _h = null; } }
+                                                if (_h) {
+                                                    $body.html(String(_h));
+                                                    try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($body[0]); } catch (e) {}
+                                                    try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                                                    try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($body[0]); } catch (e) {}
+                                                }
+                                            } catch (e) {}
+                                        };
+                                        _do();
+                                    }
+                                } catch (e) {}
+                            }, 200);
+                        };
+                        $body.on('click.dndAcuRerender', '.acu-simple-mode-toggle', _rerenderLocal);
+                        $body.on('click.dndAcuRerender', '.mvu-btn-numeric-mode', _rerenderLocal);
+                    } catch (e) {}
                     // [b13.2.15] 拦截原骰子面板的 × 关闭按钮：关闭整个 DND 弹窗（而不是清空容器）
                     try {
                         $pop[0].addEventListener('click', function(ev: any) {
