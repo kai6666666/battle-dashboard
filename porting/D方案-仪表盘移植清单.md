@@ -121,6 +121,7 @@
 - 🚀 **b12.17 表格管理镜像内嵌（2026-10-06）**：▼ 展开行为恢复——在**原编辑器 A 的区域**（`#dnd-table-manager-container`）**内嵌骰子导航盘镜像**：特殊入口 4 枚（审核/变量/收藏夹/交互总览）+ 全部表格入口（`getTableNavItems` 含隐藏过滤/图标）；点击经 `openDicePanelTab` / `openDicePanelTable` 由骰子面板中转（编辑在骰子侧）→ tag `v0.0.37-b12.17`
 - 🚀 **b12.18 内容弹窗化（2026-10-06）**：点击镜像项**不再打开骰子面板**——① 表格项 → **表详情弹窗**（DND 渲染：表名/行数 + 全字段表格，只读，`renderTableDetailHtml`）② 特殊项 → **视图弹窗**（自建遮罩弹窗，`renderAcuViewHtml` 渲染骰子视图 HTML：审核/交互总览=同步字符串、收藏夹=异步；变量=提示+跳转按钮）→ tag `v0.0.38-b12.18`
 - 🚀 **b13.1 表格宿主嵌入（2026-10-06）**：融合方案 §4.1/§5 首批——① 桥新增 `renderTableHostForDnd`（渲染直调 `renderTableContent`）+ `dndTableOp`（search/page/reverse）+ `getAcuThemeClass` ② Mini HUD「▼」点击表 → **内嵌完整表格视图**（不再弹窗/不打开骰子面板）：返回条 + `.dnd-acu-table-host`（骰子主题类）+ 搜索（防抖300ms+焦点恢复）/ 分页 / 倒序 / 关闭→返回列表 ③ 骰子样式为裸类选择器（全局生效），嵌入后样式原样可用 → tag `v0.0.40-b13.1`
+- 🚀 **b13.2 事件多宿主（2026-10-06）**：DND 事件层——① 单元格点击 → **全功能菜单**（编辑内容/整体编辑/表尾新增行/复制/收藏此行/撤销修改/删除整行/锁定，`showCellMenuForDnd` 伪事件直调 `showCellMenu`，菜单内部自带全部 handler）② 书签（`toggleBookmarkForDnd` + 拦截防双触）③ 交互动作按钮（`runCardActionForDnd` 复刻 DOM→getInteractOptionsForRow→executeTableInteractionAction）→ tag `v0.0.41-b13.2`
 
 ## 增补事项
 - [x] **悬浮球二合一**（✅ 2026-10-05 完成，v0.0.15-b10d）：唯一 D20 球（长按/双击开骰子面板）+ S1 桥 `__acuToggleDicePanel` + 触发器融合隐藏
