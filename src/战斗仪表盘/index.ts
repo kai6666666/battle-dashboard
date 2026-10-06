@@ -1650,6 +1650,15 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           return true;
         } catch (e) { return false; }
       },
+      // [b13.2.20] 交互总览绑定：DND 内嵌视图里的交互总览事件
+      bindInteractionEventsForDnd: (containerEl: any) => {
+        try {
+          const jq: any = (window as any).jQuery || (window as any).$;
+          if (!jq || !containerEl) return false;
+          bindGlobalInteractionEvents(jq(containerEl));
+          return true;
+        } catch (e) { return false; }
+      },
       bindChangesEventsForDnd: () => {
         try { bindChangesEvents(); return true; } catch (e) { console.warn('[AcuDice] bindChangesEventsForDnd 失败', e); return false; }
       },

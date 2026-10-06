@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.60-b13.2.19 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.61-b13.2.20 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -419,6 +419,22 @@ export function createHudRenderFragment(deps: any): any {
                     const themeCls3 = (g && typeof g.getAcuThemeClass === 'function') ? String(g.getAcuThemeClass()) : 'acu-theme-dark';
                     const $view = $(`<div class="dnd-acu-view-inline" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-view-inline-body ${themeCls3}" style="padding:2px 6px 6px;"></div></div>`);
                     const $bodyEl3 = $view.find('.dnd-acu-view-inline-body');
+                    // [b13.2.20] 注入骰子绑定所需容器身份（#acu-data-area + .acu-data-display）
+                    try {
+                        try { const _oldIds = document.querySelectorAll('#acu-data-area'); for (let _oi = 0; _oi < _oldIds.length; _oi++) { try { _oldIds[_oi].removeAttribute('id'); } catch (e) {} } } catch (e) {}
+                        $bodyEl3.attr('id', 'acu-data-area');
+                        $bodyEl3.addClass('acu-data-display');
+                    } catch (e) {}
+                    // [b13.2.20] 内嵌滚动修正：解除骰子内容高度限制，滚动交给外层容器
+                    try {
+                        if (!(window as any).__dndInlineScrollFix) {
+                            (window as any).__dndInlineScrollFix = true;
+                            const _st = document.createElement('style');
+                            _st.id = 'dnd-inline-scroll-fix';
+                            _st.textContent = '.dnd-acu-view-inline .acu-fav-wrapper,.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content,.dnd-acu-view-inline .acu-mvu-panel,.dnd-acu-view-inline .acu-panel-content{max-height:none !important;height:auto !important;overflow:visible !important;}';
+                            try { (document.head || document.documentElement).appendChild(_st); } catch (e) {}
+                        }
+                    } catch (e) {}
                     // 渲染内容（沿用弹窗时代的渲染与绑定链路）
                     if (tab === 'mvu') {
                         let okMvu = false;
@@ -432,6 +448,7 @@ export function createHudRenderFragment(deps: any): any {
                             $bodyEl3.html(String(h3));
                             try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
                             try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                            try { if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') g.bindInteractionEventsForDnd($bodyEl3[0]); } catch (e) {}
                         } else { $bodyEl3.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
                     }
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
@@ -468,6 +485,7 @@ export function createHudRenderFragment(deps: any): any {
                                                     $bodyEl3.html(String(_h3));
                                                     try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
                                                     try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                                                    try { if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') g.bindInteractionEventsForDnd($bodyEl3[0]); } catch (e) {}
                                                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
                                                 }
                                             } catch (e) {}
@@ -487,7 +505,7 @@ export function createHudRenderFragment(deps: any): any {
                             try {
                                 const c3x = String(el3x.className || '');
                                 if (c3x.indexOf('dnd-z-lowered') >= 0) return;
-                                if (c3x.indexOf('acu-edit-overlay') >= 0 || c3x.indexOf('acu-dialog') >= 0) {
+                                if (c3x.indexOf('acu-edit-overlay') >= 0 || c3x.indexOf('acu-dialog') >= 0 || c3x.indexOf('tutorial') >= 0 || (c3x.indexOf('overlay') >= 0 && c3x.indexOf('acu-') >= 0)) {
                                     el3x.style.setProperty('z-index', '2147483647', 'important');
                                     if (!el3x.getAttribute('data-dnd-tail-done')) {
                                         el3x.setAttribute('data-dnd-tail-done', '1');
@@ -497,7 +515,7 @@ export function createHudRenderFragment(deps: any): any {
                             } catch (e) {}
                         };
                         try {
-                            const l3x = _hostDoc3.querySelectorAll('.acu-edit-overlay:not([data-dnd-tail-done]), .acu-dialog:not([data-dnd-tail-done])');
+                            const l3x = _hostDoc3.querySelectorAll('.acu-edit-overlay:not([data-dnd-tail-done]), .acu-dialog:not([data-dnd-tail-done]), [class*="tutorial"]:not([data-dnd-tail-done]), [class*="overlay"][class*="acu-"]:not([data-dnd-tail-done])');
                             for (let i3x = 0; i3x < l3x.length; i3x++) _boost3(l3x[i3x]);
                         } catch (e) {}
                         try {
@@ -511,7 +529,7 @@ export function createHudRenderFragment(deps: any): any {
                                             const n3x: any = a3x[ai3x];
                                             if (!n3x || n3x.nodeType !== 1) continue;
                                             const c3y = String(n3x.className || '');
-                                            if (c3y.indexOf('acu-edit-overlay') >= 0 || c3y.indexOf('acu-dialog') >= 0) _boost3(n3x);
+                                            if (c3y.indexOf('acu-edit-overlay') >= 0 || c3y.indexOf('acu-dialog') >= 0 || c3y.indexOf('tutorial') >= 0 || (c3y.indexOf('overlay') >= 0 && c3y.indexOf('acu-') >= 0)) _boost3(n3x);
                                         }
                                     }
                                 });
