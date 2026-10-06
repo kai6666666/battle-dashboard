@@ -115,6 +115,7 @@
 - 🔧 **b12.11 投骰融合深化（2026-10-06）**：① 快投面板新增「完整投骰面板」入口（`showDicePanelForDnd` 桥 → 骰子系统完整检定面板：COC/DND 规则切换 / 预设 / 成功标准 / 难度等级）② 投骰结果展示加固——`find('> div')` → `children('div')`（兼容旧 jQuery）+ 结果弹窗 fallback（弹窗不存在时自动新开，保证特效可见）→ tag `v0.0.31-b12.11`
 - 🔧 **b12.12 投骰结果卡空白修复（2026-10-06）**：真凶 = 结果卡的 JS 两段式透明动画（`opacity:0` 起始 + 10ms setTimeout 恢复）在宿主环境被节流卡死 → 显示为空白块；重写为 **CSS 动画类 `dnd-roll-pop`**（无 JS 透明初始态，动画失败也直接可见）+ 插入位置改为内容容器 `prepend` + 全段 try-catch → tag `v0.0.32-b12.12`
 - 🔧 **b12.13 投骰结果原生渲染（2026-10-06）**：升级为**原生 DOM**（`createElement` + `insertBefore`）+ inline 强制 `opacity:1;visibility:visible`（彻底杜绝透明卡死）+ **诊断日志**（`[DND] 投骰结果已插入: <outerHTML>` / 找不到容器警告）→ tag `v0.0.33-b12.13`
+- 🚀 **b12.14 Mini HUD 选项升级（2026-10-06）**：骰子同款能力 + DND 原能力融合——点击选项：若骰子设置 `clickOptionToAutoSend` 开启 → **自动发送**（`smartSendText` 桥，多通道兼容）；否则/失败 → 回退 **填入输入框**（DND 原行为）；不加标题栏保持简洁 → tag `v0.0.34-b12.14`
 
 ## 增补事项
 - [x] **悬浮球二合一**（✅ 2026-10-05 完成，v0.0.15-b10d）：唯一 D20 球（长按/双击开骰子面板）+ S1 桥 `__acuToggleDicePanel` + 触发器融合隐藏
