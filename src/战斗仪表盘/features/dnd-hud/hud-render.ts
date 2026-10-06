@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.75-b13.2.34 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.76-b13.2.35 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -373,6 +373,18 @@ export function createHudRenderFragment(deps: any): any {
                                 const t9: any = ev.target;
                                 if (!t9 || !t9.closest || !t9.closest('.acu-height-drag-handle')) return;
                                 if (ev.cancelable) ev.preventDefault();
+                                // [b13.2.35] 触摸双击恢复
+                                try {
+                                    const _nowT9 = Date.now();
+                                    if ($view[0]._lastTapT && (_nowT9 - $view[0]._lastTapT) < 340) {
+                                        $view[0]._lastTapT = 0;
+                                        $view[0].style.removeProperty('height');
+                                        $view[0].style.setProperty('max-height', '58vh', 'important');
+                                        console.info('[DND]表格高度双击恢复(touch)');
+                                        return;
+                                    }
+                                    $view[0]._lastTapT = _nowT9;
+                                } catch (eDbl9) {}
                                 try { console.info('[DND]表格高度拖动开始(touch)'); } catch (t9e) {}
                                 let lastY9 = ev.touches[0].clientY;
                                 const _docT9: any = ($view[0] && $view[0].ownerDocument) || document;
@@ -386,6 +398,7 @@ export function createHudRenderFragment(deps: any): any {
                                         try { if (!(mv9 as any)._lg2) { (mv9 as any)._lg2 = 1; console.info('[DND]表格高度 move首帧 step=' + Math.round(stepY9)); } } catch (eLg9) {}
                                         const curH9 = $view[0].getBoundingClientRect().height || 400;
                                         const nh9 = Math.max(120, Math.min(window.innerHeight * 0.85, curH9 - stepY9));
+                                        try { const _n9 = ((mv9 as any)._lg3 = ((mv9 as any)._lg3 || 0) + 1); if (_n9 <= 12) console.info('[DND]表格move#' + _n9 + ' curH=' + Math.round(curH9) + ' step=' + Math.round(stepY9) + ' nh=' + Math.round(nh9)); } catch (eLg39) {}
                                         $view[0].style.setProperty('max-height', nh9 + 'px', 'important');
                                         $view[0].style.setProperty('height', nh9 + 'px', 'important');
                                     } catch (m9) {}
@@ -639,6 +652,18 @@ export function createHudRenderFragment(deps: any): any {
                                 const tB: any = ev.target;
                                 if (!tB || !tB.closest || !tB.closest('.acu-height-drag-handle')) return;
                                 if (ev.cancelable) ev.preventDefault();
+                                // [b13.2.35] 触摸双击恢复（dblclick 在触摸设备不可靠）
+                                try {
+                                    const _nowT = Date.now();
+                                    if ($view[0]._lastTapT && (_nowT - $view[0]._lastTapT) < 340) {
+                                        $view[0]._lastTapT = 0;
+                                        $view[0].style.removeProperty('height');
+                                        $view[0].style.setProperty('max-height', '58vh', 'important');
+                                        console.info('[DND]内嵌高度双击恢复(touch) tab=' + tab);
+                                        return;
+                                    }
+                                    $view[0]._lastTapT = _nowT;
+                                } catch (eDbl) {}
                                 try { console.info('[DND]内嵌高度拖动开始(touch) tab=' + tab); } catch (tBe) {}
                                 let lastYB = ev.touches[0].clientY;
                                 const _docTB: any = ($view[0] && $view[0].ownerDocument) || document;
@@ -652,6 +677,7 @@ export function createHudRenderFragment(deps: any): any {
                                         try { if (!(mvB as any)._lg2) { (mvB as any)._lg2 = 1; console.info('[DND]内嵌高度 move首帧 step=' + Math.round(stepY)); } } catch (eLg) {}
                                         const curH = $view[0].getBoundingClientRect().height || 400;
                                         const nhB = Math.max(120, Math.min(window.innerHeight * 0.85, curH - stepY));
+                                        try { const _n = ((mvB as any)._lg3 = ((mvB as any)._lg3 || 0) + 1); if (_n <= 12) console.info('[DND]内嵌move#' + _n + ' curH=' + Math.round(curH) + ' step=' + Math.round(stepY) + ' nh=' + Math.round(nhB)); } catch (eLg3) {}
                                         $view[0].style.setProperty('max-height', nhB + 'px', 'important');
                                         $view[0].style.setProperty('height', nhB + 'px', 'important');
                                     } catch (mB) {}
