@@ -389,6 +389,22 @@ export function createHudRenderFragment(deps: any): any {
                         try { _docId = (document === (((window as any).parent || {}).document)) ? 'top' : 'iframe'; } catch (e) { _docId = 'cross-origin'; }
                         console.info('[DND]视图弹窗已打开 rect=' + JSON.stringify({ t: Math.round(_r.top), l: Math.round(_r.left), w: Math.round(_r.width), h: Math.round(_r.height) }) + ' | doc=' + _docId + ' | ' + label);
                     } catch (e) {}
+                    // [b13.2.8] 凶手探测器：命中测试 + 确保弹窗在 body 最后
+                    try {
+                        if ($pop[0] && $pop[0].parentNode && $pop[0].parentNode.appendChild) { $pop[0].parentNode.appendChild($pop[0]); }
+                        const _w: any = window;
+                        const _hx = Math.round((_w.innerWidth || document.documentElement.clientWidth) / 2);
+                        const _hy = Math.round((_w.innerHeight || document.documentElement.clientHeight) / 2);
+                        const _hit: any = document.elementFromPoint(_hx, _hy);
+                        let _hitDesc = 'none';
+                        if (_hit) {
+                            _hitDesc = (_hit.tagName || '?') + '#' + (_hit.id || '') + '.' + String(_hit.className || '').slice(0, 60);
+                        }
+                        const _inside = !!(_hit && $pop[0].contains(_hit));
+                        let _zi = '?';
+                        try { _zi = window.getComputedStyle($pop[0]).zIndex || '?'; } catch (e) {}
+                        console.info('[DND]弹窗层级诊断 z=' + _zi + ' | hit=' + _hitDesc + ' | inside=' + _inside);
+                    } catch (e) {}
                     $pop.find('.dnd-acu-view-close').on('click', function() { $pop.remove(); });
                     $pop.on('click', function(ev) { if (ev.target === $pop[0]) $pop.remove(); });
                     return;
