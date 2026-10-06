@@ -14,7 +14,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.67-b13.2.26 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.68-b13.2.27 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -341,7 +341,7 @@ export function createHudRenderFragment(deps: any): any {
                         let h = '';
                         try { if (g && typeof g.renderTableHostForDnd === 'function') h = g.renderTableHostForDnd(table); } catch (e) {}
                         if (h) $view.find('.dnd-acu-table-host').html(h);
-                        try { console.info('[DND]表格刷新 len=' + String(h || '').length); } catch (e) {}
+                        try { console.info('[DND]表格刷新 len=' + String(h || '').length + ' | pageBtns=' + $view.find('.acu-page-btn').length); } catch (e) {}
                     };
                     // [b13.3] 注册全局刷新回调（供写操作后自动刷新）
                     try { (window as any).__dndTableRefresh = function() { try { refresh(); } catch (e) {} }; } catch (e) {}
@@ -426,6 +426,40 @@ export function createHudRenderFragment(deps: any): any {
                         try { if (g && typeof g.toggleTableStyleForDnd === 'function') g.toggleTableStyleForDnd(tName); } catch (e2) {}
                         refresh();
                     });
+                    // [b13.2.27] 表格高度拖动（DND 本地实现：拖动调整视图高度，双击恢复）
+                    try {
+                        $view.on('pointerdown.dndHeight', '.acu-height-drag-handle', function(ev: any) {
+                            try {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                const startY = ev.clientY;
+                                const startH = $view[0].getBoundingClientRect().height || 400;
+                                const move = function(mv: any) {
+                                    try {
+                                        const dh = (mv.clientY - startY);
+                                        let nh = Math.max(160, Math.min(window.innerHeight * 0.85, startH - dh));
+                                        $view[0].style.setProperty('max-height', nh + 'px', 'important');
+                                        $view[0].style.setProperty('height', nh + 'px', 'important');
+                                    } catch (e) {}
+                                };
+                                const up = function() {
+                                    try { document.removeEventListener('pointermove', move, true); document.removeEventListener('pointerup', up, true); } catch (e) {}
+                                };
+                                document.addEventListener('pointermove', move, true);
+                                document.addEventListener('pointerup', up, true);
+                            } catch (e) {}
+                        });
+                        $view.on('dblclick.dndHeight', '.acu-height-drag-handle', function() {
+                            try { $view[0].style.removeProperty('height'); $view[0].style.setProperty('max-height', '58vh', 'important'); } catch (e) {}
+                        });
+                    } catch (e) {}
+                    // [b13.2.27] 库存可视化按钮
+                    try {
+                        $view.on('click.dndInv', '.acu-table-inventory-btn', function(ev: any) {
+                            ev.stopPropagation();
+                            try { if (g && typeof g.showInventoryVisualization === 'function') g.showInventoryVisualization(); } catch (e) {}
+                        });
+                    } catch (e) {}
                     // 关闭按钮 → 返回列表
                     $view.on('click', '.acu-close-btn', function(e) { e.stopPropagation(); $view.remove(); $list.show(); });
                     // [b13.2.24] 表格教程按钮绑定（原骰子面板教程按钮在 DND 表格视图里补绑）
