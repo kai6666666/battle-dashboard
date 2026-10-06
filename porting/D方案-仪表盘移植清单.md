@@ -116,6 +116,7 @@
 - 🔧 **b12.12 投骰结果卡空白修复（2026-10-06）**：真凶 = 结果卡的 JS 两段式透明动画（`opacity:0` 起始 + 10ms setTimeout 恢复）在宿主环境被节流卡死 → 显示为空白块；重写为 **CSS 动画类 `dnd-roll-pop`**（无 JS 透明初始态，动画失败也直接可见）+ 插入位置改为内容容器 `prepend` + 全段 try-catch → tag `v0.0.32-b12.12`
 - 🔧 **b12.13 投骰结果原生渲染（2026-10-06）**：升级为**原生 DOM**（`createElement` + `insertBefore`）+ inline 强制 `opacity:1;visibility:visible`（彻底杜绝透明卡死）+ **诊断日志**（`[DND] 投骰结果已插入: <outerHTML>` / 找不到容器警告）→ tag `v0.0.33-b12.13`
 - 🚀 **b12.14 Mini HUD 选项升级（2026-10-06）**：骰子同款能力 + DND 原能力融合——点击选项：若骰子设置 `clickOptionToAutoSend` 开启 → **自动发送**（`smartSendText` 桥，多通道兼容）；否则/失败 → 回退 **填入输入框**（DND 原行为）；不加标题栏保持简洁 → tag `v0.0.34-b12.14`
+- 🚀 **b12.15 选项深化 + 表格收口（2026-10-06）**：① 选项深化——接入骰子其他选项表（`isOptionTableName` 转置扫描，去重 DND 表，无前缀 • 标记）+ **检定建议按钮**（`executeCheckSuggestion`）+ **字号同步**（`optionFontSize`）；保留 A-D 原渲染 ② 表格编辑收口（按决策 §6.2-7）——**移除编辑器 A（dnd-table 域全删）**，Mini HUD「▼」栏改为**跳转骰子侧表格编辑器**（`openDatabaseVisualizerInterface`，B 唯一编辑权）→ tag `v0.0.35-b12.15`
 
 ## 增补事项
 - [x] **悬浮球二合一**（✅ 2026-10-05 完成，v0.0.15-b10d）：唯一 D20 球（长按/双击开骰子面板）+ S1 桥 `__acuToggleDicePanel` + 触发器融合隐藏
