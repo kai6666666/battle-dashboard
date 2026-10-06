@@ -503,6 +503,7 @@ export function createBindChangesEvents(deps: any) {
       .on('click', function () {
         const currentMode = Store.get(deps.STORAGE_KEY_VALIDATION_MODE, false);
         const newMode = !currentMode;
+        try { console.info('[DICE]切换数据验证模式 current=' + currentMode + ' new=' + newMode); } catch (e2) {}
         Store.set(deps.STORAGE_KEY_VALIDATION_MODE, newMode);
 
         // 刷新面板
