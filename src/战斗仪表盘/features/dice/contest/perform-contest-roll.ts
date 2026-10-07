@@ -2,6 +2,7 @@
  * contest / perform-contest-roll.ts — 对抗投骰主流程（高级预设判定；从 show-contest-panel.ts 拆出，x8-d）。
  */
 import { rollComplexDiceExpression } from '../dice-engine';
+import { renderDiceResultEffect } from '../panel/render-result-effect';
 import { showActionableErrorToast } from '../../../shared/actionable-error-toast';
 import type { OutcomeLevel } from '../../../shared/advanced-preset-types';
 
@@ -527,6 +528,16 @@ export function createPerformContestRoll(ctx: any) {
         '</div>',
     );
     $resultDisplay.show();
+    // [b13.6.5] 结果特效卡（对抗检定，胜者高亮显示）
+    try {
+      var _cw = String(displayInitValue != null ? displayInitValue : '');
+      var _ow = String(displayOppValue != null ? displayOppValue : '');
+      var _wl = String(displayWinner || '');
+      var _isOppWin = _wl.indexOf('对手') >= 0;
+      var _kind3 = 'normal';
+      if (!hideDiceResultFromUser && _wl) { _kind3 = _isOppWin ? 'fail' : 'crit'; }
+      renderDiceResultEffect(getPanel(), { value: (_cw || '?') + ' VS ' + (_ow || '?'), label: '对抗检定 · ' + _wl, kind: _kind3 });
+    } catch (eEF4) {}
 
     // 绑定整行点击事件进行重投
     $resultDisplay.off('click').on('click', function (e: any) {

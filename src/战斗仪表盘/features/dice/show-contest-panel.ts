@@ -110,6 +110,21 @@ export function createShowContestPanel(deps: any) {
           _pElH.style.setProperty('box-shadow', 'none', 'important');
           var _closeElC: any = _pElH.querySelector('.acu-contest-close');
           if (_closeElC) _closeElC.style.setProperty('display', 'none', 'important');
+          // [b13.6.5] 宿主嵌入：加嵌入类 + 注入嵌入样式（一次/per-doc）
+          try {
+            _pElH.classList.add('acu-host-embedded');
+            var _docH = _pElH.ownerDocument || document;
+            if (!_docH.getElementById('acu-host-embed-style')) {
+              var _st = _docH.createElement('style');
+              _st.id = 'acu-host-embed-style';
+              _st.textContent = '.acu-dice-panel.acu-host-embedded,.acu-contest-panel.acu-host-embedded{background:transparent!important;border:none!important;box-shadow:none!important;border-radius:0!important}' +
+                '.acu-dice-panel.acu-host-embedded .acu-dice-panel-header,.acu-contest-panel.acu-host-embedded .acu-dice-panel-header{background:rgba(255,255,255,0.03)!important;border-bottom:1px solid rgba(232,192,106,0.22)!important}' +
+                '.acu-dice-panel.acu-host-embedded .acu-dice-panel-body,.acu-contest-panel.acu-host-embedded .acu-dice-panel-body{background:transparent!important}' +
+                '.acu-dice-panel.acu-host-embedded .acu-dice-roll-result-card{border-color:var(--dnd-border-gold, rgba(232,192,106,.45))!important}' +
+                '@keyframes dndResultPop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}.acu-dice-roll-result-card .dnd-dice-result-number{animation:dndResultPop .4s cubic-bezier(.2,1.4,.4,1)!important}';
+              (_docH.head || _docH.documentElement).appendChild(_st);
+            }
+          } catch (eEmb) {}
         } catch (eSH) {}
         _hostEl.appendChild(_pElH);
       } catch (eH) {}

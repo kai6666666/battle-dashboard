@@ -5,6 +5,7 @@
  */
 import { calculateDiceExpectedValue, rollComplexDiceExpression } from '../../../features/dice/dice-engine';
 import { showActionableErrorToast } from '../../../shared/actionable-error-toast';
+import { renderDiceResultEffect } from './render-result-effect';
 
 export function createDicePanelRoll(deps: any, ctx: any) {
   const dicePanelExpr = ctx.expr;
@@ -107,6 +108,8 @@ export function createDicePanelRoll(deps: any, ctx: any) {
         </div>
       `);
 
+      // [b13.6.5] 结果特效卡（保留快投 D20 特效，与面板结合）
+      try { renderDiceResultEffect(panel, { value: displayValue, label: String(diceExpr).toUpperCase() + ' 投掷结果', kind: 'normal' }); } catch (eEF1) {}
       // 绑定重投按钮
       $btn.off('click', '.dice-retry-btn').on('click', '.dice-retry-btn', function (e) {
         e.stopPropagation();
@@ -372,6 +375,15 @@ export function createDicePanelRoll(deps: any, ctx: any) {
         </div>
       `);
 
+      // [b13.6.5] 结果特效卡（保留快投 D20 特效，与面板结合）
+      try {
+        var _effectKind = 'normal';
+        if (!hideDiceResultFromUser) {
+          if (resultType === 'critSuccess') _effectKind = 'crit';
+          else if (resultType === 'critFailure') _effectKind = 'fail';
+        }
+        renderDiceResultEffect(panel, { value: displayValue, label: String(formula).toUpperCase() + ' 投掷结果', kind: _effectKind });
+      } catch (eEF2) {}
       // 绑定重投按钮点击事件（使用事件委托，因为按钮内容会动态更新）
       $rollBtn.off('click', '.dice-retry-btn').on('click', '.dice-retry-btn', function (e) {
         e.stopPropagation();

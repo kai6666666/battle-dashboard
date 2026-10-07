@@ -7,6 +7,7 @@
 import { computePendingEffectVariables } from '../../../shared/effect-math';
 import { rollComplexDiceExpression } from '../../../features/dice/dice-engine';
 import { showActionableErrorToast } from '../../../shared/actionable-error-toast';
+import { renderDiceResultEffect } from './render-result-effect';
 
 export function createDicePanelAdvancedCheck(deps: any, ctx: any) {
   const dicePanelEffectRuns = ctx.effectRuns;
@@ -374,6 +375,15 @@ export function createDicePanelAdvancedCheck(deps: any, ctx: any) {
         </div>
       `);
 
+      // [b13.6.5] 结果特效卡（保留快投 D20 特效，与面板结合）
+      try {
+        var _effectKind2 = 'normal';
+        if (!hideDiceResultFromUser) {
+          if (resultType === 'critSuccess') _effectKind2 = 'crit';
+          else if (resultType === 'critFailure') _effectKind2 = 'fail';
+        }
+        renderDiceResultEffect(panel, { value: displayValue, label: String((currentAdvancedPreset && currentAdvancedPreset.name) || '检定') + ' 投掷结果', kind: _effectKind2 });
+      } catch (eEF3) {}
       // 绑定重投按钮点击事件
       $rollBtn.off('click', '.dice-retry-btn').on('click', '.dice-retry-btn', function (e) {
         e.stopPropagation();
