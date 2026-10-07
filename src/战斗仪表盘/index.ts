@@ -1577,7 +1577,6 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           if (view === 'changes') return renderChangesPanel(rawData);
           if (view === 'global-interactions') return renderGlobalInteractionsPanel(rawData);
           if (view === 'favorites') { try { return renderFavoritesPanel(); } catch (e) { return null; } }
-          if (view === 'dashboard') { try { const _tablesD: any = processJsonData(rawData || {}); return renderDashboard(_tablesD); } catch (e) { return null; } }
           return null;
         } catch (e) { console.warn('[AcuDice] renderAcuViewHtml 失败', e); return null; }
       },

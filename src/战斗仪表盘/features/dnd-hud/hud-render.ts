@@ -18,7 +18,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.96-b13.5 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.96-b13.5r | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -302,7 +302,6 @@ export function createHudRenderFragment(deps: any): any {
         let items: any[] = [];
         try { if (g && typeof g.getTableNavItems === 'function') items = g.getTableNavItems() || []; } catch (e) {}
         const specials = [
-            { tab: 'dashboard', icon: 'fa-chart-pie', label: '仪表盘' },
             { tab: 'changes', icon: 'fa-code-compare', label: '审核' },
             { tab: 'mvu', icon: 'fa-code-branch', label: '变量' },
             { tab: 'favorites', icon: 'fa-star', label: '收藏夹' },
