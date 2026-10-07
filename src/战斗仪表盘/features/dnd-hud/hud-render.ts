@@ -18,7 +18,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.91-b13.2.50 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.92-b13.3 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -288,8 +288,11 @@ export function createHudRenderFragment(deps: any): any {
         try {
             if (!(window as any).__dndWriteWatch) {
                 (window as any).__dndWriteWatch = true;
-                $(document).on('click.dndWriteWatch', '.acu-cell-menu-item, .acu-dialog-btn, .acu-settings-content .acu-dialog-btn', function() {
-                    setTimeout(function() { try { if ((window as any).__dndTableRefresh) (window as any).__dndTableRefresh(); } catch (e) {} }, 450);
+                $(document).on('click.dndWriteWatch', '.acu-cell-menu-item, .acu-dialog-btn, .acu-btn-confirm, #dlg-save, .acu-settings-content .acu-dialog-btn', function() {
+                    // [b13.3] 写操作三档延迟刷新（防异步写库竞态：450/1300/2400ms）
+                    [450, 1300, 2400].forEach(function(_dlyW) {
+                        setTimeout(function() { try { if ((window as any).__dndTableRefresh) (window as any).__dndTableRefresh(); } catch (e) {} }, _dlyW);
+                    });
                 });
                 $(document).on('click.dndWriteWatch2', '.acu-menu-backdrop', function() {
                     setTimeout(function() { try { if ((window as any).__dndTableRefresh) (window as any).__dndTableRefresh(); } catch (e) {} }, 300);
