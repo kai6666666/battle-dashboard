@@ -16,6 +16,21 @@ export function createContestPanelBindings(ctx: any) {
     var currentInitName = getPanel().find('#contest-init-name').val() || '';
     var currentDice = getPanel().find('#contest-dice-type').val() || '1d100';
     var initiatorNameVal = getPanel().find('#contest-init-display').val().trim();
+    // [b13.6.3] 宿主模式：在宿主内切回普通面板（不关弹窗）
+    var _hc = ctx.getHostCtx ? ctx.getHostCtx() : null;
+    if (_hc && _hc.hostEl) {
+      getPanel().remove();
+      deps.showDicePanel({
+        attrValue: initValueInput !== '' ? parseInt(initValueInput, 10) : null,
+        targetValue: null,
+        targetName: currentInitName,
+        diceType: currentDice,
+        initiatorName: initiatorNameVal,
+        hostEl: _hc.hostEl,
+        onClose: _hc.onClose,
+      });
+      return;
+    }
     closePanel();
     deps.showDicePanel({
       // 只有用户实际输入了值才传递，否则传 null 让普通检定面板显示 placeholder
@@ -41,6 +56,13 @@ export function createContestPanelBindings(ctx: any) {
     deps.showAdvancedPresetManager({ fromDicePanel: true });
   });
   var closePanel = function () {
+    // [b13.6.3] 宿主模式：关闭小弹窗（不删宿主）
+    var _hc2 = ctx.getHostCtx ? ctx.getHostCtx() : null;
+    if (_hc2 && _hc2.hostEl) {
+      try { if (typeof _hc2.onClose === 'function') _hc2.onClose(); } catch (eC) {}
+      getPanel().remove();
+      return;
+    }
     getOverlay().remove();
     getPanel().remove();
   };

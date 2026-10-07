@@ -406,6 +406,18 @@ export function createShowDicePanel(deps: any) {
       const attrValueInput = panel.find('#dice-attr-value').val().trim();
       const currentDice = panel.find('#dice-formula').val() || '1d100';
       const initiatorNameVal = panel.find('#dice-initiator-name').val().trim();
+      // [b13.6.3] 宿主模式：在宿主内切换到对抗面板（不关弹窗）
+      if (_hostEl) {
+        panel.remove();
+        deps.showContestPanel({
+          initiatorName: initiatorNameVal && initiatorNameVal !== '<user>' ? initiatorNameVal : '',
+          initiatorValue: attrValueInput !== '' ? parseInt(attrValueInput, 10) : undefined,
+          diceType: currentDice,
+          hostEl: _hostEl,
+          onClose: _onCloseCb,
+        });
+        return;
+      }
       closePanel();
       deps.showContestPanel({
         // 只有用户实际输入了非默认值才传递，否则留空让 placeholder 生效

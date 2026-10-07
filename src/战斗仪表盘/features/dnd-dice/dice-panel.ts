@@ -40,6 +40,20 @@ export function createDicePanelFragment(deps: any): any {
                         const r = p ? p.getBoundingClientRect() : null;
                         console.info('[DND]面板渲染后 ' + (r ? ('w' + Math.round(r.width) + ' h' + Math.round(r.height) + ' vis=' + (p ? getComputedStyle(p).display : '?')) : 'panel未找到'));
                     } catch (e3) {}
+                    // [b13.6.3] 面板注入后重新定位弹窗（避免太靠下）
+                    try {
+                        var popEl: any = document.getElementById('dnd-detail-popup-el');
+                        if (!popEl) { try { const $pp = $ ? $('#dnd-detail-popup-el') : null; if ($pp && $pp.length) popEl = $pp[0]; } catch (eP0) {} }
+                        if (popEl) {
+                            const winH = window.innerHeight || 800;
+                            const ph = popEl.offsetHeight || 0;
+                            let ptop = Math.max(10, Math.round((winH - ph) / 2));
+                            if (ph > winH - 20) ptop = 10;
+                            popEl.style.setProperty('top', ptop + 'px', 'important');
+                            popEl.style.setProperty('bottom', 'auto', 'important');
+                            console.info('[DND]弹窗重定位 top=' + ptop + ' ph=' + ph + ' winH=' + winH);
+                        }
+                    } catch (e6) {}
                 } else {
                     deps.notification.warning('完整投骰面板不可用：桥未就绪');
                 }

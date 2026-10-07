@@ -19,6 +19,9 @@ export function createShowContestPanel(deps: any) {
   const showContestPanel = (options: Record<string, any> = {}) => {
     const { $ } = deps.getCore();
     $('.acu-dice-panel, .acu-dice-overlay, .acu-contest-panel, .acu-contest-overlay').remove();
+    // [b13.6.3] 宿主模式支持（小弹窗内嵌）
+    const _hostEl: any = options.hostEl || null;
+    const _onCloseCb: any = options.onClose || null;
 
     const config = deps.getConfig();
     const diceCfg = deps.getDiceConfig();
@@ -90,8 +93,24 @@ export function createShowContestPanel(deps: any) {
     });
 
     const panel = $(panelHtml);
-    overlay.append(panel);
-    $('body').append(overlay);
+    if (_hostEl) {
+      // [b13.6.3] 宿主模式：面板直接嵌入宿主（小弹窗）
+      try {
+        _hostEl.innerHTML = '';
+        var _pElH: any = panel[0];
+        try {
+          _pElH.style.setProperty('position', 'static', 'important');
+          _pElH.style.setProperty('width', '100%', 'important');
+          _pElH.style.setProperty('max-width', '100%', 'important');
+          _pElH.style.setProperty('max-height', 'none', 'important');
+          _pElH.style.setProperty('margin', '0', 'important');
+        } catch (eSH) {}
+        _hostEl.appendChild(_pElH);
+      } catch (eH) {}
+    } else {
+      overlay.append(panel);
+      $('body').append(overlay);
+    }
     deps.bindTutorialButtonsIn(panel);
 
 
@@ -157,6 +176,7 @@ export function createShowContestPanel(deps: any) {
       getPanel: () => panel,
       getOverlay: () => overlay,
       performContestRoll,
+      getHostCtx: () => ({ hostEl: _hostEl, onClose: _onCloseCb }),
     });
   };
   return showContestPanel;
