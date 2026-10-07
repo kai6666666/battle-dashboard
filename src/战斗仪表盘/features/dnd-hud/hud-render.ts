@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.84-b13.2.43 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.85-b13.2.44 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -374,10 +374,10 @@ export function createHudRenderFragment(deps: any): any {
                                 });
                                 $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control').each(function(this: any) {
                                     try {
-                                        this.style.setProperty('min-width', '24px', 'important');
-                                        this.style.setProperty('width', '24px', 'important');
-                                        this.style.setProperty('height', '24px', 'important');
-                                        this.style.setProperty('padding', '0', 'important');
+                                        this.style.setProperty('min-width', '20px', 'important');
+                                        this.style.setProperty('width', '20px', 'important');
+                                        this.style.setProperty('height', '20px', 'important');
+                                        this.style.setProperty('padding', '0', 'important'); this.style.setProperty('font-size', '11px', 'important');
                                     } catch (eGB) {}
                                 });
                             } catch (eGA2) {}
@@ -389,7 +389,7 @@ export function createHudRenderFragment(deps: any): any {
                                         this.style.setProperty('width', '45%', 'important');
                                         this.style.setProperty('max-width', '45%', 'important');
                                         this.style.setProperty('min-width', '0', 'important');
-                                        this.style.setProperty('margin-left', 'auto', 'important');
+                                        this.style.setProperty('margin-left', 'auto', 'important'); this.style.setProperty('margin-right', '10px', 'important');
                                         this.style.setProperty('margin-top', '4px', 'important');
                                         this.style.setProperty('box-sizing', 'border-box', 'important');
                                         this.style.setProperty('border-radius', '999px', 'important');
@@ -501,7 +501,7 @@ export function createHudRenderFragment(deps: any): any {
                                     this.style.setProperty('width', '45%', 'important');
                                     this.style.setProperty('max-width', '45%', 'important');
                                     this.style.setProperty('min-width', '0', 'important');
-                                    this.style.setProperty('margin-left', 'auto', 'important');
+                                    this.style.setProperty('margin-left', 'auto', 'important'); this.style.setProperty('margin-right', '10px', 'important');
                                     this.style.setProperty('margin-top', '4px', 'important');
                                     this.style.setProperty('box-sizing', 'border-box', 'important');
                                     this.style.setProperty('border-radius', '999px', 'important');
@@ -727,13 +727,16 @@ export function createHudRenderFragment(deps: any): any {
                                     _gH.append(_gS);
                                 }
                             } catch (eGS) {}
-                            // [b13.2.43] 标题压缩（给按钮留足空间，防 ✕ 换行）
+                            // [b13.2.44] 标题可见保底（主标题完整；副标题可省略）+ 标题区最小宽度
                             try {
                                 $view.find('.acu-panel-title').each(function(this: any) {
-                                    try { this.style.setProperty('min-width', '0', 'important'); this.style.setProperty('flex', '1 1 auto', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); } catch (ePT) {}
+                                    try { this.style.removeProperty('overflow'); this.style.setProperty('min-width', '72px', 'important'); } catch (ePT) {}
                                 });
-                                $view.find('.acu-title-main, .acu-title-sub').each(function(this: any) {
-                                    try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('min-width', '0', 'important'); } catch (eTS) {}
+                                $view.find('.acu-title-main').each(function(this: any) {
+                                    try { this.style.removeProperty('overflow'); this.style.removeProperty('min-width'); } catch (eTM) {}
+                                });
+                                $view.find('.acu-title-sub').each(function(this: any) {
+                                    try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '110px', 'important'); } catch (eTS) {}
                                 });
                                 $view.find('.acu-header-actions').each(function(this: any) {
                                     try { this.style.setProperty('flex-shrink', '0', 'important'); } catch (eHS) {}
@@ -758,10 +761,10 @@ export function createHudRenderFragment(deps: any): any {
                                 });
                                 $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control').each(function(this: any) {
                                     try {
-                                        this.style.setProperty('min-width', '24px', 'important');
-                                        this.style.setProperty('width', '24px', 'important');
-                                        this.style.setProperty('height', '24px', 'important');
-                                        this.style.setProperty('padding', '0', 'important');
+                                        this.style.setProperty('min-width', '20px', 'important');
+                                        this.style.setProperty('width', '20px', 'important');
+                                        this.style.setProperty('height', '20px', 'important');
+                                        this.style.setProperty('padding', '0', 'important'); this.style.setProperty('font-size', '11px', 'important');
                                     } catch (eGB2) {}
                                 });
                             } catch (eIx2) {}
@@ -784,7 +787,7 @@ export function createHudRenderFragment(deps: any): any {
                                         this.style.setProperty('width', '45%', 'important');
                                         this.style.setProperty('max-width', '45%', 'important');
                                         this.style.setProperty('min-width', '0', 'important');
-                                        this.style.setProperty('margin-left', 'auto', 'important');
+                                        this.style.setProperty('margin-left', 'auto', 'important'); this.style.setProperty('margin-right', '10px', 'important');
                                         this.style.setProperty('margin-top', '4px', 'important');
                                         this.style.setProperty('box-sizing', 'border-box', 'important');
                                         this.style.setProperty('border-radius', '999px', 'important');
