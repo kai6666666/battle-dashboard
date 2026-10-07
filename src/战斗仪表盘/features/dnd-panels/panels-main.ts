@@ -1,6 +1,8 @@
 // features/dnd-panels/panels-main.ts
 // 面板主入口 / 快捷清单 / 过滤（b10b · 自 BasedonST `src/ui/modules/UIPanels.js` 拆分移植）
 import { DND_CONFIG } from '../dnd-core';
+import { applyDndHeaderTidy } from '../dnd-hud/hud-header-tidy';
+import { __DND_CSS_V9 } from '../dnd-hud/hud-render';
 
 export function createPanelsMainFragment(deps: any): any {
   return {
@@ -53,11 +55,54 @@ export function createPanelsMainFragment(deps: any): any {
             case 'acu-mvu':
             case 'acu-favorites':
             case 'acu-global-interactions': {
-                // [b12.9] 骰子面板四大功能入口：转发到骰子面板对应 tab
+                // [b13.4] 骰子视图主面板内嵌渲染（替代弹骰子面板）
                 const tabMap: any = { 'acu-changes': 'changes', 'acu-mvu': 'mvu', 'acu-favorites': 'favorites', 'acu-global-interactions': 'global-interactions' };
                 const tab = tabMap[panelName];
-                $content.html('<div style="padding:40px 20px;text-align:center;color:var(--dnd-text-dim);font-size:13px;"><i class="fa-solid fa-dice-d20" style="font-size:22px;opacity:.6;"></i><br><br>已转发到骰子面板，请在屏幕上方的骰子面板中操作。</div>');
-                try { const acuUI: any = (window as any).__acuUI; acuUI?.openDicePanelTab?.(tab); } catch (e) { console.warn('[DND] openDicePanelTab 失败', e); }
+                $content.html('<div class="dnd-acu-view-inline dnd-acu-main-embed" id="acu-data-area" style="max-height:100%;overflow-y:auto;"><div class="dnd-acu-view-inline-body" style="padding:2px 6px 6px;"></div></div>');
+                const $emb = $content.find('.dnd-acu-view-inline');
+                const $embBody = $content.find('.dnd-acu-view-inline-body');
+                const _gEmb: any = (window as any).__acuUI;
+                // [b13.4] per-doc 样式注入（主面板视图样式）
+                try {
+                    const _docE: any = ($content[0] && $content[0].ownerDocument) || document;
+                    const _cssE = String((window as any).__dndInlineCssV8 || __DND_CSS_V9 || '');
+                    const _ensE = function(_d: any, _css: string) {
+                        try {
+                            if (!_d || !_css) return;
+                            const _hE = _d.head || _d.documentElement;
+                            if (!_hE) return;
+                            let _eE: any = null;
+                            try { _eE = _d.getElementById ? _d.getElementById('dnd-inline-scroll-fix') : null; } catch (aE) {}
+                            if (!_eE) { _eE = _d.createElement('style'); _eE.id = 'dnd-inline-scroll-fix'; _hE.appendChild(_eE); }
+                            if (_eE.getAttribute('data-v') !== 'v11') { _eE.textContent = _css; _eE.setAttribute('data-v', 'v11'); }
+                        } catch (bE) {}
+                    };
+                    _ensE(_docE, _cssE);
+                    if (_docE !== document) _ensE(document, _cssE);
+                } catch (cE) {}
+                const _doEmbedV = async () => {
+                    try {
+                        if (tab === 'mvu') {
+                            let okM = false;
+                            try { if (_gEmb && typeof _gEmb.renderMvuPanelForDnd === 'function') okM = _gEmb.renderMvuPanelForDnd($embBody[0]); } catch (e) {}
+                            if (!okM) $embBody.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">变量面板暂不可用</div>');
+                        } else {
+                            let h: any = null;
+                            try { if (_gEmb && typeof _gEmb.renderAcuViewHtml === 'function') h = _gEmb.renderAcuViewHtml(tab); } catch (e) {}
+                            if (h && typeof h.then === 'function') { try { h = await h; } catch (e) { h = null; } }
+                            if (h) $embBody.html(String(h));
+                            else $embBody.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>');
+                        }
+                        try { if (_gEmb && typeof _gEmb.bindTutorialButtonsInForDnd === 'function') _gEmb.bindTutorialButtonsInForDnd($embBody[0]); } catch (e) {}
+                        try { if (tab === 'favorites' && _gEmb && typeof _gEmb.bindFavoritesEventsForDnd === 'function') _gEmb.bindFavoritesEventsForDnd($embBody[0]); } catch (e) {}
+                        try { if (tab === 'changes' && _gEmb && typeof _gEmb.bindChangesEventsForDnd === 'function') _gEmb.bindChangesEventsForDnd(); } catch (e) {}
+                        try { if (tab === 'global-interactions' && _gEmb && typeof _gEmb.bindInteractionEventsForDnd === 'function') { setTimeout(function() { try { _gEmb.bindInteractionEventsForDnd($embBody[0]); } catch (e) {} }, 350); } } catch (e) {}
+                        // 头部规整（同 Mini HUD：标题保底/搜索框搬行/按钮归一）
+                        try { applyDndHeaderTidy($, $emb); } catch (e) {}
+                        try { console.info('[DND]主面板内嵌渲染 tab=' + tab + ' len=' + String($embBody.html() || '').length); } catch (e) {}
+                    } catch (e) {}
+                };
+                _doEmbedV();
                 break;
             }
             default:
