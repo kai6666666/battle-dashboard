@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.76-b13.2.35 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.77-b13.2.36 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -397,7 +397,7 @@ export function createHudRenderFragment(deps: any): any {
                                         lastY9 = curY9;
                                         try { if (!(mv9 as any)._lg2) { (mv9 as any)._lg2 = 1; console.info('[DND]表格高度 move首帧 step=' + Math.round(stepY9)); } } catch (eLg9) {}
                                         const curH9 = $view[0].getBoundingClientRect().height || 400;
-                                        const nh9 = Math.max(120, Math.min(window.innerHeight * 0.85, curH9 - stepY9));
+                                        const nh9 = Math.max(120, Math.min(Math.max(window.innerHeight || 0, 700) * 0.85, curH9 - stepY9));
                                         try { const _n9 = ((mv9 as any)._lg3 = ((mv9 as any)._lg3 || 0) + 1); if (_n9 <= 12) console.info('[DND]表格move#' + _n9 + ' curH=' + Math.round(curH9) + ' step=' + Math.round(stepY9) + ' nh=' + Math.round(nh9)); } catch (eLg39) {}
                                         $view[0].style.setProperty('max-height', nh9 + 'px', 'important');
                                         $view[0].style.setProperty('height', nh9 + 'px', 'important');
@@ -524,7 +524,7 @@ export function createHudRenderFragment(deps: any): any {
                                 const move = function(mv: any) {
                                     try {
                                         const dh = (mv.clientY - startY);
-                                        let nh = Math.max(160, Math.min(window.innerHeight * 0.85, startH - dh));
+                                        let nh = Math.max(160, Math.min(Math.max(window.innerHeight || 0, 700) * 0.85, startH - dh));
                                         try { if (!(move as any)._lg) { (move as any)._lg = 1; console.info('[DND]表格高度 move dy=' + Math.round(dh) + ' nh=' + Math.round(nh)); } } catch (e2) {}
                                         $view[0].style.setProperty('max-height', nh + 'px', 'important');
                                         $view[0].style.setProperty('height', nh + 'px', 'important');
@@ -676,7 +676,7 @@ export function createHudRenderFragment(deps: any): any {
                                         lastYB = curY;
                                         try { if (!(mvB as any)._lg2) { (mvB as any)._lg2 = 1; console.info('[DND]内嵌高度 move首帧 step=' + Math.round(stepY)); } } catch (eLg) {}
                                         const curH = $view[0].getBoundingClientRect().height || 400;
-                                        const nhB = Math.max(120, Math.min(window.innerHeight * 0.85, curH - stepY));
+                                        const nhB = Math.max(120, Math.min(Math.max(window.innerHeight || 0, 700) * 0.85, curH - stepY));
                                         try { const _n = ((mvB as any)._lg3 = ((mvB as any)._lg3 || 0) + 1); if (_n <= 12) console.info('[DND]内嵌move#' + _n + ' curH=' + Math.round(curH) + ' step=' + Math.round(stepY) + ' nh=' + Math.round(nhB)); } catch (eLg3) {}
                                         $view[0].style.setProperty('max-height', nhB + 'px', 'important');
                                         $view[0].style.setProperty('height', nhB + 'px', 'important');
