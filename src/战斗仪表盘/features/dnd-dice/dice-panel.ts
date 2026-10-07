@@ -43,6 +43,17 @@ export function createDicePanelFragment(deps: any): any {
                     } catch (e3) {}
                     // [b13.6.7] 弹窗✕归位到面板按钮区（统一样式与区域）
                     try { relocatePopupCloseInto(host); } catch (eRC) {}
+                    // [b13.6.8] 弹窗滚动加固（防“不可滑动”与“固定”异常）
+                    try {
+                        var _popSC: any = document.getElementById('dnd-detail-popup-el');
+                        if (!_popSC) { try { var _$psc = $ ? $('#dnd-detail-popup-el') : null; if (_$psc && _$psc.length) _popSC = _$psc[0]; } catch (eSC0) {} }
+                        if (_popSC) {
+                            _popSC.style.setProperty('overflow-y', 'auto', 'important');
+                            _popSC.style.setProperty('touch-action', 'pan-y', 'important');
+                            _popSC.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important');
+                            console.info('[DND]ZCHK popup z=' + getComputedStyle(_popSC).zIndex + ' oh=' + _popSC.offsetHeight + ' sh=' + _popSC.scrollHeight);
+                        }
+                    } catch (eSC) {}
                     // [b13.6.3] 面板注入后重新定位弹窗（避免太靠下）
                     try {
                         var popEl: any = document.getElementById('dnd-detail-popup-el');

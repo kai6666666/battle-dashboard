@@ -16,7 +16,7 @@ export function createShowAdvancedPresetManager(deps: any) {
     const diceCfg = deps.getDiceConfig();
 
     const overlay = $(`
-      <div class="acu-edit-overlay" style="z-index:2147483646;">
+      <div class="acu-edit-overlay" style="z-index:2147483647 !important;">
         <div class="acu-edit-dialog acu-dice-settings-dialog acu-theme-${config.theme}">
           <div class="acu-dice-settings-header">
             <h3><i class="fa-solid fa-dice-d20"></i> 检定设置</h3>

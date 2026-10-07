@@ -1108,6 +1108,8 @@ export const createTutorialModule = (options: TutorialModuleOptions): TutorialMo
     popover.setAttribute('aria-describedby', 'acu-tutorial-body');
     popover.style.visibility = 'hidden';
     overlay.append(blocker, maskSvg, highlight, popover);
+    // [b13.6.8] inline 加固 z-index（防被 Mini HUD 遮挡）
+    try { overlay.style.setProperty('z-index', '2147483647', 'important'); } catch (eZ1) {}
     doc.body.appendChild(overlay);
     bindOverlayEvents();
   };
