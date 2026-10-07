@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.81-b13.2.40 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.82-b13.2.41 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -349,7 +349,11 @@ export function createHudRenderFragment(deps: any): any {
                                 var _hdT = $view.find('.acu-header-actions').first();
                                 var _seT = _hdT.find('.acu-search-wrapper').first();
                                 var _ctT = _hdT.find('.acu-panel-control-set').first();
-                                if (_seT.length && _ctT.length) { _ctT.detach(); _seT.before(_ctT); }
+                                var _brkT0 = $view.find('.dnd-search-break');
+                                if (_seT.length && _ctT.length) {
+                                    _ctT.detach();
+                                    if (_brkT0.length) { _brkT0.before(_ctT); } else { _seT.before(_ctT); }
+                                }
                             } catch (eTx) {}
                             try {
                                 _hdT.each(function(this: any) {
@@ -358,7 +362,10 @@ export function createHudRenderFragment(deps: any): any {
                             } catch (eTx2) {}
                             try {
                                 if (!$view.find('.dnd-search-break').length) {
-                                    $view.find('.acu-search-wrapper').first().before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>');
+                                    var _seT2 = $view.find('.acu-search-wrapper').first();
+                                    var _ctT2 = $view.find('.acu-panel-control-set').first();
+                                    if (_ctT2.length) { _ctT2.after('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>'); }
+                                    else if (_seT2.length) { _seT2.before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>'); }
                                 }
                             } catch (eBrA) {}
                             try {
@@ -386,7 +393,7 @@ export function createHudRenderFragment(deps: any): any {
                                         this.style.setProperty('margin-top', '4px', 'important');
                                         this.style.setProperty('box-sizing', 'border-box', 'important');
                                         this.style.setProperty('border-radius', '999px', 'important');
-                                        this.style.setProperty('border', '1px solid var(--acu-accent, #d4a017)', 'important');
+                                        this.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
                                         this.style.setProperty('overflow', 'hidden', 'important');
                                     } catch (eB2) {}
                                 });
@@ -481,7 +488,10 @@ export function createHudRenderFragment(deps: any): any {
                             if (_seR.length && _ctR.length) { _ctR.detach(); _seR.before(_ctR); }
                             try {
                                 if (!$view.find('.dnd-search-break').length) {
-                                    $view.find('.acu-search-wrapper').first().before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>');
+                                    var _seB2 = $view.find('.acu-search-wrapper').first();
+                                    var _ctB2 = $view.find('.acu-panel-control-set').first();
+                                    if (_ctB2.length) { _ctB2.after('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>'); }
+                                    else if (_seB2.length) { _seB2.before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>'); }
                                 }
                             } catch (eBrB) {}
                             $view.find('.acu-search-wrapper').each(function(this: any) {
@@ -495,7 +505,7 @@ export function createHudRenderFragment(deps: any): any {
                                     this.style.setProperty('margin-top', '4px', 'important');
                                     this.style.setProperty('box-sizing', 'border-box', 'important');
                                     this.style.setProperty('border-radius', '999px', 'important');
-                                    this.style.setProperty('border', '1px solid var(--acu-accent, #d4a017)', 'important');
+                                    this.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
                                     this.style.setProperty('overflow', 'hidden', 'important');
                                 } catch (eB3) {}
                             });
@@ -714,9 +724,10 @@ export function createHudRenderFragment(deps: any): any {
                                 if (!_seI.length) return;
                                 var _hcI = _hdI.find('.acu-height-control').first();
                                 var _cbI = _hdI.find('.acu-close-btn').first();
-                                var _svI = _hdI.find('.acu-fav-sort') as any;
-                                if (_hcI.length) { _hcI.detach(); _seI.before(_hcI); }
-                                if (_cbI.length) { _cbI.detach(); _seI.before(_cbI); }
+                                var _brkI0 = $view.find('.dnd-search-break');
+                                var _anchorI = _brkI0.length ? _brkI0 : _seI;
+                                if (_hcI.length) { _hcI.detach(); _anchorI.before(_hcI); }
+                                if (_cbI.length) { _cbI.detach(); _anchorI.before(_cbI); }
                             } catch (eIx) {}
                             try {
                                 _hdI.each(function(this: any) {
@@ -733,7 +744,13 @@ export function createHudRenderFragment(deps: any): any {
                             } catch (eIx2) {}
                             try {
                                 if (!$view.find('.dnd-search-break').length) {
-                                    $view.find('.acu-search-wrapper').first().before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>');
+                                    var _seI2 = $view.find('.acu-search-wrapper').first();
+                                    var _cbI2 = $view.find('.acu-close-btn').first();
+                                    var _hcI2 = $view.find('.acu-height-control').first();
+                                    var _brkHtml = '<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>';
+                                    if (_cbI2.length) { _cbI2.after(_brkHtml); }
+                                    else if (_hcI2.length) { _hcI2.after(_brkHtml); }
+                                    else if (_seI2.length) { _seI2.before(_brkHtml); }
                                 }
                             } catch (eBrC) {}
                             try {
@@ -748,7 +765,7 @@ export function createHudRenderFragment(deps: any): any {
                                         this.style.setProperty('margin-top', '4px', 'important');
                                         this.style.setProperty('box-sizing', 'border-box', 'important');
                                         this.style.setProperty('border-radius', '999px', 'important');
-                                        this.style.setProperty('border', '1px solid var(--acu-accent, #d4a017)', 'important');
+                                        this.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
                                         this.style.setProperty('overflow', 'hidden', 'important');
                                     } catch (eB4) {}
                                 });
@@ -760,13 +777,13 @@ export function createHudRenderFragment(deps: any): any {
                                 });
                                 $view.find('.acu-global-interaction-search-wrapper').each(function(this: any) {
                                     try {
-                                        this.style.setProperty('width', '45%', 'important');
-                                        this.style.setProperty('max-width', 'calc(100% - 8px)', 'important');
+                                        this.style.setProperty('width', 'min(45%, 220px)', 'important');
+                                        this.style.setProperty('max-width', 'calc(100% - 16px)', 'important');
                                         this.style.setProperty('min-width', '0', 'important');
                                         this.style.setProperty('box-sizing', 'border-box', 'important');
-                                        this.style.setProperty('margin-right', '4px', 'important');
+                                        this.style.setProperty('margin-right', '8px', 'important');
                                         this.style.setProperty('border-radius', '999px', 'important');
-                                        this.style.setProperty('border', '1px solid var(--acu-accent, #d4a017)', 'important');
+                                        this.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
                                         this.style.setProperty('overflow', 'hidden', 'important');
                                     } catch (eTb2) {}
                                 });
