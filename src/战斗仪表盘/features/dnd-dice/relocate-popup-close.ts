@@ -9,6 +9,14 @@ export function relocatePopupCloseInto(host: any) {
     var closeBtn: any = null;
     if (popupEl) closeBtn = popupEl.querySelector('.dnd-popup-close-btn');
     if (!closeBtn) closeBtn = doc.querySelector('.dnd-popup-close-btn');
+    // [b13.6.9] 清理全 doc 多余✕（最多保留 1 个，防积累导致按钮区移位）
+    try {
+      var _allClose = doc.querySelectorAll('.dnd-popup-close-btn');
+      if (_allClose.length > 1) { closeBtn = _allClose[_allClose.length - 1]; }
+      for (var _ci = 0; _ci < _allClose.length; _ci++) {
+        if (_allClose[_ci] !== closeBtn && _allClose[_ci].parentNode) { _allClose[_ci].parentNode.removeChild(_allClose[_ci]); }
+      }
+    } catch (eK) {}
     var actions = host.querySelector('.acu-dice-panel-actions');
     if (!actions) return;
     // 2. 若不存在——新建

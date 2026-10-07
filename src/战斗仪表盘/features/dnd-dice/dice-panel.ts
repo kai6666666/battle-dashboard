@@ -51,6 +51,8 @@ export function createDicePanelFragment(deps: any): any {
                             _popSC.style.setProperty('overflow-y', 'auto', 'important');
                             _popSC.style.setProperty('touch-action', 'pan-y', 'important');
                             _popSC.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important');
+                            // [b13.6.9] 子容器 touch 放行（防面板内部拦滑）
+                            try { var _pnlSC: any = _popSC.querySelector('.acu-dice-panel, .acu-contest-panel'); if (_pnlSC) { _pnlSC.style.setProperty('touch-action', 'pan-y', 'important'); _pnlSC.style.setProperty('overflow-y', 'visible', 'important'); } } catch (eSC2) {}
                             console.info('[DND]ZCHK popup z=' + getComputedStyle(_popSC).zIndex + ' oh=' + _popSC.offsetHeight + ' sh=' + _popSC.scrollHeight);
                         }
                     } catch (eSC) {}

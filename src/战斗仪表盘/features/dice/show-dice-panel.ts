@@ -15,6 +15,7 @@ import { createDicePanelEffectConfirm } from './panel/dice-panel-effect-confirm'
 import { createDicePanelApplyPreset } from './panel/dice-panel-apply-preset';
 import { createDicePanelAdvancedCheck } from './panel/dice-panel-advanced-check';
 import { createDicePanelRoll } from './panel/dice-panel-roll';
+import { relocatePopupCloseInto } from '../dnd-dice/relocate-popup-close';
 type LegacyAdvancedDicePreset = Record<string, any>;
 type AdvancedDicePreset = Record<string, any>;
 type DiceRawData = Record<string, any>;
@@ -303,6 +304,8 @@ export function createShowDicePanel(deps: any) {
           } catch (eEmb) {}
         } catch (eSH) {}
         _hostEl.appendChild(_pElH);
+        // [b13.6.9] 弹窗✕归位到面板按钮区（切回普通时重建✕）
+        try { relocatePopupCloseInto(_hostEl); } catch (eRC1) {}
       } catch (eH) {}
     } else {
       overlay.append(panel);
