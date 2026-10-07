@@ -15,6 +15,7 @@ import { createPerformCustomContestRoll } from './contest/perform-custom-contest
 import { createPerformContestRoll } from './contest/perform-contest-roll';
 import { createContestPanelBindings } from './contest/contest-panel-bindings';
 import { createContestPanelInit } from './contest/contest-panel-init';
+import { relocatePopupCloseInto } from '../dnd-dice/relocate-popup-close';
 export function createShowContestPanel(deps: any) {
   const showContestPanel = (options: Record<string, any> = {}) => {
     const { $ } = deps.getCore();
@@ -127,6 +128,8 @@ export function createShowContestPanel(deps: any) {
           } catch (eEmb) {}
         } catch (eSH) {}
         _hostEl.appendChild(_pElH);
+        // [b13.6.7] 弹窗✕归位到面板按钮区
+        try { relocatePopupCloseInto(_hostEl); } catch (eRC2) {}
       } catch (eH) {}
     } else {
       overlay.append(panel);

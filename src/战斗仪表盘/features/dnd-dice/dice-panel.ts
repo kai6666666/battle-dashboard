@@ -1,6 +1,7 @@
 // features/dnd-dice/dice-panel.ts
 // 快速投掷面板（池显示已降级为引擎状态）（b9 骰子归一 · 自 BasedonST `src/ui/modules/UIDice.js` 拆分移植并改接 AcuDice）
 import { DND_CONFIG } from '../dnd-core';
+import { relocatePopupCloseInto, scrollIntoPopupView } from './relocate-popup-close';
 
 export function createDicePanelFragment(deps: any): any {
   return {
@@ -40,6 +41,8 @@ export function createDicePanelFragment(deps: any): any {
                         const r = p ? p.getBoundingClientRect() : null;
                         console.info('[DND]面板渲染后 ' + (r ? ('w' + Math.round(r.width) + ' h' + Math.round(r.height) + ' vis=' + (p ? getComputedStyle(p).display : '?')) : 'panel未找到'));
                     } catch (e3) {}
+                    // [b13.6.7] 弹窗✕归位到面板按钮区（统一样式与区域）
+                    try { relocatePopupCloseInto(host); } catch (eRC) {}
                     // [b13.6.3] 面板注入后重新定位弹窗（避免太靠下）
                     try {
                         var popEl: any = document.getElementById('dnd-detail-popup-el');
@@ -54,6 +57,8 @@ export function createDicePanelFragment(deps: any): any {
                             console.info('[DND]弹窗重定位 top=' + ptop + ' ph=' + ph + ' winH=' + winH);
                         }
                     } catch (e6) {}
+                    // [b13.6.7] 面板注入后窗口内部滚动兜底（防“固定”异常）
+                    try { setTimeout(function () { try { var _peS: any = document.getElementById('dnd-detail-popup-el'); if (!_peS) { try { var _$ps = $ ? $('#dnd-detail-popup-el') : null; if (_$ps && _$ps.length) _peS = _$ps[0]; } catch (eSN) {} } var _rcS = host.querySelector('.acu-dice-roll-result-card'); if (_peS && _rcS) scrollIntoPopupView(_peS, _rcS); } catch (eSS) {} }, 220); } catch (eSSb) {}
                     // [b13.6.4] 监听面板高度变化（投骰后结果卡注入）——保持弹窗底部不出屏
                     try {
                         const popupRef = () => {

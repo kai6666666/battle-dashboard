@@ -529,7 +529,7 @@ export function createPerformContestRoll(ctx: any) {
     );
     $resultDisplay.show();
     // [b13.6.6] 结果出现后滚动到可见（对抗检定）
-    try { setTimeout(function () { try { ($resultDisplay[0] as any).scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (eS1) {} }, 150); } catch (eS1b) {}
+    try { setTimeout(function () { try { var _pe1: any = document.getElementById('dnd-detail-popup-el'); if (!_pe1 || !_pe1.contains($resultDisplay[0])) return; var _pr1 = _pe1.getBoundingClientRect(); var _tr1 = ($resultDisplay[0] as any).getBoundingClientRect(); if (_tr1.bottom > _pr1.bottom - 12) { _pe1.scrollTop += (_tr1.bottom - (_pr1.bottom - 12)); } } catch (eS1) {} }, 150); } catch (eS1b) {}
     // [b13.6.5] 结果特效卡（对抗检定，胜者高亮显示）
     try {
       var _cw = String(displayInitValue != null ? displayInitValue : '');
