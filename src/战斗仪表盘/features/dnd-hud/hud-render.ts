@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.79-b13.2.38 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.80-b13.2.39 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -360,9 +360,9 @@ export function createHudRenderFragment(deps: any): any {
                                 $view.find('.acu-search-wrapper').each(function(this: any) {
                                     try {
                                         this.style.setProperty('order', '9999', 'important');
-                                        this.style.setProperty('flex', '0 0 55%', 'important');
-                                        this.style.setProperty('width', '55%', 'important');
-                                        this.style.setProperty('max-width', '55%', 'important');
+                                        this.style.setProperty('flex', '0 0 45%', 'important');
+                                        this.style.setProperty('width', '45%', 'important');
+                                        this.style.setProperty('max-width', '45%', 'important');
                                         this.style.setProperty('min-width', '0', 'important');
                                         this.style.setProperty('margin-left', 'auto', 'important');
                                         this.style.setProperty('margin-top', '6px', 'important');
@@ -461,9 +461,9 @@ export function createHudRenderFragment(deps: any): any {
                             $view.find('.acu-search-wrapper').each(function(this: any) {
                                 try {
                                     this.style.setProperty('order', '9999', 'important');
-                                    this.style.setProperty('flex', '0 0 55%', 'important');
-                                    this.style.setProperty('width', '55%', 'important');
-                                    this.style.setProperty('max-width', '55%', 'important');
+                                    this.style.setProperty('flex', '0 0 45%', 'important');
+                                    this.style.setProperty('width', '45%', 'important');
+                                    this.style.setProperty('max-width', '45%', 'important');
                                     this.style.setProperty('min-width', '0', 'important');
                                     this.style.setProperty('margin-left', 'auto', 'important');
                                     this.style.setProperty('margin-top', '6px', 'important');
@@ -698,9 +698,9 @@ export function createHudRenderFragment(deps: any): any {
                                 $view.find('.acu-search-wrapper').each(function(this: any) {
                                     try {
                                         this.style.setProperty('order', '9999', 'important');
-                                        this.style.setProperty('flex', '0 0 55%', 'important');
-                                        this.style.setProperty('width', '55%', 'important');
-                                        this.style.setProperty('max-width', '55%', 'important');
+                                        this.style.setProperty('flex', '0 0 45%', 'important');
+                                        this.style.setProperty('width', '45%', 'important');
+                                        this.style.setProperty('max-width', '45%', 'important');
                                         this.style.setProperty('min-width', '0', 'important');
                                         this.style.setProperty('margin-left', 'auto', 'important');
                                         this.style.setProperty('margin-top', '6px', 'important');
@@ -708,6 +708,15 @@ export function createHudRenderFragment(deps: any): any {
                                     } catch (eB4) {}
                                 });
                             } catch (eIx3) {}
+                            // [b13.2.39] 交互面板 toolbar 搜索框：半宽靠右（就地，保持 content 顶部第二排）
+                            try {
+                                $view.find('.acu-global-interaction-toolbar').each(function(this: any) {
+                                    try { this.style.setProperty('display', 'flex', 'important'); this.style.setProperty('justify-content', 'flex-end', 'important'); this.style.setProperty('align-items', 'center', 'important'); } catch (eTb1) {}
+                                });
+                                $view.find('.acu-global-interaction-search-wrapper').each(function(this: any) {
+                                    try { this.style.setProperty('width', '45%', 'important'); this.style.setProperty('max-width', '45%', 'important'); this.style.setProperty('min-width', '0', 'important'); this.style.setProperty('box-sizing', 'border-box', 'important'); } catch (eTb2) {}
+                                });
+                            } catch (eTb0) {}
                         };
                         _tidyI();
                         setTimeout(_tidyI, 300);
