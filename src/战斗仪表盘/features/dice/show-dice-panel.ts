@@ -280,6 +280,12 @@ export function createShowDicePanel(deps: any) {
           _pElH.style.setProperty('max-width', '100%', 'important');
           _pElH.style.setProperty('max-height', 'none', 'important');
           _pElH.style.setProperty('margin', '0', 'important');
+          // [b13.6.4] 样式融合：去外框/阴影/大圆角（融入小弹窗）；隐藏内层✕
+          _pElH.style.setProperty('border', 'none', 'important');
+          _pElH.style.setProperty('border-radius', '0', 'important');
+          _pElH.style.setProperty('box-shadow', 'none', 'important');
+          var _closeEl: any = _pElH.querySelector('.acu-dice-close');
+          if (_closeEl) _closeEl.style.setProperty('display', 'none', 'important');
         } catch (eSH) {}
         _hostEl.appendChild(_pElH);
       } catch (eH) {}

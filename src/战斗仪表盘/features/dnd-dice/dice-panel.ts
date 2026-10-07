@@ -54,6 +54,36 @@ export function createDicePanelFragment(deps: any): any {
                             console.info('[DND]弹窗重定位 top=' + ptop + ' ph=' + ph + ' winH=' + winH);
                         }
                     } catch (e6) {}
+                    // [b13.6.4] 监听面板高度变化（投骰后结果卡注入）——保持弹窗底部不出屏
+                    try {
+                        const popupRef = () => {
+                            var pe: any = document.getElementById('dnd-detail-popup-el');
+                            if (!pe) { try { const $p3 = $ ? $('#dnd-detail-popup-el') : null; if ($p3 && $p3.length) pe = $p3[0]; } catch (eR0) {} }
+                            return pe;
+                        };
+                        const repositionPopup = () => {
+                            try {
+                                const pe = popupRef();
+                                if (!pe) return;
+                                const winH2 = window.innerHeight || 800;
+                                let top2 = parseFloat(pe.style.top) || 0;
+                                const rect2 = pe.getBoundingClientRect();
+                                if (rect2.bottom > winH2 - 10) {
+                                    top2 -= (rect2.bottom - (winH2 - 10));
+                                }
+                                if (top2 < 10) top2 = 10;
+                                pe.style.setProperty('top', Math.round(top2) + 'px', 'important');
+                            } catch (eR) {}
+                        };
+                        if (typeof (window as any).ResizeObserver === 'function') {
+                            const ro = new (window as any).ResizeObserver(function () { repositionPopup(); });
+                            ro.observe(host);
+                            try { (host as any).__dndPopupRO = ro; } catch (eR2) {}
+                        }
+                        // 双保险：延迟一次 + 再延迟一次（覆盖动画帧）
+                        setTimeout(repositionPopup, 120);
+                        setTimeout(repositionPopup, 400);
+                    } catch (eRO) {}
                 } else {
                     deps.notification.warning('完整投骰面板不可用：桥未就绪');
                 }
