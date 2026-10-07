@@ -51,6 +51,18 @@ export function createDicePanelFragment(deps: any): any {
                             _popSC.style.setProperty('overflow-y', 'auto', 'important');
                             _popSC.style.setProperty('touch-action', 'pan-y', 'important');
                             _popSC.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important');
+                            // [b13.7.1] 隐藏滚动条（保留滚动功能）+ overscroll 链隔离
+                            _popSC.style.setProperty('scrollbar-width', 'none', 'important');
+                            _popSC.style.setProperty('overscroll-behavior', 'contain', 'important');
+                            try {
+                                var _docSP = _popSC.ownerDocument || document;
+                                if (!_docSP.getElementById('acu-hide-scrollbar-style')) {
+                                    var _stSP = _docSP.createElement('style');
+                                    _stSP.id = 'acu-hide-scrollbar-style';
+                                    _stSP.textContent = '.dnd-detail-popup::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}.dnd-detail-popup{-ms-overflow-style:none!important}.dnd-detail-popup *{scrollbar-width:none!important}.dnd-detail-popup *::-webkit-scrollbar{display:none!important;width:0!important}';
+                                    (_docSP.head || _docSP.documentElement).appendChild(_stSP);
+                                }
+                            } catch (eSP) {}
                             // [b13.6.9] 子容器 touch 放行（防面板内部拦滑）
                             try { var _pnlSC: any = _popSC.querySelector('.acu-dice-panel, .acu-contest-panel'); if (_pnlSC) { _pnlSC.style.setProperty('touch-action', 'pan-y', 'important'); _pnlSC.style.setProperty('overflow-y', 'visible', 'important'); } } catch (eSC2) {}
                             console.info('[DND]ZCHK popup z=' + getComputedStyle(_popSC).zIndex + ' oh=' + _popSC.offsetHeight + ' sh=' + _popSC.scrollHeight);
