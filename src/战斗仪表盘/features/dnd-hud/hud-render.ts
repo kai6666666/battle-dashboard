@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.89-b13.2.48 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.90-b13.2.49 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -359,10 +359,17 @@ export function createHudRenderFragment(deps: any): any {
                                     $view.find('.acu-search-wrapper').each(function(this: any) {
                                         var $s = $(this);
                                         try {
-                                            var _inRowX = $s.parent().hasClass('dnd-search-row');
-                                            var $ph = _inRowX ? $() : $s.closest('.acu-panel-header');
-                                            if (!_inRowX && $ph.length) { $s.detach(); }
-                                            var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                            var $ph = $s.closest('.acu-panel-header');
+                                            if (!$ph.length) { $ph = $view.find('.acu-panel-header').first(); }
+                                            if ($ph.length) {
+                                                try { $ph[0].style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eHW) {}
+                                                var $existRow = $ph.children('.dnd-search-row').first();
+                                                if (!$existRow.length) {
+                                                    $existRow = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;flex:1 0 100% !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                                    $ph.append($existRow);
+                                                }
+                                                if ($s.parent()[0] !== $existRow[0]) { try { $s.detach(); $existRow.append($s); } catch (eMV) {} }
+                                            }
                                             try {
                                                 var _sw: any = $s[0];
                                                 _sw.style.setProperty('width', '45%', 'important');
@@ -388,7 +395,8 @@ export function createHudRenderFragment(deps: any): any {
                                                     $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
                                                 }
                                             } catch (eTB2) {}
-                                            if (!_inRowX && $ph.length) { $row.append($s); $ph.after($row); }
+                                            try { $view.find('.dnd-search-row').filter(function(this: any) { return !$(this).closest('.acu-panel-header').length; }).remove(); } catch (eRM) {}
+                                            try { $view.find('.acu-global-interaction-toolbar').each(function(this: any) { if (!$(this).children().length) { this.style.setProperty('display', 'none', 'important'); } }); } catch (eHTB) {}
                                         } catch (eS1) {}
                                     });
                                 } catch (eS2) {}
@@ -536,10 +544,17 @@ export function createHudRenderFragment(deps: any): any {
                                     $view.find('.acu-search-wrapper').each(function(this: any) {
                                         var $s = $(this);
                                         try {
-                                            var _inRowX = $s.parent().hasClass('dnd-search-row');
-                                            var $ph = _inRowX ? $() : $s.closest('.acu-panel-header');
-                                            if (!_inRowX && $ph.length) { $s.detach(); }
-                                            var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                            var $ph = $s.closest('.acu-panel-header');
+                                            if (!$ph.length) { $ph = $view.find('.acu-panel-header').first(); }
+                                            if ($ph.length) {
+                                                try { $ph[0].style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eHW) {}
+                                                var $existRow = $ph.children('.dnd-search-row').first();
+                                                if (!$existRow.length) {
+                                                    $existRow = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;flex:1 0 100% !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                                    $ph.append($existRow);
+                                                }
+                                                if ($s.parent()[0] !== $existRow[0]) { try { $s.detach(); $existRow.append($s); } catch (eMV) {} }
+                                            }
                                             try {
                                                 var _sw: any = $s[0];
                                                 _sw.style.setProperty('width', '45%', 'important');
@@ -565,7 +580,8 @@ export function createHudRenderFragment(deps: any): any {
                                                     $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
                                                 }
                                             } catch (eTB2) {}
-                                            if (!_inRowX && $ph.length) { $row.append($s); $ph.after($row); }
+                                            try { $view.find('.dnd-search-row').filter(function(this: any) { return !$(this).closest('.acu-panel-header').length; }).remove(); } catch (eRM) {}
+                                            try { $view.find('.acu-global-interaction-toolbar').each(function(this: any) { if (!$(this).children().length) { this.style.setProperty('display', 'none', 'important'); } }); } catch (eHTB) {}
                                         } catch (eS1) {}
                                     });
                                 } catch (eS2) {}
@@ -839,10 +855,17 @@ export function createHudRenderFragment(deps: any): any {
                                     $view.find('.acu-search-wrapper').each(function(this: any) {
                                         var $s = $(this);
                                         try {
-                                            var _inRowX = $s.parent().hasClass('dnd-search-row');
-                                            var $ph = _inRowX ? $() : $s.closest('.acu-panel-header');
-                                            if (!_inRowX && $ph.length) { $s.detach(); }
-                                            var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                            var $ph = $s.closest('.acu-panel-header');
+                                            if (!$ph.length) { $ph = $view.find('.acu-panel-header').first(); }
+                                            if ($ph.length) {
+                                                try { $ph[0].style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eHW) {}
+                                                var $existRow = $ph.children('.dnd-search-row').first();
+                                                if (!$existRow.length) {
+                                                    $existRow = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;flex:1 0 100% !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                                    $ph.append($existRow);
+                                                }
+                                                if ($s.parent()[0] !== $existRow[0]) { try { $s.detach(); $existRow.append($s); } catch (eMV) {} }
+                                            }
                                             try {
                                                 var _sw: any = $s[0];
                                                 _sw.style.setProperty('width', '45%', 'important');
@@ -868,7 +891,8 @@ export function createHudRenderFragment(deps: any): any {
                                                     $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
                                                 }
                                             } catch (eTB2) {}
-                                            if (!_inRowX && $ph.length) { $row.append($s); $ph.after($row); }
+                                            try { $view.find('.dnd-search-row').filter(function(this: any) { return !$(this).closest('.acu-panel-header').length; }).remove(); } catch (eRM) {}
+                                            try { $view.find('.acu-global-interaction-toolbar').each(function(this: any) { if (!$(this).children().length) { this.style.setProperty('display', 'none', 'important'); } }); } catch (eHTB) {}
                                         } catch (eS1) {}
                                     });
                                 } catch (eS2) {}
