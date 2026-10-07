@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.80-b13.2.39 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.81-b13.2.40 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -357,6 +357,24 @@ export function createHudRenderFragment(deps: any): any {
                                 });
                             } catch (eTx2) {}
                             try {
+                                if (!$view.find('.dnd-search-break').length) {
+                                    $view.find('.acu-search-wrapper').first().before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>');
+                                }
+                            } catch (eBrA) {}
+                            try {
+                                $view.find('.acu-header-actions').each(function(this: any) {
+                                    try { this.style.setProperty('gap', '3px', 'important'); this.style.setProperty('row-gap', '3px', 'important'); } catch (eGA) {}
+                                });
+                                $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control').each(function(this: any) {
+                                    try {
+                                        this.style.setProperty('min-width', '24px', 'important');
+                                        this.style.setProperty('width', '24px', 'important');
+                                        this.style.setProperty('height', '24px', 'important');
+                                        this.style.setProperty('padding', '0', 'important');
+                                    } catch (eGB) {}
+                                });
+                            } catch (eGA2) {}
+                            try {
                                 $view.find('.acu-search-wrapper').each(function(this: any) {
                                     try {
                                         this.style.setProperty('order', '9999', 'important');
@@ -365,8 +383,11 @@ export function createHudRenderFragment(deps: any): any {
                                         this.style.setProperty('max-width', '45%', 'important');
                                         this.style.setProperty('min-width', '0', 'important');
                                         this.style.setProperty('margin-left', 'auto', 'important');
-                                        this.style.setProperty('margin-top', '6px', 'important');
+                                        this.style.setProperty('margin-top', '4px', 'important');
                                         this.style.setProperty('box-sizing', 'border-box', 'important');
+                                        this.style.setProperty('border-radius', '999px', 'important');
+                                        this.style.setProperty('border', '1px solid var(--acu-accent, #d4a017)', 'important');
+                                        this.style.setProperty('overflow', 'hidden', 'important');
                                     } catch (eB2) {}
                                 });
                             } catch (eTx3) {}
@@ -458,6 +479,11 @@ export function createHudRenderFragment(deps: any): any {
                             var _seR = _hdR.find('.acu-search-wrapper').first();
                             var _ctR = _hdR.find('.acu-panel-control-set').first();
                             if (_seR.length && _ctR.length) { _ctR.detach(); _seR.before(_ctR); }
+                            try {
+                                if (!$view.find('.dnd-search-break').length) {
+                                    $view.find('.acu-search-wrapper').first().before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>');
+                                }
+                            } catch (eBrB) {}
                             $view.find('.acu-search-wrapper').each(function(this: any) {
                                 try {
                                     this.style.setProperty('order', '9999', 'important');
@@ -466,8 +492,11 @@ export function createHudRenderFragment(deps: any): any {
                                     this.style.setProperty('max-width', '45%', 'important');
                                     this.style.setProperty('min-width', '0', 'important');
                                     this.style.setProperty('margin-left', 'auto', 'important');
-                                    this.style.setProperty('margin-top', '6px', 'important');
+                                    this.style.setProperty('margin-top', '4px', 'important');
                                     this.style.setProperty('box-sizing', 'border-box', 'important');
+                                    this.style.setProperty('border-radius', '999px', 'important');
+                                    this.style.setProperty('border', '1px solid var(--acu-accent, #d4a017)', 'important');
+                                    this.style.setProperty('overflow', 'hidden', 'important');
                                 } catch (eB3) {}
                             });
                         } catch (eRx) {}
@@ -691,9 +720,22 @@ export function createHudRenderFragment(deps: any): any {
                             } catch (eIx) {}
                             try {
                                 _hdI.each(function(this: any) {
-                                    try { this.style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eA2) {}
+                                    try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '3px', 'important'); this.style.setProperty('row-gap', '3px', 'important'); } catch (eA2) {}
+                                });
+                                $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control').each(function(this: any) {
+                                    try {
+                                        this.style.setProperty('min-width', '24px', 'important');
+                                        this.style.setProperty('width', '24px', 'important');
+                                        this.style.setProperty('height', '24px', 'important');
+                                        this.style.setProperty('padding', '0', 'important');
+                                    } catch (eGB2) {}
                                 });
                             } catch (eIx2) {}
+                            try {
+                                if (!$view.find('.dnd-search-break').length) {
+                                    $view.find('.acu-search-wrapper').first().before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>');
+                                }
+                            } catch (eBrC) {}
                             try {
                                 $view.find('.acu-search-wrapper').each(function(this: any) {
                                     try {
@@ -703,8 +745,11 @@ export function createHudRenderFragment(deps: any): any {
                                         this.style.setProperty('max-width', '45%', 'important');
                                         this.style.setProperty('min-width', '0', 'important');
                                         this.style.setProperty('margin-left', 'auto', 'important');
-                                        this.style.setProperty('margin-top', '6px', 'important');
+                                        this.style.setProperty('margin-top', '4px', 'important');
                                         this.style.setProperty('box-sizing', 'border-box', 'important');
+                                        this.style.setProperty('border-radius', '999px', 'important');
+                                        this.style.setProperty('border', '1px solid var(--acu-accent, #d4a017)', 'important');
+                                        this.style.setProperty('overflow', 'hidden', 'important');
                                     } catch (eB4) {}
                                 });
                             } catch (eIx3) {}
@@ -714,7 +759,16 @@ export function createHudRenderFragment(deps: any): any {
                                     try { this.style.setProperty('display', 'flex', 'important'); this.style.setProperty('justify-content', 'flex-end', 'important'); this.style.setProperty('align-items', 'center', 'important'); } catch (eTb1) {}
                                 });
                                 $view.find('.acu-global-interaction-search-wrapper').each(function(this: any) {
-                                    try { this.style.setProperty('width', '45%', 'important'); this.style.setProperty('max-width', '45%', 'important'); this.style.setProperty('min-width', '0', 'important'); this.style.setProperty('box-sizing', 'border-box', 'important'); } catch (eTb2) {}
+                                    try {
+                                        this.style.setProperty('width', '45%', 'important');
+                                        this.style.setProperty('max-width', 'calc(100% - 8px)', 'important');
+                                        this.style.setProperty('min-width', '0', 'important');
+                                        this.style.setProperty('box-sizing', 'border-box', 'important');
+                                        this.style.setProperty('margin-right', '4px', 'important');
+                                        this.style.setProperty('border-radius', '999px', 'important');
+                                        this.style.setProperty('border', '1px solid var(--acu-accent, #d4a017)', 'important');
+                                        this.style.setProperty('overflow', 'hidden', 'important');
+                                    } catch (eTb2) {}
                                 });
                             } catch (eTb0) {}
                         };
