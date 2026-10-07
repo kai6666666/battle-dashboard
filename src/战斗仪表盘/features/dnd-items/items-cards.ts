@@ -150,7 +150,7 @@ export function createItemsCardsFragment(deps: any): any {
 
         // 添加关闭按钮到内容顶部
         const closeBtn = `<div class="dnd-popup-close-btn" style="position:absolute;top:8px;right:8px;cursor:pointer;color:var(--dnd-text-highlight);font-size:17px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);transition:all 0.2s;" onmouseover="this.style.background='var(--dnd-bg-tertiary)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'"><i class="fa-solid fa-times"></i></div>`;
-        $popup.html(closeBtn + '<div style="padding-right:20px;">' + contentHtml + '</div>');
+        $popup.html(closeBtn + '<div style="padding:0;">' + contentHtml + '</div>');
         // [b12.6] 关闭按钮：脚本绑定（替代 inline onclick，兼容宿主环境）
         $popup.off('click.dndPopupClose').on('click.dndPopupClose', '.dnd-popup-close-btn', (e) => {
             e.stopPropagation();

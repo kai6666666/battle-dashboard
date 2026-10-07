@@ -101,6 +101,14 @@ export function createDicePanelFragment(deps: any): any {
                         // 双保险：延迟一次 + 再延迟一次（覆盖动画帧）
                         setTimeout(repositionPopup, 120);
                         setTimeout(repositionPopup, 400);
+                        // [b13.7.0] MutationObserver：内容变化后同步重定位弹窗（防投骰后溢出屏）
+                        try {
+                            if (typeof (window as any).MutationObserver === 'function') {
+                                var _mo = new (window as any).MutationObserver(function () { repositionPopup(); });
+                                _mo.observe(host, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+                                try { (host as any).__dndPopupMO = _mo; } catch (eMO2) {}
+                            }
+                        } catch (eMO) {}
                     } catch (eRO) {}
                 } else {
                     deps.notification.warning('完整投骰面板不可用：桥未就绪');
