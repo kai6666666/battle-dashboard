@@ -2,6 +2,7 @@
 // Mini HUD 主渲染（+位置/拖拽）（b4 · 自 BasedonST `src/ui/modules/UIHUD.js` 拆分移植）
 // 工厂 + DI；与同域其它 fragment 经 index.ts 合并为同一对象（this 跨块可用）。
 import { DND_CONFIG } from '../dnd-core';
+import { applyDndHeaderTidy } from './hud-header-tidy';
 
 // [b13.2.32] DND 内联样式表（per-doc 注入用）
 const __DND_CSS_V9 = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-search-wrapper,.dnd-acu-view-inline .acu-search-wrapper{order:9999 !important;flex:0 1 auto !important;width:44% !important;max-width:44% !important;min-width:110px !important;margin-left:auto !important;margin-top:4px !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-header-actions,.dnd-acu-view-inline .acu-header-actions{flex-wrap:wrap !important;row-gap:6px !important;justify-content:flex-end !important;max-width:100% !important;min-width:0 !important;}' + '.dnd-acu-table-view .acu-panel-header,.dnd-acu-view-inline .acu-panel-header{max-width:100% !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-search-wrapper .acu-search-input,.dnd-acu-view-inline .acu-search-wrapper .acu-search-input{max-width:100% !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-panel-control-set,.dnd-acu-view-inline .acu-panel-control-set{display:flex !important;align-items:center !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-btn-dozed{pointer-events:none !important;opacity:.3 !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
@@ -17,7 +18,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.90-b13.2.49 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.91-b13.2.50 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -344,110 +345,7 @@ export function createHudRenderFragment(deps: any): any {
                     $container.append($view);
                     // [b13.2.38] 头部排序规整：↕✕ → 第一排末；搜索框 → 半宽靠右第二排
                     try {
-                        var _tidyT = function() {
-                            try {
-                                try { $view.find('.dnd-search-break').remove(); } catch (e0) {}
-                                try {
-                                    $view.find('.acu-panel-title').each(function(this: any) {
-                                        try { this.style.setProperty('min-width', '72px', 'important'); } catch (ePT) {}
-                                    });
-                                    $view.find('.acu-title-sub').each(function(this: any) {
-                                        try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '96px', 'important'); } catch (eTS) {}
-                                    });
-                                } catch (eTS0) {}
-                                try {
-                                    $view.find('.acu-search-wrapper').each(function(this: any) {
-                                        var $s = $(this);
-                                        try {
-                                            var $ph = $s.closest('.acu-panel-header');
-                                            if (!$ph.length) { $ph = $view.find('.acu-panel-header').first(); }
-                                            if ($ph.length) {
-                                                try { $ph[0].style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eHW) {}
-                                                var $existRow = $ph.children('.dnd-search-row').first();
-                                                if (!$existRow.length) {
-                                                    $existRow = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;flex:1 0 100% !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
-                                                    $ph.append($existRow);
-                                                }
-                                                if ($s.parent()[0] !== $existRow[0]) { try { $s.detach(); $existRow.append($s); } catch (eMV) {} }
-                                            }
-                                            try {
-                                                var _sw: any = $s[0];
-                                                _sw.style.setProperty('width', '45%', 'important');
-                                                _sw.style.setProperty('max-width', '45%', 'important');
-                                                _sw.style.setProperty('min-width', '0', 'important');
-                                                _sw.style.setProperty('flex', '0 0 45%', 'important');
-                                                _sw.style.setProperty('margin', '0', 'important'); _sw.style.setProperty('margin-left', 'auto', 'important');
-                                                _sw.style.setProperty('order', '0', 'important');
-                                                _sw.style.setProperty('box-sizing', 'border-box', 'important');
-                                                _sw.style.setProperty('border-radius', '999px', 'important');
-                                                _sw.style.setProperty('overflow', 'hidden', 'important');
-                                                _sw.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
-                                            } catch (eSW) {}
-                                            $s.find('input').each(function(this: any) {
-                                                try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
-                                            });
-                                            try {
-                                                var $ptb = $s.parent();
-                                                if ($ptb.length && String($ptb.attr('class') || '').indexOf('interaction-toolbar') >= 0) {
-                                                    $ptb[0].style.setProperty('display', 'flex', 'important');
-                                                    $ptb[0].style.setProperty('justify-content', 'flex-end', 'important');
-                                                    $ptb[0].style.setProperty('width', '100%', 'important');
-                                                    $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
-                                                }
-                                            } catch (eTB2) {}
-                                            try { $view.find('.dnd-search-row').filter(function(this: any) { return !$(this).closest('.acu-panel-header').length; }).remove(); } catch (eRM) {}
-                                            try { $view.find('.acu-global-interaction-toolbar').each(function(this: any) { if (!$(this).children().length) { this.style.setProperty('display', 'none', 'important'); } }); } catch (eHTB) {}
-                                        } catch (eS1) {}
-                                    });
-                                } catch (eS2) {}
-                                try {
-                                    $view.find('.acu-header-actions').each(function(this: any) {
-                                        try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA1) {}
-                                    });
-                                    $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control, .acu-panel-control-set button, .acu-panel-control-set .acu-height-control').each(function(this: any) {
-                                        try {
-                                            this.style.setProperty('flex', '0 0 auto', 'important');
-                                            this.style.setProperty('min-width', '24px', 'important');
-                                            this.style.setProperty('width', '24px', 'important');
-                                            this.style.setProperty('min-height', '24px', 'important');
-                                            this.style.setProperty('height', '24px', 'important');
-                                            this.style.setProperty('padding', '0', 'important');
-                                            this.style.setProperty('margin', '0', 'important');
-                                        } catch (eB1) {}
-                                    });
-                                } catch (eA2) {}
-                                try {
-                                    var _hD8 = $view.find('.acu-header-actions').first();
-                                    if (_hD8.length) {
-                                        var _w8: any = ($view[0].ownerDocument && $view[0].ownerDocument.defaultView) || window;
-                                        var _csH = _w8.getComputedStyle(_hD8[0]);
-                                        var _segs: string[] = [];
-                                        _hD8.children().each(function(i: number) {
-                                            var _r8 = this.getBoundingClientRect();
-                                            var _c8 = _w8.getComputedStyle(this);
-                                            _segs.push('(' + (i + 1) + ')' + String(this.className || '?').split(' ')[0].slice(0, 22) + ' x' + Math.round(_r8.left) + ' y' + Math.round(_r8.top) + ' w' + Math.round(_r8.width) + ' o' + _c8.order);
-                                        });
-                                        console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
-                                    }
-                                    try {
-                                        var _rwD = $view.find('.dnd-search-row').first();
-                                        if (_rwD.length) {
-                                            var _rrD = _rwD[0].getBoundingClientRect();
-                                            var _swDc = _rwD.find('.acu-search-wrapper').first();
-                                            var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
-                                            console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
-                                        }
-                                        var _anySw = $view.find('.acu-search-wrapper').first();
-                                        if (_anySw.length) {
-                                            var _ad = _anySw[0].getBoundingClientRect();
-                                            var _pcls = '?';
-                                            try { _pcls = String(_anySw.parent().attr('class') || '?').slice(0, 36); } catch (ePC) {}
-                                            console.info('[DND]HDRFIX search w=' + Math.round(_ad.width) + ' x=' + Math.round(_ad.left) + ',' + Math.round(_ad.top) + ' r=' + Math.round(_ad.right) + ' par=' + _pcls);
-                                        }
-                                    } catch (eSR) {}
-                                } catch (eD8) {}
-                            } catch (eFX) {}
-                        };_tidyT();
+                        var _tidyT = function() { try { applyDndHeaderTidy($, $view); } catch (eTD1) {} };_tidyT();
                         setTimeout(_tidyT, 300);
                         setTimeout(_tidyT, 800);
                     } catch (eT0) {}
@@ -529,110 +427,7 @@ export function createHudRenderFragment(deps: any): any {
                         let h = '';
                         try { if (g && typeof g.renderTableHostForDnd === 'function') h = g.renderTableHostForDnd(table); } catch (e) {}
                         if (h) $view.find('.dnd-acu-table-host').html(h);
-                        try {
-                            try {
-                                try { $view.find('.dnd-search-break').remove(); } catch (e0) {}
-                                try {
-                                    $view.find('.acu-panel-title').each(function(this: any) {
-                                        try { this.style.setProperty('min-width', '72px', 'important'); } catch (ePT) {}
-                                    });
-                                    $view.find('.acu-title-sub').each(function(this: any) {
-                                        try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '96px', 'important'); } catch (eTS) {}
-                                    });
-                                } catch (eTS0) {}
-                                try {
-                                    $view.find('.acu-search-wrapper').each(function(this: any) {
-                                        var $s = $(this);
-                                        try {
-                                            var $ph = $s.closest('.acu-panel-header');
-                                            if (!$ph.length) { $ph = $view.find('.acu-panel-header').first(); }
-                                            if ($ph.length) {
-                                                try { $ph[0].style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eHW) {}
-                                                var $existRow = $ph.children('.dnd-search-row').first();
-                                                if (!$existRow.length) {
-                                                    $existRow = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;flex:1 0 100% !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
-                                                    $ph.append($existRow);
-                                                }
-                                                if ($s.parent()[0] !== $existRow[0]) { try { $s.detach(); $existRow.append($s); } catch (eMV) {} }
-                                            }
-                                            try {
-                                                var _sw: any = $s[0];
-                                                _sw.style.setProperty('width', '45%', 'important');
-                                                _sw.style.setProperty('max-width', '45%', 'important');
-                                                _sw.style.setProperty('min-width', '0', 'important');
-                                                _sw.style.setProperty('flex', '0 0 45%', 'important');
-                                                _sw.style.setProperty('margin', '0', 'important'); _sw.style.setProperty('margin-left', 'auto', 'important');
-                                                _sw.style.setProperty('order', '0', 'important');
-                                                _sw.style.setProperty('box-sizing', 'border-box', 'important');
-                                                _sw.style.setProperty('border-radius', '999px', 'important');
-                                                _sw.style.setProperty('overflow', 'hidden', 'important');
-                                                _sw.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
-                                            } catch (eSW) {}
-                                            $s.find('input').each(function(this: any) {
-                                                try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
-                                            });
-                                            try {
-                                                var $ptb = $s.parent();
-                                                if ($ptb.length && String($ptb.attr('class') || '').indexOf('interaction-toolbar') >= 0) {
-                                                    $ptb[0].style.setProperty('display', 'flex', 'important');
-                                                    $ptb[0].style.setProperty('justify-content', 'flex-end', 'important');
-                                                    $ptb[0].style.setProperty('width', '100%', 'important');
-                                                    $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
-                                                }
-                                            } catch (eTB2) {}
-                                            try { $view.find('.dnd-search-row').filter(function(this: any) { return !$(this).closest('.acu-panel-header').length; }).remove(); } catch (eRM) {}
-                                            try { $view.find('.acu-global-interaction-toolbar').each(function(this: any) { if (!$(this).children().length) { this.style.setProperty('display', 'none', 'important'); } }); } catch (eHTB) {}
-                                        } catch (eS1) {}
-                                    });
-                                } catch (eS2) {}
-                                try {
-                                    $view.find('.acu-header-actions').each(function(this: any) {
-                                        try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA1) {}
-                                    });
-                                    $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control, .acu-panel-control-set button, .acu-panel-control-set .acu-height-control').each(function(this: any) {
-                                        try {
-                                            this.style.setProperty('flex', '0 0 auto', 'important');
-                                            this.style.setProperty('min-width', '24px', 'important');
-                                            this.style.setProperty('width', '24px', 'important');
-                                            this.style.setProperty('min-height', '24px', 'important');
-                                            this.style.setProperty('height', '24px', 'important');
-                                            this.style.setProperty('padding', '0', 'important');
-                                            this.style.setProperty('margin', '0', 'important');
-                                        } catch (eB1) {}
-                                    });
-                                } catch (eA2) {}
-                                try {
-                                    var _hD8 = $view.find('.acu-header-actions').first();
-                                    if (_hD8.length) {
-                                        var _w8: any = ($view[0].ownerDocument && $view[0].ownerDocument.defaultView) || window;
-                                        var _csH = _w8.getComputedStyle(_hD8[0]);
-                                        var _segs: string[] = [];
-                                        _hD8.children().each(function(i: number) {
-                                            var _r8 = this.getBoundingClientRect();
-                                            var _c8 = _w8.getComputedStyle(this);
-                                            _segs.push('(' + (i + 1) + ')' + String(this.className || '?').split(' ')[0].slice(0, 22) + ' x' + Math.round(_r8.left) + ' y' + Math.round(_r8.top) + ' w' + Math.round(_r8.width) + ' o' + _c8.order);
-                                        });
-                                        console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
-                                    }
-                                    try {
-                                        var _rwD = $view.find('.dnd-search-row').first();
-                                        if (_rwD.length) {
-                                            var _rrD = _rwD[0].getBoundingClientRect();
-                                            var _swDc = _rwD.find('.acu-search-wrapper').first();
-                                            var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
-                                            console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
-                                        }
-                                        var _anySw = $view.find('.acu-search-wrapper').first();
-                                        if (_anySw.length) {
-                                            var _ad = _anySw[0].getBoundingClientRect();
-                                            var _pcls = '?';
-                                            try { _pcls = String(_anySw.parent().attr('class') || '?').slice(0, 36); } catch (ePC) {}
-                                            console.info('[DND]HDRFIX search w=' + Math.round(_ad.width) + ' x=' + Math.round(_ad.left) + ',' + Math.round(_ad.top) + ' r=' + Math.round(_ad.right) + ' par=' + _pcls);
-                                        }
-                                    } catch (eSR) {}
-                                } catch (eD8) {}
-                            } catch (eFX) {}
-                            } catch (eRx) {}
+                        try { applyDndHeaderTidy($, $view); } catch (eRX2) {}
                         try { console.info('[DND]表格刷新 len=' + String(h || '').length + ' | pageBtns=' + $view.find('.acu-page-btn').length); } catch (e) {}
                     };
                     // [b13.3] 注册全局刷新回调（供写操作后自动刷新）
@@ -840,110 +635,7 @@ export function createHudRenderFragment(deps: any): any {
                     $container.append($view);
                     // [b13.2.37] 头部排序规整（收藏夹：高度/关闭 → 搜索框前）
                     try {
-                        var _tidyI = function() {
-                            try {
-                                try { $view.find('.dnd-search-break').remove(); } catch (e0) {}
-                                try {
-                                    $view.find('.acu-panel-title').each(function(this: any) {
-                                        try { this.style.setProperty('min-width', '72px', 'important'); } catch (ePT) {}
-                                    });
-                                    $view.find('.acu-title-sub').each(function(this: any) {
-                                        try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '96px', 'important'); } catch (eTS) {}
-                                    });
-                                } catch (eTS0) {}
-                                try {
-                                    $view.find('.acu-search-wrapper').each(function(this: any) {
-                                        var $s = $(this);
-                                        try {
-                                            var $ph = $s.closest('.acu-panel-header');
-                                            if (!$ph.length) { $ph = $view.find('.acu-panel-header').first(); }
-                                            if ($ph.length) {
-                                                try { $ph[0].style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eHW) {}
-                                                var $existRow = $ph.children('.dnd-search-row').first();
-                                                if (!$existRow.length) {
-                                                    $existRow = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;flex:1 0 100% !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
-                                                    $ph.append($existRow);
-                                                }
-                                                if ($s.parent()[0] !== $existRow[0]) { try { $s.detach(); $existRow.append($s); } catch (eMV) {} }
-                                            }
-                                            try {
-                                                var _sw: any = $s[0];
-                                                _sw.style.setProperty('width', '45%', 'important');
-                                                _sw.style.setProperty('max-width', '45%', 'important');
-                                                _sw.style.setProperty('min-width', '0', 'important');
-                                                _sw.style.setProperty('flex', '0 0 45%', 'important');
-                                                _sw.style.setProperty('margin', '0', 'important'); _sw.style.setProperty('margin-left', 'auto', 'important');
-                                                _sw.style.setProperty('order', '0', 'important');
-                                                _sw.style.setProperty('box-sizing', 'border-box', 'important');
-                                                _sw.style.setProperty('border-radius', '999px', 'important');
-                                                _sw.style.setProperty('overflow', 'hidden', 'important');
-                                                _sw.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
-                                            } catch (eSW) {}
-                                            $s.find('input').each(function(this: any) {
-                                                try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
-                                            });
-                                            try {
-                                                var $ptb = $s.parent();
-                                                if ($ptb.length && String($ptb.attr('class') || '').indexOf('interaction-toolbar') >= 0) {
-                                                    $ptb[0].style.setProperty('display', 'flex', 'important');
-                                                    $ptb[0].style.setProperty('justify-content', 'flex-end', 'important');
-                                                    $ptb[0].style.setProperty('width', '100%', 'important');
-                                                    $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
-                                                }
-                                            } catch (eTB2) {}
-                                            try { $view.find('.dnd-search-row').filter(function(this: any) { return !$(this).closest('.acu-panel-header').length; }).remove(); } catch (eRM) {}
-                                            try { $view.find('.acu-global-interaction-toolbar').each(function(this: any) { if (!$(this).children().length) { this.style.setProperty('display', 'none', 'important'); } }); } catch (eHTB) {}
-                                        } catch (eS1) {}
-                                    });
-                                } catch (eS2) {}
-                                try {
-                                    $view.find('.acu-header-actions').each(function(this: any) {
-                                        try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA1) {}
-                                    });
-                                    $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control, .acu-panel-control-set button, .acu-panel-control-set .acu-height-control').each(function(this: any) {
-                                        try {
-                                            this.style.setProperty('flex', '0 0 auto', 'important');
-                                            this.style.setProperty('min-width', '24px', 'important');
-                                            this.style.setProperty('width', '24px', 'important');
-                                            this.style.setProperty('min-height', '24px', 'important');
-                                            this.style.setProperty('height', '24px', 'important');
-                                            this.style.setProperty('padding', '0', 'important');
-                                            this.style.setProperty('margin', '0', 'important');
-                                        } catch (eB1) {}
-                                    });
-                                } catch (eA2) {}
-                                try {
-                                    var _hD8 = $view.find('.acu-header-actions').first();
-                                    if (_hD8.length) {
-                                        var _w8: any = ($view[0].ownerDocument && $view[0].ownerDocument.defaultView) || window;
-                                        var _csH = _w8.getComputedStyle(_hD8[0]);
-                                        var _segs: string[] = [];
-                                        _hD8.children().each(function(i: number) {
-                                            var _r8 = this.getBoundingClientRect();
-                                            var _c8 = _w8.getComputedStyle(this);
-                                            _segs.push('(' + (i + 1) + ')' + String(this.className || '?').split(' ')[0].slice(0, 22) + ' x' + Math.round(_r8.left) + ' y' + Math.round(_r8.top) + ' w' + Math.round(_r8.width) + ' o' + _c8.order);
-                                        });
-                                        console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
-                                    }
-                                    try {
-                                        var _rwD = $view.find('.dnd-search-row').first();
-                                        if (_rwD.length) {
-                                            var _rrD = _rwD[0].getBoundingClientRect();
-                                            var _swDc = _rwD.find('.acu-search-wrapper').first();
-                                            var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
-                                            console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
-                                        }
-                                        var _anySw = $view.find('.acu-search-wrapper').first();
-                                        if (_anySw.length) {
-                                            var _ad = _anySw[0].getBoundingClientRect();
-                                            var _pcls = '?';
-                                            try { _pcls = String(_anySw.parent().attr('class') || '?').slice(0, 36); } catch (ePC) {}
-                                            console.info('[DND]HDRFIX search w=' + Math.round(_ad.width) + ' x=' + Math.round(_ad.left) + ',' + Math.round(_ad.top) + ' r=' + Math.round(_ad.right) + ' par=' + _pcls);
-                                        }
-                                    } catch (eSR) {}
-                                } catch (eD8) {}
-                            } catch (eFX) {}
-                        };_tidyI();
+                        var _tidyI = function() { try { applyDndHeaderTidy($, $view); } catch (eTD2) {} };_tidyI();
                         setTimeout(_tidyI, 300);
                         setTimeout(_tidyI, 800);
                         setTimeout(_tidyI, 1500);
