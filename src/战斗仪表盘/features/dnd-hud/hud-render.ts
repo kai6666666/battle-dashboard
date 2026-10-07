@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.83-b13.2.42 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.84-b13.2.43 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -718,6 +718,27 @@ export function createHudRenderFragment(deps: any): any {
                     // [b13.2.37] 头部排序规整（收藏夹：高度/关闭 → 搜索框前）
                     try {
                         var _tidyI = function() {
+                            // [b13.2.43] 交互搜索框移入 header（参与标准两排布局）
+                            try {
+                                var _gS = $view.find('.acu-global-interaction-search-wrapper');
+                                var _gH = $view.find('.acu-header-actions').first();
+                                if (_gS.length && _gH.length && !_gH.find('.acu-global-interaction-search-wrapper').length) {
+                                    _gS.detach();
+                                    _gH.append(_gS);
+                                }
+                            } catch (eGS) {}
+                            // [b13.2.43] 标题压缩（给按钮留足空间，防 ✕ 换行）
+                            try {
+                                $view.find('.acu-panel-title').each(function(this: any) {
+                                    try { this.style.setProperty('min-width', '0', 'important'); this.style.setProperty('flex', '1 1 auto', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); } catch (ePT) {}
+                                });
+                                $view.find('.acu-title-main, .acu-title-sub').each(function(this: any) {
+                                    try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('min-width', '0', 'important'); } catch (eTS) {}
+                                });
+                                $view.find('.acu-header-actions').each(function(this: any) {
+                                    try { this.style.setProperty('flex-shrink', '0', 'important'); } catch (eHS) {}
+                                });
+                            } catch (eTS0) {}
                             try {
                                 var _hdI = $view.find('.acu-header-actions').first();
                                 var _seI = _hdI.find('.acu-search-wrapper').first();
