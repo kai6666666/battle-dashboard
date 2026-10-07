@@ -63,6 +63,40 @@ export function createDicePanelFragment(deps: any): any {
                                     (_docSP.head || _docSP.documentElement).appendChild(_stSP);
                                 }
                             } catch (eSP) {}
+                            // [b13.7.2] JS 手动触摸滚动（无视内部元素拦截；tap 兼容）
+                            try {
+                                if (!(_popSC as any).dataset.dndTouchScrollBound) {
+                                    (_popSC as any).dataset.dndTouchScrollBound = '1';
+                                    var _lastY = 0, _lastT = 0, _vel = 0, _raf = 0, _moved = 0;
+                                    _popSC.addEventListener('touchstart', function (ev: any) {
+                                        try { if (!ev.touches || !ev.touches.length) return; _lastY = ev.touches[0].clientY; _lastT = Date.now(); _vel = 0; _moved = 0; if (_raf) { cancelAnimationFrame(_raf); _raf = 0; } } catch (e0) {}
+                                    }, { passive: true });
+                                    _popSC.addEventListener('touchmove', function (ev: any) {
+                                        try {
+                                            if (!ev.touches || !ev.touches.length) return;
+                                            var curY = ev.touches[0].clientY;
+                                            var nowT = Date.now();
+                                            var dy = _lastY - curY;
+                                            var dt = Math.max(1, nowT - _lastT);
+                                            _lastY = curY; _lastT = nowT; _vel = dy / dt;
+                                            _moved += Math.abs(dy);
+                                            if (Math.abs(dy) > 0) { _popSC.scrollTop += dy; }
+                                            if (_moved > 4 && ev.cancelable) ev.preventDefault();
+                                        } catch (e1) {}
+                                    }, { passive: false });
+                                    _popSC.addEventListener('touchend', function () {
+                                        try {
+                                            if (Math.abs(_vel) > 0.2) {
+                                                var step = function () {
+                                                    try { _popSC.scrollTop += _vel * 16; _vel *= 0.95; if (Math.abs(_vel) > 0.05) { _raf = requestAnimationFrame(step); } } catch (e2) {}
+                                                };
+                                                _raf = requestAnimationFrame(step);
+                                            }
+                                        } catch (e3) {}
+                                    }, { passive: true });
+                                    console.info('[DND]PSCR touch-scroll bound');
+                                }
+                            } catch (eTS) {}
                             // [b13.6.9] 子容器 touch 放行（防面板内部拦滑）
                             try { var _pnlSC: any = _popSC.querySelector('.acu-dice-panel, .acu-contest-panel'); if (_pnlSC) { _pnlSC.style.setProperty('touch-action', 'pan-y', 'important'); _pnlSC.style.setProperty('overflow-y', 'visible', 'important'); } } catch (eSC2) {}
                             console.info('[DND]ZCHK popup z=' + getComputedStyle(_popSC).zIndex + ' oh=' + _popSC.offsetHeight + ' sh=' + _popSC.scrollHeight);
