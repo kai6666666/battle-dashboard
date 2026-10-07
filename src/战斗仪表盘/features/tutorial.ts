@@ -8,7 +8,7 @@ import type { TutorialScope, TutorialPlacement, TutorialAction, TutorialStep, Tu
 const STORAGE_KEY = 'acu_tutorial_state_v1';
 const STYLE_ID = 'acu-tutorial-style';
 const OVERLAY_CLASS = 'acu-tutorial-overlay';
-const TUTORIAL_OVERLAY_Z_INDEX = 31600;
+const TUTORIAL_OVERLAY_Z_INDEX = 2147483646; // [b13.6.6] 提升至 Mini HUD 之上（原 31600）
 const AUTO_START_MAX_ATTEMPTS = 30;
 const AUTO_START_INTERVAL_MS = 160;
 const BLOCKING_LAYER_MIN_VIEWPORT_AREA_RATIO = 0.2;

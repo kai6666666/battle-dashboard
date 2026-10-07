@@ -528,6 +528,8 @@ export function createPerformContestRoll(ctx: any) {
         '</div>',
     );
     $resultDisplay.show();
+    // [b13.6.6] 结果出现后滚动到可见（对抗检定）
+    try { setTimeout(function () { try { ($resultDisplay[0] as any).scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (eS1) {} }, 150); } catch (eS1b) {}
     // [b13.6.5] 结果特效卡（对抗检定，胜者高亮显示）
     try {
       var _cw = String(displayInitValue != null ? displayInitValue : '');

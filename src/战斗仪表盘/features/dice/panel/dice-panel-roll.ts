@@ -376,6 +376,8 @@ export function createDicePanelRoll(deps: any, ctx: any) {
       `);
 
       // [b13.6.5] 结果特效卡（保留快投 D20 特效，与面板结合）
+      // [b13.6.6] 结果出现后滚动到可见
+      try { setTimeout(function () { try { var _rc = panel.find('.acu-dice-roll-result-card'); if (_rc.length && _rc[0]) _rc[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (eS2) {} }, 150); } catch (eS2b) {}
       try {
         var _effectKind = 'normal';
         if (!hideDiceResultFromUser) {

@@ -164,7 +164,7 @@ export function createShowGlobalDiceHistoryDialog(deps: any) {
     };
 
     const dialog = $(`
-      <div class="acu-edit-overlay acu-dice-history-overlay">
+      <div class="acu-edit-overlay acu-dice-history-overlay" style="z-index:2147483646;">
         <div class="acu-edit-dialog acu-dice-history-dialog ${currentThemeClass}">
           <div class="acu-dice-history-header">
             <h3><i class="fa-solid fa-clock-rotate-left"></i> 检定历史</h3>
