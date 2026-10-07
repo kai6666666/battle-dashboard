@@ -212,7 +212,7 @@ async function invokeManualUpdate(event) {
         // [新增] 手动更新数据按钮
         html += `
             <div class="dnd-res-item dnd-footer-btn dnd-clickable" data-action="manual-update" style="cursor:pointer;" title="手动刷新数据">
-                <span class="dnd-res-icon dnd-refresh-icon" style="font-size:16px;color:var(--dnd-text-main)"><i class="fa-solid fa-sync"></i></span>
+                <span class="dnd-res-icon dnd-refresh-icon" style="font-size:16px;color:var(--dnd-text-main)"><i class="fa-solid fa-bolt"></i></span>
             </div>
         `;
 

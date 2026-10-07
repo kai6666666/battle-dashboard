@@ -4,6 +4,7 @@
 // 约定：REPL → deps.*；`$(this)` 为 jQuery 语义不受影响。
 import { DND_CONFIG } from '../dnd-core';
 import { createDiceSections } from './dice-sections';
+import { SCRIPT_VERSION } from '../../shared/constants';
 
 export function createSettingsPanelFragment(deps: any): any {
   // [b14] 骰子设置区块（迁入项按批次追加；批次①=主题与外观-字体与渲染）
@@ -64,10 +65,15 @@ export function createSettingsPanelFragment(deps: any): any {
         const diceAdvancedRowsHtml = diceSections.buildAdvancedHtml();
 
         const html = `
-            <div style="padding:20px; max-width: 600px;">
-                <h2 style="color:var(--dnd-text-highlight);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:10px;margin-top:0;">
-                    ${deps.icons.COG} 仪表盘设置
-                </h2>
+            <div id="dnd-settings-panel" style="padding:20px; max-width: 600px;">
+                <div id="dnd-settings-title-row" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dnd-border-gold);padding-bottom:10px;margin-top:0;">
+                    <h2 style="color:var(--dnd-text-highlight);margin:0;flex:1;font-size:1.5em;font-weight:bold;display:flex;align-items:center;gap:8px;border:none;padding:0;">
+                        ${deps.icons.COG} 仪表盘设置
+                    </h2>
+                    <span class="dnd-version-badge" title="当前版本 ${SCRIPT_VERSION}">${SCRIPT_VERSION}</span>
+                    <button type="button" id="dnd-settings-manual-update" class="dnd-title-icon-btn" title="清理缓存并刷新以获取最新版本" aria-label="清理缓存并刷新以获取最新版本"><i class="fa-solid fa-rotate"></i></button>
+                    <span id="dnd-settings-help-slot"></span>
+                </div>
 
                 <!-- 同步状态 -->
                 <div style="background:var(--dnd-bg-card);padding:15px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;">
@@ -93,7 +99,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块1：💻 界面显示 -->
-                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                <div id="dnd-set-block-1" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">💻 界面显示</h3>
                     <p style="color:var(--dnd-text-dim);font-size:13px;margin-bottom:15px;">
                         调整仪表盘和悬浮球的大小比例，适配不同分辨率的屏幕。
@@ -154,7 +160,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块2：🎨 主题与外观（配色模板 + 风格管理 + 骰子-字体与渲染） -->
-                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                <div id="dnd-set-block-2" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">${deps.icons.PALETTE} 主题与外观</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:15px;">
                         配色模板与风格管理统一管理整个战斗仪表盘的视觉主题（骰子相关界面同步对齐）。
@@ -318,7 +324,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块3：✨ 动态背景 -->
-                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                <div id="dnd-set-block-3" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">${deps.icons.SPARKLES} 动态背景</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:15px;">
                         为界面添加动态背景效果，类似游戏UI设计，让背景不再单调。
@@ -354,7 +360,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块4：▦ 布局与浏览（批次②已迁入） -->
-                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                <div id="dnd-set-block-4" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">▦ 布局与浏览</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:15px;">
                         骰子面板的布局与浏览设置（修改即时生效）。
@@ -363,7 +369,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块5：📋 表格管理（批次②：导航盘管理 + 表格列数 + 检验表格模板；旧 dnd_tm_* 已退役） -->
-                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                <div id="dnd-set-block-5" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;"><i class="fa-solid fa-clipboard-list"></i> 表格管理</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:15px;">
                         管理表格入口的显示与顺序（骰子导航盘）。
@@ -372,7 +378,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块6：⤢ 面板与交互（批次②已迁入） -->
-                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                <div id="dnd-set-block-6" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">⤢ 面板与交互</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:15px;">
                         骰子面板的交互行为设置（修改即时生效）。
@@ -381,7 +387,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块7：📚 预设管理（骰子预设10项 + DND自动预设切换） -->
-                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);">
+                <div id="dnd-set-block-7" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">📚 预设管理</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:20px;">
                         骰子各预设管理入口，以及根据战斗状态自动切换酒馆的 Plot/World Info 预设。
@@ -443,7 +449,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块8：🔌 API 连接（批次③样式核对；当前=DND API 连接配置） -->
-                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                <div id="dnd-set-block-8" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;"><i class="fa-solid fa-plug"></i> API 连接</h3>
                     <p style="color:var(--dnd-text-dim);font-size:13px;margin-bottom:15px;">
                         可在插件自定义 API 与神数据库 AI 调用之间切换。角色创建与地图生成会使用这里选定的方案。
@@ -501,7 +507,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
                 
                 <!-- [b14] 区块9：⚙️ 高级设置（DND存储空间管理 + 骰子工具4项） -->
-                <div style="margin-top:20px;background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);">
+                <div id="dnd-set-block-9" style="margin-top:20px;background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">⚙️ 高级设置</h3>
                     <div class="dnd-set-sub-title" style="margin-top:4px;"><i class="fa-solid fa-database"></i> 存储空间管理</div>
                     <p style="color:#888;font-size:13px;margin-bottom:15px;">
@@ -539,6 +545,16 @@ export function createSettingsPanelFragment(deps: any): any {
                             cursor:pointer;
                             font-size:13px;
                         ">${deps.icons.MAP} 清理地图缓存</button>
+                        
+                        <button type="button" id="dnd-clear-local-cache" class="dnd-clickable" style="
+                            background:rgba(231, 76, 60, 0.2);
+                            border:1px solid #e74c3c;
+                            color:#e74c3c;
+                            padding:8px 15px;
+                            border-radius:4px;
+                            cursor:pointer;
+                            font-size:13px;
+                        "><i class="fa-solid fa-eraser"></i> 清空本地缓存</button>
                     </div>
 ${diceAdvancedRowsHtml}
                 </div>

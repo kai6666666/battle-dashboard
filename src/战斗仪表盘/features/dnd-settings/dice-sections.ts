@@ -6,6 +6,7 @@
 //   - 本文件按批次持续承载迁入的骰子区块：
 //     批次①：主题与外观-字体与渲染；批次②：布局与浏览 / 表格管理 / 面板与交互。
 import { normalizeDialogueIndentStrategy } from '../dialogue-indent-renderer';
+import { Store } from '../../shared/storage/store';
 
 const FALLBACK_CONFIG: any = {
   fontFamily: 'default',
@@ -725,10 +726,6 @@ export function createDiceSections(deps: any) {
                         <button type="button" id="dnd-dice-config-backup" class="dnd-set-action-btn"><i class="fa-solid fa-arrows-rotate"></i> 打开</button>
                     </div>
                     <div class="dnd-set-row">
-                        <span class="dnd-set-row-label">清空本地缓存</span>
-                        <button type="button" id="dnd-dice-clear-cache" class="dnd-set-action-btn"><i class="fa-solid fa-eraser"></i> 清空</button>
-                    </div>
-                    <div class="dnd-set-row">
                         <span class="dnd-set-row-label">数据库弹窗</span>
                         ${seg('dnd-dice-db-toast', ENABLED_OPTIONS, toastActive, '数据库弹窗')}
                     </div>
@@ -752,7 +749,7 @@ export function createDiceSections(deps: any) {
       });
     } catch (e) {}
     try {
-      $c.find('#dnd-dice-clear-cache').on('click', function (this: any, e: any) {
+      $c.find('#dnd-clear-local-cache').on('click', function (this: any, e: any) {
         e.preventDefault();
         callBridge('clearDiceLocalCacheFlow');
       });
@@ -766,8 +763,159 @@ export function createDiceSections(deps: any) {
     } catch (e) {}
   };
 
+  // ===== 面板外壳：9区块折叠 / 标题三件套 / 教程按钮（[b14.3]） =====
+  const DND_BLOCK_IDS = [
+    'dnd-set-block-1',
+    'dnd-set-block-2',
+    'dnd-set-block-3',
+    'dnd-set-block-4',
+    'dnd-set-block-5',
+    'dnd-set-block-6',
+    'dnd-set-block-7',
+    'dnd-set-block-8',
+    'dnd-set-block-9',
+  ];
+  const DND_COLLAPSE_STORE_KEY = 'dnd_set_groups_expanded_v1';
+  const BLOCK_HELP_MAP: Array<{ id: string; scope: string; title: string }> = [
+    { id: 'dnd-set-block-2', scope: 'settingsAppearance', title: '查看外观样式教程' },
+    { id: 'dnd-set-block-4', scope: 'settingsLayout', title: '查看布局与浏览教程' },
+    { id: 'dnd-set-block-5', scope: 'settingsTables', title: '查看表格管理教程' },
+    { id: 'dnd-set-block-6', scope: 'settingsPosition', title: '查看面板与交互教程' },
+    { id: 'dnd-set-block-7', scope: 'settingsDicePresets', title: '查看战斗仪表盘预设教程' },
+    { id: 'dnd-set-block-9', scope: 'settingsAdvanced', title: '查看高级设置教程' },
+  ];
+  const readExpandedBlocks = (): string[] => {
+    try {
+      const v = Store.get(DND_COLLAPSE_STORE_KEY, []);
+      return Array.isArray(v) ? v.map(String) : [];
+    } catch (e) {
+      return [];
+    }
+  };
+  const writeExpandedBlocks = (list: string[]): void => {
+    try {
+      Store.set(DND_COLLAPSE_STORE_KEY, list);
+    } catch (e) {}
+  };
+  const bindPanelChrome = ($c: any): void => {
+    const { $ } = deps.utils.getCore();
+    if (!$ || !$c) return;
+
+    // 1) 9 区块折叠（默认全部折叠；展开状态记忆）
+    const expanded = readExpandedBlocks();
+    DND_BLOCK_IDS.forEach(id => {
+      try {
+        const $group = $c.find('#' + id);
+        if (!$group.length) return;
+        $group.addClass('dnd-set-group');
+        const $title = $group.children('h3').first();
+        if (!$title.length) return;
+
+        // 包裹正文（保留标题在折叠时可见）
+        const $body = $('<div class="dnd-set-group-body"></div>');
+        $group.contents().not($title).detach().appendTo($body);
+        $group.append($body);
+
+        // 标题样式 + 指示箭头
+        $title.addClass('dnd-set-group-title');
+        if (!$title.find('.dnd-set-group-chevron').length) {
+          $title.prepend('<i class="fa-solid fa-chevron-down dnd-set-group-chevron"></i>');
+        }
+        const setChevron = (isExpandedState: boolean) => {
+          const $chev = $title.find('.dnd-set-group-chevron');
+          $chev.toggleClass('fa-chevron-down', isExpandedState).toggleClass('fa-chevron-right', !isExpandedState);
+        };
+
+        const isExpanded = expanded.indexOf(id) >= 0;
+        if (isExpanded) {
+          setChevron(true);
+        } else {
+          $group.addClass('collapsed');
+          setChevron(false);
+          $body.hide();
+        }
+
+        $title.on('click', function (e: any) {
+          try {
+            if ($(e.target).closest('button, a, select, input, .acu-panel-tutorial-btn').length) return;
+          } catch (e2) {}
+          if ($group.hasClass('collapsed')) {
+            // 展开
+            $group.removeClass('collapsed');
+            setChevron(true);
+            $body.addClass('dnd-animating').show();
+            const targetH = $body.prop('scrollHeight');
+            $body.css('height', 0).animate({ height: targetH }, 180, function (this: any) {
+              $(this).css('height', '').removeClass('dnd-animating');
+            });
+            const list = readExpandedBlocks();
+            if (list.indexOf(id) < 0) list.push(id);
+            writeExpandedBlocks(list);
+          } else {
+            // 折叠
+            $group.addClass('collapsed');
+            setChevron(false);
+            const currentH = $body.outerHeight();
+            $body
+              .addClass('dnd-animating')
+              .css('height', currentH)
+              .animate({ height: 0 }, 180, function (this: any) {
+                $(this).hide().css('height', '').removeClass('dnd-animating');
+              });
+            writeExpandedBlocks(readExpandedBlocks().filter((x: string) => x !== id));
+          }
+        });
+      } catch (e) {}
+    });
+
+    // 2) 区块教程按钮（6 个迁移区块）
+    BLOCK_HELP_MAP.forEach(cfg => {
+      try {
+        const $title = $c.find('#' + cfg.id + ' .dnd-set-group-title').first();
+        if (!$title.length) return;
+        const btnHtml = callBridge('getTutorialButtonHtml', cfg.scope, cfg.title, 'dnd-block-help');
+        if (typeof btnHtml === 'string' && btnHtml) $title.append(btnHtml);
+      } catch (e) {}
+    });
+
+    // 3) 顶部三件套：帮助按钮注入 + 脚本手动更新
+    try {
+      const slot = $c.find('#dnd-settings-help-slot');
+      if (slot.length) {
+        const h = callBridge('getTutorialButtonHtml', 'settings', '查看设置页面教程', 'dnd-title-help-btn');
+        if (typeof h === 'string' && h) slot.html(h);
+      }
+    } catch (e) {}
+    try {
+      $c.find('#dnd-settings-manual-update').on('click', function (this: any, e: any) {
+        e.preventDefault();
+        e.stopPropagation();
+        callBridge('showManualUpdateDialog');
+      });
+    } catch (e) {}
+
+    // 4) 教程按钮统一绑定：先展开所在区块，再启动教程
+    try {
+      $c.find('.acu-panel-tutorial-btn').off('click.dndTut').on('click.dndTut', function (this: any, e: any) {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          const $grp = $(this).closest('[id^="dnd-set-block-"]');
+          if ($grp.length && $grp.hasClass('collapsed')) {
+            $grp.find('.dnd-set-group-title').first().trigger('click');
+          }
+        } catch (e2) {}
+        try {
+          const b = getBridge();
+          if (b && typeof b.startTutorialFromButton === 'function') b.startTutorialFromButton(this);
+        } catch (e3) {}
+      });
+    } catch (e) {}
+  };
+
   // ===== 总绑定（设置面板每次渲染后调用） =====
   const bindAll = ($c: any): void => {
+    bindPanelChrome($c);
     bindAppearance($c);
     bindLayout($c);
     bindTable($c);

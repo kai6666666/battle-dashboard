@@ -24,6 +24,18 @@ export const STYLES_PART_09_SETTINGS_FUSION = `
 .dnd-set-action-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(157,139,108,0.16); border: 1px solid var(--dnd-border-gold, #9d8b6c); color: var(--dnd-text-highlight, #ffdb85); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all .2s; flex-shrink: 0; }
 .dnd-set-action-btn:hover { background: rgba(157,139,108,0.28); }
 
+/* ===== [b14.3] 面板外壳：折叠标题 / 标题三件套 / 教程按钮 ===== */
+.dnd-set-group-title { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+.dnd-set-group-title .dnd-set-group-chevron { font-size: 12px; color: var(--dnd-text-dim, #888); transition: transform .18s ease; flex-shrink: 0; }
+.dnd-set-group.collapsed .dnd-set-group-title .dnd-set-group-chevron { transform: rotate(-90deg); }
+.dnd-version-badge { font-size: 11px; color: var(--dnd-text-dim, #888); border: 1px solid var(--dnd-border-subtle, #444); border-radius: 4px; padding: 2px 6px; white-space: nowrap; }
+.dnd-title-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: transparent; border: 1px solid var(--dnd-border-subtle, #444); color: var(--dnd-text-main, #dcd0c0); border-radius: 4px; cursor: pointer; transition: all .2s; padding: 0; }
+.dnd-title-icon-btn:hover { border-color: var(--dnd-border-gold, #9d8b6c); color: var(--dnd-text-highlight, #ffdb85); }
+.dnd-block-help { width: 28px; height: 28px; min-width: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0; margin-left: auto; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--dnd-text-dim, #888); font-size: 13px; cursor: pointer; transition: all .18s; }
+.dnd-block-help:hover { color: var(--dnd-text-highlight, #ffdb85); background: rgba(157,139,108,0.16); }
+.dnd-title-help-btn { width: 28px; height: 28px; min-width: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--dnd-text-dim, #888); font-size: 15px; cursor: pointer; transition: all .18s; }
+.dnd-title-help-btn:hover { color: var(--dnd-text-highlight, #ffdb85); background: rgba(157,139,108,0.16); }
+
 /* ===== [b14②] 导航盘管理弹窗（DND 化包装） ===== */
 .dnd-navmgr-overlay { position: fixed; inset: 0; z-index: 2147483646; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
 .dnd-navmgr-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.62); }

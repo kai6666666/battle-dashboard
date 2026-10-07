@@ -3,6 +3,7 @@
  */
 export * from './tutorial/types';
 import { STEPS } from './tutorial/steps';
+import { TUTORIAL_SELECTOR_ALTERNATES } from './tutorial/selector-alternates';
 import type { TutorialScope, TutorialPlacement, TutorialAction, TutorialStep, TutorialState, TutorialModule, TutorialModuleOptions, ActiveTutorial, StartOptions, TutorialViewport, TutorialRect } from './tutorial/types';
 
 const STORAGE_KEY = 'acu_tutorial_state_v1';
@@ -56,7 +57,16 @@ const isTutorialAction = (action: string | undefined): action is TutorialAction 
 
 const getSelectors = (step: TutorialStep): readonly string[] => {
   if (!step.selector) return [];
-  return Array.isArray(step.selector) ? step.selector : [step.selector];
+  const base = Array.isArray(step.selector) ? step.selector : [step.selector];
+  const out: string[] = [];
+  for (const selector of base) {
+    out.push(selector);
+    const alternates = TUTORIAL_SELECTOR_ALTERNATES[selector];
+    if (alternates && alternates.length) {
+      for (const alt of alternates) out.push(alt);
+    }
+  }
+  return out;
 };
 
 export const createTutorialModule = (options: TutorialModuleOptions): TutorialModule => {

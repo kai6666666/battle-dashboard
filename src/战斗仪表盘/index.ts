@@ -1573,6 +1573,10 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       renderDataValidationDeprecatedBadge: () => {
         try { return renderDeprecatedBadge(DATA_VALIDATION_DEPRECATED_META.deprecatedReason); } catch (e) { return ''; }
       },
+      // [b14.3] 教程按钮 / 脚本手动更新桥（DND 主面板调用）
+      getTutorialButtonHtml: (...a: any[]) => (getTutorialButtonHtml as any)(...a),
+      startTutorialFromButton: (...a: any[]) => (startTutorialFromButton as any)(...a),
+      showManualUpdateDialog: (...a: any[]) => (showManualUpdateDialog as any)(...a),
       runDatabaseManualUpdate: (...a: any[]) => (runDatabaseManualUpdate as any)(...a),
       showGachaVisualization: (...a: any[]) => (showGachaVisualization as any)(...a),
       showInventoryVisualization: (...a: any[]) => (showInventoryVisualization as any)(...a),
