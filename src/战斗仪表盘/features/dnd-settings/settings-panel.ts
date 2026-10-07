@@ -19,12 +19,8 @@ export function createSettingsPanelFragment(deps: any): any {
         const syncStatus = await deps.settingsManager.getSyncStatus();
         const currentScale = await deps.dbAdapter.getSetting(DND_CONFIG.STORAGE_KEYS.UI_SCALE) || DND_CONFIG.UI_SCALE.DEFAULT;
         
-        // 获取表格管理配置
-        const allData = deps.dataManager.getAllData() || {};
-        const tables = Object.keys(allData).filter(k => k.startsWith('sheet_') || (allData[k].name && allData[k].mate));
-        const savedTmCols = await deps.dbAdapter.getSetting('dnd_tm_cols') || 'auto';
-        const savedHiddenTables = await deps.dbAdapter.getSetting('dnd_tm_hidden_tables');
-        const hiddenTables = savedHiddenTables ? JSON.parse(savedHiddenTables) : [];
+        // [b14批次②] 旧表格管理配置（dnd_tm_cols / dnd_tm_hidden_tables）已退役：
+        // 统一改由骰子导航盘管理 + 表格列数（gridColumns）承载。
 
         // 获取动态背景配置
         const savedBgConfig = await deps.dbAdapter.getSetting(DND_CONFIG.STORAGE_KEYS.DYNAMIC_BG);
@@ -59,6 +55,10 @@ export function createSettingsPanelFragment(deps: any): any {
 
         // [b14] 骰子区块 HTML（批次①：主题与外观-字体与渲染）
         const diceAppearanceRowsHtml = diceSections.buildAppearanceHtml();
+        // [b14批次②] 骰子区块 HTML（布局与浏览 / 表格管理 / 面板与交互）
+        const diceLayoutRowsHtml = diceSections.buildLayoutHtml();
+        const diceTableRowsHtml = diceSections.buildTableHtml();
+        const diceInteractionRowsHtml = diceSections.buildInteractionHtml();
 
         const html = `
             <div style="padding:20px; max-width: 600px;">
@@ -350,55 +350,31 @@ export function createSettingsPanelFragment(deps: any): any {
                     </div>
                 </div>
 
-                <!-- [b14] 区块4：▦ 布局与浏览（预留 · 批次②迁入） -->
-                <div style="background:var(--dnd-bg-card);padding:16px 20px;border-radius:6px;border:1px dashed var(--dnd-border-subtle);margin-bottom:20px;">
-                    <h3 style="color:var(--dnd-text-dim);margin-top:0;font-size:15px;">▦ 布局与浏览</h3>
-                    <p style="color:var(--dnd-text-dim);font-size:12px;margin:0;">
-                        骰子布局设置将在批次②迁入：布局模式 / 横向滚动条 / 卡片顺序 / PC导航布局 / 卡片宽度 / 每页卡片数。
+                <!-- [b14] 区块4：▦ 布局与浏览（批次②已迁入） -->
+                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                    <h3 style="color:var(--dnd-text-header);margin-top:0;">▦ 布局与浏览</h3>
+                    <p style="color:#888;font-size:13px;margin-bottom:15px;">
+                        骰子面板的布局与浏览设置（修改即时生效）。
                     </p>
+                    ${diceLayoutRowsHtml}
                 </div>
 
-                <!-- [b14] 区块5：📋 表格管理（批次②升级：导航盘管理 + 表格列数 + 检验表格模板） -->
+                <!-- [b14] 区块5：📋 表格管理（批次②：导航盘管理 + 表格列数 + 检验表格模板；旧 dnd_tm_* 已退役） -->
                 <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;"><i class="fa-solid fa-clipboard-list"></i> 表格管理</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:15px;">
-                        自定义表格管理模块的布局和显示内容。
+                        管理表格入口的显示与顺序（骰子导航盘）。
                     </p>
-                    
-                    <div style="margin-bottom:15px;">
-                        <label style="display:block;margin-bottom:5px;color:var(--dnd-text-main);">每行按钮数</label>
-                        <select id="dnd-tm-cols-setting" style="width:100%;background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;">
-                            <option value="auto" ${savedTmCols === 'auto' ? 'selected' : ''}>自动 (Auto)</option>
-                            <option value="2" ${savedTmCols == 2 ? 'selected' : ''}>2 列</option>
-                            <option value="3" ${savedTmCols == 3 ? 'selected' : ''}>3 列</option>
-                            <option value="4" ${savedTmCols == 4 ? 'selected' : ''}>4 列</option>
-                            <option value="5" ${savedTmCols == 5 ? 'selected' : ''}>5 列</option>
-                        </select>
-                    </div>
-
-                    <div style="margin-bottom:10px;">
-                        <label style="display:block;margin-bottom:5px;color:var(--dnd-text-main);">可见表格</label>
-                        <div style="background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);border-radius:4px;padding:10px;max-height:150px;overflow-y:auto;">
-                            ${tables.length > 0 ? tables.map(k => {
-                                const name = allData[k].name || k;
-                                const isChecked = !hiddenTables.includes(k);
-                                return `
-                                    <label style="display:flex;align-items:center;margin-bottom:5px;cursor:pointer;">
-                                        <input type="checkbox" class="dnd-tm-visible-check" value="${k}" ${isChecked ? 'checked' : ''} style="margin-right:8px;">
-                                        <span style="color:var(--dnd-text-main);font-size:12px;">${name}</span>
-                                    </label>
-                                `;
-                            }).join('') : '<div style="color:var(--dnd-text-dim);font-size:12px;">暂无可用表格</div>'}
-                        </div>
-                    </div>
+                    ${diceTableRowsHtml}
                 </div>
 
-                <!-- [b14] 区块6：⤢ 面板与交互（预留 · 批次②迁入） -->
-                <div style="background:var(--dnd-bg-card);padding:16px 20px;border-radius:6px;border:1px dashed var(--dnd-border-subtle);margin-bottom:20px;">
-                    <h3 style="color:var(--dnd-text-dim);margin-top:0;font-size:15px;">⤢ 面板与交互</h3>
-                    <p style="color:var(--dnd-text-dim);font-size:12px;margin:0;">
-                        骰子面板与交互设置将在批次②迁入：导航盘位置 / 功能按钮位置 / 收起样式 / 收起位置 / 选项面板 / 点击选项后。
+                <!-- [b14] 区块6：⤢ 面板与交互（批次②已迁入） -->
+                <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
+                    <h3 style="color:var(--dnd-text-header);margin-top:0;">⤢ 面板与交互</h3>
+                    <p style="color:#888;font-size:13px;margin-bottom:15px;">
+                        骰子面板的交互行为设置（修改即时生效）。
                     </p>
+                    ${diceInteractionRowsHtml}
                 </div>
 
                 <!-- [b14] 区块7：📚 预设管理（批次③补齐骰子预设10项；当前=DND自动预设切换） -->
@@ -594,8 +570,8 @@ export function createSettingsPanelFragment(deps: any): any {
         
         $c.html(html);
 
-        // [b14] 骰子区块绑定（主题与外观-字体与渲染）
-        try { diceSections.bindAppearance($c); } catch (e) { console.warn('[DND] 骰子设置区块绑定失败', e); }
+        // [b14] 骰子区块绑定（批次①-②：主题外观 / 布局 / 表格 / 面板交互）
+        try { diceSections.bindAll($c); } catch (e) { console.warn('[DND] 骰子设置区块绑定失败', e); }
 
         // [b12.7] 打开骰子设置面板
         $c.find('#dnd-open-acu-settings').on('click', function() {
@@ -1222,15 +1198,7 @@ export function createSettingsPanelFragment(deps: any): any {
             };
             await deps.settingsManager.setAPIConfig(newApiConfig);
 
-            // 4. 保存表格管理配置
-            const tmCols = $c.find('#dnd-tm-cols-setting').val();
-            await deps.dbAdapter.setSetting('dnd_tm_cols', tmCols);
-            
-            const hiddenTbls = [];
-            $c.find('.dnd-tm-visible-check:not(:checked)').each(function() {
-                hiddenTbls.push($(this).val());
-            });
-            await deps.dbAdapter.setSetting('dnd_tm_hidden_tables', JSON.stringify(hiddenTbls));
+            // 4. [b14批次②] 旧表格管理保存逻辑已退役（改由导航盘管理/表格列数即改即存）
             
             // 通知全局更新
             $(document).trigger('dnd:settings-changed');

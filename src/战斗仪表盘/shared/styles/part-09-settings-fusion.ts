@@ -21,6 +21,32 @@ export const STYLES_PART_09_SETTINGS_FUSION = `
 .dnd-set-stepper-btn { width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; background: var(--dnd-bg-input); border: 1px solid var(--dnd-border-subtle); color: var(--dnd-text-main); border-radius: 4px; cursor: pointer; font-size: 13px; line-height: 1; transition: all .2s; }
 .dnd-set-stepper-btn:hover { border-color: var(--dnd-border-gold); color: var(--dnd-text-highlight); }
 .dnd-set-stepper-value { min-width: 48px; text-align: center; color: var(--dnd-text-highlight); font-size: 13px; }
+.dnd-set-action-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(157,139,108,0.16); border: 1px solid var(--dnd-border-gold, #9d8b6c); color: var(--dnd-text-highlight, #ffdb85); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all .2s; flex-shrink: 0; }
+.dnd-set-action-btn:hover { background: rgba(157,139,108,0.28); }
+
+/* ===== [b14②] 导航盘管理弹窗（DND 化包装） ===== */
+.dnd-navmgr-overlay { position: fixed; inset: 0; z-index: 2147483646; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+.dnd-navmgr-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.62); }
+.dnd-navmgr-dialog { position: relative; z-index: 1; width: min(560px, calc(100vw - 32px)); max-height: min(72vh, 640px); display: flex; flex-direction: column; overflow: hidden; background: var(--dnd-bg-popup, #1c1512); color: var(--dnd-text-main, #dcd0c0); border: 1px solid var(--dnd-border-inner, #5c4b35); border-radius: 10px; box-shadow: var(--dnd-shadow, 0 0 10px rgba(0,0,0,0.8)); }
+.dnd-navmgr-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--dnd-border-inner, #5c4b35); }
+.dnd-navmgr-title { font-weight: bold; color: var(--dnd-text-header, #e6dcca); font-size: 14px; }
+.dnd-navmgr-close { background: transparent; border: 1px solid transparent; color: var(--dnd-text-dim, #888); width: 28px; height: 28px; border-radius: 4px; cursor: pointer; transition: all .2s; }
+.dnd-navmgr-close:hover { border-color: var(--dnd-border-gold, #9d8b6c); color: var(--dnd-text-highlight, #ffdb85); }
+.dnd-navmgr-body { padding: 12px 14px; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
+.dnd-navmgr-hint { font-size: 11px; color: var(--dnd-text-dim, #888); margin-bottom: 8px; }
+.dnd-navmgr-list { display: flex; flex-direction: column; gap: 4px; max-height: 52vh; overflow-y: auto; padding: 2px; }
+.dnd-navmgr-item { display: flex; align-items: center; gap: 8px; padding: 7px 9px; border: 1px solid var(--dnd-border-subtle, #444); border-radius: 5px; background: var(--dnd-bg-input, #1a1a1c); }
+.dnd-navmgr-item.is-special { border-color: var(--dnd-border-gold, #9d8b6c); }
+.dnd-navmgr-item.is-hidden { opacity: .45; }
+.dnd-navmgr-item.is-hidden .dnd-navmgr-name { text-decoration: line-through; }
+.dnd-navmgr-eye { display: inline-flex; width: 24px; height: 24px; align-items: center; justify-content: center; color: var(--dnd-text-main, #dcd0c0); cursor: pointer; border-radius: 4px; }
+.dnd-navmgr-eye:hover { color: var(--dnd-text-highlight, #ffdb85); }
+.dnd-navmgr-icon { width: 20px; text-align: center; color: var(--dnd-text-dim, #888); }
+.dnd-navmgr-name { flex: 1; font-size: 13px; color: var(--dnd-text-main, #dcd0c0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dnd-navmgr-handle { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; color: var(--dnd-text-dim, #888); cursor: grab; touch-action: none; }
+.dnd-navmgr-handle:active { cursor: grabbing; }
+.dnd-navmgr-empty { padding: 16px; text-align: center; color: var(--dnd-text-dim, #888); font-size: 12px; }
+.dnd-navmgr-item.acu-drag-ghost { z-index: 2147483647; }
 
 /* ===== [b14] 主题收编：骰子可见界面核心变量对齐 DND（--acu-* -> --dnd-*） ===== */
 :root [class*="acu-theme-"]:not(.acu-theme-icon) {
