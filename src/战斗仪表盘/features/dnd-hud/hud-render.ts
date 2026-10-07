@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.87-b13.2.46 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.88-b13.2.47 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -364,7 +364,22 @@ export function createHudRenderFragment(deps: any): any {
                                             if (!$ph.length) return;
                                             $s.detach();
                                             var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
-                                            $s.css({ 'width': '45%', 'max-width': '45%', 'min-width': '0', 'flex': '0 0 45%', 'margin': '0', 'order': '0', 'box-sizing': 'border-box', 'border-radius': '999px', 'border': '1px solid var(--acu-border, rgba(150,150,150,.35))', 'overflow': 'hidden' });
+                                            try {
+                                                var _sw: any = $s[0];
+                                                _sw.style.setProperty('width', '45%', 'important');
+                                                _sw.style.setProperty('max-width', '45%', 'important');
+                                                _sw.style.setProperty('min-width', '0', 'important');
+                                                _sw.style.setProperty('flex', '0 0 45%', 'important');
+                                                _sw.style.setProperty('margin', '0', 'important');
+                                                _sw.style.setProperty('order', '0', 'important');
+                                                _sw.style.setProperty('box-sizing', 'border-box', 'important');
+                                                _sw.style.setProperty('border-radius', '999px', 'important');
+                                                _sw.style.setProperty('overflow', 'hidden', 'important');
+                                                _sw.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
+                                            } catch (eSW) {}
+                                            $s.find('input').each(function(this: any) {
+                                                try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
+                                            });
                                             $row.append($s);
                                             $ph.after($row);
                                         } catch (eS1) {}
@@ -399,6 +414,15 @@ export function createHudRenderFragment(deps: any): any {
                                         });
                                         console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
                                     }
+                                    try {
+                                        var _rwD = $view.find('.dnd-search-row').first();
+                                        if (_rwD.length) {
+                                            var _rrD = _rwD[0].getBoundingClientRect();
+                                            var _swDc = _rwD.find('.acu-search-wrapper').first();
+                                            var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
+                                            console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
+                                        }
+                                    } catch (eSR) {}
                                 } catch (eD8) {}
                             } catch (eFX) {}
                         };_tidyT();
@@ -503,7 +527,22 @@ export function createHudRenderFragment(deps: any): any {
                                             if (!$ph.length) return;
                                             $s.detach();
                                             var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
-                                            $s.css({ 'width': '45%', 'max-width': '45%', 'min-width': '0', 'flex': '0 0 45%', 'margin': '0', 'order': '0', 'box-sizing': 'border-box', 'border-radius': '999px', 'border': '1px solid var(--acu-border, rgba(150,150,150,.35))', 'overflow': 'hidden' });
+                                            try {
+                                                var _sw: any = $s[0];
+                                                _sw.style.setProperty('width', '45%', 'important');
+                                                _sw.style.setProperty('max-width', '45%', 'important');
+                                                _sw.style.setProperty('min-width', '0', 'important');
+                                                _sw.style.setProperty('flex', '0 0 45%', 'important');
+                                                _sw.style.setProperty('margin', '0', 'important');
+                                                _sw.style.setProperty('order', '0', 'important');
+                                                _sw.style.setProperty('box-sizing', 'border-box', 'important');
+                                                _sw.style.setProperty('border-radius', '999px', 'important');
+                                                _sw.style.setProperty('overflow', 'hidden', 'important');
+                                                _sw.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
+                                            } catch (eSW) {}
+                                            $s.find('input').each(function(this: any) {
+                                                try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
+                                            });
                                             $row.append($s);
                                             $ph.after($row);
                                         } catch (eS1) {}
@@ -538,6 +577,15 @@ export function createHudRenderFragment(deps: any): any {
                                         });
                                         console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
                                     }
+                                    try {
+                                        var _rwD = $view.find('.dnd-search-row').first();
+                                        if (_rwD.length) {
+                                            var _rrD = _rwD[0].getBoundingClientRect();
+                                            var _swDc = _rwD.find('.acu-search-wrapper').first();
+                                            var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
+                                            console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
+                                        }
+                                    } catch (eSR) {}
                                 } catch (eD8) {}
                             } catch (eFX) {}
                             } catch (eRx) {}
@@ -768,7 +816,22 @@ export function createHudRenderFragment(deps: any): any {
                                             if (!$ph.length) return;
                                             $s.detach();
                                             var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
-                                            $s.css({ 'width': '45%', 'max-width': '45%', 'min-width': '0', 'flex': '0 0 45%', 'margin': '0', 'order': '0', 'box-sizing': 'border-box', 'border-radius': '999px', 'border': '1px solid var(--acu-border, rgba(150,150,150,.35))', 'overflow': 'hidden' });
+                                            try {
+                                                var _sw: any = $s[0];
+                                                _sw.style.setProperty('width', '45%', 'important');
+                                                _sw.style.setProperty('max-width', '45%', 'important');
+                                                _sw.style.setProperty('min-width', '0', 'important');
+                                                _sw.style.setProperty('flex', '0 0 45%', 'important');
+                                                _sw.style.setProperty('margin', '0', 'important');
+                                                _sw.style.setProperty('order', '0', 'important');
+                                                _sw.style.setProperty('box-sizing', 'border-box', 'important');
+                                                _sw.style.setProperty('border-radius', '999px', 'important');
+                                                _sw.style.setProperty('overflow', 'hidden', 'important');
+                                                _sw.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
+                                            } catch (eSW) {}
+                                            $s.find('input').each(function(this: any) {
+                                                try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
+                                            });
                                             $row.append($s);
                                             $ph.after($row);
                                         } catch (eS1) {}
@@ -803,6 +866,15 @@ export function createHudRenderFragment(deps: any): any {
                                         });
                                         console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
                                     }
+                                    try {
+                                        var _rwD = $view.find('.dnd-search-row').first();
+                                        if (_rwD.length) {
+                                            var _rrD = _rwD[0].getBoundingClientRect();
+                                            var _swDc = _rwD.find('.acu-search-wrapper').first();
+                                            var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
+                                            console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
+                                        }
+                                    } catch (eSR) {}
                                 } catch (eD8) {}
                             } catch (eFX) {}
                         };_tidyI();
