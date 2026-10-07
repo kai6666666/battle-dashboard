@@ -4,7 +4,7 @@
 import { DND_CONFIG } from '../dnd-core';
 
 // [b13.2.32] DND 内联样式表（per-doc 注入用）
-const __DND_CSS_V9 = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-view-inline .acu-search-wrapper{width:96px !important;max-width:96px !important;min-width:0 !important;flex:0 0 96px !important;box-sizing:border-box !important;overflow:hidden !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-btn-dozed{pointer-events:none !important;opacity:.3 !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
+const __DND_CSS_V9 = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-search-wrapper,.dnd-acu-view-inline .acu-search-wrapper{order:9999 !important;flex:1 1 100% !important;width:auto !important;max-width:none !important;min-width:0 !important;margin-top:4px !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-header-actions,.dnd-acu-view-inline .acu-header-actions{flex-wrap:wrap !important;row-gap:6px !important;justify-content:flex-end !important;}' + '.dnd-acu-table-view .acu-panel-control-set,.dnd-acu-view-inline .acu-panel-control-set{display:flex !important;align-items:center !important;gap:4px !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-btn-dozed{pointer-events:none !important;opacity:.3 !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
 
 export function createHudRenderFragment(deps: any): any {
   return {
@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.77-b13.2.36 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.78-b13.2.37 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -342,6 +342,20 @@ export function createHudRenderFragment(deps: any): any {
                     try { console.info('[DND]表格视图已渲染 table=' + table + ' len=' + String(tableHtml || '').length); } catch (eC2) {}
                     $list.hide();
                     $container.append($view);
+                    // [b13.2.37] 头部排序规整：高度/关闭 → 搜索框之前（搜索框换第二排）
+                    try {
+                        var _tidyT = function() {
+                            try {
+                                var _hdT = $view.find('.acu-header-actions').first();
+                                var _seT = _hdT.find('.acu-search-wrapper').first();
+                                var _ctT = _hdT.find('.acu-panel-control-set').first();
+                                if (_seT.length && _ctT.length) { _ctT.detach(); _seT.before(_ctT); }
+                            } catch (eTx) {}
+                        };
+                        _tidyT();
+                        setTimeout(_tidyT, 300);
+                        setTimeout(_tidyT, 800);
+                    } catch (eT0) {}
                     // [b13.2.34] 悬浮球休眠（视图打开期间防误触）
                     try { const _fbT1: any = document.getElementById('dnd-toggle-btn'); if (_fbT1) _fbT1.classList.add('dnd-btn-dozed'); } catch (e1z) {}
                     // [b13.2.32] per-doc 样式注入（表格视图所在文档）+ 触摸高度拖动
@@ -356,7 +370,7 @@ export function createHudRenderFragment(deps: any): any {
                                 let _el9: any = null;
                                 try { _el9 = _d.getElementById ? _d.getElementById('dnd-inline-scroll-fix') : null; } catch (a9) {}
                                 if (!_el9) { _el9 = _d.createElement('style'); _el9.id = 'dnd-inline-scroll-fix'; _head9.appendChild(_el9); }
-                                if (_el9.getAttribute('data-v') !== 'v9') { _el9.textContent = _css; _el9.setAttribute('data-v', 'v9'); }
+                                if (_el9.getAttribute('data-v') !== 'v10') { _el9.textContent = _css; _el9.setAttribute('data-v', 'v10'); }
                             } catch (b9) {}
                         };
                         _ensure9(_docB9, _cssA9);
@@ -420,6 +434,12 @@ export function createHudRenderFragment(deps: any): any {
                         let h = '';
                         try { if (g && typeof g.renderTableHostForDnd === 'function') h = g.renderTableHostForDnd(table); } catch (e) {}
                         if (h) $view.find('.dnd-acu-table-host').html(h);
+                        try {
+                            var _hdR = $view.find('.acu-header-actions').first();
+                            var _seR = _hdR.find('.acu-search-wrapper').first();
+                            var _ctR = _hdR.find('.acu-panel-control-set').first();
+                            if (_seR.length && _ctR.length) { _ctR.detach(); _seR.before(_ctR); }
+                        } catch (eRx) {}
                         try { console.info('[DND]表格刷新 len=' + String(h || '').length + ' | pageBtns=' + $view.find('.acu-page-btn').length); } catch (e) {}
                     };
                     // [b13.3] 注册全局刷新回调（供写操作后自动刷新）
@@ -598,7 +618,7 @@ export function createHudRenderFragment(deps: any): any {
                                         let _el: any = null;
                                         try { _el = _d.getElementById ? _d.getElementById('dnd-inline-scroll-fix') : null; } catch (e3a) {}
                                         if (!_el) { try { _el = _d.createElement('style'); _el.id = 'dnd-inline-scroll-fix'; _head.appendChild(_el); } catch (e3b) { return; } }
-                                        if (_el.getAttribute && _el.getAttribute('data-v') !== 'v9') { _el.textContent = _cssTxt; try { _el.setAttribute('data-v', 'v9'); } catch (e3c) {} }
+                                        if (_el.getAttribute && _el.getAttribute('data-v') !== 'v10') { _el.textContent = _cssTxt; try { _el.setAttribute('data-v', 'v10'); } catch (e3c) {} }
                                     } catch (e3) {}
                                 };
                                 _ensure(_docA);
@@ -625,6 +645,24 @@ export function createHudRenderFragment(deps: any): any {
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
                     $list.hide();
                     $container.append($view);
+                    // [b13.2.37] 头部排序规整（收藏夹：高度/关闭 → 搜索框前）
+                    try {
+                        var _tidyI = function() {
+                            try {
+                                var _hdI = $view.find('.acu-header-actions').first();
+                                var _seI = _hdI.find('.acu-search-wrapper').first();
+                                if (!_seI.length) return;
+                                var _hcI = _hdI.find('.acu-height-control').first();
+                                var _cbI = _hdI.find('.acu-close-btn').first();
+                                if (_hcI.length) { _hcI.detach(); _seI.before(_hcI); }
+                                if (_cbI.length) { _cbI.detach(); _seI.before(_cbI); }
+                            } catch (eIx) {}
+                        };
+                        _tidyI();
+                        setTimeout(_tidyI, 300);
+                        setTimeout(_tidyI, 800);
+                        setTimeout(_tidyI, 1500);
+                    } catch (eI0) {}
                     // [b13.2.34] 悬浮球休眠
                     try { const _fbT3: any = document.getElementById('dnd-toggle-btn'); if (_fbT3) _fbT3.classList.add('dnd-btn-dozed'); } catch (e3z) {}
                     // [b13.2.32] per-doc 样式注入 + 触摸高度拖动（内嵌视图）
@@ -639,7 +677,7 @@ export function createHudRenderFragment(deps: any): any {
                                 let _eB: any = null;
                                 try { _eB = _d.getElementById ? _d.getElementById('dnd-inline-scroll-fix') : null; } catch (aB) {}
                                 if (!_eB) { _eB = _d.createElement('style'); _eB.id = 'dnd-inline-scroll-fix'; _hB.appendChild(_eB); }
-                                if (_eB.getAttribute('data-v') !== 'v9') { _eB.textContent = _css; _eB.setAttribute('data-v', 'v9'); }
+                                if (_eB.getAttribute('data-v') !== 'v10') { _eB.textContent = _css; _eB.setAttribute('data-v', 'v10'); }
                             } catch (bB) {}
                         };
                         _ensB(_docB2, _cssB);
