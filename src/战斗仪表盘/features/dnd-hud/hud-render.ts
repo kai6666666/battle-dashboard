@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.88-b13.2.47 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.89-b13.2.48 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -359,10 +359,9 @@ export function createHudRenderFragment(deps: any): any {
                                     $view.find('.acu-search-wrapper').each(function(this: any) {
                                         var $s = $(this);
                                         try {
-                                            if ($s.parent().hasClass('dnd-search-row')) return;
-                                            var $ph = $s.closest('.acu-panel-header');
-                                            if (!$ph.length) return;
-                                            $s.detach();
+                                            var _inRowX = $s.parent().hasClass('dnd-search-row');
+                                            var $ph = _inRowX ? $() : $s.closest('.acu-panel-header');
+                                            if (!_inRowX && $ph.length) { $s.detach(); }
                                             var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
                                             try {
                                                 var _sw: any = $s[0];
@@ -370,7 +369,7 @@ export function createHudRenderFragment(deps: any): any {
                                                 _sw.style.setProperty('max-width', '45%', 'important');
                                                 _sw.style.setProperty('min-width', '0', 'important');
                                                 _sw.style.setProperty('flex', '0 0 45%', 'important');
-                                                _sw.style.setProperty('margin', '0', 'important');
+                                                _sw.style.setProperty('margin', '0', 'important'); _sw.style.setProperty('margin-left', 'auto', 'important');
                                                 _sw.style.setProperty('order', '0', 'important');
                                                 _sw.style.setProperty('box-sizing', 'border-box', 'important');
                                                 _sw.style.setProperty('border-radius', '999px', 'important');
@@ -380,8 +379,16 @@ export function createHudRenderFragment(deps: any): any {
                                             $s.find('input').each(function(this: any) {
                                                 try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
                                             });
-                                            $row.append($s);
-                                            $ph.after($row);
+                                            try {
+                                                var $ptb = $s.parent();
+                                                if ($ptb.length && String($ptb.attr('class') || '').indexOf('interaction-toolbar') >= 0) {
+                                                    $ptb[0].style.setProperty('display', 'flex', 'important');
+                                                    $ptb[0].style.setProperty('justify-content', 'flex-end', 'important');
+                                                    $ptb[0].style.setProperty('width', '100%', 'important');
+                                                    $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
+                                                }
+                                            } catch (eTB2) {}
+                                            if (!_inRowX && $ph.length) { $row.append($s); $ph.after($row); }
                                         } catch (eS1) {}
                                     });
                                 } catch (eS2) {}
@@ -421,6 +428,13 @@ export function createHudRenderFragment(deps: any): any {
                                             var _swDc = _rwD.find('.acu-search-wrapper').first();
                                             var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
                                             console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
+                                        }
+                                        var _anySw = $view.find('.acu-search-wrapper').first();
+                                        if (_anySw.length) {
+                                            var _ad = _anySw[0].getBoundingClientRect();
+                                            var _pcls = '?';
+                                            try { _pcls = String(_anySw.parent().attr('class') || '?').slice(0, 36); } catch (ePC) {}
+                                            console.info('[DND]HDRFIX search w=' + Math.round(_ad.width) + ' x=' + Math.round(_ad.left) + ',' + Math.round(_ad.top) + ' r=' + Math.round(_ad.right) + ' par=' + _pcls);
                                         }
                                     } catch (eSR) {}
                                 } catch (eD8) {}
@@ -522,10 +536,9 @@ export function createHudRenderFragment(deps: any): any {
                                     $view.find('.acu-search-wrapper').each(function(this: any) {
                                         var $s = $(this);
                                         try {
-                                            if ($s.parent().hasClass('dnd-search-row')) return;
-                                            var $ph = $s.closest('.acu-panel-header');
-                                            if (!$ph.length) return;
-                                            $s.detach();
+                                            var _inRowX = $s.parent().hasClass('dnd-search-row');
+                                            var $ph = _inRowX ? $() : $s.closest('.acu-panel-header');
+                                            if (!_inRowX && $ph.length) { $s.detach(); }
                                             var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
                                             try {
                                                 var _sw: any = $s[0];
@@ -533,7 +546,7 @@ export function createHudRenderFragment(deps: any): any {
                                                 _sw.style.setProperty('max-width', '45%', 'important');
                                                 _sw.style.setProperty('min-width', '0', 'important');
                                                 _sw.style.setProperty('flex', '0 0 45%', 'important');
-                                                _sw.style.setProperty('margin', '0', 'important');
+                                                _sw.style.setProperty('margin', '0', 'important'); _sw.style.setProperty('margin-left', 'auto', 'important');
                                                 _sw.style.setProperty('order', '0', 'important');
                                                 _sw.style.setProperty('box-sizing', 'border-box', 'important');
                                                 _sw.style.setProperty('border-radius', '999px', 'important');
@@ -543,8 +556,16 @@ export function createHudRenderFragment(deps: any): any {
                                             $s.find('input').each(function(this: any) {
                                                 try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
                                             });
-                                            $row.append($s);
-                                            $ph.after($row);
+                                            try {
+                                                var $ptb = $s.parent();
+                                                if ($ptb.length && String($ptb.attr('class') || '').indexOf('interaction-toolbar') >= 0) {
+                                                    $ptb[0].style.setProperty('display', 'flex', 'important');
+                                                    $ptb[0].style.setProperty('justify-content', 'flex-end', 'important');
+                                                    $ptb[0].style.setProperty('width', '100%', 'important');
+                                                    $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
+                                                }
+                                            } catch (eTB2) {}
+                                            if (!_inRowX && $ph.length) { $row.append($s); $ph.after($row); }
                                         } catch (eS1) {}
                                     });
                                 } catch (eS2) {}
@@ -584,6 +605,13 @@ export function createHudRenderFragment(deps: any): any {
                                             var _swDc = _rwD.find('.acu-search-wrapper').first();
                                             var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
                                             console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
+                                        }
+                                        var _anySw = $view.find('.acu-search-wrapper').first();
+                                        if (_anySw.length) {
+                                            var _ad = _anySw[0].getBoundingClientRect();
+                                            var _pcls = '?';
+                                            try { _pcls = String(_anySw.parent().attr('class') || '?').slice(0, 36); } catch (ePC) {}
+                                            console.info('[DND]HDRFIX search w=' + Math.round(_ad.width) + ' x=' + Math.round(_ad.left) + ',' + Math.round(_ad.top) + ' r=' + Math.round(_ad.right) + ' par=' + _pcls);
                                         }
                                     } catch (eSR) {}
                                 } catch (eD8) {}
@@ -811,10 +839,9 @@ export function createHudRenderFragment(deps: any): any {
                                     $view.find('.acu-search-wrapper').each(function(this: any) {
                                         var $s = $(this);
                                         try {
-                                            if ($s.parent().hasClass('dnd-search-row')) return;
-                                            var $ph = $s.closest('.acu-panel-header');
-                                            if (!$ph.length) return;
-                                            $s.detach();
+                                            var _inRowX = $s.parent().hasClass('dnd-search-row');
+                                            var $ph = _inRowX ? $() : $s.closest('.acu-panel-header');
+                                            if (!_inRowX && $ph.length) { $s.detach(); }
                                             var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
                                             try {
                                                 var _sw: any = $s[0];
@@ -822,7 +849,7 @@ export function createHudRenderFragment(deps: any): any {
                                                 _sw.style.setProperty('max-width', '45%', 'important');
                                                 _sw.style.setProperty('min-width', '0', 'important');
                                                 _sw.style.setProperty('flex', '0 0 45%', 'important');
-                                                _sw.style.setProperty('margin', '0', 'important');
+                                                _sw.style.setProperty('margin', '0', 'important'); _sw.style.setProperty('margin-left', 'auto', 'important');
                                                 _sw.style.setProperty('order', '0', 'important');
                                                 _sw.style.setProperty('box-sizing', 'border-box', 'important');
                                                 _sw.style.setProperty('border-radius', '999px', 'important');
@@ -832,8 +859,16 @@ export function createHudRenderFragment(deps: any): any {
                                             $s.find('input').each(function(this: any) {
                                                 try { this.style.setProperty('border-radius', '999px', 'important'); } catch (eIN) {}
                                             });
-                                            $row.append($s);
-                                            $ph.after($row);
+                                            try {
+                                                var $ptb = $s.parent();
+                                                if ($ptb.length && String($ptb.attr('class') || '').indexOf('interaction-toolbar') >= 0) {
+                                                    $ptb[0].style.setProperty('display', 'flex', 'important');
+                                                    $ptb[0].style.setProperty('justify-content', 'flex-end', 'important');
+                                                    $ptb[0].style.setProperty('width', '100%', 'important');
+                                                    $ptb[0].style.setProperty('box-sizing', 'border-box', 'important');
+                                                }
+                                            } catch (eTB2) {}
+                                            if (!_inRowX && $ph.length) { $row.append($s); $ph.after($row); }
                                         } catch (eS1) {}
                                     });
                                 } catch (eS2) {}
@@ -873,6 +908,13 @@ export function createHudRenderFragment(deps: any): any {
                                             var _swDc = _rwD.find('.acu-search-wrapper').first();
                                             var _srD = _swDc.length ? _swDc[0].getBoundingClientRect() : null;
                                             console.info('[DND]HDRFIX searchRow rowW=' + Math.round(_rrD.width) + ' rowX=' + Math.round(_rrD.left) + ',' + Math.round(_rrD.top) + ' searchW=' + (_srD ? Math.round(_srD.width) : '?') + ' searchX=' + (_srD ? Math.round(_srD.left) : '?') + ' searchR=' + (_srD ? Math.round(_srD.right) : '?'));
+                                        }
+                                        var _anySw = $view.find('.acu-search-wrapper').first();
+                                        if (_anySw.length) {
+                                            var _ad = _anySw[0].getBoundingClientRect();
+                                            var _pcls = '?';
+                                            try { _pcls = String(_anySw.parent().attr('class') || '?').slice(0, 36); } catch (ePC) {}
+                                            console.info('[DND]HDRFIX search w=' + Math.round(_ad.width) + ' x=' + Math.round(_ad.left) + ',' + Math.round(_ad.top) + ' r=' + Math.round(_ad.right) + ' par=' + _pcls);
                                         }
                                     } catch (eSR) {}
                                 } catch (eD8) {}
