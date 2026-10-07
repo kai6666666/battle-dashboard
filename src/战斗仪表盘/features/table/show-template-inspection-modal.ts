@@ -6,13 +6,12 @@ import { inspectTableTemplateWithPreset } from './table-template-requirements';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowTemplateInspectionModal(deps: any) {
   const showTemplateInspectionModal = (): void => {
-    const dbApi = deps.getCore().getDB() as Record<string, unknown> | null | undefined;
-    if (!dbApi || typeof dbApi.getTableTemplate !== 'function') {
-      showActionableErrorToast('数据库模板 API 不可用，无法读取当前聊天表格模板。', { developerHint: true });
-      return;
-    }
-
     try {
+      const dbApi = deps.getCore().getDB() as Record<string, unknown> | null | undefined;
+      if (!dbApi || typeof dbApi.getTableTemplate !== 'function') {
+        showActionableErrorToast('数据库模板 API 不可用，无法读取当前聊天表格模板。', { developerHint: true });
+        return;
+      }
       const template = (dbApi.getTableTemplate as () => unknown).call(dbApi);
       const preset = deps.TableTemplateRequirementPresetManager.getActivePreset();
       const result = inspectTableTemplateWithPreset(template, preset);

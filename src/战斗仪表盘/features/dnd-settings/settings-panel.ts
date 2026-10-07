@@ -46,7 +46,7 @@ export function createSettingsPanelFragment(deps: any): any {
         
         // 构建预设选项 HTML
         const buildOptions = (selected) => {
-            let html = `<option value="">-- 手动输入 --</option>`;
+            let html = `<option value="">-- 手动选择 --</option>`;
             presets.forEach(p => {
                 const isSel = p === selected ? 'selected' : '';
                 html += `<option value="${p}" ${isSel}>${p}</option>`;
@@ -393,7 +393,7 @@ export function createSettingsPanelFragment(deps: any): any {
                 </div>
 
                 <!-- [b14] 区块7：📚 预设管理（骰子预设10项 + DND自动预设切换） -->
-                <div id="dnd-set-block-7" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);">
+                <div id="dnd-set-block-7" style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);margin-bottom:20px;">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">📚 预设管理</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:20px;">
                         骰子各预设管理入口，以及根据战斗状态自动切换酒馆的 Plot/World Info 预设。
@@ -527,7 +527,7 @@ export function createSettingsPanelFragment(deps: any): any {
                     </p>
                     <div id="dnd-storage-stats" style="margin-bottom:15px;font-size:12px;color:#ccc;"></div>
                     
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;">
                         <button type="button" id="dnd-check-storage" class="dnd-clickable" style="
                             background:rgba(52, 152, 219, 0.2);
                             border:1px solid #3498db;
@@ -746,7 +746,7 @@ ${diceAdvancedRowsHtml}
             
             // 更新下拉框
             const updateSelect = ($sel, currentVal) => {
-                let html = `<option value="">-- 手动输入 --</option>`;
+                let html = `<option value="">-- 手动选择 --</option>`;
                 newPresets.forEach(p => {
                     const isSel = p === currentVal ? 'selected' : '';
                     html += `<option value="${p}" ${isSel}>${p}</option>`;
@@ -1226,20 +1226,7 @@ ${diceAdvancedRowsHtml}
             }
         });
 
-        // [b10d] 骰子功能入口（汇总）：打开骰子面板（变量表 / 表格工具 / 快捷掷骰）
-        try {
-            const $jq: any = (window as any).jQuery || (window as any).$;
-            if ($jq && $c && $c.length) {
-                const $entry = $jq('<div style="margin-top:14px;padding:10px 12px;border:1px dashed var(--dnd-border-subtle);border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;">'
-                    + '<span style="font-size:12px;color:var(--dnd-text-dim);">🎲 骰子功能面板（变量表 / 表格工具 / 快捷掷骰）</span>'
-                    + '<button type="button" class="dnd-clickable" style="background:var(--dnd-bg-secondary);border:1px solid var(--dnd-border-inner);color:var(--dnd-text-main);border-radius:4px;padding:4px 10px;cursor:pointer;font-size:12px;white-space:nowrap;">打开</button>'
-                    + '</div>');
-                $entry.find('button').on('click', function () {
-                    try { const w: any = window; if (w.__acuToggleDicePanel) w.__acuToggleDicePanel('expand'); } catch (errEn) {}
-                });
-                $c.append($entry);
-            }
-        } catch (errEn2) {}
+        // [b14.5] 骰子功能面板入口已迁移至「⚙️ 高级设置 → 骰子工具」区（启用/禁用开关）
         // 清理预览背景 (当设置面板关闭时)
         // 注意: 这里假设面板关闭时会调用某种清理，否则可能需要额外机制
     }

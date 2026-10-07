@@ -1297,6 +1297,7 @@ export function createShowSettingsModal(deps: any) {
     const closeDialog = () => {
       deps.setIsSettingsOpen(false);
       dialog.remove();
+      try { deps.clearModalStack(); } catch (e) {}
       deps.renderInterface();
     };
     dialog.on('click', '#dlg-close-x, .acu-settings-header .acu-close-btn', closeDialog);

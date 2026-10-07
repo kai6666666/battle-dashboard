@@ -7,6 +7,7 @@
 //     批次①：主题与外观-字体与渲染；批次②：布局与浏览 / 表格管理 / 面板与交互。
 import { normalizeDialogueIndentStrategy } from '../dialogue-indent-renderer';
 import { Store } from '../../shared/storage/store';
+import { DICE_ROOT_SELECTOR } from '../../shared/constants';
 
 const FALLBACK_CONFIG: any = {
   fontFamily: 'default',
@@ -575,7 +576,20 @@ export function createDiceSections(deps: any) {
     try {
       $c.find('#dnd-dice-template-inspection').on('click', function (this: any, e: any) {
         e.preventDefault();
-        callBridge('showTemplateInspectionModal');
+        try {
+          const b = getBridge();
+          if (b && typeof b.showTemplateInspectionModal === 'function') {
+            b.showTemplateInspectionModal();
+          } else {
+            try { const w: any = window; if (w.toastr) w.toastr.warning('检验表格模板不可用：桥未就绪'); } catch (e2) {}
+          }
+        } catch (err) {
+          try { console.error('[b14] 检验表格模板调用失败', err); } catch (e2) {}
+          try {
+            const w: any = window;
+            if (w.toastr) w.toastr.error('检验表格模板调用失败：' + ((err && (err as any).message) || err));
+          } catch (e2) {}
+        }
       });
     } catch (e) {}
 
@@ -712,9 +726,18 @@ export function createDiceSections(deps: any) {
   const buildAdvancedHtml = (): string => {
     const cfg = { ...FALLBACK_CONFIG, ...readConfig() };
     const toastActive = cfg.muteDatabaseToasts === true ? 'disabled' : 'enabled';
+    let dicePanelOn = false;
+    try {
+      const { $ } = deps.utils.getCore();
+      dicePanelOn = !!($ && $(DICE_ROOT_SELECTOR + '.acu-is-expanded').length);
+    } catch (e) {}
     return `
                     <div style="border-top:1px solid var(--dnd-border-inner);margin:18px 0 15px;"></div>
                     <div class="dnd-set-sub-title"><i class="fa-solid fa-screwdriver-wrench"></i> 骰子工具</div>
+                    <div class="dnd-set-row">
+                        <span class="dnd-set-row-label">🎲 骰子功能面板</span>
+                        ${seg('dnd-dice-panel-switch', ENABLED_OPTIONS, dicePanelOn ? 'enabled' : 'disabled', '骰子功能面板')}
+                    </div>
                     <div class="dnd-set-row">
                         <span class="dnd-set-row-label">Debug控制台</span>
                         <button type="button" id="dnd-dice-debug-console" class="dnd-set-action-btn"><i class="fa-solid fa-terminal"></i> 打开</button>
@@ -750,6 +773,23 @@ export function createDiceSections(deps: any) {
       $c.find('#dnd-clear-local-cache').on('click', function (this: any, e: any) {
         e.preventDefault();
         callBridge('clearDiceLocalCacheFlow');
+      });
+    } catch (e) {}
+    try {
+      $c.find('#dnd-dice-panel-switch .dnd-set-seg-btn').on('click', function (this: any) {
+        const value = String($(this).data('value') || '');
+        if (value !== 'enabled' && value !== 'disabled') return;
+        setSegActive($, $c.find('#dnd-dice-panel-switch'), value);
+        let currentOn = false;
+        try {
+          currentOn = $(DICE_ROOT_SELECTOR + '.acu-is-expanded').length > 0;
+        } catch (e) {}
+        if ((value === 'enabled') !== currentOn) {
+          try {
+            const w: any = window;
+            if (typeof w.__acuToggleDicePanel === 'function') w.__acuToggleDicePanel('toggle');
+          } catch (e) {}
+        }
       });
     } catch (e) {}
     try {

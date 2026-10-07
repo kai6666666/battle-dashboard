@@ -44,6 +44,9 @@ export const STYLES_PART_09_SETTINGS_FUSION = `
 .acu-edit-overlay, .acu-dice-overlay, .acu-contest-overlay, .acu-dice-config-overlay, .acu-preview-overlay, .acu-import-confirm-overlay, .acu-crop-modal-overlay, .acu-avatar-manager-overlay, .acu-relation-graph-overlay, .acu-map-overlay, .acu-delete-confirm-overlay, .acu-favorites-overlay, .acu-fav-edit-overlay, .acu-fav-new-overlay, .acu-fav-send-overlay, .acu-fav-tag-overlay, .acu-inventory-overlay, .acu-inventory-detail-overlay, .acu-gacha-overlay, .acu-gacha-shard-confirm-overlay, .acu-config-backup-overlay, .acu-manual-update-overlay, .acu-validation-modal-overlay, .acu-msg-overlay, .acu-blacklist-manager-overlay, .acu-system-input-overlay, .acu-profile-prompt-overlay, .acu-custom-icon-confirm-overlay, .acu-gacha-shard-shop-overlay, .acu-gacha-pickup-detail-overlay, .acu-gacha-item-editor-overlay, .acu-gacha-name-dialog-overlay, .acu-gacha-confirm-overlay, .acu-inventory-edit-overlay, .acu-inventory-meta-overlay, .acu-inventory-gift-overlay { z-index: 2147483646 !important; }
 .acu-drag-ghost { z-index: 2147483647 !important; }
 
+/* ===== [b14.5] 提示条层级：抬升至主面板之上（避免提示被仪表盘遮挡） ===== */
+#toast-container, #toast-container .toast { z-index: 2147483647 !important; }
+
 /* ===== [b14②] 导航盘管理弹窗（DND 化包装） ===== */
 .dnd-navmgr-overlay { position: fixed; inset: 0; z-index: 2147483646; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
 .dnd-navmgr-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.62); }
