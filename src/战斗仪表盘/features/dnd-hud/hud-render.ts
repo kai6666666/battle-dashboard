@@ -4,7 +4,7 @@
 import { DND_CONFIG } from '../dnd-core';
 
 // [b13.2.32] DND 内联样式表（per-doc 注入用）
-const __DND_CSS_V9 = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-search-wrapper,.dnd-acu-view-inline .acu-search-wrapper{order:9999 !important;flex:0 1 auto !important;width:44% !important;max-width:44% !important;min-width:110px !important;margin-left:auto !important;margin-top:4px !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-header-actions,.dnd-acu-view-inline .acu-header-actions{flex-wrap:wrap !important;row-gap:6px !important;justify-content:flex-end !important;max-width:100% !important;min-width:0 !important;}' + '.dnd-acu-table-view .acu-panel-header,.dnd-acu-view-inline .acu-panel-header{max-width:100% !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-search-wrapper .acu-search-input,.dnd-acu-view-inline .acu-search-wrapper .acu-search-input{max-width:100% !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-panel-control-set,.dnd-acu-view-inline .acu-panel-control-set{display:flex !important;align-items:center !important;gap:4px !important;}' + '.dnd-acu-view-inline .acu-header-actions{flex-wrap:nowrap !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-btn-dozed{pointer-events:none !important;opacity:.3 !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
+const __DND_CSS_V9 = '.dnd-acu-view-inline .acu-fav-wrapper{max-height:none !important;height:auto !important;overflow:visible !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content,.dnd-acu-view-inline .acu-changes-content{max-height:52vh !important;height:auto !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-search-wrapper,.dnd-acu-view-inline .acu-search-wrapper{order:9999 !important;flex:0 1 auto !important;width:44% !important;max-width:44% !important;min-width:110px !important;margin-left:auto !important;margin-top:4px !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-header-actions,.dnd-acu-view-inline .acu-header-actions{flex-wrap:wrap !important;row-gap:6px !important;justify-content:flex-end !important;max-width:100% !important;min-width:0 !important;}' + '.dnd-acu-table-view .acu-panel-header,.dnd-acu-view-inline .acu-panel-header{max-width:100% !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-search-wrapper .acu-search-input,.dnd-acu-view-inline .acu-search-wrapper .acu-search-input{max-width:100% !important;box-sizing:border-box !important;}' + '.dnd-acu-table-view .acu-panel-control-set,.dnd-acu-view-inline .acu-panel-control-set{display:flex !important;align-items:center !important;gap:4px !important;}' + '.dnd-acu-view-inline{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-height-drag-handle,.dnd-acu-view-inline .acu-height-drag-handle{touch-action:none !important;user-select:none !important;-webkit-user-select:none !important;}' + '.dnd-btn-dozed{pointer-events:none !important;opacity:.3 !important;}' + '.dnd-acu-view-inline .acu-fav-panel-content{-webkit-overflow-scrolling:touch !important;touch-action:pan-y !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid,.dnd-acu-view-inline .acu-card-body.view-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;padding:10px !important;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row{display:flex;height:auto !important;min-height:fit-content;border:1px solid var(--acu-border);border-radius:6px;padding:5px 7px;flex-direction:column !important;align-items:flex-start !important;background:rgba(0,0,0,.02);box-sizing:border-box;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-row.acu-grid-span-full,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-row.acu-grid-span-full{grid-column:1/-1;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-label,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-label{width:100% !important;font-size:.85em;opacity:.8;margin-bottom:2px;}' + '.dnd-acu-table-view .acu-card-body.view-grid .acu-card-value,.dnd-acu-view-inline .acu-card-body.view-grid .acu-card-value{width:100% !important;}';
 
 export function createHudRenderFragment(deps: any): any {
   return {
@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.85-b13.2.44 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.86-b13.2.45 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -370,14 +370,14 @@ export function createHudRenderFragment(deps: any): any {
                             } catch (eBrA) {}
                             try {
                                 $view.find('.acu-header-actions').each(function(this: any) {
-                                    try { this.style.setProperty('gap', '3px', 'important'); this.style.setProperty('row-gap', '3px', 'important'); } catch (eGA) {}
+                                    try { this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eGA) {}
                                 });
                                 $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control').each(function(this: any) {
                                     try {
-                                        this.style.setProperty('min-width', '20px', 'important');
-                                        this.style.setProperty('width', '20px', 'important');
-                                        this.style.setProperty('height', '20px', 'important');
-                                        this.style.setProperty('padding', '0', 'important'); this.style.setProperty('font-size', '11px', 'important');
+                                        this.style.setProperty('min-width', '24px', 'important');
+                                        this.style.setProperty('width', '24px', 'important');
+                                        this.style.setProperty('height', '24px', 'important');
+                                        this.style.setProperty('padding', '0', 'important'); this.style.setProperty('margin', '0', 'important'); this.style.setProperty('flex-shrink', '0', 'important');
                                     } catch (eGB) {}
                                 });
                             } catch (eGA2) {}
@@ -736,7 +736,7 @@ export function createHudRenderFragment(deps: any): any {
                                     try { this.style.removeProperty('overflow'); this.style.removeProperty('min-width'); } catch (eTM) {}
                                 });
                                 $view.find('.acu-title-sub').each(function(this: any) {
-                                    try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '110px', 'important'); } catch (eTS) {}
+                                    try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '96px', 'important'); } catch (eTS) {}
                                 });
                                 $view.find('.acu-header-actions').each(function(this: any) {
                                     try { this.style.setProperty('flex-shrink', '0', 'important'); } catch (eHS) {}
@@ -757,14 +757,14 @@ export function createHudRenderFragment(deps: any): any {
                             } catch (eIx) {}
                             try {
                                 _hdI.each(function(this: any) {
-                                    try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '3px', 'important'); this.style.setProperty('row-gap', '3px', 'important'); } catch (eA2) {}
+                                    try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA2) {}
                                 });
                                 $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control').each(function(this: any) {
                                     try {
-                                        this.style.setProperty('min-width', '20px', 'important');
-                                        this.style.setProperty('width', '20px', 'important');
-                                        this.style.setProperty('height', '20px', 'important');
-                                        this.style.setProperty('padding', '0', 'important'); this.style.setProperty('font-size', '11px', 'important');
+                                        this.style.setProperty('min-width', '24px', 'important');
+                                        this.style.setProperty('width', '24px', 'important');
+                                        this.style.setProperty('height', '24px', 'important');
+                                        this.style.setProperty('padding', '0', 'important'); this.style.setProperty('margin', '0', 'important'); this.style.setProperty('flex-shrink', '0', 'important');
                                     } catch (eGB2) {}
                                 });
                             } catch (eIx2) {}
