@@ -59,6 +59,9 @@ export function createSettingsPanelFragment(deps: any): any {
         const diceLayoutRowsHtml = diceSections.buildLayoutHtml();
         const diceTableRowsHtml = diceSections.buildTableHtml();
         const diceInteractionRowsHtml = diceSections.buildInteractionHtml();
+        // [b14批次③] 骰子区块 HTML（预设管理 / 高级设置工具）
+        const dicePresetsRowsHtml = diceSections.buildPresetsHtml();
+        const diceAdvancedRowsHtml = diceSections.buildAdvancedHtml();
 
         const html = `
             <div style="padding:20px; max-width: 600px;">
@@ -377,14 +380,16 @@ export function createSettingsPanelFragment(deps: any): any {
                     ${diceInteractionRowsHtml}
                 </div>
 
-                <!-- [b14] 区块7：📚 预设管理（批次③补齐骰子预设10项；当前=DND自动预设切换） -->
+                <!-- [b14] 区块7：📚 预设管理（骰子预设10项 + DND自动预设切换） -->
                 <div style="background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">📚 预设管理</h3>
                     <p style="color:#888;font-size:13px;margin-bottom:20px;">
-                        根据游戏内的战斗状态（全局状态表中的"战斗模式"字段），自动切换酒馆的 Plot/World Info 预设。
+                        骰子各预设管理入口，以及根据战斗状态自动切换酒馆的 Plot/World Info 预设。
                     </p>
                     
-                    <div style="margin-bottom:20px;">
+                                        ${dicePresetsRowsHtml}
+
+<div style="margin-bottom:20px;">
                         <label style="display:flex;align-items:center;cursor:pointer;">
                             <input type="checkbox" id="dnd-cfg-enabled" ${config.ENABLED ? 'checked' : ''} style="margin-right:10px;transform:scale(1.2);">
                             <span style="font-weight:bold;">启用自动切换功能</span>
@@ -495,7 +500,7 @@ export function createSettingsPanelFragment(deps: any): any {
                     </div>
                 </div>
                 
-                <!-- [b14] 区块9：⚙️ 高级设置（批次③补齐骰子工具4项；当前=DND 存储空间管理） -->
+                <!-- [b14] 区块9：⚙️ 高级设置（DND存储空间管理 + 骰子工具4项） -->
                 <div style="margin-top:20px;background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);">
                     <h3 style="color:var(--dnd-text-header);margin-top:0;">⚙️ 高级设置</h3>
                     <div class="dnd-set-sub-title" style="margin-top:4px;"><i class="fa-solid fa-database"></i> 存储空间管理</div>
@@ -535,30 +540,11 @@ export function createSettingsPanelFragment(deps: any): any {
                             font-size:13px;
                         ">${deps.icons.MAP} 清理地图缓存</button>
                     </div>
+${diceAdvancedRowsHtml}
                 </div>
-                
-                <!-- [b12.7] 骰子面板设置（接入骰子系统完整设置） -->
-                <div style="margin-top:20px;background:var(--dnd-bg-card);padding:20px;border-radius:6px;border:1px solid var(--dnd-border-inner);">
-                    <h3 style="color:var(--dnd-text-header);margin-top:0;"><i class="fa-solid fa-dice-d20"></i> 骰子面板设置</h3>
-                    <p style="color:#888;font-size:13px;margin-bottom:15px;">
-                        骰子系统的完整设置已接入此处（预设 / 主题 / 字体 / 过滤 / 渲染 / 正则 / 动作 / 备份等全部配置项）。
-                    </p>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                        <button type="button" id="dnd-open-acu-settings" class="dnd-clickable" style="
-                            background:rgba(155, 89, 182, 0.2);
-                            border:1px solid #9b59b6;
-                            color:#d8b6e8;
-                            padding:8px 16px;
-                            border-radius:4px;
-                            cursor:pointer;
-                            font-size:13px;
-                            font-weight:bold;
-                            display:flex;align-items:center;gap:5px;
-                        "><i class="fa-solid fa-gear"></i> 打开骰子设置面板</button>
-                    </div>
-                </div>
+                <!-- [b14③]旧「骰子面板设置」入口已移除（骰子设置已全量迁入本面板 9 区块） -->
 
-                <div style="margin-top:20px;padding:15px;background:rgba(197, 160, 89, 0.1);border-left:3px solid var(--dnd-border-gold);border-radius:4px;">
+<div style="margin-top:20px;padding:15px;background:rgba(197, 160, 89, 0.1);border-left:3px solid var(--dnd-border-gold);border-radius:4px;">
                     <div style="font-weight:bold;color:var(--dnd-text-highlight);margin-bottom:5px;">${deps.icons.LIGHTBULB} 提示</div>
                     <div style="font-size:12px;color:#ccc;line-height:1.5;">
                         预设名称必须与酒馆 World Info 界面中的 Plot 预设名称完全一致。<br>
@@ -573,17 +559,7 @@ export function createSettingsPanelFragment(deps: any): any {
         // [b14] 骰子区块绑定（批次①-②：主题外观 / 布局 / 表格 / 面板交互）
         try { diceSections.bindAll($c); } catch (e) { console.warn('[DND] 骰子设置区块绑定失败', e); }
 
-        // [b12.7] 打开骰子设置面板
-        $c.find('#dnd-open-acu-settings').on('click', function() {
-            try {
-                const acuUI: any = (window as any).__acuUI;
-                if (acuUI && typeof acuUI.showSettingsModal === 'function') {
-                    acuUI.showSettingsModal();
-                } else if ((window as any).toastr) {
-                    (window as any).toastr.warning('骰子设置不可用：UI 桥未就绪');
-                }
-            } catch (e) { console.warn('[DND] 打开骰子设置失败', e); }
-        });
+        // [b14③] 旧「骰子面板设置」按钮绑定已移除（showSettingsModal 保留兼容，不再作为入口）
 
         // 绑定存储检查按钮
         $c.find('#dnd-check-storage').on('click', function() {

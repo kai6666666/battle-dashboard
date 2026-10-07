@@ -658,12 +658,122 @@ export function createDiceSections(deps: any) {
     } catch (e) {}
   };
 
+  // ===== 区块7：📚预设管理 - 骰子预设10项（批次③迁入） =====
+  const buildPresetsHtml = (): string => {
+    let badge = '';
+    try {
+      const b = callBridge('renderDataValidationDeprecatedBadge');
+      if (typeof b === 'string') badge = b;
+    } catch (e) {}
+    const rows: Array<{ label: string; kind: string; badge?: string }> = [
+      { label: '检定预设', kind: 'check' },
+      { label: '属性预设', kind: 'attribute' },
+      { label: '交互规则预设', kind: 'action' },
+      { label: '仪表盘预设', kind: 'dashboard' },
+      { label: '渲染预设', kind: 'render' },
+      { label: '模板检验预设', kind: 'templateRequirement' },
+      { label: '角色头像预设', kind: 'avatar' },
+      { label: '图标预设', kind: 'icon' },
+      { label: '数据验证预设', kind: 'validation', badge },
+      { label: '表格正则预设', kind: 'regex' },
+    ];
+    return `
+                    <div class="dnd-set-sub-title"><i class="fa-solid fa-layer-group"></i> 骰子预设管理</div>
+                    <p style="color:var(--dnd-text-dim);font-size:12px;margin:0 0 12px;">
+                        预设与规则的管理入口（点击「管理」打开对应管理面板）。
+                    </p>
+                    ${rows
+                      .map(
+                        r =>
+                          `<div class="dnd-set-row">
+                        <span class="dnd-set-row-label">${r.label}${r.badge ? ' ' + r.badge : ''}</span>
+                        <button type="button" class="dnd-set-action-btn dnd-dice-preset-manage" data-kind="${r.kind}"><i class="fa-solid fa-cog"></i> 管理</button>
+                    </div>`,
+                      )
+                      .join('')}
+                    <div style="border-top:1px solid var(--dnd-border-inner);margin:18px 0 15px;"></div>
+                    <div class="dnd-set-sub-title"><i class="fa-solid fa-shuffle"></i> 战斗状态自动切换（DND）</div>
+                `;
+  };
+
+  // ===== 绑定：区块7 预设管理 =====
+  const bindPresets = ($c: any): void => {
+    const { $ } = deps.utils.getCore();
+    if (!$ || !$c) return;
+    try {
+      $c.find('.dnd-dice-preset-manage').on('click', function (this: any, e: any) {
+        e.preventDefault();
+        const kind = String($(this).data('kind') || '');
+        callBridge('openDicePresetManager', kind);
+      });
+    } catch (e) {}
+  };
+
+  // ===== 区块9：⚙️高级设置 - 骰子工具（批次③迁入） =====
+  const buildAdvancedHtml = (): string => {
+    const cfg = { ...FALLBACK_CONFIG, ...readConfig() };
+    const toastActive = cfg.muteDatabaseToasts === true ? 'disabled' : 'enabled';
+    return `
+                    <div style="border-top:1px solid var(--dnd-border-inner);margin:18px 0 15px;"></div>
+                    <div class="dnd-set-sub-title"><i class="fa-solid fa-screwdriver-wrench"></i> 骰子工具</div>
+                    <div class="dnd-set-row">
+                        <span class="dnd-set-row-label">Debug控制台</span>
+                        <button type="button" id="dnd-dice-debug-console" class="dnd-set-action-btn"><i class="fa-solid fa-terminal"></i> 打开</button>
+                    </div>
+                    <div class="dnd-set-row">
+                        <span class="dnd-set-row-label">配置方案与备份</span>
+                        <button type="button" id="dnd-dice-config-backup" class="dnd-set-action-btn"><i class="fa-solid fa-arrows-rotate"></i> 打开</button>
+                    </div>
+                    <div class="dnd-set-row">
+                        <span class="dnd-set-row-label">清空本地缓存</span>
+                        <button type="button" id="dnd-dice-clear-cache" class="dnd-set-action-btn"><i class="fa-solid fa-eraser"></i> 清空</button>
+                    </div>
+                    <div class="dnd-set-row">
+                        <span class="dnd-set-row-label">数据库弹窗</span>
+                        ${seg('dnd-dice-db-toast', ENABLED_OPTIONS, toastActive, '数据库弹窗')}
+                    </div>
+                `;
+  };
+
+  // ===== 绑定：区块9 高级设置 =====
+  const bindAdvanced = ($c: any): void => {
+    const { $ } = deps.utils.getCore();
+    if (!$ || !$c) return;
+    try {
+      $c.find('#dnd-dice-debug-console').on('click', function (this: any, e: any) {
+        e.preventDefault();
+        callBridge('showDebugConsoleModal');
+      });
+    } catch (e) {}
+    try {
+      $c.find('#dnd-dice-config-backup').on('click', function (this: any, e: any) {
+        e.preventDefault();
+        callBridge('showDiceConfigBackupDialog');
+      });
+    } catch (e) {}
+    try {
+      $c.find('#dnd-dice-clear-cache').on('click', function (this: any, e: any) {
+        e.preventDefault();
+        callBridge('clearDiceLocalCacheFlow');
+      });
+    } catch (e) {}
+    try {
+      $c.find('#dnd-dice-db-toast .dnd-set-seg-btn').on('click', function (this: any) {
+        const value = String($(this).data('value') || '');
+        setSegActive($, $c.find('#dnd-dice-db-toast'), value);
+        saveConfig({ muteDatabaseToasts: value === 'disabled' });
+      });
+    } catch (e) {}
+  };
+
   // ===== 总绑定（设置面板每次渲染后调用） =====
   const bindAll = ($c: any): void => {
     bindAppearance($c);
     bindLayout($c);
     bindTable($c);
     bindInteraction($c);
+    bindPresets($c);
+    bindAdvanced($c);
   };
 
   return {
@@ -671,6 +781,8 @@ export function createDiceSections(deps: any) {
     buildLayoutHtml,
     buildTableHtml,
     buildInteractionHtml,
+    buildPresetsHtml,
+    buildAdvancedHtml,
     bindAppearance,
     bindAll,
   };

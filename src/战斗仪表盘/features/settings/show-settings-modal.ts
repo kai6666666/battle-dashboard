@@ -10,7 +10,7 @@ import { normalizeDialogueIndentStrategy } from '../../features/dialogue-indent-
 type AvatarManagerNode = Record<string, any>;
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
 export function createShowSettingsModal(deps: any) {
-  const showSettingsModal = () => {
+  const showSettingsModal = (options?: any) => {
     const { $ } = deps.getCore();
     $('.acu-edit-overlay').not(':has(.acu-settings-dialog)').remove();
     deps.clearModalStack();
@@ -1307,6 +1307,20 @@ export function createShowSettingsModal(deps: any) {
       deps.showManualUpdateDialog();
     });
     deps.setupOverlayClose(dialog, 'acu-edit-overlay', closeDialog);
+
+    // [b14③] 可选：直接打开指定二级管理弹窗（供 DND 主面板「预设管理」入口复用；不改原流程）
+    try {
+      const target = options && options.openManager;
+      if (target) {
+        const $group = dialog.find('.acu-settings-group[data-group="dicePresets"]');
+        if ($group.length && $group.hasClass('collapsed')) {
+          try { $group.find('.acu-settings-group-title').trigger('click'); } catch (e) {}
+        }
+        setTimeout(() => {
+          try { openSettingsManagerDialog(String(target)); } catch (e) {}
+        }, 60);
+      }
+    } catch (e) {}
   };
   return showSettingsModal;
 }
