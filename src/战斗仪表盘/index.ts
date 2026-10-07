@@ -1471,6 +1471,15 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
     const _acuToast = (m: string) => { try { (window as any).toastr?.warning?.(m); } catch (e) {} };
     const _acuUIBridge: any = {
       showSettingsModal: (...a: any[]) => (showSettingsModal as any)(...a),
+      // [b14] 设置融合：骰子配置读写 + 刷新链路（DND 主面板设置调用）
+      getConfig: (...a: any[]) => (getConfig as any)(...a),
+      saveConfig: (...a: any[]) => (saveConfig as any)(...a),
+      renderInterface: (...a: any[]) => (renderInterface as any)(...a),
+      refreshDialogueIndentRender: (...a: any[]) => (refreshDialogueIndentRender as any)(...a),
+      getNavigationFontMetrics: (...a: any[]) => (getNavigationFontMetrics as any)(...a),
+      getFontsList: () => {
+        try { return (Array.isArray(FONTS) ? FONTS : []).map((f: any) => ({ id: f.id, name: f.name })); } catch (e) { return []; }
+      },
       runDatabaseManualUpdate: (...a: any[]) => (runDatabaseManualUpdate as any)(...a),
       showGachaVisualization: (...a: any[]) => (showGachaVisualization as any)(...a),
       showInventoryVisualization: (...a: any[]) => (showInventoryVisualization as any)(...a),
