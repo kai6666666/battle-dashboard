@@ -167,6 +167,7 @@ export function createSettingsPanelFragment(deps: any): any {
                     </p>
 
                     <!-- 配色模板 -->
+                    <div id="dnd-sub-color" class="dnd-set-sub-group">
                     <div class="dnd-set-sub-title">${deps.icons.PALETTE} 配色模板</div>
                     <p style="color:#888;font-size:12px;margin-bottom:12px;">
                         选择预设主题或自定义配色，让界面风格更符合你的喜好。
@@ -245,8 +246,10 @@ export function createSettingsPanelFragment(deps: any): any {
                             </div>
                         </div>
                     </div>
+                    </div>
 
                 <!-- 风格管理 -->
+                <div id="dnd-sub-style" class="dnd-set-sub-group">
                 <div style="border-top:1px solid var(--dnd-border-inner);margin:18px 0 15px;"></div>
                 <div class="dnd-set-sub-title">${deps.icons.MASK} 风格管理</div>
                     <p style="color:#888;font-size:12px;margin-bottom:12px;">
@@ -317,10 +320,13 @@ export function createSettingsPanelFragment(deps: any): any {
                             风格和配色可以叠加使用 —— 先选择喜欢的风格，再通过配色进行个性化调整。
                         </div>
                     </div>
+                    </div>
 
                     <!-- [b14] 字体与渲染（骰子迁入 · 批次①） -->
+                    <div id="dnd-sub-font" class="dnd-set-sub-group">
                     <div style="border-top:1px solid var(--dnd-border-inner);margin:18px 0 15px;"></div>
                     ${diceAppearanceRowsHtml}
+                </div>
                 </div>
 
                 <!-- [b14] 区块3：✨ 动态背景 -->
@@ -392,10 +398,15 @@ export function createSettingsPanelFragment(deps: any): any {
                     <p style="color:#888;font-size:13px;margin-bottom:20px;">
                         骰子各预设管理入口，以及根据战斗状态自动切换酒馆的 Plot/World Info 预设。
                     </p>
-                    
-                                        ${dicePresetsRowsHtml}
 
-<div style="margin-bottom:20px;">
+                    <div id="dnd-sub-presets" class="dnd-set-sub-group">
+                    ${dicePresetsRowsHtml}
+                    </div>
+
+                    <div id="dnd-sub-autoswitch" class="dnd-set-sub-group">
+                    <div style="border-top:1px solid var(--dnd-border-inner);margin:18px 0 15px;"></div>
+                    <div class="dnd-set-sub-title"><i class="fa-solid fa-shuffle"></i> 战斗状态自动切换（DND）</div>
+                    <div style="margin-bottom:20px;">
                         <label style="display:flex;align-items:center;cursor:pointer;">
                             <input type="checkbox" id="dnd-cfg-enabled" ${config.ENABLED ? 'checked' : ''} style="margin-right:10px;transform:scale(1.2);">
                             <span style="font-weight:bold;">启用自动切换功能</span>
@@ -405,21 +416,21 @@ export function createSettingsPanelFragment(deps: any): any {
                     <div class="dnd-cfg-group" style="opacity:${config.ENABLED ? 1 : 0.5};pointer-events:${config.ENABLED ? 'auto' : 'none'};transition:all 0.3s;">
                         <div style="margin-bottom:15px;">
                             <label style="display:block;margin-bottom:5px;color:var(--dnd-text-main);">${deps.icons.SWORD} 战斗状态预设</label>
-                            <div style="display:flex;gap:10px;">
-                                <select id="dnd-cfg-combat-sel" style="background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;flex:1;">
+                            <div style="display:flex;flex-direction:column;gap:8px;">
+                                <select id="dnd-cfg-combat-sel" style="width:100%;box-sizing:border-box;background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;">
                                     ${buildOptions(config.COMBAT_PRESET)}
                                 </select>
-                                <input type="text" id="dnd-cfg-combat-input" value="${config.COMBAT_PRESET}" placeholder="预设名称" style="background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;flex:1;">
+                                <input type="text" id="dnd-cfg-combat-input" value="${config.COMBAT_PRESET}" placeholder="预设名称" style="width:100%;box-sizing:border-box;background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;">
                             </div>
                         </div>
                         
                         <div style="margin-bottom:20px;">
                             <label style="display:block;margin-bottom:5px;color:var(--dnd-text-main);">${deps.icons.COMPASS} 探索状态预设</label>
-                            <div style="display:flex;gap:10px;">
-                                <select id="dnd-cfg-explore-sel" style="background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;flex:1;">
+                            <div style="display:flex;flex-direction:column;gap:8px;">
+                                <select id="dnd-cfg-explore-sel" style="width:100%;box-sizing:border-box;background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;">
                                     ${buildOptions(config.EXPLORE_PRESET)}
                                 </select>
-                                <input type="text" id="dnd-cfg-explore-input" value="${config.EXPLORE_PRESET}" placeholder="预设名称" style="background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;flex:1;">
+                                <input type="text" id="dnd-cfg-explore-input" value="${config.EXPLORE_PRESET}" placeholder="预设名称" style="width:100%;box-sizing:border-box;background:var(--dnd-bg-input);border:1px solid var(--dnd-border-subtle);color:var(--dnd-text-main);padding:8px;border-radius:4px;">
                             </div>
                         </div>
                     </div>
@@ -445,6 +456,7 @@ export function createSettingsPanelFragment(deps: any): any {
                             font-size:14px;
                             display:flex;align-items:center;gap:5px;
                         "><i class="fa-solid fa-save"></i> 保存设置</button>
+                    </div>
                     </div>
                 </div>
 

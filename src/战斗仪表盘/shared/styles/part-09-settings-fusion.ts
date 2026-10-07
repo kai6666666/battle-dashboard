@@ -27,7 +27,7 @@ export const STYLES_PART_09_SETTINGS_FUSION = `
 /* ===== [b14.3] 面板外壳：折叠标题 / 标题三件套 / 教程按钮 ===== */
 .dnd-set-group-title { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
 .dnd-set-group-title .dnd-set-group-chevron { font-size: 12px; color: var(--dnd-text-dim, #888); transition: transform .18s ease; flex-shrink: 0; }
-.dnd-set-group.collapsed .dnd-set-group-title .dnd-set-group-chevron { transform: rotate(-90deg); }
+
 .dnd-version-badge { font-size: 11px; color: var(--dnd-text-dim, #888); border: 1px solid var(--dnd-border-subtle, #444); border-radius: 4px; padding: 2px 6px; white-space: nowrap; }
 .dnd-title-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: transparent; border: 1px solid var(--dnd-border-subtle, #444); color: var(--dnd-text-main, #dcd0c0); border-radius: 4px; cursor: pointer; transition: all .2s; padding: 0; }
 .dnd-title-icon-btn:hover { border-color: var(--dnd-border-gold, #9d8b6c); color: var(--dnd-text-highlight, #ffdb85); }
@@ -35,6 +35,14 @@ export const STYLES_PART_09_SETTINGS_FUSION = `
 .dnd-block-help:hover { color: var(--dnd-text-highlight, #ffdb85); background: rgba(157,139,108,0.16); }
 .dnd-title-help-btn { width: 28px; height: 28px; min-width: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--dnd-text-dim, #888); font-size: 15px; cursor: pointer; transition: all .18s; }
 .dnd-title-help-btn:hover { color: var(--dnd-text-highlight, #ffdb85); background: rgba(157,139,108,0.16); }
+
+/* ===== [b14.4] 子节折叠标题（配色/风格/字体渲染/骰子预设/自动切换） ===== */
+.dnd-set-sub-group .dnd-set-sub-title { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+.dnd-set-sub-group .dnd-set-sub-chevron { font-size: 11px; color: var(--dnd-text-dim, #888); flex-shrink: 0; }
+
+/* ===== [b14.4] 骰子弹窗层级收编：统一抬升至主面板之上（层序按打开顺序） ===== */
+.acu-edit-overlay, .acu-dice-overlay, .acu-contest-overlay, .acu-dice-config-overlay, .acu-preview-overlay, .acu-import-confirm-overlay, .acu-crop-modal-overlay, .acu-avatar-manager-overlay, .acu-relation-graph-overlay, .acu-map-overlay, .acu-delete-confirm-overlay, .acu-favorites-overlay, .acu-fav-edit-overlay, .acu-fav-new-overlay, .acu-fav-send-overlay, .acu-fav-tag-overlay, .acu-inventory-overlay, .acu-inventory-detail-overlay, .acu-gacha-overlay, .acu-gacha-shard-confirm-overlay, .acu-config-backup-overlay, .acu-manual-update-overlay, .acu-validation-modal-overlay, .acu-msg-overlay, .acu-blacklist-manager-overlay, .acu-system-input-overlay, .acu-profile-prompt-overlay, .acu-custom-icon-confirm-overlay, .acu-gacha-shard-shop-overlay, .acu-gacha-pickup-detail-overlay, .acu-gacha-item-editor-overlay, .acu-gacha-name-dialog-overlay, .acu-gacha-confirm-overlay, .acu-inventory-edit-overlay, .acu-inventory-meta-overlay, .acu-inventory-gift-overlay { z-index: 2147483646 !important; }
+.acu-drag-ghost { z-index: 2147483647 !important; }
 
 /* ===== [b14②] 导航盘管理弹窗（DND 化包装） ===== */
 .dnd-navmgr-overlay { position: fixed; inset: 0; z-index: 2147483646; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }

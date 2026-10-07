@@ -692,8 +692,6 @@ export function createDiceSections(deps: any) {
                     </div>`,
                       )
                       .join('')}
-                    <div style="border-top:1px solid var(--dnd-border-inner);margin:18px 0 15px;"></div>
-                    <div class="dnd-set-sub-title"><i class="fa-solid fa-shuffle"></i> 战斗状态自动切换（DND）</div>
                 `;
   };
 
@@ -776,6 +774,8 @@ export function createDiceSections(deps: any) {
     'dnd-set-block-9',
   ];
   const DND_COLLAPSE_STORE_KEY = 'dnd_set_groups_expanded_v1';
+  const DND_SUB_IDS = ['dnd-sub-color', 'dnd-sub-style', 'dnd-sub-font', 'dnd-sub-presets', 'dnd-sub-autoswitch'];
+  const DND_SUB_STORE_KEY = 'dnd_set_subgroups_expanded_v1';
   const BLOCK_HELP_MAP: Array<{ id: string; scope: string; title: string }> = [
     { id: 'dnd-set-block-2', scope: 'settingsAppearance', title: '查看外观样式教程' },
     { id: 'dnd-set-block-4', scope: 'settingsLayout', title: '查看布局与浏览教程' },
@@ -795,6 +795,19 @@ export function createDiceSections(deps: any) {
   const writeExpandedBlocks = (list: string[]): void => {
     try {
       Store.set(DND_COLLAPSE_STORE_KEY, list);
+    } catch (e) {}
+  };
+  const readExpandedSubs = (): string[] => {
+    try {
+      const v = Store.get(DND_SUB_STORE_KEY, []);
+      return Array.isArray(v) ? v.map(String) : [];
+    } catch (e) {
+      return [];
+    }
+  };
+  const writeExpandedSubs = (list: string[]): void => {
+    try {
+      Store.set(DND_SUB_STORE_KEY, list);
     } catch (e) {}
   };
   const bindPanelChrome = ($c: any): void => {
@@ -868,6 +881,65 @@ export function createDiceSections(deps: any) {
       } catch (e) {}
     });
 
+    // 1.5) 子节折叠（配色/风格/字体渲染/骰子预设/战斗状态自动切换；默认折叠；展开状态记忆）
+    const expandedSubs = readExpandedSubs();
+    DND_SUB_IDS.forEach(id => {
+      try {
+        const $group = $c.find('#' + id);
+        if (!$group.length) return;
+        const $title = $group.children('.dnd-set-sub-title').first();
+        if (!$title.length) return;
+
+        const $body = $('<div class="dnd-set-group-body"></div>');
+        $group.contents().not($title).detach().appendTo($body);
+        $group.append($body);
+
+        if (!$title.find('.dnd-set-sub-chevron').length) {
+          $title.prepend('<i class="fa-solid fa-chevron-down dnd-set-sub-chevron"></i>');
+        }
+        const setSubChevron = (isEx: boolean) => {
+          const $chev = $title.find('.dnd-set-sub-chevron');
+          $chev.toggleClass('fa-chevron-down', isEx).toggleClass('fa-chevron-right', !isEx);
+        };
+        const isExpandedSub = expandedSubs.indexOf(id) >= 0;
+        if (isExpandedSub) setSubChevron(true);
+        else {
+          $group.addClass('collapsed');
+          setSubChevron(false);
+          $body.hide();
+        }
+
+        $title.on('click', function (e: any) {
+          try {
+            if ($(e.target).closest('button, a, select, input, .acu-panel-tutorial-btn').length) return;
+          } catch (e2) {}
+          if ($group.hasClass('collapsed')) {
+            $group.removeClass('collapsed');
+            setSubChevron(true);
+            $body.addClass('dnd-animating').show();
+            const targetH = $body.prop('scrollHeight');
+            $body.css('height', 0).animate({ height: targetH }, 180, function (this: any) {
+              $(this).css('height', '').removeClass('dnd-animating');
+            });
+            const list = readExpandedSubs();
+            if (list.indexOf(id) < 0) list.push(id);
+            writeExpandedSubs(list);
+          } else {
+            $group.addClass('collapsed');
+            setSubChevron(false);
+            const currentH = $body.outerHeight();
+            $body
+              .addClass('dnd-animating')
+              .css('height', currentH)
+              .animate({ height: 0 }, 180, function (this: any) {
+                $(this).hide().css('height', '').removeClass('dnd-animating');
+              });
+            writeExpandedSubs(readExpandedSubs().filter((x: string) => x !== id));
+          }
+        });
+      } catch (e) {}
+    });
+
     // 2) 区块教程按钮（6 个迁移区块）
     BLOCK_HELP_MAP.forEach(cfg => {
       try {
@@ -903,6 +975,11 @@ export function createDiceSections(deps: any) {
           const $grp = $(this).closest('[id^="dnd-set-block-"]');
           if ($grp.length && $grp.hasClass('collapsed')) {
             $grp.find('.dnd-set-group-title').first().trigger('click');
+          }
+          if ($grp.length) {
+            $grp.find('.dnd-set-sub-group.collapsed').each(function (this: any) {
+              $(this).find('.dnd-set-sub-title').first().trigger('click');
+            });
           }
         } catch (e2) {}
         try {
