@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.86-b13.2.45 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.87-b13.2.46 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -346,60 +346,62 @@ export function createHudRenderFragment(deps: any): any {
                     try {
                         var _tidyT = function() {
                             try {
-                                var _hdT = $view.find('.acu-header-actions').first();
-                                var _seT = _hdT.find('.acu-search-wrapper').first();
-                                var _ctT = _hdT.find('.acu-panel-control-set').first();
-                                var _brkT0 = $view.find('.dnd-search-break');
-                                if (_seT.length && _ctT.length) {
-                                    _ctT.detach();
-                                    if (_brkT0.length) { _brkT0.before(_ctT); } else { _seT.before(_ctT); }
-                                }
-                            } catch (eTx) {}
-                            try {
-                                _hdT.each(function(this: any) {
-                                    try { this.style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eA) {}
-                                });
-                            } catch (eTx2) {}
-                            try {
-                                if (!$view.find('.dnd-search-break').length) {
-                                    var _seT2 = $view.find('.acu-search-wrapper').first();
-                                    var _ctT2 = $view.find('.acu-panel-control-set').first();
-                                    if (_ctT2.length) { _ctT2.after('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>'); }
-                                    else if (_seT2.length) { _seT2.before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>'); }
-                                }
-                            } catch (eBrA) {}
-                            try {
-                                $view.find('.acu-header-actions').each(function(this: any) {
-                                    try { this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eGA) {}
-                                });
-                                $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control').each(function(this: any) {
-                                    try {
-                                        this.style.setProperty('min-width', '24px', 'important');
-                                        this.style.setProperty('width', '24px', 'important');
-                                        this.style.setProperty('height', '24px', 'important');
-                                        this.style.setProperty('padding', '0', 'important'); this.style.setProperty('margin', '0', 'important'); this.style.setProperty('flex-shrink', '0', 'important');
-                                    } catch (eGB) {}
-                                });
-                            } catch (eGA2) {}
-                            try {
-                                $view.find('.acu-search-wrapper').each(function(this: any) {
-                                    try {
-                                        this.style.setProperty('order', '9999', 'important');
-                                        this.style.setProperty('flex', '0 0 45%', 'important');
-                                        this.style.setProperty('width', '45%', 'important');
-                                        this.style.setProperty('max-width', '45%', 'important');
-                                        this.style.setProperty('min-width', '0', 'important');
-                                        this.style.setProperty('margin-left', 'auto', 'important'); this.style.setProperty('margin-right', '10px', 'important');
-                                        this.style.setProperty('margin-top', '4px', 'important');
-                                        this.style.setProperty('box-sizing', 'border-box', 'important');
-                                        this.style.setProperty('border-radius', '999px', 'important');
-                                        this.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
-                                        this.style.setProperty('overflow', 'hidden', 'important');
-                                    } catch (eB2) {}
-                                });
-                            } catch (eTx3) {}
-                        };
-                        _tidyT();
+                                try { $view.find('.dnd-search-break').remove(); } catch (e0) {}
+                                try {
+                                    $view.find('.acu-panel-title').each(function(this: any) {
+                                        try { this.style.setProperty('min-width', '72px', 'important'); } catch (ePT) {}
+                                    });
+                                    $view.find('.acu-title-sub').each(function(this: any) {
+                                        try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '96px', 'important'); } catch (eTS) {}
+                                    });
+                                } catch (eTS0) {}
+                                try {
+                                    $view.find('.acu-search-wrapper').each(function(this: any) {
+                                        var $s = $(this);
+                                        try {
+                                            if ($s.parent().hasClass('dnd-search-row')) return;
+                                            var $ph = $s.closest('.acu-panel-header');
+                                            if (!$ph.length) return;
+                                            $s.detach();
+                                            var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                            $s.css({ 'width': '45%', 'max-width': '45%', 'min-width': '0', 'flex': '0 0 45%', 'margin': '0', 'order': '0', 'box-sizing': 'border-box', 'border-radius': '999px', 'border': '1px solid var(--acu-border, rgba(150,150,150,.35))', 'overflow': 'hidden' });
+                                            $row.append($s);
+                                            $ph.after($row);
+                                        } catch (eS1) {}
+                                    });
+                                } catch (eS2) {}
+                                try {
+                                    $view.find('.acu-header-actions').each(function(this: any) {
+                                        try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA1) {}
+                                    });
+                                    $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control, .acu-panel-control-set button, .acu-panel-control-set .acu-height-control').each(function(this: any) {
+                                        try {
+                                            this.style.setProperty('flex', '0 0 auto', 'important');
+                                            this.style.setProperty('min-width', '24px', 'important');
+                                            this.style.setProperty('width', '24px', 'important');
+                                            this.style.setProperty('min-height', '24px', 'important');
+                                            this.style.setProperty('height', '24px', 'important');
+                                            this.style.setProperty('padding', '0', 'important');
+                                            this.style.setProperty('margin', '0', 'important');
+                                        } catch (eB1) {}
+                                    });
+                                } catch (eA2) {}
+                                try {
+                                    var _hD8 = $view.find('.acu-header-actions').first();
+                                    if (_hD8.length) {
+                                        var _w8: any = ($view[0].ownerDocument && $view[0].ownerDocument.defaultView) || window;
+                                        var _csH = _w8.getComputedStyle(_hD8[0]);
+                                        var _segs: string[] = [];
+                                        _hD8.children().each(function(i: number) {
+                                            var _r8 = this.getBoundingClientRect();
+                                            var _c8 = _w8.getComputedStyle(this);
+                                            _segs.push('(' + (i + 1) + ')' + String(this.className || '?').split(' ')[0].slice(0, 22) + ' x' + Math.round(_r8.left) + ' y' + Math.round(_r8.top) + ' w' + Math.round(_r8.width) + ' o' + _c8.order);
+                                        });
+                                        console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
+                                    }
+                                } catch (eD8) {}
+                            } catch (eFX) {}
+                        };_tidyT();
                         setTimeout(_tidyT, 300);
                         setTimeout(_tidyT, 800);
                     } catch (eT0) {}
@@ -482,34 +484,63 @@ export function createHudRenderFragment(deps: any): any {
                         try { if (g && typeof g.renderTableHostForDnd === 'function') h = g.renderTableHostForDnd(table); } catch (e) {}
                         if (h) $view.find('.dnd-acu-table-host').html(h);
                         try {
-                            var _hdR = $view.find('.acu-header-actions').first();
-                            var _seR = _hdR.find('.acu-search-wrapper').first();
-                            var _ctR = _hdR.find('.acu-panel-control-set').first();
-                            if (_seR.length && _ctR.length) { _ctR.detach(); _seR.before(_ctR); }
                             try {
-                                if (!$view.find('.dnd-search-break').length) {
-                                    var _seB2 = $view.find('.acu-search-wrapper').first();
-                                    var _ctB2 = $view.find('.acu-panel-control-set').first();
-                                    if (_ctB2.length) { _ctB2.after('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>'); }
-                                    else if (_seB2.length) { _seB2.before('<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>'); }
-                                }
-                            } catch (eBrB) {}
-                            $view.find('.acu-search-wrapper').each(function(this: any) {
+                                try { $view.find('.dnd-search-break').remove(); } catch (e0) {}
                                 try {
-                                    this.style.setProperty('order', '9999', 'important');
-                                    this.style.setProperty('flex', '0 0 45%', 'important');
-                                    this.style.setProperty('width', '45%', 'important');
-                                    this.style.setProperty('max-width', '45%', 'important');
-                                    this.style.setProperty('min-width', '0', 'important');
-                                    this.style.setProperty('margin-left', 'auto', 'important'); this.style.setProperty('margin-right', '10px', 'important');
-                                    this.style.setProperty('margin-top', '4px', 'important');
-                                    this.style.setProperty('box-sizing', 'border-box', 'important');
-                                    this.style.setProperty('border-radius', '999px', 'important');
-                                    this.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
-                                    this.style.setProperty('overflow', 'hidden', 'important');
-                                } catch (eB3) {}
-                            });
-                        } catch (eRx) {}
+                                    $view.find('.acu-panel-title').each(function(this: any) {
+                                        try { this.style.setProperty('min-width', '72px', 'important'); } catch (ePT) {}
+                                    });
+                                    $view.find('.acu-title-sub').each(function(this: any) {
+                                        try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '96px', 'important'); } catch (eTS) {}
+                                    });
+                                } catch (eTS0) {}
+                                try {
+                                    $view.find('.acu-search-wrapper').each(function(this: any) {
+                                        var $s = $(this);
+                                        try {
+                                            if ($s.parent().hasClass('dnd-search-row')) return;
+                                            var $ph = $s.closest('.acu-panel-header');
+                                            if (!$ph.length) return;
+                                            $s.detach();
+                                            var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                            $s.css({ 'width': '45%', 'max-width': '45%', 'min-width': '0', 'flex': '0 0 45%', 'margin': '0', 'order': '0', 'box-sizing': 'border-box', 'border-radius': '999px', 'border': '1px solid var(--acu-border, rgba(150,150,150,.35))', 'overflow': 'hidden' });
+                                            $row.append($s);
+                                            $ph.after($row);
+                                        } catch (eS1) {}
+                                    });
+                                } catch (eS2) {}
+                                try {
+                                    $view.find('.acu-header-actions').each(function(this: any) {
+                                        try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA1) {}
+                                    });
+                                    $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control, .acu-panel-control-set button, .acu-panel-control-set .acu-height-control').each(function(this: any) {
+                                        try {
+                                            this.style.setProperty('flex', '0 0 auto', 'important');
+                                            this.style.setProperty('min-width', '24px', 'important');
+                                            this.style.setProperty('width', '24px', 'important');
+                                            this.style.setProperty('min-height', '24px', 'important');
+                                            this.style.setProperty('height', '24px', 'important');
+                                            this.style.setProperty('padding', '0', 'important');
+                                            this.style.setProperty('margin', '0', 'important');
+                                        } catch (eB1) {}
+                                    });
+                                } catch (eA2) {}
+                                try {
+                                    var _hD8 = $view.find('.acu-header-actions').first();
+                                    if (_hD8.length) {
+                                        var _w8: any = ($view[0].ownerDocument && $view[0].ownerDocument.defaultView) || window;
+                                        var _csH = _w8.getComputedStyle(_hD8[0]);
+                                        var _segs: string[] = [];
+                                        _hD8.children().each(function(i: number) {
+                                            var _r8 = this.getBoundingClientRect();
+                                            var _c8 = _w8.getComputedStyle(this);
+                                            _segs.push('(' + (i + 1) + ')' + String(this.className || '?').split(' ')[0].slice(0, 22) + ' x' + Math.round(_r8.left) + ' y' + Math.round(_r8.top) + ' w' + Math.round(_r8.width) + ' o' + _c8.order);
+                                        });
+                                        console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
+                                    }
+                                } catch (eD8) {}
+                            } catch (eFX) {}
+                            } catch (eRx) {}
                         try { console.info('[DND]表格刷新 len=' + String(h || '').length + ' | pageBtns=' + $view.find('.acu-page-btn').length); } catch (e) {}
                     };
                     // [b13.3] 注册全局刷新回调（供写操作后自动刷新）
@@ -718,104 +749,63 @@ export function createHudRenderFragment(deps: any): any {
                     // [b13.2.37] 头部排序规整（收藏夹：高度/关闭 → 搜索框前）
                     try {
                         var _tidyI = function() {
-                            // [b13.2.43] 交互搜索框移入 header（参与标准两排布局）
                             try {
-                                var _gS = $view.find('.acu-global-interaction-search-wrapper');
-                                var _gH = $view.find('.acu-header-actions').first();
-                                if (_gS.length && _gH.length && !_gH.find('.acu-global-interaction-search-wrapper').length) {
-                                    _gS.detach();
-                                    _gH.append(_gS);
-                                }
-                            } catch (eGS) {}
-                            // [b13.2.44] 标题可见保底（主标题完整；副标题可省略）+ 标题区最小宽度
-                            try {
-                                $view.find('.acu-panel-title').each(function(this: any) {
-                                    try { this.style.removeProperty('overflow'); this.style.setProperty('min-width', '72px', 'important'); } catch (ePT) {}
-                                });
-                                $view.find('.acu-title-main').each(function(this: any) {
-                                    try { this.style.removeProperty('overflow'); this.style.removeProperty('min-width'); } catch (eTM) {}
-                                });
-                                $view.find('.acu-title-sub').each(function(this: any) {
-                                    try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '96px', 'important'); } catch (eTS) {}
-                                });
-                                $view.find('.acu-header-actions').each(function(this: any) {
-                                    try { this.style.setProperty('flex-shrink', '0', 'important'); } catch (eHS) {}
-                                });
-                            } catch (eTS0) {}
-                            try {
-                                var _hdI = $view.find('.acu-header-actions').first();
-                                var _seI = _hdI.find('.acu-search-wrapper').first();
-                                // [b13.2.42] 搜索框不在 header（如交互面板）时不退出，后续仍处理 toolbar
-                                if (_seI.length) {
-                                    var _hcI = _hdI.find('.acu-height-control').first();
-                                    var _cbI = _hdI.find('.acu-close-btn').first();
-                                    var _brkI0 = $view.find('.dnd-search-break');
-                                    var _anchorI = _brkI0.length ? _brkI0 : _seI;
-                                    if (_hcI.length) { _hcI.detach(); _anchorI.before(_hcI); }
-                                    if (_cbI.length) { _cbI.detach(); _anchorI.before(_cbI); }
-                                }
-                            } catch (eIx) {}
-                            try {
-                                _hdI.each(function(this: any) {
-                                    try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA2) {}
-                                });
-                                $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control').each(function(this: any) {
-                                    try {
-                                        this.style.setProperty('min-width', '24px', 'important');
-                                        this.style.setProperty('width', '24px', 'important');
-                                        this.style.setProperty('height', '24px', 'important');
-                                        this.style.setProperty('padding', '0', 'important'); this.style.setProperty('margin', '0', 'important'); this.style.setProperty('flex-shrink', '0', 'important');
-                                    } catch (eGB2) {}
-                                });
-                            } catch (eIx2) {}
-                            try {
-                                if (!$view.find('.dnd-search-break').length) {
-                                    var _seI2 = $view.find('.acu-search-wrapper').first();
-                                    var _cbI2 = $view.find('.acu-close-btn').first();
-                                    var _hcI2 = $view.find('.acu-height-control').first();
-                                    var _brkHtml = '<div class="dnd-search-break" style="flex:1 0 100% !important;height:0 !important;margin:0 !important;padding:0 !important;"></div>';
-                                    if (_cbI2.length) { _cbI2.after(_brkHtml); }
-                                    else if (_hcI2.length) { _hcI2.after(_brkHtml); }
-                                    else if (_seI2.length) { _seI2.before(_brkHtml); }
-                                }
-                            } catch (eBrC) {}
-                            try {
-                                $view.find('.acu-search-wrapper').each(function(this: any) {
-                                    try {
-                                        this.style.setProperty('order', '9999', 'important');
-                                        this.style.setProperty('flex', '0 0 45%', 'important');
-                                        this.style.setProperty('width', '45%', 'important');
-                                        this.style.setProperty('max-width', '45%', 'important');
-                                        this.style.setProperty('min-width', '0', 'important');
-                                        this.style.setProperty('margin-left', 'auto', 'important'); this.style.setProperty('margin-right', '10px', 'important');
-                                        this.style.setProperty('margin-top', '4px', 'important');
-                                        this.style.setProperty('box-sizing', 'border-box', 'important');
-                                        this.style.setProperty('border-radius', '999px', 'important');
-                                        this.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
-                                        this.style.setProperty('overflow', 'hidden', 'important');
-                                    } catch (eB4) {}
-                                });
-                            } catch (eIx3) {}
-                            // [b13.2.39] 交互面板 toolbar 搜索框：半宽靠右（就地，保持 content 顶部第二排）
-                            try {
-                                $view.find('.acu-global-interaction-toolbar').each(function(this: any) {
-                                    try { this.style.setProperty('display', 'flex', 'important'); this.style.setProperty('justify-content', 'flex-end', 'important'); this.style.setProperty('align-items', 'center', 'important'); } catch (eTb1) {}
-                                });
-                                $view.find('.acu-global-interaction-search-wrapper').each(function(this: any) {
-                                    try {
-                                        this.style.setProperty('width', 'min(45%, 220px)', 'important');
-                                        this.style.setProperty('max-width', 'calc(100% - 16px)', 'important');
-                                        this.style.setProperty('min-width', '0', 'important');
-                                        this.style.setProperty('box-sizing', 'border-box', 'important');
-                                        this.style.setProperty('margin-right', '8px', 'important');
-                                        this.style.setProperty('border-radius', '999px', 'important');
-                                        this.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
-                                        this.style.setProperty('overflow', 'hidden', 'important');
-                                    } catch (eTb2) {}
-                                });
-                            } catch (eTb0) {}
-                        };
-                        _tidyI();
+                                try { $view.find('.dnd-search-break').remove(); } catch (e0) {}
+                                try {
+                                    $view.find('.acu-panel-title').each(function(this: any) {
+                                        try { this.style.setProperty('min-width', '72px', 'important'); } catch (ePT) {}
+                                    });
+                                    $view.find('.acu-title-sub').each(function(this: any) {
+                                        try { this.style.setProperty('white-space', 'nowrap', 'important'); this.style.setProperty('overflow', 'hidden', 'important'); this.style.setProperty('text-overflow', 'ellipsis', 'important'); this.style.setProperty('max-width', '96px', 'important'); } catch (eTS) {}
+                                    });
+                                } catch (eTS0) {}
+                                try {
+                                    $view.find('.acu-search-wrapper').each(function(this: any) {
+                                        var $s = $(this);
+                                        try {
+                                            if ($s.parent().hasClass('dnd-search-row')) return;
+                                            var $ph = $s.closest('.acu-panel-header');
+                                            if (!$ph.length) return;
+                                            $s.detach();
+                                            var $row = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
+                                            $s.css({ 'width': '45%', 'max-width': '45%', 'min-width': '0', 'flex': '0 0 45%', 'margin': '0', 'order': '0', 'box-sizing': 'border-box', 'border-radius': '999px', 'border': '1px solid var(--acu-border, rgba(150,150,150,.35))', 'overflow': 'hidden' });
+                                            $row.append($s);
+                                            $ph.after($row);
+                                        } catch (eS1) {}
+                                    });
+                                } catch (eS2) {}
+                                try {
+                                    $view.find('.acu-header-actions').each(function(this: any) {
+                                        try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA1) {}
+                                    });
+                                    $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control, .acu-panel-control-set button, .acu-panel-control-set .acu-height-control').each(function(this: any) {
+                                        try {
+                                            this.style.setProperty('flex', '0 0 auto', 'important');
+                                            this.style.setProperty('min-width', '24px', 'important');
+                                            this.style.setProperty('width', '24px', 'important');
+                                            this.style.setProperty('min-height', '24px', 'important');
+                                            this.style.setProperty('height', '24px', 'important');
+                                            this.style.setProperty('padding', '0', 'important');
+                                            this.style.setProperty('margin', '0', 'important');
+                                        } catch (eB1) {}
+                                    });
+                                } catch (eA2) {}
+                                try {
+                                    var _hD8 = $view.find('.acu-header-actions').first();
+                                    if (_hD8.length) {
+                                        var _w8: any = ($view[0].ownerDocument && $view[0].ownerDocument.defaultView) || window;
+                                        var _csH = _w8.getComputedStyle(_hD8[0]);
+                                        var _segs: string[] = [];
+                                        _hD8.children().each(function(i: number) {
+                                            var _r8 = this.getBoundingClientRect();
+                                            var _c8 = _w8.getComputedStyle(this);
+                                            _segs.push('(' + (i + 1) + ')' + String(this.className || '?').split(' ')[0].slice(0, 22) + ' x' + Math.round(_r8.left) + ' y' + Math.round(_r8.top) + ' w' + Math.round(_r8.width) + ' o' + _c8.order);
+                                        });
+                                        console.info('[DND]HDRFIX actW=' + Math.round(_hD8[0].getBoundingClientRect().width) + ' wrap=' + _csH.flexWrap + ' n=' + _hD8.children().length + ' || ' + _segs.join(' '));
+                                    }
+                                } catch (eD8) {}
+                            } catch (eFX) {}
+                        };_tidyI();
                         setTimeout(_tidyI, 300);
                         setTimeout(_tidyI, 800);
                         setTimeout(_tidyI, 1500);
