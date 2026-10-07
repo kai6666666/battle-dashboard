@@ -11,8 +11,26 @@ export function createDicePanelFragment(deps: any): any {
         try { console.info('[DND]快投→完整面板（小弹窗宿主模式）'); } catch (e0) {}
         self.showItemDetailPopup?.('<div id="dnd-dice-host-slot" style="width:100%;min-width:280px;min-height:80px;display:block;"></div>', event ? event.clientX : 200, event ? event.clientY : 200);
         try {
-            const host = document.getElementById('dnd-dice-host-slot');
-            try { console.info('[DND]宿主插槽 ' + (host ? '已找到' : '未找到')); } catch (e1) {}
+            // [b13.6.2] 多路查找宿主：document / jQuery / popup 内查询
+            let host: any = document.getElementById('dnd-dice-host-slot');
+            let route = host ? 'document' : '';
+            if (!host) {
+                try { const $h = $ ? $('#dnd-dice-host-slot') : null; if ($h && $h.length) { host = $h[0]; route = 'jQuery'; } } catch (e4) {}
+            }
+            if (!host) {
+                try {
+                    const $p = $ ? $('#dnd-detail-popup-el') : null;
+                    if ($p && $p.length) {
+                        const inner = $p[0].querySelector('#dnd-dice-host-slot');
+                        if (inner) { host = inner; route = 'popup-inner'; }
+                    }
+                } catch (e5) {}
+            }
+            try {
+                const $p2 = $ ? $('#dnd-detail-popup-el') : null;
+                const dump = $p2 && $p2.length ? String($p2[0].innerHTML || '').slice(0, 220) : '(popup不存在)';
+                console.info('[DND]宿主插槽 ' + (host ? ('已找到 via ' + route) : ('未找到 || popupLen=' + ($p2 ? $p2.length : 'null') + ' popupHTML=' + dump)));
+            } catch (e1) {}
             if (host) {
                 const acuUI: any = (window as any).__acuUI;
                 if (acuUI && typeof acuUI.showDicePanelForDnd === 'function') {
