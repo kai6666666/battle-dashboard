@@ -17,7 +17,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.82-b13.2.41 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.83-b13.2.42 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -721,13 +721,15 @@ export function createHudRenderFragment(deps: any): any {
                             try {
                                 var _hdI = $view.find('.acu-header-actions').first();
                                 var _seI = _hdI.find('.acu-search-wrapper').first();
-                                if (!_seI.length) return;
-                                var _hcI = _hdI.find('.acu-height-control').first();
-                                var _cbI = _hdI.find('.acu-close-btn').first();
-                                var _brkI0 = $view.find('.dnd-search-break');
-                                var _anchorI = _brkI0.length ? _brkI0 : _seI;
-                                if (_hcI.length) { _hcI.detach(); _anchorI.before(_hcI); }
-                                if (_cbI.length) { _cbI.detach(); _anchorI.before(_cbI); }
+                                // [b13.2.42] 搜索框不在 header（如交互面板）时不退出，后续仍处理 toolbar
+                                if (_seI.length) {
+                                    var _hcI = _hdI.find('.acu-height-control').first();
+                                    var _cbI = _hdI.find('.acu-close-btn').first();
+                                    var _brkI0 = $view.find('.dnd-search-break');
+                                    var _anchorI = _brkI0.length ? _brkI0 : _seI;
+                                    if (_hcI.length) { _hcI.detach(); _anchorI.before(_hcI); }
+                                    if (_cbI.length) { _cbI.detach(); _anchorI.before(_cbI); }
+                                }
                             } catch (eIx) {}
                             try {
                                 _hdI.each(function(this: any) {
@@ -793,6 +795,7 @@ export function createHudRenderFragment(deps: any): any {
                         setTimeout(_tidyI, 300);
                         setTimeout(_tidyI, 800);
                         setTimeout(_tidyI, 1500);
+                        setTimeout(_tidyI, 2500);
                     } catch (eI0) {}
                     // [b13.2.34] 悬浮球休眠
                     try { const _fbT3: any = document.getElementById('dnd-toggle-btn'); if (_fbT3) _fbT3.classList.add('dnd-btn-dozed'); } catch (e3z) {}
