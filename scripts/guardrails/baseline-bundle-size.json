@@ -1,11 +1,11 @@
 {
   "files": {
     "dist/战斗仪表盘/stable.js": {
-      "size": 3756126,
+      "size": 3756401,
       "tolerance": 16384
     },
     "dist/战斗仪表盘/stable.js.map": {
-      "size": 8675313,
+      "size": 8676019,
       "tolerance": 65536
     }
   }
