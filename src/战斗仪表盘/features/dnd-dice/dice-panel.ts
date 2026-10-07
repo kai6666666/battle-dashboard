@@ -5,79 +5,24 @@ import { DND_CONFIG } from '../dnd-core';
 export function createDicePanelFragment(deps: any): any {
   return {
     showQuickDice(event) {
-        // [b9 骰子归一] 骰子池已退役：投骰统一走 AcuDice 引擎（window.AcuDice.roll）
-        
-        let html = `
-            <div style="font-weight:bold;color:var(--dnd-text-highlight);border-bottom:1px solid var(--dnd-border-subtle);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-                <span>${deps.icons.DICE} 快速投掷</span>
-                    <span style="font-size:11px;color:var(--dnd-accent-green);background:var(--dnd-bg-tertiary);padding:2px 6px;border-radius:3px;">引擎: AcuDice</span>
-            </div>
-            
-            <!-- [b9 骰子归一] 引擎状态（原骰子池区块已退役） -->
-            <div style="background:var(--dnd-bg-tertiary);padding:8px;border-radius:4px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:11px;color:var(--dnd-text-dim);">投骰引擎：AcuDice（统一）</span>
-                <span onclick="window.DND_Dashboard_UI.refreshDicePool()" style="cursor:pointer;color:var(--dnd-text-highlight);font-size:11px;">${deps.icons.SYNC} 状态</span>
-            </div>
-            
-            <!-- [b12.11] 完整投骰面板入口（骰子系统：规则 / 预设 / 成功标准切换） -->
-            <div style="margin-bottom:12px;">
-                <button type="button" class="dnd-dice-open-full-panel" style="width:100%;background:linear-gradient(135deg, rgba(155,89,182,0.22), rgba(52,152,219,0.22));border:1px solid var(--dnd-border-gold);color:var(--dnd-text-highlight);padding:9px 10px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:6px;">
-                    <i class="fa-solid fa-dice-d20"></i> 完整投骰面板（可切换规则 / 预设 / 成功标准）
-                </button>
-            </div>
-            
-            <!-- 快速投掷按钮 -->
-            <div class="dnd-dice-grid">
-                ${[4,6,8,10,12,20].map(d => `
-                    <button class="dnd-dice-btn" data-sides="${d}" onclick="window.DND_Dashboard_UI.rollDice(${d}, event)">
-                        D${d}
-                    </button>
-                `).join('')}
-            </div>
-            
-            <!-- D100 单独一行 -->
-            <div style="margin-top:8px;">
-                <button class="dnd-dice-btn" data-sides="100" style="
-                    width:100%;
-                    background:var(--dnd-bg-secondary);
-                    border:1px solid var(--dnd-border-gold);
-                    color:var(--dnd-text-highlight);
-                    padding:8px;
-                    border-radius:4px;
-                    cursor:pointer;
-                    transition:all 0.2s;
-                    font-size:12px;
-                " onmouseover="this.style.background='var(--dnd-bg-tertiary)'" 
-                onmouseout="this.style.background='var(--dnd-bg-secondary)'"
-                onclick="window.DND_Dashboard_UI.rollDice(100, event)">
-                    ${deps.icons.TARGET} D100 (百分骰)
-                </button>
-            </div>
-            
-            <!-- 自定义投掷 -->
-            <div class="dnd-dice-custom-area">
-                <div style="font-size:11px;color:var(--dnd-text-dim);margin-bottom:5px;">自定义投掷</div>
-                <div class="dnd-dice-input-row">
-                    <input type="text" id="dnd-custom-dice" placeholder="2d6+3" class="dnd-dice-input">
-                    <button onclick="window.DND_Dashboard_UI.rollCustomDice()" class="dnd-dice-submit-btn">投掷</button>
-                </div>
-            </div>
-        `;
-        ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.( html, event.clientX, event.clientY);
-        // [b12.11] 完整投骰面板入口：脚本绑定
-        {
-            const { $: _$d } = deps.utils.getCore();
-            _$d('#dnd-detail-popup-el .dnd-dice-open-full-panel').off('click.dndFullDice').on('click.dndFullDice', function(e) {
-                e.stopPropagation();
-                try {
-                    const acuUI: any = (window as any).__acuUI;
-                    if (acuUI && typeof acuUI.showDicePanelForDnd === 'function') { acuUI.showDicePanelForDnd(); }
-                    else { deps.notification.warning('完整投骰面板不可用：桥未就绪'); }
-                } catch (err) { deps.logger.warn('[DND] 打开完整投骰面板失败', err); }
-            });
-        }
+        // [b13.6] 方案4：底栏🎲 → 小弹窗（showItemDetailPopup）承载「完整投骰面板」
+        const { $ } = deps.utils.getCore();
+        const self: any = ((window as any).DND_Dashboard_UI || this);
+        try { console.info('[DND]快投→完整面板（小弹窗宿主模式）'); } catch (e0) {}
+        self.showItemDetailPopup?.('<div id="dnd-dice-host-slot" style="width:100%;min-width:280px;"></div>', event ? event.clientX : 200, event ? event.clientY : 200);
+        setTimeout(function() {
+            try {
+                const host = document.getElementById('dnd-dice-host-slot');
+                if (!host) { try { console.warn('[DND]宿主插槽未找到'); } catch (e1) {} return; }
+                const acuUI: any = (window as any).__acuUI;
+                if (acuUI && typeof acuUI.showDicePanelForDnd === 'function') {
+                    acuUI.showDicePanelForDnd({ hostEl: host, onClose: function() { try { self.hideDetailPopup?.(); } catch (e2) {} } });
+                } else {
+                    deps.notification.warning('完整投骰面板不可用：桥未就绪');
+                }
+            } catch (err) { deps.logger.warn('[DND] 打开完整投骰面板失败', err); }
+        }, 60);
     },
-
     // 获取骰子池数据
     getDicePoolData() {
         // [b9 骰子归一] 骰子池已退役（投骰走 AcuDice）；保留空接口防外部调用。

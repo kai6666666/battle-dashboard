@@ -94,6 +94,9 @@ export function createShowDicePanel(deps: any) {
       }
     }
 
+    // [b13.6] 方案4：宿主容器模式（小弹窗承载完整面板）
+    const _hostEl: any = options.hostEl || null;
+    const _onCloseCb: any = options.onClose || null;
     const overlay = $(`<div class="acu-dice-overlay"></div>`);
 
     // [精简] 成功标准选项：只保留 COC 和 DND
@@ -266,8 +269,24 @@ export function createShowDicePanel(deps: any) {
             </div>
         `);
 
-    overlay.append(panel);
-    $('body').append(overlay);
+    if (_hostEl) {
+      // [b13.6] 宿主模式：面板直接嵌入宿主容器（小弹窗）
+      try {
+        _hostEl.innerHTML = '';
+        var _pElH: any = panel[0];
+        try {
+          _pElH.style.setProperty('position', 'static', 'important');
+          _pElH.style.setProperty('width', '100%', 'important');
+          _pElH.style.setProperty('max-width', '100%', 'important');
+          _pElH.style.setProperty('max-height', 'none', 'important');
+          _pElH.style.setProperty('margin', '0', 'important');
+        } catch (eSH) {}
+        _hostEl.appendChild(_pElH);
+      } catch (eH) {}
+    } else {
+      overlay.append(panel);
+      $('body').append(overlay);
+    }
     deps.bindTutorialButtonsIn(panel);
 
     dicePanelAttrButtons.init();
@@ -401,13 +420,22 @@ export function createShowDicePanel(deps: any) {
     });
     // 关闭
     const closePanel = () => {
+      try {
+        if (_hostEl) {
+          if (typeof _onCloseCb === 'function') _onCloseCb();
+          panel.remove();
+          return;
+        }
+      } catch (eC) {}
       overlay.remove();
       panel.remove();
     };
-    panel.on('click', (e: any) => {
-      e.stopPropagation();
-    });
-    overlay.click(closePanel);
+    if (!_hostEl) {
+      panel.on('click', (e: any) => {
+        e.stopPropagation();
+      });
+      overlay.click(closePanel);
+    }
     panel.find('.acu-dice-close').click(closePanel);
     // 齿轮设置按钮点击 - 调用高级检定管理
     panel.find('.acu-dice-config-btn').click(function (e: any) {
