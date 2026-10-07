@@ -342,7 +342,7 @@ export function createHudRenderFragment(deps: any): any {
                     try { console.info('[DND]表格视图已渲染 table=' + table + ' len=' + String(tableHtml || '').length); } catch (eC2) {}
                     $list.hide();
                     $container.append($view);
-                    // [b13.2.37] 头部排序规整：高度/关闭 → 搜索框之前（搜索框换第二排）
+                    // [b13.2.38] 头部排序规整：↕✕ → 第一排末；搜索框 → 半宽靠右第二排
                     try {
                         var _tidyT = function() {
                             try {
@@ -351,6 +351,25 @@ export function createHudRenderFragment(deps: any): any {
                                 var _ctT = _hdT.find('.acu-panel-control-set').first();
                                 if (_seT.length && _ctT.length) { _ctT.detach(); _seT.before(_ctT); }
                             } catch (eTx) {}
+                            try {
+                                _hdT.each(function(this: any) {
+                                    try { this.style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eA) {}
+                                });
+                            } catch (eTx2) {}
+                            try {
+                                $view.find('.acu-search-wrapper').each(function(this: any) {
+                                    try {
+                                        this.style.setProperty('order', '9999', 'important');
+                                        this.style.setProperty('flex', '0 0 55%', 'important');
+                                        this.style.setProperty('width', '55%', 'important');
+                                        this.style.setProperty('max-width', '55%', 'important');
+                                        this.style.setProperty('min-width', '0', 'important');
+                                        this.style.setProperty('margin-left', 'auto', 'important');
+                                        this.style.setProperty('margin-top', '6px', 'important');
+                                        this.style.setProperty('box-sizing', 'border-box', 'important');
+                                    } catch (eB2) {}
+                                });
+                            } catch (eTx3) {}
                         };
                         _tidyT();
                         setTimeout(_tidyT, 300);
@@ -439,6 +458,18 @@ export function createHudRenderFragment(deps: any): any {
                             var _seR = _hdR.find('.acu-search-wrapper').first();
                             var _ctR = _hdR.find('.acu-panel-control-set').first();
                             if (_seR.length && _ctR.length) { _ctR.detach(); _seR.before(_ctR); }
+                            $view.find('.acu-search-wrapper').each(function(this: any) {
+                                try {
+                                    this.style.setProperty('order', '9999', 'important');
+                                    this.style.setProperty('flex', '0 0 55%', 'important');
+                                    this.style.setProperty('width', '55%', 'important');
+                                    this.style.setProperty('max-width', '55%', 'important');
+                                    this.style.setProperty('min-width', '0', 'important');
+                                    this.style.setProperty('margin-left', 'auto', 'important');
+                                    this.style.setProperty('margin-top', '6px', 'important');
+                                    this.style.setProperty('box-sizing', 'border-box', 'important');
+                                } catch (eB3) {}
+                            });
                         } catch (eRx) {}
                         try { console.info('[DND]表格刷新 len=' + String(h || '').length + ' | pageBtns=' + $view.find('.acu-page-btn').length); } catch (e) {}
                     };
@@ -654,9 +685,29 @@ export function createHudRenderFragment(deps: any): any {
                                 if (!_seI.length) return;
                                 var _hcI = _hdI.find('.acu-height-control').first();
                                 var _cbI = _hdI.find('.acu-close-btn').first();
+                                var _svI = _hdI.find('.acu-fav-sort') as any;
                                 if (_hcI.length) { _hcI.detach(); _seI.before(_hcI); }
                                 if (_cbI.length) { _cbI.detach(); _seI.before(_cbI); }
                             } catch (eIx) {}
+                            try {
+                                _hdI.each(function(this: any) {
+                                    try { this.style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eA2) {}
+                                });
+                            } catch (eIx2) {}
+                            try {
+                                $view.find('.acu-search-wrapper').each(function(this: any) {
+                                    try {
+                                        this.style.setProperty('order', '9999', 'important');
+                                        this.style.setProperty('flex', '0 0 55%', 'important');
+                                        this.style.setProperty('width', '55%', 'important');
+                                        this.style.setProperty('max-width', '55%', 'important');
+                                        this.style.setProperty('min-width', '0', 'important');
+                                        this.style.setProperty('margin-left', 'auto', 'important');
+                                        this.style.setProperty('margin-top', '6px', 'important');
+                                        this.style.setProperty('box-sizing', 'border-box', 'important');
+                                    } catch (eB4) {}
+                                });
+                            } catch (eIx3) {}
                         };
                         _tidyI();
                         setTimeout(_tidyI, 300);
