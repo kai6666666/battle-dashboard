@@ -581,13 +581,14 @@ export function createDiceSections(deps: any) {
           if (b && typeof b.showTemplateInspectionModal === 'function') {
             b.showTemplateInspectionModal();
           } else {
-            try { const w: any = window; if (w.toastr) w.toastr.warning('检验表格模板不可用：桥未就绪'); } catch (e2) {}
+            try { const w: any = window; const t = w.toastr || (w.parent && w.parent.toastr); if (t) t.warning('检验表格模板不可用：桥未就绪'); } catch (e2) {}
           }
         } catch (err) {
           try { console.error('[b14] 检验表格模板调用失败', err); } catch (e2) {}
           try {
             const w: any = window;
-            if (w.toastr) w.toastr.error('检验表格模板调用失败：' + ((err && (err as any).message) || err));
+            const t = w.toastr || (w.parent && w.parent.toastr);
+            if (t) t.error('检验表格模板调用失败：' + ((err && (err as any).message) || err));
           } catch (e2) {}
         }
       });
@@ -717,7 +718,21 @@ export function createDiceSections(deps: any) {
       $c.find('.dnd-dice-preset-manage').on('click', function (this: any, e: any) {
         e.preventDefault();
         const kind = String($(this).data('kind') || '');
-        callBridge('openDicePresetManager', kind);
+        try {
+          const b = getBridge();
+          if (b && typeof b.openDicePresetManager === 'function') {
+            b.openDicePresetManager(kind);
+          } else {
+            try { const w: any = window; const t = w.toastr || (w.parent && w.parent.toastr); if (t) t.warning('预设管理入口不可用：桥未就绪'); } catch (e2) {}
+          }
+        } catch (err) {
+          try { console.error('[b14] 预设管理打开失败', err); } catch (e2) {}
+          try {
+            const w: any = window;
+            const t = w.toastr || (w.parent && w.parent.toastr);
+            if (t) t.error('预设管理打开失败：' + ((err && (err as any).message) || err));
+          } catch (e2) {}
+        }
       });
     } catch (e) {}
   };

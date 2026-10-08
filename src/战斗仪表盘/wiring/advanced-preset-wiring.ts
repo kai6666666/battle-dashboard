@@ -60,7 +60,7 @@ import { createValidateAdvancedPresetTemplates } from '../features/presets/valid
 import { createBuildNewTableTemplateRequirementPresetJsoncTemplate } from '../features/table/build-new-table-template-requirement-preset-jsonc-template';
 import { createIsRuleTemplateSheetWithNote } from '../features/table/is-rule-template-sheet-with-note';
 import { createReplaceTag } from '../features/table/replace-tag';
-import { createBuiltinTableTemplateRequirementPreset, getRequirementInspectionSheets } from '../features/table/table-template-requirements';
+import { createBuiltinTableTemplateRequirementPreset, getTemplateInspectionSheets as getRequirementInspectionSheets } from '../features/table/table-template-requirements';
 import { PRESET_FORMAT_VERSION } from '../shared/constants';
 import { STORAGE_KEY_ACTIVE_ADVANCED_PRESET, STORAGE_KEY_ACTIVE_ATTR_PRESET, STORAGE_KEY_ACTIVE_TABLE_TEMPLATE_REQUIREMENT_PRESET, STORAGE_KEY_ADVANCED_PRESETS, STORAGE_KEY_BUILTIN_PRESET_ORDER, STORAGE_KEY_BUILTIN_PRESET_VISIBILITY, STORAGE_KEY_TABLE_TEMPLATE_REQUIREMENT_PRESETS } from '../shared/storage-keys';
 import defaultTableTemplateRequirementRaw from '../骰子表格SQL_v4.3.json?raw';

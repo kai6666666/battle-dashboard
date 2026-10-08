@@ -1511,6 +1511,7 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       saveTableOrder: (...a: any[]) => (saveTableOrder as any)(...a),
       createSortableList: (...a: any[]) => (createSortableList as any)(...a),
       showTemplateInspectionModal: (...a: any[]) => (showTemplateInspectionModal as any)(...a),
+      showTableTemplateRequirementPresetManager: (...a: any[]) => (showTableTemplateRequirementPresetManager as any)(...a),
       areAllTablesReversed: () => {
         try {
           const rawData: any = (cachedRawData_ACC && cachedRawData_ACC.v) || getTableData();
@@ -1543,9 +1544,12 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
             return;
           }
           if (k === 'icon') { showCustomTableNameIconManager(); return; }
-          if (k === 'validation') { showSettingsModal({ openManager: '#validation-preset-manager-dialog' }); return; }
-          if (k === 'regex') { showSettingsModal({ openManager: '#regex-preset-manager-dialog' }); return; }
-        } catch (e) { console.warn('[AcuDice] openDicePresetManager 失败', e); }
+          if (k === 'validation') { showSettingsModal({ openManager: '#validation-preset-manager-dialog', silentManager: true }); return; }
+          if (k === 'regex') { showSettingsModal({ openManager: '#regex-preset-manager-dialog', silentManager: true }); return; }
+        } catch (e) {
+          console.warn('[AcuDice] openDicePresetManager 失败', e);
+          try { const w: any = window; const t = w.toastr || (w.parent && w.parent.toastr); if (t && t.error) t.error('预设管理打开失败，请查看控制台日志'); } catch (e2) {}
+        }
       },
       showDebugConsoleModal: (...a: any[]) => (showDebugConsoleModal as any)(...a),
       showDiceConfigBackupDialog: (...a: any[]) => (showDiceConfigBackupDialog as any)(...a),

@@ -560,5 +560,5 @@ export function createCheckSuggestionWiring(deps: any) {
     getStableTableSort: (...a: any[]) => getStableTableSort(...a),
     ensureCanonicalTableOrder: (...a: any[]) => ensureCanonicalTableOrder(...a),
   });
-  return { AcuDiceAPI, executeCheckSuggestionCommand, getTemplateInspectionSheets, normalizeCheckSuggestionDiceFormula, showFavoriteEditModal, showSendToTableModal, showSettingsModal, showTagInputModal };
+  return { AcuDiceAPI, executeCheckSuggestionCommand, getTemplateInspectionSheets, normalizeCheckSuggestionDiceFormula, showFavoriteEditModal, showSendToTableModal, showSettingsModal, showTagInputModal, showTemplateInspectionModal, showTableTemplateRequirementPresetManager };
 }

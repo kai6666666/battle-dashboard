@@ -137,6 +137,7 @@ export function createShowSettingsModal(deps: any) {
     $('body').append(dialog);
     // 二级管理弹窗不能留在设置面板的滚动内容里，否则部分移动端浏览器会把 fixed 定位裁进父弹窗。
     dialog.find('.acu-settings-manager-overlay').appendTo(dialog);
+    let managerSilent = false; // [b14.6] 管理器静默直达：仅显示二级管理弹窗（隐藏设置主窗）
 
     // === 分组折叠交互（带动画） ===
     dialog.find('.acu-settings-group-title').on('click', function (this: any) {
@@ -310,6 +311,7 @@ export function createShowSettingsModal(deps: any) {
       e.preventDefault();
       e.stopPropagation();
       closeSettingsManagerDialog($(this).closest('.acu-settings-manager-overlay') as JQuery<HTMLElement>);
+      if (managerSilent) { try { closeDialog(); } catch (e2) {} }
     });
 
     dialog.on('click', '.acu-settings-manager-dialog', function (e: any) {
@@ -323,6 +325,7 @@ export function createShowSettingsModal(deps: any) {
       e.preventDefault();
       e.stopPropagation();
       closeSettingsManagerDialog($visibleManager as JQuery<HTMLElement>);
+      if (managerSilent) { try { closeDialog(); } catch (e2) {} }
     });
 
     dialog.on('click', '.acu-setting-segmented-option', function (this: any, e: any) {
@@ -1313,6 +1316,9 @@ export function createShowSettingsModal(deps: any) {
     try {
       const target = options && options.openManager;
       if (target) {
+        if (options && options.silentManager) {
+          try { managerSilent = true; dialog.addClass('acu-manager-silent'); } catch (e) {}
+        }
         const $group = dialog.find('.acu-settings-group[data-group="dicePresets"]');
         if ($group.length && $group.hasClass('collapsed')) {
           try { $group.find('.acu-settings-group-title').trigger('click'); } catch (e) {}

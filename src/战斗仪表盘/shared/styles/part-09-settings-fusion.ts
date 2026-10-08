@@ -46,6 +46,8 @@ export const STYLES_PART_09_SETTINGS_FUSION = `
 
 /* ===== [b14.5] 提示条层级：抬升至主面板之上（避免提示被仪表盘遮挡） ===== */
 #toast-container, #toast-container .toast { z-index: 2147483647 !important; }
+/* ===== [b14.6] 管理器静默直达：隐藏设置主窗（仅保留二级管理弹窗） ===== */
+.acu-edit-overlay.acu-manager-silent > .acu-edit-dialog.acu-settings-dialog { display: none !important; }
 
 /* ===== [b14②] 导航盘管理弹窗（DND 化包装） ===== */
 .dnd-navmgr-overlay { position: fixed; inset: 0; z-index: 2147483646; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
