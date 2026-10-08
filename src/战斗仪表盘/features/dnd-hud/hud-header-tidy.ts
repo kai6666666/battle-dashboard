@@ -19,23 +19,19 @@ export function applyDndHeaderTidy($: any, $view: any): void {
                                             var $ph = $s.closest('.acu-panel-header');
                                             if (!$ph.length) { $ph = $view.find('.acu-panel-header').first(); }
                                             if ($ph.length) {
-                                                try { $ph[0].style.setProperty('flex-wrap', 'wrap', 'important'); } catch (eHW) {}
+                                                try { $ph[0].style.setProperty('flex-wrap', 'nowrap', 'important'); } catch (eHW) {}
                                                 var $existRow = $ph.children('.dnd-search-row').first();
-                                                if (!$existRow.length) {
-                                                    $existRow = $('<div class="dnd-search-row" style="display:flex !important;justify-content:flex-end !important;flex:1 0 100% !important;width:100% !important;box-sizing:border-box !important;padding:0 10px 4px 0 !important;margin:0 !important;"></div>');
-                                                    $ph.append($existRow);
+                                                if ($existRow.length) {
+                                                    try { $existRow.find('.acu-search-wrapper').first().insertBefore($existRow); $existRow.remove(); } catch (eMV2) {}
                                                 }
-                                                if ($s.parent()[0] !== $existRow[0]) { try { $s.detach(); $existRow.append($s); } catch (eMV) {} }
                                             }
                                             try {
                                                 var _sw: any = $s[0];
-                                                _sw.style.setProperty('width', '45%', 'important');
-                                                _sw.style.setProperty('max-width', '45%', 'important');
+                                                _sw.style.removeProperty('width');
+                                                _sw.style.removeProperty('max-width');
+                                                _sw.style.removeProperty('flex');
+                                                _sw.style.removeProperty('margin-left');
                                                 _sw.style.setProperty('min-width', '0', 'important');
-                                                _sw.style.setProperty('flex', '0 0 45%', 'important');
-                                                _sw.style.setProperty('margin', '0', 'important'); _sw.style.setProperty('margin-left', 'auto', 'important');
-                                                _sw.style.setProperty('order', '0', 'important');
-                                                _sw.style.setProperty('box-sizing', 'border-box', 'important');
                                                 _sw.style.setProperty('border-radius', '999px', 'important');
                                                 _sw.style.setProperty('overflow', 'hidden', 'important');
                                                 _sw.style.setProperty('border', '1px solid var(--acu-border, rgba(150,150,150,.35))', 'important');
