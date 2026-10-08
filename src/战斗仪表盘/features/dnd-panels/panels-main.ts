@@ -58,7 +58,7 @@ export function createPanelsMainFragment(deps: any): any {
                 // [b13.4] 骰子视图主面板内嵌渲染（替代弹骰子面板）
                 const tabMap: any = { 'acu-changes': 'changes', 'acu-mvu': 'mvu', 'acu-favorites': 'favorites', 'acu-global-interactions': 'global-interactions' };
                 const tab = tabMap[panelName];
-                $content.html('<div class="dnd-acu-view-inline dnd-acu-main-embed" id="acu-data-area" style="max-height:100%;overflow-y:auto;"><div class="dnd-acu-view-inline-body" style="padding:2px 6px 6px;"></div></div>');
+                $content.html('<div class="dnd-acu-view-inline dnd-acu-main-embed" id="acu-data-area" style="max-height:100%;overflow-y:auto;"><div class="dnd-acu-view-inline-body acu-embed-scope" style="padding:2px 6px 6px;"></div></div>');
                 const $emb = $content.find('.dnd-acu-view-inline');
                 const $embBody = $content.find('.dnd-acu-view-inline-body');
                 const _gEmb: any = (window as any).__acuUI;

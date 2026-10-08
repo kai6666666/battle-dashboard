@@ -18,7 +18,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.98-b14.6 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.98-b14.7 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -336,7 +336,7 @@ export function createHudRenderFragment(deps: any): any {
                     try { if (g && typeof g.renderTableHostForDnd === 'function') tableHtml = g.renderTableHostForDnd(table); } catch (e) {}
                     if (!tableHtml) tableHtml = '<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">无法读取该表数据（可能尚未加载）</div>';
                     const themeCls = (g && typeof g.getAcuThemeClass === 'function') ? String(g.getAcuThemeClass()) : 'acu-theme-dark';
-                    const $view = $(`<div class="dnd-acu-table-view" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-table-host ${themeCls}" style="padding:2px 6px 6px;"></div></div>`);
+                    const $view = $(`<div class="dnd-acu-table-view" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-table-host ${themeCls} acu-embed-scope" style="padding:2px 6px 6px;"></div></div>`);
                     // [b13.2.21] 注入骰子绑定所需容器身份（仅 id；不加 acu-data-display 类以免 absolute 定位塌陷）
                     try {
                         try { const _oldIds = document.querySelectorAll('#acu-data-area'); for (let _oi = 0; _oi < _oldIds.length; _oi++) { try { _oldIds[_oi].removeAttribute('id'); } catch (e) {} } } catch (e) {}
@@ -579,7 +579,7 @@ export function createHudRenderFragment(deps: any): any {
                     $container.find('.dnd-acu-view-inline').remove();
                     $container.find('.dnd-acu-table-view').remove();
                     const themeCls3 = (g && typeof g.getAcuThemeClass === 'function') ? String(g.getAcuThemeClass()) : 'acu-theme-dark';
-                    const $view = $(`<div class="dnd-acu-view-inline" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-view-inline-body ${themeCls3}" style="padding:2px 6px 6px;"></div></div>`);
+                    const $view = $(`<div class="dnd-acu-view-inline" style="max-height:58vh;overflow-y:auto;border-top:1px solid var(--dnd-border-inner);"><div class="dnd-acu-view-inline-body ${themeCls3} acu-embed-scope" style="padding:2px 6px 6px;"></div></div>`);
                     const $bodyEl3 = $view.find('.dnd-acu-view-inline-body');
                     // [b13.2.20] 注入骰子绑定所需容器身份（#acu-data-area + .acu-data-display）
                     try {
