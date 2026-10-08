@@ -59,15 +59,15 @@ export function applyDndHeaderTidy($: any, $view: any): void {
                                 } catch (eS2) {}
                                 try {
                                     $view.find('.acu-header-actions').each(function(this: any) {
-                                        try { this.style.setProperty('flex-wrap', 'wrap', 'important'); this.style.setProperty('gap', '2px', 'important'); this.style.setProperty('row-gap', '2px', 'important'); } catch (eA1) {}
+                                        try { this.style.setProperty('flex-wrap', 'nowrap', 'important'); this.style.setProperty('gap', '1px', 'important'); this.style.setProperty('row-gap', '1px', 'important'); } catch (eA1) {}
                                     });
                                     $view.find('.acu-header-actions button, .acu-header-actions .acu-height-control, .acu-panel-control-set button, .acu-panel-control-set .acu-height-control').each(function(this: any) {
                                         try {
                                             this.style.setProperty('flex', '0 0 auto', 'important');
-                                            this.style.setProperty('min-width', '24px', 'important');
-                                            this.style.setProperty('width', '24px', 'important');
-                                            this.style.setProperty('min-height', '24px', 'important');
-                                            this.style.setProperty('height', '24px', 'important');
+                                            this.style.setProperty('min-width', '20px', 'important');
+                                            this.style.setProperty('width', '22px', 'important');
+                                            this.style.setProperty('min-height', '20px', 'important');
+                                            this.style.setProperty('height', '22px', 'important');
                                             this.style.setProperty('padding', '0', 'important');
                                             this.style.setProperty('margin', '0', 'important');
                                         } catch (eB1) {}

@@ -98,7 +98,7 @@ export function createShowActionPresetManager(deps: any) {
     // 关闭按钮
     overlay.find('.acu-close-btn, #acu-action-preset-back').on('click', () => {
       overlay.remove();
-      deps.popModal();
+      try { deps.clearModalStack(); } catch (e) {}
     });
 
     // Toggle切换预设激活状态（单选）
@@ -227,7 +227,7 @@ export function createShowActionPresetManager(deps: any) {
     // 点击遮罩关闭
     deps.setupOverlayClose(overlay, 'acu-edit-overlay', () => {
       overlay.remove();
-      deps.popModal();
+      try { deps.clearModalStack(); } catch (e) {}
     });
   };
   return showActionPresetManager;
