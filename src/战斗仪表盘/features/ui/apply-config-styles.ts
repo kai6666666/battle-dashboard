@@ -64,7 +64,7 @@ export function createApplyConfigStyles(deps: any) {
       '--acu-grid-cols': config.gridColumns,
     };
 
-    deps.collectHostAndLocalNodes(`${DICE_ROOT_SELECTOR}, .acu-embedded-options-container`).forEach((node: any) => {
+    deps.collectHostAndLocalNodes(`${DICE_ROOT_SELECTOR}, .acu-embedded-options-container, .dnd-acu-view-inline-body, .dnd-acu-table-host`).forEach((node: any) => {
       Array.from(node.classList)
         .filter((className: any) => className.startsWith('acu-theme-'))
         .forEach(className => node.classList.remove(className));

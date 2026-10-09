@@ -62,6 +62,8 @@ export function createPanelsMainFragment(deps: any): any {
                 const $emb = $content.find('.dnd-acu-view-inline');
                 const $embBody = $content.find('.dnd-acu-view-inline-body');
                 const _gEmb: any = (window as any).__acuUI;
+                // [b14.10] 同步骰子配置变量到内嵌容器（跟随主面板设置）
+                try { if (_gEmb && typeof _gEmb.applyAcuVarsForDnd === 'function') _gEmb.applyAcuVarsForDnd($embBody[0]); } catch (eAV3) {}
                 // [b13.4] per-doc 样式注入（主面板视图样式）
                 try {
                     const _docE: any = ($content[0] && $content[0].ownerDocument) || document;

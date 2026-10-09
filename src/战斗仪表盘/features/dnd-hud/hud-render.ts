@@ -18,7 +18,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.98-b14.9 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.98-b14.10 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -343,6 +343,8 @@ export function createHudRenderFragment(deps: any): any {
                         $view.find('.dnd-acu-table-host').attr('id', 'acu-data-area').addClass('visible');
                     } catch (e) {}
                     $view.find('.dnd-acu-table-host').html(tableHtml);
+                    // [b14.10] 同步骰子配置变量到内嵌容器（跟随主面板设置）
+                    try { if (g && typeof g.applyAcuVarsForDnd === 'function') g.applyAcuVarsForDnd($view.find('.dnd-acu-table-host')[0]); } catch (eAV1) {}
                     try { console.info('[DND]表格视图已渲染 table=' + table + ' len=' + String(tableHtml || '').length); } catch (eC2) {}
                     $list.hide();
                     $container.append($view);
@@ -588,6 +590,8 @@ export function createHudRenderFragment(deps: any): any {
                         $bodyEl3.addClass('visible');
                         // [b13.2.21] 不加 acu-data-display 类（其 CSS 为 absolute 向上弹出定位，会导致内嵌布局塌陷）
                     } catch (e) {}
+                    // [b14.10] 同步骰子配置变量到内嵌容器（跟随主面板设置）
+                    try { if (g && typeof g.applyAcuVarsForDnd === 'function') g.applyAcuVarsForDnd($bodyEl3[0]); } catch (eAV2) {}
                     // [b13.2.20] 内嵌滚动修正：解除骰子内容高度限制，滚动交给外层容器
                     try {
                         if (!(window as any).__dndInlineScrollFix_v8) {

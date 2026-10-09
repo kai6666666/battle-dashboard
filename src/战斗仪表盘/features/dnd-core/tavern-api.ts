@@ -16,6 +16,8 @@ export interface DndDatabaseAIStatus {
   presetCount: number;
   tablePreset: string;
   plotPreset: string;
+  /** [b14.10] naiv1.2.9 起 API 预设方法已收敛（空壳）：true 表示预设信息不可用 */
+  presetsRestricted?: boolean;
 }
 
 export interface DndGenerateOptions {
@@ -80,6 +82,7 @@ export function createDndTavernApi(deps: DndTavernApiDeps): DndTavernApi {
     let presets: any[] = [];
     let tablePreset = '';
     let plotPreset = '';
+    let presetsRestricted = false;
 
     try {
       if (api?.getApiPresets) presets = api.getApiPresets() || [];
@@ -88,12 +91,23 @@ export function createDndTavernApi(deps: DndTavernApiDeps): DndTavernApi {
     } catch (e) {
       logger.warn('[TavernAPI] 读取数据库 AI 状态失败:', e);
     }
+    // [b14.10] naiv1.2.9 适配：8 项 API 预设方法已弃用（空壳）。
+    // 先用新面（仍存在的方法）补充剧情预设名；若三者均空但 callAI 可用 → 标记受限。
+    try {
+      if (!plotPreset && typeof api?.getCurrentPlotPreset === 'function') {
+        plotPreset = api.getCurrentPlotPreset() || '';
+      }
+      if (!presets.length && !tablePreset && !plotPreset && api && typeof api.callAI === 'function') {
+        presetsRestricted = typeof api.getPlotPresetNames === 'function';
+      }
+    } catch (e2) {}
 
     return {
       available: !!(api && typeof api.callAI === 'function'),
       presetCount: Array.isArray(presets) ? presets.length : 0,
       tablePreset,
       plotPreset,
+      presetsRestricted,
     };
   };
 
@@ -187,7 +201,13 @@ export function createDndTavernApi(deps: DndTavernApiDeps): DndTavernApi {
       if (!dbApi || typeof dbApi.callAI !== 'function') {
         throw new Error('当前数据库 API 未提供 callAI()');
       }
-      const response = await dbApi.callAI(messages, { max_tokens: maxTokens });
+      // [b14.10] naiv1.2.9：callAI 预设无法解析时会抛错（不再静默返回 null），此处统一转友好错误
+      let response: any;
+      try {
+        response = await dbApi.callAI(messages, { max_tokens: maxTokens });
+      } catch (callErr: any) {
+        throw new Error('数据库 AI 预设无法解析（请在数据库插件内配置 AI 预设）：' + ((callErr && callErr.message) || callErr));
+      }
       if (!response) {
         throw new Error('数据库 AI 调用失败，请检查数据库中的 AI 配置');
       }

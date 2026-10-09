@@ -482,9 +482,9 @@ export function createSettingsPanelFragment(deps: any): any {
                         <div style="font-weight:bold;color:var(--dnd-text-header);margin-bottom:8px;">神数据库 AI 状态</div>
                         <div style="font-size:12px;color:var(--dnd-text-main);line-height:1.7;">
                             <div>AI 调用接口：<span style="color:${dbAiStatus.available ? 'var(--dnd-accent-green)' : 'var(--dnd-accent-red)'};font-weight:bold;">${dbAiStatus.available ? '已检测到' : '未检测到'}</span></div>
-                            <div>已检测到 API 预设：${dbAiStatus.presetCount} 个</div>
-                            <div>当前填表预设：${dbAiStatus.tablePreset || '使用数据库当前配置'}</div>
-                            <div>当前剧情预设：${dbAiStatus.plotPreset || '使用数据库当前配置'}</div>
+                            <div>已检测到 API 预设：${dbAiStatus.presetsRestricted ? '——不可用（naiv1.2.9 已收敛，请走数据库插件 UI）' : String(dbAiStatus.presetCount) + ' 个'}</div>
+                            <div>当前填表预设：${dbAiStatus.presetsRestricted ? '——不可用（naiv1.2.9 已收敛）' : (dbAiStatus.tablePreset || '使用数据库当前配置')}</div>
+                            <div>当前剧情预设：${dbAiStatus.presetsRestricted ? '——不可用（naiv1.2.9 已收敛）' : (dbAiStatus.plotPreset || '使用数据库当前配置')}</div>
                         </div>
                         <div style="font-size:11px;color:var(--dnd-text-dim);margin-top:8px;line-height:1.6;">
                             这里显示的是数据库 AI 接口是否已暴露给前端；具体的 API URL、模型与预设切换，请在神数据库插件内部完成配置。

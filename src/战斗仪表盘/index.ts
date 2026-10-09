@@ -1725,6 +1725,27 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
       getAcuThemeClass: () => {
         try { return 'acu-theme-' + (getConfig().theme || 'dark'); } catch (e) { return 'acu-theme-dark'; }
       },
+      // [b14.10] 将骰子配置变量同步到 DND 内嵌容器（跟随主面板设置：卡宽/字号/列数等）
+      applyAcuVarsForDnd: (el: any) => {
+        try {
+          const jq: any = (window as any).jQuery || (window as any).$;
+          if (!jq || !el) return false;
+          const root = jq(el)[0];
+          if (!root) return false;
+          const cfg = getConfig() || {};
+          const navMetrics = getNavigationFontMetrics(cfg.navFontSize);
+          const set = (k: string, v: any) => { try { if (v != null) root.style.setProperty(k, String(v)); } catch (e) {} };
+          set('--acu-card-width', (cfg.cardWidth || 260) + 'px');
+          set('--acu-font-size', (cfg.fontSize || 13) + 'px');
+          set('--acu-opt-font-size', (cfg.optionFontSize || 12) + 'px');
+          set('--acu-grid-cols', cfg.gridColumns || 'auto');
+          set('--acu-nav-button-size', navMetrics.buttonSize + 'px');
+          set('--acu-nav-font-size', navMetrics.fontSize + 'px');
+          set('--acu-nav-icon-size', navMetrics.iconSize + 'px');
+          set('--acu-nav-button-padding-x', navMetrics.paddingX + 'px');
+          return true;
+        } catch (e) { return false; }
+      },
       // [b13.2.3] 保障骰子缓存数据就绪（编辑/锁定/收藏等操作依赖 cachedRawData）
       ensureAcuCachedData: () => {
         try {
