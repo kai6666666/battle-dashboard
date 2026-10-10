@@ -44,7 +44,9 @@ export function createApplyConfigStyles(deps: any) {
                     .acu-contest-panel *:not(i[class*="fa-"]):not(i[class*="ti-"]),
                     .acu-dice-config-dialog,
                     .acu-relation-graph-container, .acu-avatar-manager, .acu-import-confirm-dialog, .acu-inventory-overlay, .acu-inventory-shell, .acu-inventory-detail,
-                    .acu-gacha-overlay, .acu-embedded-options-container, .acu-option-panel, .acu-opt-btn, .acu-check-suggestion-btn {
+                    .acu-gacha-overlay, .acu-embedded-options-container, .acu-option-panel, .acu-opt-btn, .acu-check-suggestion-btn,
+                    .dnd-acu-table-host, .dnd-acu-table-host *:not(i[class*="fa-"]):not(i[class*="ti-"]),
+                    .dnd-acu-view-inline-body, .dnd-acu-view-inline-body *:not(i[class*="fa-"]):not(i[class*="ti-"]) {
                         font-family: ${fontVal} !important;
                     }
                 `;
@@ -72,6 +74,14 @@ export function createApplyConfigStyles(deps: any) {
       if (node.classList.contains('acu-wrapper')) {
         node.classList.toggle('acu-desktop-nav-aligned', config.desktopNavAligned === true);
       }
+      // [b14.11] 布局类同步：DND 内嵌容器实时跟随「布局模式 / 横向滚动条」（G1/G2）
+      try {
+        if (node.classList.contains('dnd-acu-table-host') || node.classList.contains('dnd-acu-view-inline-body')) {
+          const _isV = config.layout === 'vertical';
+          node.classList.toggle('acu-layout-vertical', _isV);
+          node.classList.toggle('acu-show-horizontal-scrollbar', !_isV && config.showHorizontalScrollbar === true);
+        }
+      } catch (e2) {}
       Object.entries(cssVars).forEach(([key, value]) => {
         node.style.setProperty(key, String(value));
       });

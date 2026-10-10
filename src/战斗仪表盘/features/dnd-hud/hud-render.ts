@@ -18,7 +18,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.98-b14.10 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.98-b14.11 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -437,6 +437,8 @@ export function createHudRenderFragment(deps: any): any {
                     };
                     // [b13.3] 注册全局刷新回调（供写操作后自动刷新）
                     try { (window as any).__dndTableRefresh = function() { try { refresh(); } catch (e) {} }; } catch (e) {}
+                    // [b14.11] 注册“配置变更”刷新（G4：内容级设置实时更新）
+                    try { (window as any).__dndAcuActiveRefresh = function() { try { refresh(); } catch (e) {} }; } catch (eAR1) {}
                     // 搜索（防抖 300ms）
                     let searchTimer: any = null;
                     $view.on('input', '.acu-search-input', function() {
@@ -640,6 +642,32 @@ export function createHudRenderFragment(deps: any): any {
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
                     $list.hide();
                     $container.append($view);
+                    // [b14.11] 注册“配置变更”重渲染（G4：内容级设置实时刷新）
+                    try {
+                        (window as any).__dndAcuActiveRefresh = function() {
+                            try {
+                                if (!document.contains($bodyEl3[0])) return;
+                                if (tab === 'mvu') {
+                                    try { if (g && typeof g.renderMvuPanelForDnd === 'function') g.renderMvuPanelForDnd($bodyEl3[0]); } catch (e) {}
+                                    return;
+                                }
+                                let hN: any = null;
+                                try { if (g && typeof g.renderAcuViewHtml === 'function') hN = g.renderAcuViewHtml(tab); } catch (e) {}
+                                const _applyN = function(hh: any) {
+                                    try {
+                                        if (!hh) return;
+                                        if (!document.contains($bodyEl3[0])) return;
+                                        $bodyEl3.html(String(hh));
+                                        try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
+                                        try { if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') { setTimeout(function() { try { g.bindInteractionEventsForDnd($bodyEl3[0]); } catch (e) {} }, 60); } } catch (e) {}
+                                        try { if (tab === 'changes' && g && typeof g.bindChangesEventsForDnd === 'function') g.bindChangesEventsForDnd(); } catch (e) {}
+                                        try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
+                                    } catch (e) {}
+                                };
+                                if (hN && typeof hN.then === 'function') { hN.then(_applyN).catch(function () {}); } else { _applyN(hN); }
+                            } catch (e) {}
+                        };
+                    } catch (e) {}
                     // [b13.2.37] 头部排序规整（收藏夹：高度/关闭 → 搜索框前）
                     try {
                         var _tidyI = function() { try { applyDndHeaderTidy($, $view); } catch (eTD2) {} };_tidyI();

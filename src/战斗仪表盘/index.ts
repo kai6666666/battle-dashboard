@@ -1743,6 +1743,20 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           set('--acu-nav-font-size', navMetrics.fontSize + 'px');
           set('--acu-nav-icon-size', navMetrics.iconSize + 'px');
           set('--acu-nav-button-padding-x', navMetrics.paddingX + 'px');
+          // [b14.11] 布局类同步（跟随「布局模式 / 横向滚动条」，G1/G2）
+          try {
+            const _isV = cfg.layout === 'vertical';
+            root.classList.toggle('acu-layout-vertical', _isV);
+            root.classList.toggle('acu-show-horizontal-scrollbar', !_isV && cfg.showHorizontalScrollbar === true);
+          } catch (e2) {}
+          return true;
+        } catch (e) { return false; }
+      },
+      // [b14.11] 通知 DND：骰子配置已变更 → 刷新当前打开的内嵌视图（G4）
+      notifyDndAcuConfigChanged: (keys?: any) => {
+        try {
+          const fn = (window as any).__dndAcuActiveRefresh;
+          if (typeof fn === 'function') fn(Array.isArray(keys) ? keys : []);
           return true;
         } catch (e) { return false; }
       },

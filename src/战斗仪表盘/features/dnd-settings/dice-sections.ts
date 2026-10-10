@@ -81,6 +81,8 @@ export function createDiceSections(deps: any) {
     try {
       const b = getBridge();
       if (b && typeof b.saveConfig === 'function') b.saveConfig(patch);
+      // [b14.11] 通知 DND：配置已变更 → 刷新已打开的内嵌视图（G4）
+      try { if (b && typeof b.notifyDndAcuConfigChanged === 'function') b.notifyDndAcuConfigChanged(Object.keys(patch || {})); } catch (e2) {}
     } catch (e) {
       try {
         deps.logger?.warn?.('[b14] 骰子配置保存失败', e);
