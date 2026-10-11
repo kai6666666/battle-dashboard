@@ -46,8 +46,13 @@ export function createDndMap(deps0: DndMapDeps): DndMap {
     explorationMapManager: null,
   };
 
-  const emm = createMapExplorationAiFragment(deps);
-  Object.assign(emm, createMapExplorationCoreFragment(deps), createMapBattleFragment(deps));
+  const aiFrag = createMapExplorationAiFragment(deps);
+  const coreFrag = createMapExplorationCoreFragment(deps);
+  const battleFrag = createMapBattleFragment(deps);
+  // [b15.4] 修复跨 fragment 自引用断链：core/battle 的 prompts/getAIRequestOptions 经 _shared 解析到 ai 层
+  try { coreFrag._shared = aiFrag; battleFrag._shared = aiFrag; } catch (e) {}
+  const emm = aiFrag;
+  Object.assign(emm, coreFrag, battleFrag);
   deps.explorationMapManager = emm;
 
   const mapDataSource = createMapDataSource(deps);

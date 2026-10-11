@@ -65,12 +65,12 @@ export function createMapDataSource(deps: any) {
     const wm = getTable('世界地图点');
     if (wm) {
       const row = wm.find((r: any) => r['详细地点'] === locationName);
-      if (row && row['MapStructureJSON']) return String(row['MapStructureJSON']);
+      if (row && row['MapStructureJSON'] && !String(row['MapStructureJSON']).startsWith('PROBE_')) return String(row['MapStructureJSON']);
     }
     const ex = getTable('EXPLORATION_Map_Data');
     if (ex) {
       const row = ex.find((r: any) => r['LocationName'] === locationName);
-      if (row && row['MapStructureJSON']) return String(row['MapStructureJSON']);
+      if (row && row['MapStructureJSON'] && !String(row['MapStructureJSON']).startsWith('PROBE_')) return String(row['MapStructureJSON']);
     }
     return null;
   };

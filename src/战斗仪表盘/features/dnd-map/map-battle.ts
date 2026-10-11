@@ -74,8 +74,8 @@ export function createMapBattleFragment(deps: any): any {
         }
 
         try {
-            const structureRequestOptions = await ExplorationMapManager.getAIRequestOptions(2000);
-            const svgRequestOptions = await ExplorationMapManager.getAIRequestOptions(8192);
+            const structureRequestOptions = await emS().getAIRequestOptions(2000);
+            const svgRequestOptions = await emS().getAIRequestOptions(8192);
 
             // Step 1: Get Structure (From Table or Generate)
             let jsonStr = null;
@@ -89,7 +89,7 @@ export function createMapBattleFragment(deps: any): any {
             // If not found or forced, generate new
             if (!jsonStr) {
                 deps.logger.info('[BattleMap] Generating new structure for:', locationName);
-                const structurePrompt = ExplorationMapManager.prompts.battleStructure(locationName + " " + description, width, height);
+                const structurePrompt = emS().prompts.battleStructure(locationName + " " + description, width, height);
                 const structureRes = await deps.tavernApi.generate([{ role: 'user', content: structurePrompt }], structureRequestOptions);
                 
                 jsonStr = structureRes;
@@ -107,7 +107,7 @@ export function createMapBattleFragment(deps: any): any {
 
             // Step 2: Generate SVG
             deps.logger.info('[BattleMap] Generating SVG...');
-            const svgPrompt = ExplorationMapManager.prompts.battleSVG(jsonStr);
+            const svgPrompt = emS().prompts.battleSVG(jsonStr);
             const svgRes = await deps.tavernApi.generate([{ role: 'user', content: svgPrompt }], svgRequestOptions);
 
             let svgContent = svgRes;
@@ -139,5 +139,9 @@ export function createMapBattleFragment(deps: any): any {
         }
     }
   };
+
+  // [b15.4] 跨 fragment 引用解析（同 core；经 _shared 注入）
+  const emS = () => (ExplorationMapManager._shared || ExplorationMapManager);
+
   return ExplorationMapManager;
 }

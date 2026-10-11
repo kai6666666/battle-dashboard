@@ -16,8 +16,8 @@ export function createMapExplorationCoreFragment(deps: any): any {
     // 2. Generate Structure (Step 1)
     generateStructure: async (locationName, description) => {
         const theme = `${locationName}。${description || ''}`;
-        const prompt = ExplorationMapManager.prompts.structure(theme);
-        const requestOptions = await ExplorationMapManager.getAIRequestOptions(4000);
+        const prompt = emS().prompts.structure(theme);
+        const requestOptions = await emS().getAIRequestOptions(4000);
         
         deps.logger.info('[ExplorationMap] Generating structure for:', locationName);
         
@@ -79,8 +79,8 @@ export function createMapExplorationCoreFragment(deps: any): any {
 
     // 3. Generate SVG (Step 2)
     generateSVG: async (locationName, structureJSON) => {
-        const prompt = ExplorationMapManager.prompts.svg(structureJSON);
-        const requestOptions = await ExplorationMapManager.getAIRequestOptions(8192);
+        const prompt = emS().prompts.svg(structureJSON);
+        const requestOptions = await emS().getAIRequestOptions(8192);
         
         deps.logger.info('[ExplorationMap] Generating SVG for:', locationName);
         
@@ -154,5 +154,9 @@ export function createMapExplorationCoreFragment(deps: any): any {
 
     // [New] Check Battle Map Structure from Table
   };
+
+  // [b15.4] 跨 fragment 引用解析：prompts/getAIRequestOptions 定义在 ai fragment（经 _shared 注入）
+  const emS = () => (ExplorationMapManager._shared || ExplorationMapManager);
+
   return ExplorationMapManager;
 }
