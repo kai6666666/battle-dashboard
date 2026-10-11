@@ -7,7 +7,8 @@ export function createMapUiInteractionFragment(deps: any): any {
     handleMapInteraction(gridX, gridY) {
         const state = this._targetingMode;
         const encounters = deps.dataManager.getTable('COMBAT_Encounter');
-        const mapData = deps.dataManager.getTable('COMBAT_BattleMap');
+        // [b15.2] 战斗单位：新（遭遇表组装）优先 + 旧（COMBAT_BattleMap）兜底
+        const mapData = deps.mapDataSource ? deps.mapDataSource.getBattleUnits() : deps.dataManager.getTable('COMBAT_BattleMap');
         const activeChar = ((window as any).DND_Dashboard_UI || this).getControlledCharacter?.( );
         const activeId = activeChar ? (activeChar['CHAR_ID'] || activeChar['PC_ID'] || activeChar['姓名']) : 'default';
 

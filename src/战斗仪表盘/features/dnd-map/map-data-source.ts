@@ -277,3 +277,11 @@ export function createMapDataSource(deps: any) {
     getBattleGrid,
   };
 }
+
+// 跨域取用（hud/panels 等）：从全局注册对象读 mapDataSource
+export function getMapDataSource(): any {
+  try {
+    const g: any = (window as any).DND_Dashboard_UI;
+    return (g && g.mapDataSource) ? g.mapDataSource : null;
+  } catch (e) { return null; }
+}

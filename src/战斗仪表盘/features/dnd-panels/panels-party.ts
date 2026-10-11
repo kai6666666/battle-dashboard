@@ -1,6 +1,7 @@
 // features/dnd-panels/panels-party.ts
 // 队伍 / 任务 / 战斗面板（b10b · 自 BasedonST `src/ui/modules/UIPanels.js` 拆分移植）
 import { DND_CONFIG } from '../dnd-core';
+import { getMapDataSource } from '../dnd-map/map-data-source';
 
 export function createPanelsPartyFragment(deps: any): any {
   return {
@@ -212,7 +213,9 @@ export function createPanelsPartyFragment(deps: any): any {
     renderCombatPanel($container) {
         const { $ } = deps.utils.getCore();
         const encounters = deps.dataManager.getTable('COMBAT_Encounter');
-        const mapData = deps.dataManager.getTable('COMBAT_BattleMap');
+        // [b15.2] 战斗单位：新（遭遇表组装）优先 + 旧（COMBAT_BattleMap）兜底
+        const gds = getMapDataSource();
+        const mapData = gds ? gds.getBattleUnits() : deps.dataManager.getTable('COMBAT_BattleMap');
 
         // 布局
         const $layout = $('<div style="display:flex;gap:20px;height:100%;"></div>');

@@ -2,6 +2,7 @@
 // 战斗 HUD（+迷你法术位）（b4 · 自 BasedonST `src/ui/modules/UIHUD.js` 拆分移植）
 // 工厂 + DI；与同域其它 fragment 经 index.ts 合并为同一对象（this 跨块可用）。
 import { DND_CONFIG } from '../dnd-core';
+import { getMapDataSource } from '../dnd-map/map-data-source';
 
 export function createHudCombatFragment(deps: any): any {
   return {
@@ -10,7 +11,8 @@ export function createHudCombatFragment(deps: any): any {
         const encounters = deps.dataManager.getTable('COMBAT_Encounter');
         const partyData = deps.dataManager.getPartyData() || [];
         const global = deps.dataManager.getTable('SYS_GlobalState');
-        const round = (global && global[0]) ? global[0]['当前回合'] : 0;
+        const gds = getMapDataSource();
+        const round = gds ? gds.getCurrentRound() : ((global && global[0]) ? global[0]['当前回合'] : 0);
         
         // 布局
         let html = `<div class="dnd-hud-combat-layout">`;

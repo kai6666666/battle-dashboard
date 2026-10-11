@@ -51,6 +51,7 @@ export function createDndMap(deps0: DndMapDeps): DndMap {
   deps.explorationMapManager = emm;
 
   const mapDataSource = createMapDataSource(deps);
+  deps.mapDataSource = mapDataSource;
 
   const map: any = Object.assign(
     {},

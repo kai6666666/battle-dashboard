@@ -6,22 +6,25 @@ export function createMapUiMinimapFragment(deps: any): any {
   return {
     async renderMiniMap($el) {
         const { $ } = deps.utils.getCore();
+        const ds = deps.mapDataSource;
         const global = deps.dataManager.getTable('SYS_GlobalState');
         const gInfo = (global && global[0]) ? global[0] : {};
-        const isCombat = gInfo['战斗模式'] === '战斗中';
-        let locationName = gInfo['当前场景'] || '未知区域';
+        const isCombat = ds ? ds.isCombatMode() : (gInfo['战斗模式'] === '战斗中');
+        let locationName = ds ? ds.getCurrentScene() : (gInfo['当前场景'] || '未知区域');
 
-        // Check for override in EXPLORATION_Map_Data
-        const mapDataExploration = deps.dataManager.getTable('EXPLORATION_Map_Data');
-        if (mapDataExploration) {
-            const forcedMap = mapDataExploration.find(m => {
-                const val = m['当前显示地图'];
-                return val === '是' || val === true || val === 'True' || val === 'true' || val === 1 || val === '1';
-            });
-            if (forcedMap && forcedMap['LocationName']) {
-                locationName = forcedMap['LocationName'];
+        // Check for override（[b15.2] 新：世界地图点.当前显示地图 | 旧：EXPLORATION_Map_Data 兜底）
+        let forcedLoc = ds ? ds.getCurrentDisplayLocation() : null;
+        if (!forcedLoc) {
+            const mapDataExploration = deps.dataManager.getTable('EXPLORATION_Map_Data');
+            if (mapDataExploration) {
+                const forcedMap = mapDataExploration.find(m => {
+                    const val = m['当前显示地图'];
+                    return val === '是' || val === true || val === 'True' || val === 'true' || val === 1 || val === '1';
+                });
+                if (forcedMap && forcedMap['LocationName']) forcedLoc = forcedMap['LocationName'];
             }
         }
+        if (forcedLoc) locationName = forcedLoc;
 
         // ==========================================
         // 模式 A: 探索地图 (SVG)
@@ -71,7 +74,7 @@ export function createMapUiMinimapFragment(deps: any): any {
             }
 
             try {
-                const mapResult = await deps.explorationMapManager.getMap(locationName, gInfo['场景描述']);
+                const mapResult = await deps.explorationMapManager.getMap(locationName, ds ? ds.getSceneDesc() : gInfo['场景描述']);
                 
                 if (mapResult.type === 'svg') {
                     const svgContent = mapResult.content;
@@ -164,7 +167,8 @@ export function createMapUiMinimapFragment(deps: any): any {
         // ==========================================
         // 模式 B: 战斗地图 (Tactical Grid)
         // ==========================================
-        const mapData = deps.dataManager.getTable('COMBAT_BattleMap');
+        // [b15.2] 战斗单位：新（遭遇表组装）优先 + 旧（COMBAT_BattleMap）兜底
+        const mapData = ds ? ds.getBattleUnits() : deps.dataManager.getTable('COMBAT_BattleMap');
         const encounters = deps.dataManager.getTable('COMBAT_Encounter');
         
         if (!mapData) {
@@ -177,7 +181,11 @@ export function createMapUiMinimapFragment(deps: any): any {
         // 1. 获取并计算地图尺寸配置
         const config = mapData.find(m => m['类型'] === 'Config');
         let cols = 20, rows = 20;
-        if (config && config['坐标']) {
+        const gridInfo = ds ? ds.getBattleGrid() : null;
+        if (gridInfo) {
+            cols = gridInfo.cols;
+            rows = gridInfo.rows;
+        } else if (config && config['坐标']) {
             const size = deps.dataManager.parseValue(config['坐标'], 'size');
             if (size) {
                 cols = size.w || 20;

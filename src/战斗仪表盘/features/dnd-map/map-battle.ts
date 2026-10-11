@@ -5,6 +5,8 @@ export function createMapBattleFragment(deps: any): any {
   const ExplorationMapManager: any = {
 
     checkBattleStructure: (sceneName) => {
+        // [b15.2] 新优先+旧兜底：统一走地图数据源适配层
+        if (deps.mapDataSource) return deps.mapDataSource.getBattleVisual(sceneName);
         const table = deps.dataManager.getTable('COMBAT_Map_Visuals');
         if (!table) return null;
         // Try exact match or fuzzy match if needed. Using exact match for now.
@@ -14,6 +16,8 @@ export function createMapBattleFragment(deps: any): any {
 
     // [New] Save Battle Map Structure to Table
     saveBattleStructure: async (sceneName, jsonStr, width, height) => {
+        // [b15.2] 新优先+旧兜底：统一走地图数据源适配层
+        if (deps.mapDataSource) { await deps.mapDataSource.saveBattleVisual(sceneName, jsonStr, width, height); return; }
         const rawData = deps.dataManager.getAllData();
         const tableKey = Object.keys(rawData).find(k => k.includes('COMBAT_Map_Visuals') || (rawData[k].name && rawData[k].name.includes('战斗地图绘制')));
         

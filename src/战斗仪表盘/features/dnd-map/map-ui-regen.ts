@@ -6,8 +6,9 @@ export function createMapUiRegenFragment(deps: any): any {
   return {
     async regenerateMap(locationName, mode) {
         const { $ } = deps.utils.getCore();
+        const ds = deps.mapDataSource;
         const global = deps.dataManager.getTable('SYS_GlobalState');
-        const isCombat = global && global[0] && global[0]['战斗模式'] === '战斗中';
+        const isCombat = ds ? ds.isCombatMode() : (global && global[0] && global[0]['战斗模式'] === '战斗中');
         
         let confirmMsg = '确定要重新绘制地图图片吗？结构将保持不变。';
         if (isCombat) confirmMsg = '确定要重新生成战斗场景底图吗？这需要消耗 tokens。';
@@ -44,16 +45,22 @@ export function createMapUiRegenFragment(deps: any): any {
         }
 
         try {
-            const desc = (global && global[0]) ? global[0]['场景描述'] : '';
+            const desc = ds ? ds.getSceneDesc() : ((global && global[0]) ? global[0]['场景描述'] : '');
 
             if (isCombat) {
                 // Battle Map Regen
-                const mapData = deps.dataManager.getTable('COMBAT_BattleMap');
-                const config = mapData ? mapData.find(m => m['类型'] === 'Config') : null;
                 let cols = 20, rows = 20;
-                if (config && config['坐标']) {
-                    const size = deps.dataManager.parseValue(config['坐标'], 'size');
-                    if (size) { cols = size.w || 20; rows = size.h || 20; }
+                const gridInfo = ds ? ds.getBattleGrid() : null;
+                if (gridInfo) {
+                    cols = gridInfo.cols;
+                    rows = gridInfo.rows;
+                } else {
+                    const mapData = deps.dataManager.getTable('COMBAT_BattleMap');
+                    const config = mapData ? mapData.find(m => m['类型'] === 'Config') : null;
+                    if (config && config['坐标']) {
+                        const size = deps.dataManager.parseValue(config['坐标'], 'size');
+                        if (size) { cols = size.w || 20; rows = size.h || 20; }
+                    }
                 }
                 
                 await deps.explorationMapManager.getBattleMap(locationName, desc, cols, rows, true); // true = force regen

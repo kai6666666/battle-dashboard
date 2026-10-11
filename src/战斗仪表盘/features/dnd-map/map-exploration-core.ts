@@ -5,6 +5,8 @@ export function createMapExplorationCoreFragment(deps: any): any {
   const ExplorationMapManager: any = {
 
     checkStructure: (locationName) => {
+        // [b15.2] 新优先+旧兜底：统一走地图数据源适配层
+        if (deps.mapDataSource) return deps.mapDataSource.getExploreStructure(locationName);
         const table = deps.dataManager.getTable('EXPLORATION_Map_Data');
         if (!table) return null;
         const row = table.find(r => r['LocationName'] === locationName);
@@ -41,6 +43,8 @@ export function createMapExplorationCoreFragment(deps: any): any {
 
     // Save structure to table
     saveStructure: async (locationName, jsonStr) => {
+        // [b15.2] 新优先+旧兜底：统一走地图数据源适配层
+        if (deps.mapDataSource) { await deps.mapDataSource.saveExploreStructure(locationName, jsonStr); return; }
         const rawData = deps.dataManager.getAllData();
         const tableKey = Object.keys(rawData).find(k => k.includes('EXPLORATION_Map_Data') || (rawData[k].name && rawData[k].name.includes('探索地图数据')));
         
