@@ -432,6 +432,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
         details.setAttribute('data-floating-menu-id', menuId);
         details.classList.add('is-floating');
         floatingHost.appendChild(details);
+        try { console.info('[DND][GID]菜单浮层转移 OK menuId=' + menuId + ' hostChildren=' + floatingHost.children.length); } catch (eM) {}
         details.style.display = 'flex';
         details.style.flexDirection = 'column';
         details.style.gap = '4px';
@@ -525,15 +526,17 @@ export function createBindGlobalInteractionEvents(deps: any) {
       const detailsBefore = $row.find<HTMLElement>('.acu-global-interaction-details')[0];
       const iconButton = $row.find<HTMLElement>('.acu-global-interaction-row-main')[0];
       const shouldExpand = !$row.hasClass('is-expanded');
-      deps.debugGlobalInteraction('toggle:before', {
-        shouldExpand,
-        rowIndex: deps.safeDecodeURIComponent($row.attr('data-row-index') || ''),
-        tableKey: deps.safeDecodeURIComponent($row.attr('data-table-key') || ''),
-        rowClass: String($row.attr('class') || ''),
-        buttonAriaExpanded: iconButton?.getAttribute('aria-expanded') || '',
-        detailsDisplay: detailsBefore ? panelWindow.getComputedStyle(detailsBefore).display : null,
-        detailsRect: detailsBefore ? safeDomRectJson(detailsBefore) : null,
-      });
+      try {
+        deps.debugGlobalInteraction('toggle:before', {
+          shouldExpand,
+          rowIndex: deps.safeDecodeURIComponent($row.attr('data-row-index') || ''),
+          tableKey: deps.safeDecodeURIComponent($row.attr('data-table-key') || ''),
+          rowClass: String($row.attr('class') || ''),
+          buttonAriaExpanded: iconButton?.getAttribute('aria-expanded') || '',
+          detailsDisplay: detailsBefore ? panelWindow.getComputedStyle(detailsBefore).display : null,
+          detailsRect: detailsBefore ? safeDomRectJson(detailsBefore) : null,
+        });
+      } catch (eDbg1) {}
       collapseExpandedGlobalInteractionRows();
       if (shouldExpand) {
         $row.addClass('is-expanded').find('.acu-global-interaction-row-main').attr('aria-expanded', 'true');
@@ -542,15 +545,17 @@ export function createBindGlobalInteractionEvents(deps: any) {
       const detailsAfter = $row.find<HTMLElement>('.acu-global-interaction-details')[0];
       const rowElement = $row[0];
       const rowStyle = rowElement ? panelWindow.getComputedStyle(rowElement) : null;
-      deps.debugGlobalInteraction('toggle:after', {
-        rowExpanded: $row.hasClass('is-expanded'),
-        buttonAriaExpanded: iconButton?.getAttribute('aria-expanded') || '',
-        detailsDisplay: detailsAfter ? panelWindow.getComputedStyle(detailsAfter).display : null,
-        detailsRect: detailsAfter ? safeDomRectJson(detailsAfter) : null,
-        rowBackground: rowStyle?.backgroundColor ?? null,
-        rowBorderWidth: rowStyle?.borderWidth ?? null,
-        rowBoxShadow: rowStyle?.boxShadow ?? null,
-      });
+      try {
+        deps.debugGlobalInteraction('toggle:after', {
+          rowExpanded: $row.hasClass('is-expanded'),
+          buttonAriaExpanded: iconButton?.getAttribute('aria-expanded') || '',
+          detailsDisplay: detailsAfter ? panelWindow.getComputedStyle(detailsAfter).display : null,
+          detailsRect: detailsAfter ? safeDomRectJson(detailsAfter) : null,
+          rowBackground: rowStyle?.backgroundColor ?? null,
+          rowBorderWidth: rowStyle?.borderWidth ?? null,
+          rowBoxShadow: rowStyle?.boxShadow ?? null,
+        });
+      } catch (eDbg2) {}
     };
 
     const handleGlobalInteractionPreviewTitleClick = function (): void {
@@ -600,6 +605,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
       try {
         (window as any).__dndGIDLastClick = { t: Date.now(), rowIndex: String($(this).closest('.acu-global-interaction-row').attr('data-row-index') || ''), panelRows: $panel.find('.acu-global-interaction-row').length };
       } catch (eCL) {}
+      try { console.info('[DND][GID]点击 row-main rowIndex=' + String($(this).closest('.acu-global-interaction-row').attr('data-row-index') || '')); } catch (eL0) {}
       deps.debugGlobalInteraction('icon:onclick', {
         rowIndex: deps.safeDecodeURIComponent($(this).closest('.acu-global-interaction-row').attr('data-row-index') || ''),
         targetTag: event.target instanceof Element ? event.target.tagName : '',
@@ -608,7 +614,13 @@ export function createBindGlobalInteractionEvents(deps: any) {
       });
       event.stopPropagation();
       event.preventDefault();
-      toggleGlobalInteractionRow($(this).closest('.acu-global-interaction-row'));
+      // [b14.15] 包裹 toggle：防任何子步骤异常导致无反应且无日志
+      try {
+        toggleGlobalInteractionRow($(this).closest('.acu-global-interaction-row'));
+      } catch (eTG) {
+        try { console.warn('[DND][GID] toggle 异常:', eTG); } catch (e2) {}
+        try { (window as any).__dndGIDLastError = String((eTG && (eTG as any).message) || eTG); } catch (e3) {}
+      }
     });
 
     const handleGlobalInteractionActionClick = function (this: HTMLElement, e: JQuery.ClickEvent): void {
