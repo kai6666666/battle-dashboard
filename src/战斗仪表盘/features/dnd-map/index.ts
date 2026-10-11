@@ -9,6 +9,7 @@ import { createMapUiZoomFragment } from './map-ui-zoom';
 import { createMapUiMinimapFragment } from './map-ui-minimap';
 import { createMapUiRegenFragment } from './map-ui-regen';
 import { createMapUiInteractionFragment } from './map-ui-interaction';
+import { createMapDataSource } from './map-data-source';
 
 export interface DndMapDeps { core: any; ui?: any; }
 export interface DndMap { map: any; explorationMapManager: any; init(): void; }
@@ -49,9 +50,12 @@ export function createDndMap(deps0: DndMapDeps): DndMap {
   Object.assign(emm, createMapExplorationCoreFragment(deps), createMapBattleFragment(deps));
   deps.explorationMapManager = emm;
 
+  const mapDataSource = createMapDataSource(deps);
+
   const map: any = Object.assign(
     {},
     emm,
+    { mapDataSource },
     createMapUiZoomFragment(deps),
     createMapUiMinimapFragment(deps),
     createMapUiRegenFragment(deps),
