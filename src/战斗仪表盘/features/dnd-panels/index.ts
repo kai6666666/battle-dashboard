@@ -8,6 +8,7 @@ import { createPanelsNpcFragment } from './panels-npc';
 import { createPanelsArchiveAFragment } from './panels-archive-a';
 import { createPanelsArchiveBFragment } from './panels-archive-b';
 import { createPanelsArchiveCFragment } from './panels-archive-c';
+import { createPanelsMapFragment } from './panels-map';
 
 export interface DndPanelsDeps { core: any; ui?: any; }
 export interface DndPanels { panels: any; init(): void; }
@@ -59,7 +60,8 @@ export function createDndPanels(deps0: DndPanelsDeps): DndPanels {
     createPanelsNpcFragment(deps),
     createPanelsArchiveAFragment(deps),
     createPanelsArchiveBFragment(deps),
-    createPanelsArchiveCFragment(deps)
+    createPanelsArchiveCFragment(deps),
+    createPanelsMapFragment(deps)
   );
 
   const init = (): void => {

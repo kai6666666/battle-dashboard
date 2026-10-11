@@ -36,6 +36,9 @@ export function createPanelsMainFragment(deps: any): any {
             case 'combat':
                 this.renderCombatPanel($content);
                 break;
+            case 'map':
+                this.renderMapPanel($content);
+                break;
             case 'world':
                 this.renderWorldPanel($content);
                 break;

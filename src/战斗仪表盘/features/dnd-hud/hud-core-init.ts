@@ -77,7 +77,7 @@ export function createHudCoreInitFragment(deps: any): any {
                         <div class="dnd-nav-item" data-target="npcs"><i class="fa-solid fa-address-book"></i> 人物图鉴</div>
                         <div class="dnd-nav-item" data-target="quests"><i class="fa-solid fa-scroll"></i> 任务日志</div>
                         <div class="dnd-nav-item" data-target="inventory"><i class="fa-solid fa-suitcase"></i> 背包物品</div>
-                        <!-- <div class="dnd-nav-item" data-target="combat"><i class="fa-solid fa-swords"></i> 战术地图</div> -->
+                        <div class="dnd-nav-item" data-target="map"><i class="fa-solid fa-map"></i> 地图</div>
                         <div class="dnd-nav-item" data-target="world"><i class="fa-solid fa-globe"></i> 世界信息</div>
                         <div class="dnd-nav-item" data-target="logs"><i class="fa-solid fa-book"></i> 历史记录</div>
                         <div class="dnd-nav-item" data-target="archives"><i class="fa-solid fa-database"></i> 数据归档</div>

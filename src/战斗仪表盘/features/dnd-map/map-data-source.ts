@@ -262,6 +262,114 @@ export function createMapDataSource(deps: any) {
     return { cols: 20, rows: 20 };
   };
 
+  // ---- 地点列表（读）----
+  const getMapLocations = (): any[] => {
+    const wm = getTable('世界地图点');
+    if (!wm) return [];
+    const isTruthyFlag = (val: any): boolean =>
+      val === '是' || val === true || val === 'True' || val === 'true' || val === 1 || val === '1';
+    return wm.map((r: any) => ({
+      name: String(r['详细地点'] || ''),
+      region: String(r['主要地区'] || ''),
+      subRegion: String(r['次要地区'] || ''),
+      locationType: String(r['地点类型'] || ''),
+      exploreState: String(r['探索状态'] || ''),
+      isCurrent: isTruthyFlag(r['当前显示地图']),
+    })).filter((x: any) => x.name);
+  };
+
+  const getApi = (): any => {
+    try {
+      const w: any = window as any;
+      return w.AutoCardUpdaterAPI || (w.parent && w.parent.AutoCardUpdaterAPI) || (w.top && w.top.AutoCardUpdaterAPI) || null;
+    } catch (e) { return null; }
+  };
+
+  // ---- 锚切换（写「当前显示地图」隐藏列）----
+  const setCurrentDisplayMap = async (locationName: string): Promise<boolean> => {
+    const wm = getTable('世界地图点');
+    if (!wm) return false;
+    const api = getApi();
+    if (api && typeof api.updateCell === 'function') {
+      try {
+        let okAll = true;
+        for (let i = 0; i < wm.length; i++) {
+          const name = String(wm[i]['详细地点'] || '');
+          const cur = (name === locationName) ? '是' : '';
+          const oldVal = String(wm[i]['当前显示地图'] ?? '');
+          if (oldVal === cur) continue;
+          const wr = await api.updateCell({ tableName: '世界地图点', rowIndex: i + 1, colIdentifier: '当前显示地图', value: cur, skipNotify: true });
+          if (wr === false) okAll = false;
+        }
+        if (okAll) return true;
+      } catch (e) { deps.logger.warn('[map-data-source] setCurrentDisplayMap(updateCell) failed:', e); }
+    }
+    // fallback：全量 saveData
+    const rawData = getAllData();
+    if (!rawData) return false;
+    const wmSheet = findSheetByPred(rawData, n => n === '世界地图点') || findSheetByPred(rawData, n => n.includes('世界地图点'));
+    if (!wmSheet || !wmSheet.content || !wmSheet.content[0]) return false;
+    const headers = wmSheet.content[0];
+    const nameIdx = headers.indexOf('详细地点');
+    const anchorIdx = headers.indexOf('当前显示地图');
+    if (nameIdx < 0 || anchorIdx < 0) return false;
+    for (let i = 1; i < wmSheet.content.length; i++) {
+      const name = String(wmSheet.content[i][nameIdx] || '');
+      wmSheet.content[i][anchorIdx] = (name === locationName) ? '是' : '';
+    }
+    try { await deps.saveData(rawData); return true; } catch (e2) { deps.logger.warn('[map-data-source] setCurrentDisplayMap(fallback) failed:', e2); return false; }
+  };
+
+  // ---- 新增地点 ----
+  const addMapLocation = async (name: string, region?: string, locationType?: string): Promise<boolean> => {
+    if (!name) return false;
+    const api = getApi();
+    if (api && typeof api.insertRow === 'function') {
+      try {
+        const row: any = { '详细地点': name, '主要地区': region || '', '地点类型': locationType || '', '探索状态': '未探索', 'LastUpdated': new Date().toISOString() };
+        const ir = await api.insertRow({ tableName: '世界地图点', row: row, skipNotify: true });
+        if (ir !== false) return true;
+      } catch (e) { deps.logger.warn('[map-data-source] addMapLocation(insertRow) failed:', e); }
+    }
+    // fallback：全量 saveData
+    const rawData = getAllData();
+    if (!rawData) return false;
+    const wmSheet = findSheetByPred(rawData, n => n === '世界地图点') || findSheetByPred(rawData, n => n.includes('世界地图点'));
+    if (!wmSheet || !wmSheet.content || !wmSheet.content[0]) return false;
+    const headers = wmSheet.content[0];
+    const newRow = new Array(headers.length).fill(null);
+    const set = (col: string, v: any) => { const ix = headers.indexOf(col); if (ix >= 0) newRow[ix] = v; };
+    set('详细地点', name); set('主要地区', region || ''); set('地点类型', locationType || ''); set('探索状态', '未探索'); set('LastUpdated', new Date().toISOString());
+    wmSheet.content.push(newRow);
+    try { await deps.saveData(rawData); return true; } catch (e2) { deps.logger.warn('[map-data-source] addMapLocation(fallback) failed:', e2); return false; }
+  };
+
+  // ---- 删除地点 ----
+  const deleteMapLocation = async (name: string): Promise<boolean> => {
+    if (!name) return false;
+    const wm = getTable('世界地图点');
+    if (!wm) return false;
+    const idx = wm.findIndex((r: any) => String(r['详细地点'] || '') === name);
+    if (idx < 0) return false;
+    const api = getApi();
+    if (api && typeof api.deleteRow === 'function') {
+      try {
+        const dr = await api.deleteRow({ tableName: '世界地图点', rowIndex: idx + 1, skipNotify: true });
+        if (dr !== false) return true;
+      } catch (e) { deps.logger.warn('[map-data-source] deleteMapLocation(deleteRow) failed:', e); }
+    }
+    // fallback：全量 saveData
+    const rawData = getAllData();
+    if (!rawData) return false;
+    const wmSheet = findSheetByPred(rawData, n => n === '世界地图点') || findSheetByPred(rawData, n => n.includes('世界地图点'));
+    if (!wmSheet || !wmSheet.content || !wmSheet.content[0]) return false;
+    const headers = wmSheet.content[0];
+    const nameIdx = headers.indexOf('详细地点');
+    if (nameIdx < 0) return false;
+    wmSheet.content = [headers].concat(wmSheet.content.slice(1).filter((r: any) => String(r[nameIdx] || '') !== name));
+    try { await deps.saveData(rawData); return true; } catch (e2) { deps.logger.warn('[map-data-source] deleteMapLocation(fallback) failed:', e2); return false; }
+  };
+
   return {
     getStoryMode,
     isCombatMode,
@@ -275,6 +383,10 @@ export function createMapDataSource(deps: any) {
     saveBattleVisual,
     getBattleUnits,
     getBattleGrid,
+    getMapLocations,
+    setCurrentDisplayMap,
+    addMapLocation,
+    deleteMapLocation,
   };
 }
 
