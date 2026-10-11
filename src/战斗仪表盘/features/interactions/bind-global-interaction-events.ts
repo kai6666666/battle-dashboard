@@ -438,17 +438,20 @@ export function createBindGlobalInteractionEvents(deps: any) {
         details.style.gap = '4px';
         details.style.pointerEvents = 'auto';
         details.style.zIndex = '2147483601';
-        // [b14.17] 视觉兑底：确保菜单背景/边框/文字颜色（不依赖外部 CSS 变量注入）
+        // [b14.18] 视觉兑底 v2：解析实体颜色后直接内联（不依赖 var 级联/外部 CSS 注入）
         try {
-          details.style.background = 'var(--acu-menu-bg, var(--acu-bg-panel, #252525))';
-          details.style.backgroundColor = 'var(--acu-menu-bg, var(--acu-bg-panel, #252525))';
-          details.style.border = '1px solid var(--acu-border, #444)';
+          const _cs = detailsDocument.defaultView ? detailsDocument.defaultView.getComputedStyle(details) : null;
+          const _getVar = (nm: string): string => { const v = _cs ? _cs.getPropertyValue(nm).trim() : ''; return v; };
+          const _bg = _getVar('--acu-menu-bg') || _getVar('--acu-bg-panel') || '#1e1e1e';
+          const _fg = _getVar('--acu-menu-text') || _getVar('--acu-text-main') || '#e8e8e8';
+          const _bd = _getVar('--acu-border') || '#4a4a4a';
+          details.style.background = _bg;
+          details.style.backgroundColor = _bg;
+          details.style.color = _fg;
+          details.style.border = '1px solid ' + _bd;
           details.style.borderRadius = '13px';
           details.style.boxShadow = '0 14px 34px rgba(0,0,0,.4)';
-          details.style.color = 'var(--acu-menu-text, var(--acu-text-main, #eee))';
           details.style.padding = '10px';
-          details.style.minWidth = '188px';
-          details.style.maxWidth = '260px';
         } catch (eV) {} // [b14.16] 兑底提升
 
         const detailsDocument = rowElement.ownerDocument || panelDocument;
@@ -509,6 +512,14 @@ export function createBindGlobalInteractionEvents(deps: any) {
         try {
           const _fr = details.getBoundingClientRect();
           console.info('[DND][GID]菜单定位 left=' + Math.round(left) + ' top=' + Math.round(top) + ' w=' + Math.round(popupWidth) + ' h=' + Math.round(popupHeight) + ' rect=(' + Math.round(_fr.left) + ',' + Math.round(_fr.top) + ',' + Math.round(_fr.width) + 'x' + Math.round(_fr.height) + ') vw=' + viewportWidth + ' vh=' + viewportHeight);
+          // [b14.18] 命中诊断：菜单中心点最顶层元素是谁（判断是否被遮挡）
+          const _cx = Math.round(_fr.left + _fr.width / 2);
+          const _cy = Math.round(_fr.top + _fr.height / 2);
+          const _doc = details.ownerDocument;
+          const _et = _doc && typeof _doc.elementFromPoint === 'function' ? _doc.elementFromPoint(_cx, _cy) : null;
+          const _etInfo = _et ? (String((_et as any).className || '') || _et.tagName || '') : 'null';
+          const _isMe = Boolean(_et && (_et === details || (_et as any).closest && (_et as any).closest('.acu-global-interaction-details') === details));
+          console.info('[DND][GID]命中诊断 cx=' + _cx + ' cy=' + _cy + ' top=' + String(_etInfo).slice(0, 80) + ' isMenu=' + _isMe);
         } catch (eLR) {}
       } catch {
         clearGlobalInteractionDetailsPlacement($row);
