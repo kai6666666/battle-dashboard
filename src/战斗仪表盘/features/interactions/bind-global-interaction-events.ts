@@ -437,7 +437,19 @@ export function createBindGlobalInteractionEvents(deps: any) {
         details.style.flexDirection = 'column';
         details.style.gap = '4px';
         details.style.pointerEvents = 'auto';
-        details.style.zIndex = '2147483601'; // [b14.16] 兑底提升
+        details.style.zIndex = '2147483601';
+        // [b14.17] 视觉兑底：确保菜单背景/边框/文字颜色（不依赖外部 CSS 变量注入）
+        try {
+          details.style.background = 'var(--acu-menu-bg, var(--acu-bg-panel, #252525))';
+          details.style.backgroundColor = 'var(--acu-menu-bg, var(--acu-bg-panel, #252525))';
+          details.style.border = '1px solid var(--acu-border, #444)';
+          details.style.borderRadius = '13px';
+          details.style.boxShadow = '0 14px 34px rgba(0,0,0,.4)';
+          details.style.color = 'var(--acu-menu-text, var(--acu-text-main, #eee))';
+          details.style.padding = '10px';
+          details.style.minWidth = '188px';
+          details.style.maxWidth = '260px';
+        } catch (eV) {} // [b14.16] 兑底提升
 
         const detailsDocument = rowElement.ownerDocument || panelDocument;
         const detailsWindow = detailsDocument.defaultView || panelWindow;
