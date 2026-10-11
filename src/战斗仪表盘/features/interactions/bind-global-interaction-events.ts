@@ -304,7 +304,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
       host.className = ['acu-global-interaction-floating-host', ...themeClasses].join(' ');
       host.style.position = 'fixed';
       host.style.inset = '0';
-      host.style.zIndex = '31420';
+      host.style.zIndex = '2147483600'; // [b14.16] 兑底提升（防被 DND 层叠遮挡）
       host.style.pointerEvents = 'none';
 
       const sourceStyle = panelWindow.getComputedStyle(root || $panel[0] || panelDocument.documentElement);
@@ -437,7 +437,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
         details.style.flexDirection = 'column';
         details.style.gap = '4px';
         details.style.pointerEvents = 'auto';
-        details.style.zIndex = '31421';
+        details.style.zIndex = '2147483601'; // [b14.16] 兑底提升
 
         const detailsDocument = rowElement.ownerDocument || panelDocument;
         const detailsWindow = detailsDocument.defaultView || panelWindow;
@@ -493,6 +493,11 @@ export function createBindGlobalInteractionEvents(deps: any) {
         details.style.left = `${Math.round(left)}px`;
         details.style.top = `${Math.round(top)}px`;
         details.style.visibility = 'visible';
+        // [b14.16] 诊断：输出最终定位与可见性
+        try {
+          const _fr = details.getBoundingClientRect();
+          console.info('[DND][GID]菜单定位 left=' + Math.round(left) + ' top=' + Math.round(top) + ' w=' + Math.round(popupWidth) + ' h=' + Math.round(popupHeight) + ' rect=(' + Math.round(_fr.left) + ',' + Math.round(_fr.top) + ',' + Math.round(_fr.width) + 'x' + Math.round(_fr.height) + ') vw=' + viewportWidth + ' vh=' + viewportHeight);
+        } catch (eLR) {}
       } catch {
         clearGlobalInteractionDetailsPlacement($row);
       }
