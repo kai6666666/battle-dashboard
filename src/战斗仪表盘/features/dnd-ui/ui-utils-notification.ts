@@ -67,7 +67,14 @@ const NotificationSystem: any = {
                 const ntype = String((options && options.type) || 'info');
                 const fnMap: any = { success: t.success, warning: t.warning, error: t.error, info: t.info };
                 const fn = fnMap[ntype] || t.info;
-                fn.call(t, String(message == null ? '' : message));
+                // [b14.13][W5] 补传 title 与时长（toastr 签名：fn(message, title, options)）
+                const _title = (options && options.title) ? String(options.title) : undefined;
+                const _tOpts: any = {};
+                try {
+                    const _dur = Number((options && options.duration) || 0);
+                    if (_dur > 0) _tOpts.timeOut = _dur;
+                } catch (eT) {}
+                fn.call(t, String(message == null ? '' : message), _title, _tOpts);
                 return Promise.resolve();
             }
         } catch (e) {}

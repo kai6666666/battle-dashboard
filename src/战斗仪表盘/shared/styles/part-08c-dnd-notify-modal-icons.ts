@@ -355,13 +355,13 @@ export const STYLES_PART_08C_DND_NOTIFY_MODAL_ICONS = `/* ======================
             left: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            background: rgba(0, 0, 0, 0.85) !important;
-            backdrop-filter: blur(5px) !important;
+            background: rgba(0, 0, 0, 0.6) !important;
+            backdrop-filter: blur(2px) !important;
             z-index: 2147483646 !important;
             display: none !important;
             justify-content: center !important;
             align-items: center !important;
-            padding: 20px !important;
+            padding: 16px !important;
         }
         .dnd-modal-overlay.active {
             display: flex !important;

@@ -18,7 +18,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.98-b14.12 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.98-b14.13 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -637,7 +637,7 @@ export function createHudRenderFragment(deps: any): any {
                             try { if (tab === 'changes') { const _s3 = String(h3); console.info('[DND]changes首次渲染 mode=' + (_s3.indexOf('acu-simple-mode-toggle active') >= 0 ? 'validation' : 'full') + ' len=' + _s3.length); } } catch (e3) {}
                             try { if (tab === 'favorites' && g && typeof g.bindFavoritesEventsForDnd === 'function') g.bindFavoritesEventsForDnd($bodyEl3[0]); } catch (e) {}
                             // [b13.2.25] changes 的绑定移至 append 后（游离 DOM 时全局选择器找不到按钮，导致首次点击无 handler）
-                        } else { $bodyEl3.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>'); }
+                        } else { $bodyEl3.html('<div class="acu-empty-state"><i class="fa-regular fa-folder-open"></i><span>暂无法渲染该视图内容</span></div>'); }
                     }
                     try { if (g && typeof g.bindTutorialButtonsInForDnd === 'function') g.bindTutorialButtonsInForDnd($bodyEl3[0]); } catch (e) {}
                     $list.hide();

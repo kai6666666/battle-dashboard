@@ -9,7 +9,7 @@ export function createHudNpcFragment(deps: any): any {
         const npcs = deps.dataManager.getTable('NPC_Registry');
         
         if (!npcs || npcs.length === 0) {
-            ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.(`<div style="text-align:center;color:#888;">${deps.icons.USERS} 暂无NPC数据</div>`, event.clientX, event.clientY);
+            ((window as any).DND_Dashboard_UI || this).showItemDetailPopup?.(`<div class="acu-empty-state"><i class="fa-regular fa-folder-open"></i><span>暂无NPC数据</span></div>`, event.clientX, event.clientY);
             return;
         }
         

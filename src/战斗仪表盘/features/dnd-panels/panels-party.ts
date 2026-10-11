@@ -47,7 +47,7 @@ export function createPanelsPartyFragment(deps: any): any {
         $container.append($toolbar);
 
         if (party.length === 0) {
-            $container.append('<div style="padding:20px; text-align:center;">暂无队伍数据，请确保已连接数据库并加载 DND 模板。</div>');
+            $container.append('<div class="acu-empty-state"><i class="fa-regular fa-folder-open"></i><span>暂无队伍数据，请确保已连接数据库并加载 DND 模板。</span></div>');
             return;
         }
 
@@ -183,7 +183,7 @@ export function createPanelsPartyFragment(deps: any): any {
         const { $ } = deps.utils.getCore();
         const quests = deps.dataManager.getTable('QUEST_Active');
         if (!quests) {
-            $container.html('暂无任务数据。');
+            $container.html('<div class="acu-empty-state"><i class="fa-regular fa-clipboard"></i><span>暂无任务数据。</span></div>');
             return;
         }
 

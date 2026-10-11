@@ -119,11 +119,11 @@ export function createPanelsNpcFragment(deps: any): any {
         const $modal = $('#dnd-modal-content');
         
         $modal.html(`
-            <div class="dnd-modal-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;border-bottom:1px solid var(--dnd-border-gold);padding-bottom:12px;">
-                <h3 style="margin:0;color:var(--dnd-text-highlight);font-size:18px;">${title}</h3>
-                <span class="dnd-modal-close" style="cursor:pointer;font-size:20px;color:var(--dnd-text-dim);width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:all 0.2s;"><i class="fa-solid fa-times"></i></span>
+            <div class="dnd-modal-header acu-import-confirm-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;border-bottom:1px solid var(--dnd-border-inner);padding-bottom:12px;">
+                <h3 class="acu-import-confirm-title" style="margin:0;color:var(--dnd-text-highlight);font-size:18px;">${title}</h3>
+                <span class="dnd-modal-close acu-import-close-btn" style="cursor:pointer;font-size:20px;color:var(--dnd-text-dim);width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all 0.2s;"><i class="fa-solid fa-times"></i></span>
             </div>
-            <div class="dnd-modal-body" style="max-height:60vh;overflow-y:auto;padding-right:5px;text-align: left;">${content}</div>
+            <div class="dnd-modal-body acu-import-confirm-body" style="max-height:60vh;overflow-y:auto;padding-right:5px;text-align: left;">${content}</div>
         `);
         
         // 绑定关闭按钮事件（使用jQuery事件而不是内联onclick）

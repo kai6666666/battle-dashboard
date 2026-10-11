@@ -88,7 +88,7 @@ export function createHudCoreInitFragment(deps: any): any {
                     </div>
                 </div>
                 <div class="dnd-modal-overlay" id="dnd-modal-overlay">
-                    <div class="dnd-modal" id="dnd-modal-content"></div>
+                    <div class="dnd-modal acu-import-confirm-dialog acu-edit-dialog" id="dnd-modal-content"></div>
                 </div>
             </div>
             

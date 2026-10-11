@@ -93,7 +93,7 @@ export function createPanelsMainFragment(deps: any): any {
                             try { if (_gEmb && typeof _gEmb.renderAcuViewHtml === 'function') h = _gEmb.renderAcuViewHtml(tab); } catch (e) {}
                             if (h && typeof h.then === 'function') { try { h = await h; } catch (e) { h = null; } }
                             if (h) $embBody.html(String(h));
-                            else $embBody.html('<div style="padding:20px;text-align:center;color:var(--dnd-text-dim);font-size:12px;">暂无法渲染该视图内容</div>');
+                            else $embBody.html('<div class="acu-empty-state"><i class="fa-regular fa-folder-open"></i><span>暂无法渲染该视图内容</span></div>');
                         }
                         try { if (_gEmb && typeof _gEmb.bindTutorialButtonsInForDnd === 'function') _gEmb.bindTutorialButtonsInForDnd($embBody[0]); } catch (e) {}
                         try { if (tab === 'favorites' && _gEmb && typeof _gEmb.bindFavoritesEventsForDnd === 'function') _gEmb.bindFavoritesEventsForDnd($embBody[0]); } catch (e) {}
