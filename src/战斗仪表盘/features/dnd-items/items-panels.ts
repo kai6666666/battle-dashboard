@@ -23,9 +23,10 @@ export function createItemsPanelsFragment(deps: any): any {
         // 获取所有类别
         const categories = [...new Set(backpackItems.map(i => i['类别'] || '杂物'))].sort();
         
-        let html = `<div style="font-weight:bold;color:var(--dnd-text-main);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-            <span>${deps.icons.BACKPACK} 背包物品</span>
-            <span style="font-size:11px;color:var(--dnd-text-dim);">${backpackItems.length} 件</span>
+        let html = `<div style="font-weight:bold;color:var(--dnd-text-main);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:8px;">
+            <span class="acu-panel-title" style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${deps.icons.BACKPACK} 背包物品</span>
+            <span class="dnd-popup-title-count" style="font-size:11px;color:var(--dnd-text-dim);white-space:nowrap;">${backpackItems.length} 件</span>
+            <span class="dnd-popup-close-btn dnd-popup-title-close" title="关闭" style="cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--dnd-text-dim);flex:0 0 auto;"><i class="fa-solid fa-times"></i></span>
         </div>`;
 
         // [b12.7] 骰子入口：商店 / 物品栏可视化 / 装备栏可视化
@@ -126,9 +127,10 @@ export function createItemsPanelsFragment(deps: any): any {
             return isEq;
         });
         
-        let html = `<div style="font-weight:bold;color:var(--dnd-text-highlight);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-            <span>${deps.icons.SWORD} 已装备</span>
-            <span style="font-size:11px;color:var(--dnd-text-dim);">${equippedItems.length} 件</span>
+        let html = `<div style="font-weight:bold;color:var(--dnd-text-highlight);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:8px;">
+            <span class="acu-panel-title" style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${deps.icons.SWORD} 已装备</span>
+            <span class="dnd-popup-title-count" style="font-size:11px;color:var(--dnd-text-dim);white-space:nowrap;">${equippedItems.length} 件</span>
+            <span class="dnd-popup-close-btn dnd-popup-title-close" title="关闭" style="cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--dnd-text-dim);flex:0 0 auto;"><i class="fa-solid fa-times"></i></span>
         </div>`;
         html += `<div style="max-height:350px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;">`;
         
@@ -163,9 +165,10 @@ export function createItemsPanelsFragment(deps: any): any {
         if (!factions || factions.length === 0) return;
         
         let html = `
-            <div style="font-weight:bold;color:var(--dnd-text-highlight);border-bottom:1px solid var(--dnd-border-subtle);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-                <span>🏛️ 势力与声望</span>
-                <span style="font-size:11px;color:var(--dnd-text-dim);">${factions.length} 个势力</span>
+            <div style="font-weight:bold;color:var(--dnd-text-highlight);border-bottom:1px solid var(--dnd-border-subtle);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:8px;">
+                <span class="acu-panel-title" style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">🏛️ 势力与声望</span>
+                <span class="dnd-popup-title-count" style="font-size:11px;color:var(--dnd-text-dim);white-space:nowrap;">${factions.length} 个势力</span>
+                <span class="dnd-popup-close-btn dnd-popup-title-close" title="关闭" style="cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--dnd-text-dim);flex:0 0 auto;"><i class="fa-solid fa-times"></i></span>
             </div>
             <div style="max-height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
         `;

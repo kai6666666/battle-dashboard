@@ -1808,8 +1808,21 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           const jq: any = (window as any).jQuery || (window as any).$;
           if (!jq || !containerEl) return false;
           bindGlobalInteractionEvents(jq(containerEl));
+          // [b14.14] 诊断：记录绑定后状态（供复测导出）
+          try {
+            const $c = jq(containerEl);
+            const st: any = {
+              t: Date.now(),
+              rows: $c.find('.acu-global-interaction-row').length,
+              mains: $c.find('.acu-global-interaction-row-main').length,
+              actions: $c.find('.acu-global-interaction-action').length,
+              inDom: !!(containerEl.ownerDocument && containerEl.ownerDocument.contains(containerEl)),
+            };
+            try { (window as any).__dndGIDLastBind = st; } catch (e3) {}
+            try { console.info('[DND][GID]绑定完成 rows=' + st.rows + ' mains=' + st.mains + ' actions=' + st.actions + ' inDom=' + st.inDom); } catch (e3) {}
+          } catch (e2) {}
           return true;
-        } catch (e) { return false; }
+        } catch (e) { console.warn('[AcuDice] bindInteractionEventsForDnd 失败', e); return false; }
       },
       bindChangesEventsForDnd: () => {
         try { bindChangesEvents(); return true; } catch (e) { console.warn('[AcuDice] bindChangesEventsForDnd 失败', e); return false; }

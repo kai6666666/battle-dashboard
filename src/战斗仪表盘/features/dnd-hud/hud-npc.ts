@@ -16,9 +16,10 @@ export function createHudNpcFragment(deps: any): any {
         // 获取所有状态类型
         const statuses = [...new Set(npcs.map(n => n['当前状态'] || '未知'))].sort();
         
-        let html = `<div style="font-weight:bold;color:var(--dnd-text-main);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-            <span>${deps.icons.USERS} NPC列表</span>
-            <span style="font-size:11px;color:#888;">${npcs.length} 人</span>
+        let html = `<div style="font-weight:bold;color:var(--dnd-text-main);border-bottom:1px solid var(--dnd-border-gold);padding-bottom:5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:8px;">
+            <span class="acu-panel-title" style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${deps.icons.USERS} NPC列表</span>
+            <span class="dnd-popup-title-count" style="font-size:11px;color:#888;white-space:nowrap;">${npcs.length} 人</span>
+            <span class="dnd-popup-close-btn dnd-popup-title-close" title="关闭" style="cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--dnd-text-dim);flex:0 0 auto;"><i class="fa-solid fa-times"></i></span>
         </div>`;
         
         // 搜索和筛选

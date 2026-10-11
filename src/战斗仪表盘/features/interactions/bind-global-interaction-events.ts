@@ -18,7 +18,8 @@ export function createBindGlobalInteractionEvents(deps: any) {
     if (panelWindow !== window) $(panelWindow).off('resize.globalInteractionEvents scroll.globalInteractionEvents');
     $(panelDocument).off('click.globalInteractionEvents');
     $(panelDocument).find('.acu-global-interaction-floating-host').remove();
-    deps.hydrateGlobalInteractionAvatars($panel);
+    // [b14.14] 容错：头像水合异常不得阻断后续事件绑定
+    try { deps.hydrateGlobalInteractionAvatars($panel); } catch (e0) { try { console.warn('[GID] hydrateGlobalInteractionAvatars 失败', e0); } catch (e1) {} }
 
     const $noResults = $panel.find('.acu-global-interaction-no-results');
     $noResults.prop('hidden', true);
@@ -286,7 +287,11 @@ export function createBindGlobalInteractionEvents(deps: any) {
     let globalInteractionFloatingMenuCounter = 0;
 
     const getGlobalInteractionFloatingHost = (): HTMLElement => {
-      const root = $panel.closest<HTMLElement>(DICE_ROOT_SELECTOR)[0];
+      let root: any = $panel.closest<HTMLElement>(DICE_ROOT_SELECTOR)[0];
+      // [b14.14] DND 内嵌回退：无骰子根时使用嵌入作用域容器（保证主题类/变量继承）
+      if (!root) {
+        try { root = $panel.closest<HTMLElement>('.acu-embed-scope, .dnd-acu-view-inline-body, .dnd-acu-table-host')[0] || null; } catch (eR) {}
+      }
       let host = panelDocument.querySelector<HTMLElement>('.acu-global-interaction-floating-host');
       if (!host) {
         host = panelDocument.createElement('div');
@@ -507,6 +512,15 @@ export function createBindGlobalInteractionEvents(deps: any) {
       updateExpandedGlobalInteractionDetailsPlacement,
     );
 
+    // [b14.14-r2] 安全 DOMRect 序列化（部分 WebView 无 toJSON，防止 debug 抛错阻断交互）
+    const safeDomRectJson = (el: any): any => {
+      try {
+        const r = el && typeof el.getBoundingClientRect === 'function' ? el.getBoundingClientRect() : null;
+        if (!r) return null;
+        if (typeof r.toJSON === 'function') return r.toJSON();
+        return { x: r.x, y: r.y, width: r.width, height: r.height, top: r.top, left: r.left, right: r.right, bottom: r.bottom };
+      } catch (e) { return null; }
+    };
     const toggleGlobalInteractionRow = ($row: JQuery<HTMLElement>): void => {
       const detailsBefore = $row.find<HTMLElement>('.acu-global-interaction-details')[0];
       const iconButton = $row.find<HTMLElement>('.acu-global-interaction-row-main')[0];
@@ -518,7 +532,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
         rowClass: String($row.attr('class') || ''),
         buttonAriaExpanded: iconButton?.getAttribute('aria-expanded') || '',
         detailsDisplay: detailsBefore ? panelWindow.getComputedStyle(detailsBefore).display : null,
-        detailsRect: detailsBefore ? detailsBefore.getBoundingClientRect().toJSON() : null,
+        detailsRect: detailsBefore ? safeDomRectJson(detailsBefore) : null,
       });
       collapseExpandedGlobalInteractionRows();
       if (shouldExpand) {
@@ -532,7 +546,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
         rowExpanded: $row.hasClass('is-expanded'),
         buttonAriaExpanded: iconButton?.getAttribute('aria-expanded') || '',
         detailsDisplay: detailsAfter ? panelWindow.getComputedStyle(detailsAfter).display : null,
-        detailsRect: detailsAfter ? detailsAfter.getBoundingClientRect().toJSON() : null,
+        detailsRect: detailsAfter ? safeDomRectJson(detailsAfter) : null,
         rowBackground: rowStyle?.backgroundColor ?? null,
         rowBorderWidth: rowStyle?.borderWidth ?? null,
         rowBoxShadow: rowStyle?.boxShadow ?? null,
@@ -582,6 +596,10 @@ export function createBindGlobalInteractionEvents(deps: any) {
     });
 
     $panel.on('click.globalInteractionEvents', '.acu-global-interaction-row-main', function (event) {
+      // [b14.14] 点击诊断：记录最近一次点击（供复测导出）
+      try {
+        (window as any).__dndGIDLastClick = { t: Date.now(), rowIndex: String($(this).closest('.acu-global-interaction-row').attr('data-row-index') || ''), panelRows: $panel.find('.acu-global-interaction-row').length };
+      } catch (eCL) {}
       deps.debugGlobalInteraction('icon:onclick', {
         rowIndex: deps.safeDecodeURIComponent($(this).closest('.acu-global-interaction-row').attr('data-row-index') || ''),
         targetTag: event.target instanceof Element ? event.target.tagName : '',

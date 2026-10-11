@@ -18,7 +18,7 @@ export function createHudRenderFragment(deps: any): any {
         if (!$hud.length) return;
         
         // [b13.2.7] 版本标识（诊断用）+ 提前安装层级守护（不依赖打开表格）
-        try { console.info('[DND]融合版构建 v0.0.98-b14.13 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
+        try { console.info('[DND]融合版构建 v0.0.98-b14.14 | z-guard=' + (!!(window as any).__dndAcuZGuardX)); } catch (e) {}
         try {
             if (!(window as any).__dndAcuZGuardX) {
                 (window as any).__dndAcuZGuardX = true;
@@ -750,6 +750,8 @@ export function createHudRenderFragment(deps: any): any {
                     try {
                         if (tab === 'global-interactions' && g && typeof g.bindInteractionEventsForDnd === 'function') {
                             (function($be: any) { setTimeout(function() { try { g.bindInteractionEventsForDnd($be); } catch (e) {} }, 350); })($bodyEl3[0]);
+                            // [b14.14] 二次加固绑定（防首绑时 DOM 未就绪/被并发渲染清理）
+                            (function($be: any) { setTimeout(function() { try { g.bindInteractionEventsForDnd($be); } catch (e) {} }, 1200); })($bodyEl3[0]);
                         }
                     } catch (e) {}
                     // [b13.2.25] append 后绑定 changes（此时按钮已在 DOM，全局选择器可命中）
