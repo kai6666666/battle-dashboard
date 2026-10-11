@@ -345,7 +345,10 @@ export function createBindGlobalInteractionEvents(deps: any) {
     };
 
     const restoreGlobalInteractionDetails = ($row: JQuery<HTMLElement>, details: HTMLElement): void => {
-      if (details.parentElement?.classList.contains('acu-global-interaction-floating-host')) {
+      // [b14.20] 兼容 html 直挂：parent 为 host 或 documentElement 时均移回行内
+      const _pe = details.parentElement;
+      const _docEl = details.ownerDocument ? details.ownerDocument.documentElement : null;
+      if (_pe && (_pe.classList.contains('acu-global-interaction-floating-host') || _pe === _docEl)) {
         $row[0]?.appendChild(details);
       }
       details.classList.remove('is-floating');
@@ -431,15 +434,29 @@ export function createBindGlobalInteractionEvents(deps: any) {
         const floatingHost = getGlobalInteractionFloatingHost();
         details.setAttribute('data-floating-menu-id', menuId);
         details.classList.add('is-floating');
-        floatingHost.appendChild(details);
+        // [b14.20] 直挂 documentElement（移植历史弹窗成功做法：避开一切祖先层叠/裁剪）
+        const _mountTarget = detailsDocument.documentElement || detailsDocument.body || floatingHost;
+        try { _mountTarget.appendChild(details); } catch (eMt) { floatingHost.appendChild(details); }
+        floatingHost.style.display = 'none';
         try { console.info('[DND][GID]菜单浮层转移 OK menuId=' + menuId + ' hostChildren=' + floatingHost.children.length); } catch (eM) {}
         details.style.display = 'flex';
         details.style.flexDirection = 'column';
         details.style.gap = '4px';
         // [b14.19] 强制顶层：改用 setProperty !important，防止被任何作用域/层叠上下文压制
-        try { details.style.setProperty('z-index', '2147483601', 'important'); } catch (eZ) { details.style.zIndex = '2147483601'; }
+        try { details.style.setProperty('z-index', '2147483647', 'important'); } catch (eZ) { details.style.zIndex = '2147483647'; }
         try { details.style.setProperty('pointer-events', 'auto', 'important'); } catch (eP) { details.style.pointerEvents = 'auto'; }
         try { details.style.setProperty('visibility', 'visible', 'important'); } catch (eV3) {} 
+        // [b14.20] 极限防护：清除任何可能压制渲染/命中的继承属性
+        try {
+          details.style.setProperty('opacity', '1', 'important');
+          details.style.setProperty('transform', 'none', 'important');
+          details.style.setProperty('clip-path', 'none', 'important');
+          details.style.setProperty('filter', 'none', 'important');
+          details.style.setProperty('contain', 'none', 'important');
+          details.style.setProperty('content-visibility', 'visible', 'important');
+          details.style.setProperty('will-change', 'auto', 'important');
+          details.style.setProperty('mix-blend-mode', 'normal', 'important');
+        } catch (eHard) {} 
         // [b14.18] 视觉兑底 v2：解析实体颜色后直接内联（不依赖 var 级联/外部 CSS 注入）
         try {
           const _cs = detailsDocument.defaultView ? detailsDocument.defaultView.getComputedStyle(details) : null;
@@ -528,6 +545,15 @@ export function createBindGlobalInteractionEvents(deps: any) {
             const _dcs = detailsDocument.defaultView ? detailsDocument.defaultView.getComputedStyle(details) : null;
             console.info('[DND][GID]元素栈 cx=' + _cx + ' cy=' + _cy + ' 栈=' + _stack);
             console.info('[DND][GID]computed pos=' + (_dcs ? _dcs.position : '?') + ' z=' + (_dcs ? _dcs.zIndex : '?') + ' pe=' + (_dcs ? _dcs.pointerEvents : '?') + ' vis=' + (_dcs ? _dcs.visibility : '?') + ' op=' + (_dcs ? _dcs.opacity : '?') + ' disp=' + (_dcs ? _dcs.display : '?'));
+            // [b14.20] 渲染深度诊断
+            try {
+              const _cv = (details as any).checkVisibility ? String((details as any).checkVisibility()) : 'n/a';
+              const _rects = details.getClientRects ? details.getClientRects().length : -1;
+              const _op = (details as any).offsetParent;
+              const _opInfo = _op ? (String((_op as any).className || '') || _op.tagName || '') : 'null';
+              const _parentInfo = details.parentElement ? (String(details.parentElement.className || '') || details.parentElement.tagName) : 'none';
+              console.info('[DND][GID]渲染诊断 cv=' + _cv + ' rects=' + _rects + ' offsetParent=' + String(_opInfo).slice(0, 50) + ' parent=' + String(_parentInfo).slice(0, 50));
+            } catch (eRd) {}
           } catch (eSt) {}
         } catch (eLR) {}
       } catch {
