@@ -5,6 +5,7 @@
 import { ConsoleCaptureManager } from './console-capture-manager';
 import { Store } from '../../shared/storage/store';
 import { showActionableErrorToast } from '../../shared/actionable-error-toast';
+import { runHiddenColumnsProbe, runMapTablesProbe } from './probes';
 export function createShowDebugConsoleModal(deps: any) {
   const showDebugConsoleModal = () => {
     const { $ } = deps.getCore();
@@ -82,7 +83,16 @@ export function createShowDebugConsoleModal(deps: any) {
                   <i class="fa-solid fa-exclamation-circle indicator"></i> Error
                 </button>
               </div>
-              <!-- 操作按钮 -->
+              <!-- 自检区 -->
+      <div class="acu-debug-probe-row">
+        <select id="debug-probe-select" class="acu-debug-probe-select">
+          <option value="">— 自检项 —</option>
+          <option value="hiddenCols">隐藏列读写自检（地图）</option>
+          <option value="mapTables">地图四表列位速查</option>
+        </select>
+        <button class="acu-debug-probe-run" id="debug-probe-run"><i class="fa-solid fa-play"></i> 运行</button>
+      </div>
+      <!-- 操作按钮 -->
               <div class="acu-debug-actions">
                 <button class="acu-debug-action-btn danger" id="debug-console-clear">
                   <i class="fa-solid fa-trash"></i> <span class="btn-text">清空</span>
@@ -175,6 +185,13 @@ export function createShowDebugConsoleModal(deps: any) {
       updateCounts();
     });
 
+    // 自检探针
+    dialog.find('#debug-probe-run').on('click', () => {
+      const v = String(dialog.find('#debug-probe-select').val() || '');
+      if (!v) { if (window.toastr) window.toastr.info('请先选择自检项'); return; }
+      if (v === 'hiddenCols') { void runHiddenColumnsProbe(); }
+      else if (v === 'mapTables') { void runMapTablesProbe(); }
+    });
     // 复制日志
     dialog.find('#debug-console-copy').on('click', async () => {
       const filteredLogs = ConsoleCaptureManager.getFilteredLogs();
