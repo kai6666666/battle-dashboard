@@ -304,7 +304,7 @@ export function createBindGlobalInteractionEvents(deps: any) {
       host.className = ['acu-global-interaction-floating-host', ...themeClasses].join(' ');
       host.style.position = 'fixed';
       host.style.inset = '0';
-      host.style.zIndex = '2147483600'; // [b14.16] 兑底提升（防被 DND 层叠遮挡）
+      try { host.style.setProperty('z-index', '2147483600', 'important'); } catch (eHz) { host.style.zIndex = '2147483600'; } // [b14.16/b14.19]
       host.style.pointerEvents = 'none';
 
       const sourceStyle = panelWindow.getComputedStyle(root || $panel[0] || panelDocument.documentElement);
@@ -436,8 +436,10 @@ export function createBindGlobalInteractionEvents(deps: any) {
         details.style.display = 'flex';
         details.style.flexDirection = 'column';
         details.style.gap = '4px';
-        details.style.pointerEvents = 'auto';
-        details.style.zIndex = '2147483601';
+        // [b14.19] 强制顶层：改用 setProperty !important，防止被任何作用域/层叠上下文压制
+        try { details.style.setProperty('z-index', '2147483601', 'important'); } catch (eZ) { details.style.zIndex = '2147483601'; }
+        try { details.style.setProperty('pointer-events', 'auto', 'important'); } catch (eP) { details.style.pointerEvents = 'auto'; }
+        try { details.style.setProperty('visibility', 'visible', 'important'); } catch (eV3) {} 
         // [b14.18] 视觉兑底 v2：解析实体颜色后直接内联（不依赖 var 级联/外部 CSS 注入）
         try {
           const _cs = detailsDocument.defaultView ? detailsDocument.defaultView.getComputedStyle(details) : null;
@@ -520,6 +522,13 @@ export function createBindGlobalInteractionEvents(deps: any) {
           const _etInfo = _et ? (String((_et as any).className || '') || _et.tagName || '') : 'null';
           const _isMe = Boolean(_et && (_et === details || (_et as any).closest && (_et as any).closest('.acu-global-interaction-details') === details));
           console.info('[DND][GID]命中诊断 cx=' + _cx + ' cy=' + _cy + ' top=' + String(_etInfo).slice(0, 80) + ' isMenu=' + _isMe);
+          // [b14.19] 元素栈诊断（前 6 层）+ 关键 computed 属性
+          try {
+            const _stack = (_doc && typeof (_doc as any).elementsFromPoint === 'function') ? Array.from((_doc as any).elementsFromPoint(_cx, _cy)).slice(0, 6).map((el: any) => String((el && el.className) || (el && el.tagName) || '').slice(0, 36)).join(' | ') : 'n/a';
+            const _dcs = detailsDocument.defaultView ? detailsDocument.defaultView.getComputedStyle(details) : null;
+            console.info('[DND][GID]元素栈 cx=' + _cx + ' cy=' + _cy + ' 栈=' + _stack);
+            console.info('[DND][GID]computed pos=' + (_dcs ? _dcs.position : '?') + ' z=' + (_dcs ? _dcs.zIndex : '?') + ' pe=' + (_dcs ? _dcs.pointerEvents : '?') + ' vis=' + (_dcs ? _dcs.visibility : '?') + ' op=' + (_dcs ? _dcs.opacity : '?') + ' disp=' + (_dcs ? _dcs.display : '?'));
+          } catch (eSt) {}
         } catch (eLR) {}
       } catch {
         clearGlobalInteractionDetailsPlacement($row);
