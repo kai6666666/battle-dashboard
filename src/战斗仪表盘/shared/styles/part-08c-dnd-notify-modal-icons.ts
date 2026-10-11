@@ -515,4 +515,42 @@ export const STYLES_PART_08C_DND_NOTIFY_MODAL_ICONS = `/* ======================
             z-index: 10 !important;
         }
 
+        /* ==== [b14.12][P3] 业务弹窗（NPC/档案）视觉统一：向骰子弹窗体系对齐 ==== */
+        .dnd-modal {
+            border-radius: 12px !important;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6) !important;
+            overflow: hidden !important;
+        }
+        .dnd-modal-header {
+            background: transparent !important;
+            border-bottom: 1px solid var(--dnd-border-inner) !important;
+            padding: 14px 16px !important;
+        }
+        .dnd-modal-body {
+            padding: 14px 16px !important;
+        }
+        .dnd-modal-close {
+            border-radius: 8px !important;
+            width: 28px !important;
+            height: 28px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .dnd-dialog {
+            border-radius: 12px !important;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6) !important;
+        }
+        .dnd-dialog-header {
+            background: transparent !important;
+            padding: 14px 16px !important;
+        }
+        .dnd-dialog-footer {
+            background: transparent !important;
+            padding: 12px 16px !important;
+        }
+        .dnd-dialog-btn {
+            border-radius: 8px !important;
+        }
+
         `;

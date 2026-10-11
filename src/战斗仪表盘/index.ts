@@ -1760,6 +1760,13 @@ import { DATA_VALIDATION_DEPRECATED_META } from './features/validation/data-vali
           return true;
         } catch (e) { return false; }
       },
+      // [b14.12][P2] 向 DND 融合侧暴露骰子系统的确认/输入对话框（统一弹窗视觉）
+      showDiceSystemConfirmDialog: (options?: any) => {
+        try { return Promise.resolve(showDiceSystemConfirmDialog(options || {})); } catch (e) { return Promise.resolve(false); }
+      },
+      showDiceSystemInputDialog: (options?: any) => {
+        try { return Promise.resolve(showDiceSystemInputDialog(options || {})); } catch (e) { return Promise.resolve(null); }
+      },
       // [b13.2.3] 保障骰子缓存数据就绪（编辑/锁定/收藏等操作依赖 cachedRawData）
       ensureAcuCachedData: () => {
         try {

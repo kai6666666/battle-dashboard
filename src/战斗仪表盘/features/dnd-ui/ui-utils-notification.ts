@@ -59,6 +59,18 @@ const NotificationSystem: any = {
      * @returns {Promise<void>}
      */
     notify(message, options = {}) {
+        // [b14.12][P1] 统一通知：优先走全局 toastr（与骰子侧一致），不可用时回退 dnd-toast
+        try {
+            const w: any = (typeof window !== 'undefined') ? window : null;
+            const t: any = w ? (w.toastr || (w.parent && w.parent.toastr) || (w.top && w.top.toastr)) : null;
+            if (t && typeof t.info === 'function') {
+                const ntype = String((options && options.type) || 'info');
+                const fnMap: any = { success: t.success, warning: t.warning, error: t.error, info: t.info };
+                const fn = fnMap[ntype] || t.info;
+                fn.call(t, String(message == null ? '' : message));
+                return Promise.resolve();
+            }
+        } catch (e) {}
         const { $ } = deps.getCore();
         this._ensureContainer();
         
@@ -127,6 +139,23 @@ const NotificationSystem: any = {
      * @returns {Promise<boolean>}
      */
     confirm(message, options = {}) {
+        // [b14.12][P2] 优先走骰子系统确认框（统一弹窗视觉），不可用时回退原双路径
+        try {
+            const w: any = (typeof window !== 'undefined') ? window : null;
+            const ui: any = w ? (w.__acuUI || (w.parent && w.parent.__acuUI) || (w.top && w.top.__acuUI)) : null;
+            if (ui && typeof ui.showDiceSystemConfirmDialog === 'function') {
+                const tone = String((options && options.tone) || 'warning');
+                return Promise.resolve(ui.showDiceSystemConfirmDialog({
+                    title: String((options && options.title) || '确认'),
+                    message: String(message == null ? '' : message),
+                    iconClass: String((options && options.iconClass) || 'fa-circle-question'),
+                    confirmText: String((options && options.confirmText) || '确定'),
+                    cancelText: (options && options.cancelText) ? String(options.cancelText) : undefined,
+                    tone: tone === 'danger' ? 'danger' : 'warning',
+                    hideCancel: !!(options && options.hideCancel),
+                })).then(function (r: any) { return !!r; }).catch(function () { return false; });
+            }
+        } catch (e) {}
         // 检测是否应该使用 modal overlay 路径
         if (this._shouldUseModalOverlay()) {
             return this._confirmViaModalOverlay(message, options);
@@ -315,6 +344,25 @@ const NotificationSystem: any = {
      * @returns {Promise<string|null>}
      */
     prompt(message, options = {}) {
+        // [b14.12][P2] 优先走骰子系统输入框（统一弹窗视觉），不可用时回退原双路径
+        try {
+            const w: any = (typeof window !== 'undefined') ? window : null;
+            const ui: any = w ? (w.__acuUI || (w.parent && w.parent.__acuUI) || (w.top && w.top.__acuUI)) : null;
+            if (ui && typeof ui.showDiceSystemInputDialog === 'function') {
+                const initVal = (options && options.initialValue != null) ? String(options.initialValue)
+                    : ((options && options.defaultValue != null) ? String(options.defaultValue) : undefined);
+                return Promise.resolve(ui.showDiceSystemInputDialog({
+                    title: String((options && options.title) || '输入'),
+                    message: String(message == null ? '' : message),
+                    iconClass: String((options && options.iconClass) || 'fa-keyboard'),
+                    initialValue: initVal,
+                    placeholder: (options && options.placeholder != null) ? String(options.placeholder) : undefined,
+                    confirmText: String((options && options.confirmText) || '确定'),
+                    cancelText: (options && options.cancelText) ? String(options.cancelText) : undefined,
+                    multiline: !!(options && options.multiline),
+                })).then(function (r: any) { return (r == null ? null : String(r)); }).catch(function () { return null; });
+            }
+        } catch (e) {}
         // 检测是否应该使用 modal overlay 路径
         if (this._shouldUseModalOverlay()) {
             return this._promptViaModalOverlay(message, options);
